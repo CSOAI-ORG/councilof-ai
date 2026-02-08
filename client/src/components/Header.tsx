@@ -196,7 +196,7 @@ export function Header() {
               {/* Home Link */}
               <a
                 href="/"
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                   location === '/'
                     ? 'text-emerald-700 bg-emerald-50'
                     : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
