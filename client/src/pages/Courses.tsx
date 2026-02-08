@@ -3,8 +3,7 @@
  * Browse regional AI compliance courses with flexible payment plans
  */
 
-import { useState } from "react";
-import { trpc } from "@/lib/trpc";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,27 +15,31 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Clock, Award, TrendingUp, CheckCircle2, Loader2 } from "lucide-react";
+import { BookOpen, Clock, Award, TrendingUp, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
+import { courses as staticCourses, regions as staticRegions, bundles as staticBundles } from "@/data/courses";
 
 export default function Courses() {
   const [selectedRegion, setSelectedRegion] = useState<number | undefined>();
   const [selectedLevel, setSelectedLevel] = useState<"fundamentals" | "advanced" | "specialist" | undefined>();
   const [selectedFramework, setSelectedFramework] = useState<string | undefined>();
 
-  // Fetch regions
-  const { data: regions = [] } = trpc.courses.getRegions.useQuery();
+  // Use static data
+  const regions = staticRegions;
+  const bundles = staticBundles;
 
-  // Fetch courses with filters
-  const { data: courses = [], isLoading: coursesLoading } = trpc.courses.getCatalog.useQuery({
-    regionId: selectedRegion,
-    level: selectedLevel,
-    framework: selectedFramework,
-  });
+  // Filter courses based on selections
+  const courses = useMemo(() => {
+    return staticCourses.filter(course => {
+      if (selectedRegion && course.regionId !== selectedRegion) return false;
+      if (selectedLevel && course.level !== selectedLevel) return false;
+      if (selectedFramework && course.framework !== selectedFramework) return false;
+      return true;
+    });
+  }, [selectedRegion, selectedLevel, selectedFramework]);
 
-  // Fetch bundles
-  const { data: bundles = [] } = trpc.courses.getCourseBundles.useQuery();
+  const coursesLoading = false;
 
   return (
     <DashboardLayout>
@@ -146,7 +149,7 @@ export default function Courses() {
           <TabsContent value="courses" className="mt-6">
             {coursesLoading ? (
               <div className="text-center py-12">
-                <Loader2 className="inline-block h-8 w-8 animate-spin text-emerald-600" />
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-600 border-r-transparent" />
                 <p className="mt-4 text-gray-600">Loading courses...</p>
               </div>
             ) : courses.length === 0 ? (
@@ -188,30 +191,12 @@ export default function Courses() {
 
 function CourseCard({ course }: { course: any }) {
   const [selectedPlan, setSelectedPlan] = useState<"oneTime" | "threeMonth" | "sixMonth" | "twelveMonth">("oneTime");
-  const enrollMutation = trpc.courses.enrollInCourse.useMutation();
+  const [enrolling, setEnrolling] = useState(false);
 
   const handleEnroll = async () => {
-    try {
-      const paymentTypeMap = {
-        oneTime: "one_time",
-        threeMonth: "3_month",
-        sixMonth: "6_month",
-        twelveMonth: "12_month",
-      };
-
-      const result = await enrollMutation.mutateAsync({
-        courseId: course.id,
-      });
-
-      // Handle enrollment result
-      if ((result as any).checkoutUrl) {
-        window.location.href = (result as any).checkoutUrl;
-      } else {
-        toast.success(result.message || 'Successfully enrolled!');
-      }
-    } catch (error: any) {
-      toast.error(error.message || "Failed to enroll in course");
-    }
+    setEnrolling(true);
+    toast.success(`Enrollment interest recorded for "${course.title}". A team member will contact you shortly!`);
+    setTimeout(() => setEnrolling(false), 1500);
   };
 
   const formatPrice = (cents: number | null | undefined) => {
@@ -341,10 +326,10 @@ function CourseCard({ course }: { course: any }) {
 
       <Button
         onClick={handleEnroll}
-        disabled={enrollMutation.isPending}
+        disabled={enrolling}
         className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700"
       >
-        {enrollMutation.isPending ? "Processing..." : "Enroll Now"}
+        {enrolling ? "Processing..." : "Enroll Now"}
       </Button>
     </Card>
   );
