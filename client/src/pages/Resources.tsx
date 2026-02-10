@@ -81,40 +81,40 @@ export default function Resources() {
 
   const videos = [
     {
-      title: "COAI Platform Overview",
+      title: "CSOAI Platform Overview",
       duration: "12:34",
       views: "2.4K",
-      thumbnail: "/api/placeholder/400/225",
+      thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
     },
     {
       title: "How to Register Your First AI System",
       duration: "8:15",
       views: "1.8K",
-      thumbnail: "/api/placeholder/400/225",
+      thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
     },
     {
       title: "Understanding the 33-Agent Council",
       duration: "15:42",
       views: "3.1K",
-      thumbnail: "/api/placeholder/400/225",
+      thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
     },
     {
       title: "PDCA Cycles for AI Governance",
       duration: "18:20",
       views: "1.5K",
-      thumbnail: "/api/placeholder/400/225",
+      thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
     },
     {
       title: "Becoming a Watchdog Analyst",
       duration: "22:10",
       views: "892",
-      thumbnail: "/api/placeholder/400/225",
+      thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
     },
     {
       title: "API Integration Tutorial",
       duration: "14:55",
       views: "1.2K",
-      thumbnail: "/api/placeholder/400/225",
+      thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
     },
   ];
 

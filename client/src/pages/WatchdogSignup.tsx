@@ -390,7 +390,7 @@ export default function WatchdogSignup() {
       {/* Footer */}
       <footer className="py-8 border-t border-border">
         <div className="container text-center text-sm text-muted-foreground">
-          <p>© 2024 COAI - Council of AIs. Building the future of AI safety.</p>
+          <p>© {new Date().getFullYear()} CSOAI - Council Safety of AI. Building the future of AI safety.</p>
           <p className="mt-2">
             Part of the SOAI (Safety Of AI) ecosystem.
           </p>

@@ -43,7 +43,7 @@ export default function Standards() {
     },
     {
       id: "tc260-western",
-      name: "COAI Framework",
+      name: "CSOAI Framework",
       fullName: "Council of AI - Western AI Safety Governance Framework",
       version: "v1.0",
       status: "Active Development",

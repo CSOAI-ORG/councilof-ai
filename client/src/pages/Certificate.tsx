@@ -78,8 +78,8 @@ export default function Certificate({
 
   const handleShare = async () => {
     const shareData = {
-      title: "COAI Watchdog Analyst Certification",
-      text: `I just earned my COAI Watchdog Analyst Certification! Certificate #${certificateNumber}`,
+      title: "CSOAI Watchdog Analyst Certification",
+      text: `I just earned my CSOAI Watchdog Analyst Certification! Certificate #${certificateNumber}`,
       url: window.location.href,
     };
 

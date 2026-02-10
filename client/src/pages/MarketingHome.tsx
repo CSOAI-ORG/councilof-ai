@@ -659,17 +659,17 @@ export default function MarketingHome() {
               <h4 className="font-bold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
+                  <a href="/about" className="hover:text-foreground transition-colors">
                     About
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
+                  <a href="/careers" className="hover:text-foreground transition-colors">
                     Careers
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
+                  <a href="/contact" className="hover:text-foreground transition-colors">
                     Contact
                   </a>
                 </li>
@@ -680,18 +680,18 @@ export default function MarketingHome() {
               <h4 className="font-bold mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
+                  <a href="/privacy-policy" className="hover:text-foreground transition-colors">
                     Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
+                  <a href="/terms-of-service" className="hover:text-foreground transition-colors">
                     Terms of Service
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Security
+                  <a href="/disclaimers" className="hover:text-foreground transition-colors">
+                    Security &amp; Disclaimers
                   </a>
                 </li>
               </ul>
@@ -699,7 +699,7 @@ export default function MarketingHome() {
           </div>
 
           <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-            <p>&copy; 2025 COAI. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} CSOAI. All rights reserved.</p>
           </div>
         </div>
       </footer>

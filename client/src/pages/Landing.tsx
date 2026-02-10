@@ -439,7 +439,7 @@ export default function Landing() {
               </a>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2025 COAI. Open source under MIT License.
+              © {new Date().getFullYear()} CSOAI. Open source under MIT License.
             </p>
           </div>
         </div>

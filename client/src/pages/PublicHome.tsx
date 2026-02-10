@@ -593,7 +593,7 @@ export default function PublicHome() {
 
           <div className="pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2025 Council of AIs. Open source under MIT License.
+              © {new Date().getFullYear()} CSOAI. Open source under MIT License.
             </p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <span>Built for humanity's AI safety</span>

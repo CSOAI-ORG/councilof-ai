@@ -257,7 +257,7 @@ export default function NewHomeV2() {
           >
             <Sparkles className="h-4 w-4 text-emerald-400" />
             <span className="text-emerald-300 text-sm font-medium">
-              Launching January 15, 2026 | Join 10,000+ Early Members
+              Now Live | Join 10,000+ Members Building AI Safety
             </span>
           </motion.div>
 
