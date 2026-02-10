@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'wouter';
 import ReactMarkdown from 'react-markdown';
 import { widgetCourses } from '@/data/widget-courses';
-import { getModuleQuiz } from '@/data/quizzes';
+import { getModuleQuiz } from '@/data/quizzes/index';
 import { Quiz } from '@/components/Quiz';
 import type { QuizResult } from '@/types/quiz';
 import { Button } from '@/components/ui/button';
