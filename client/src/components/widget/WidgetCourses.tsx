@@ -139,7 +139,7 @@ function CourseCard({ course }: { course: any }) {
       <div className="grid grid-cols-3 gap-4 text-sm text-gray-700 mb-4 pb-4 border-b border-gray-200">
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-gray-500" />
-          <span>{course.duration}h</span>
+          <span>{course.duration}</span>
         </div>
         <div className="flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-gray-500" />
