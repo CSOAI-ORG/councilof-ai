@@ -49,12 +49,12 @@ export default function WidgetCourses() {
           <div className="flex items-center gap-3">
             <Filter className="w-5 h-5 text-gray-600" />
             <label className="font-medium text-gray-700 min-w-fit">Filter by Framework:</label>
-            <Select value={selectedFramework || ''} onValueChange={(value) => setSelectedFramework(value === '' ? undefined : value)}>
+            <Select value={selectedFramework || 'all'} onValueChange={(value) => setSelectedFramework(value === 'all' ? undefined : value)}>
               <SelectTrigger className="w-48">
                 <SelectValue placeholder="All Frameworks" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Frameworks</SelectItem>
+                <SelectItem value="all">All Frameworks</SelectItem>
                 {frameworks.map((framework) => (
                   <SelectItem key={framework} value={framework}>
                     {framework}
