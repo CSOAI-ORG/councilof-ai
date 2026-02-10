@@ -8,6 +8,10 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+// Widget imports
+import WidgetLayout from "./components/widget/WidgetLayout";
+import WidgetCourses from "./components/widget/WidgetCourses";
+import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
 // Home removed - using NewHomeV2 instead
 import Landing from "./pages/Landing";
@@ -166,7 +170,40 @@ function RouteAnnouncer() {
   return null;
 }
 
+/**
+ * Widget Router - renders widget pages without Header/Footer/Auth
+ */
+function WidgetRouter() {
+  return (
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="light">
+        <TooltipProvider>
+          <WidgetLayout>
+            <Switch>
+              <Route path="/widget" component={WidgetCourses} />
+              <Route path="/widget/course/:courseId" component={WidgetCoursePlayer} />
+              <Route>
+                <div className="text-center py-12">
+                  <h2 className="text-xl font-bold">Widget page not found</h2>
+                </div>
+              </Route>
+            </Switch>
+          </WidgetLayout>
+          <Toaster position="top-right" />
+        </TooltipProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
+  );
+}
+
 function App() {
+  const [location] = useLocation();
+
+  // Widget routes - no header/footer/auth
+  if (location.startsWith('/widget')) {
+    return <WidgetRouter />;
+  }
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
