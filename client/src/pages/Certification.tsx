@@ -1,5 +1,5 @@
 /*
- * COAI Certification Test Page
+ * CSOAI Certification Test Page
  * Take the certification test to become a Watchdog Analyst
  */
 
@@ -63,7 +63,7 @@ const sampleQuestions = [
   },
   {
     id: 4,
-    question: "In the COAI 33-Agent Council, what percentage of votes is needed for consensus?",
+    question: "In the CSOAI 33-Agent Council, what percentage of votes is needed for consensus?",
     options: [
       "50% (simple majority)",
       "67% (two-thirds majority)",
@@ -200,7 +200,7 @@ export default function Certification() {
                   <Award className="h-8 w-8 text-primary" />
                 </div>
                 <CardTitle className="text-2xl">
-                  COAI Watchdog Analyst Certification
+                  CSOAI Watchdog Analyst Certification
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -391,7 +391,7 @@ export default function Certification() {
                 
                 <p className="text-muted-foreground mb-6">
                   {passed 
-                    ? "You've passed the COAI Watchdog Analyst Certification!"
+                    ? "You've passed the CSOAI Watchdog Analyst Certification!"
                     : "You didn't pass this time, but you can try again."
                   }
                 </p>

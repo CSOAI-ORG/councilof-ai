@@ -1,6 +1,6 @@
 /**
  * Blog/News Section Placeholder
- * Will display AI safety news, COAI updates, and regulatory changes
+ * Will display AI safety news, CSOAI updates, and regulatory changes
  */
 
 import { Link } from "wouter";
@@ -18,14 +18,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
 
 // Placeholder blog posts
 const blogPosts = [
   {
     id: 1,
     title: "EU AI Act: What Enterprises Need to Know for 2025 Compliance",
-    excerpt: "A comprehensive guide to the EU AI Act requirements and how COAI helps organizations achieve compliance before the deadline.",
+    excerpt: "A comprehensive guide to the EU AI Act requirements and how CSOAI helps organizations achieve compliance before the deadline.",
     category: "Regulatory",
     author: "CSOAI Team",
     date: "Dec 20, 2024",
@@ -93,7 +92,7 @@ export default function Blog() {
   };
 
   const handleReadMore = () => {
-    toast.info("Full blog posts coming soon!");
+    // Coming soon
   };
 
   return (
@@ -112,7 +111,7 @@ export default function Blog() {
               <div className="h-6 w-px bg-border" />
               <div className="flex items-center gap-2">
                 <Newspaper className="h-6 w-6 text-primary" />
-                <h1 className="text-xl font-bold">COAI Blog</h1>
+                <h1 className="text-xl font-bold">CSOAI Blog</h1>
               </div>
             </div>
             <Link href="/dashboard">
@@ -164,7 +163,7 @@ export default function Blog() {
               key={category}
               variant={category === "All" ? "default" : "outline"}
               size="sm"
-              onClick={() => toast.info("Category filtering coming soon!")}
+              disabled={category !== "All"}
             >
               {category}
             </Button>
@@ -253,7 +252,7 @@ export default function Blog() {
             <p className="text-muted-foreground mb-4">
               We're working on bringing you in-depth articles, case studies, and expert insights on AI safety and governance.
             </p>
-            <Button variant="outline" onClick={() => toast.info("Thanks for your interest!")}>
+            <Button variant="outline" disabled>
               Request a Topic
             </Button>
           </CardContent>

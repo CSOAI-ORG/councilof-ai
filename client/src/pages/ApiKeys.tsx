@@ -1,5 +1,5 @@
 /*
- * COAI API Keys Management Page
+ * CSOAI API Keys Management Page
  * Enterprise API key generation and management
  */
 
@@ -144,7 +144,7 @@ export default function ApiKeys() {
           <div>
             <h1 className="text-2xl font-semibold">API Keys</h1>
             <p className="text-muted-foreground text-sm">
-              Manage API keys for programmatic access to COAI services
+              Manage API keys for programmatic access to CSOAI services
             </p>
           </div>
           <Button onClick={() => setCreateDialogOpen(true)} className="gap-2">
@@ -208,7 +208,7 @@ export default function ApiKeys() {
           <CardHeader>
             <CardTitle className="text-lg">Your API Keys</CardTitle>
             <CardDescription>
-              API keys are used to authenticate requests to the COAI API
+              API keys are used to authenticate requests to the CSOAI API
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -217,7 +217,7 @@ export default function ApiKeys() {
                 <Key className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                 <h3 className="font-medium text-lg mb-2">No API keys yet</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Create an API key to start using the COAI API
+                  Create an API key to start using the CSOAI API
                 </p>
                 <Button onClick={() => setCreateDialogOpen(true)}>
                   Create your first API key
@@ -324,7 +324,7 @@ export default function ApiKeys() {
           <DialogHeader>
             <DialogTitle>Create API Key</DialogTitle>
             <DialogDescription>
-              Create a new API key for programmatic access to COAI services.
+              Create a new API key for programmatic access to CSOAI services.
             </DialogDescription>
           </DialogHeader>
           

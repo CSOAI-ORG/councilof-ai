@@ -130,7 +130,7 @@ export default function PDCACycles() {
                 Simulator
               </Button>
             </Link>
-            <Button onClick={() => toast.info("Create cycle dialog coming soon")}>
+            <Button disabled>
               <Plus className="mr-2 h-4 w-4" />
               New Cycle
             </Button>
@@ -211,7 +211,7 @@ export default function PDCACycles() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" onClick={() => toast.info("View cycle details coming soon")}>
+                      <Button variant="outline" size="sm" disabled>
                         View Details
                       </Button>
                       {cycle.status === "active" && (
@@ -242,7 +242,7 @@ export default function PDCACycles() {
               <p className="text-muted-foreground mb-4">
                 Start a new PDCA cycle to begin continuous improvement
               </p>
-              <Button onClick={() => toast.info("Create cycle dialog coming soon")}>
+              <Button disabled>
                 <Plus className="mr-2 h-4 w-4" />
                 Create First Cycle
               </Button>

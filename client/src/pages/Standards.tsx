@@ -72,7 +72,7 @@ export default function Standards() {
             <h1 className="text-4xl font-bold mb-4">AI Governance Standards</h1>
             <p className="text-xl text-blue-100">
               Comprehensive implementation guides for global AI safety and compliance frameworks.
-              COAI provides Western-adapted standards equivalent to China's TC260, ensuring your AI systems
+              CSOAI provides Western-adapted standards equivalent to China's TC260, ensuring your AI systems
               meet international regulatory requirements.
             </p>
           </div>
@@ -171,7 +171,7 @@ export default function Standards() {
                   <th className="text-center p-3 font-semibold">EU AI Act</th>
                   <th className="text-center p-3 font-semibold">NIST AI RMF</th>
                   <th className="text-center p-3 font-semibold">ISO/IEC 42001</th>
-                  <th className="text-center p-3 font-semibold">COAI Framework</th>
+                  <th className="text-center p-3 font-semibold">CSOAI Framework</th>
                 </tr>
               </thead>
               <tbody>

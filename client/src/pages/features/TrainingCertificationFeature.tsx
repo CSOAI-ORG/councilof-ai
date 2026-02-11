@@ -344,7 +344,7 @@ export default function TrainingCertificationFeature() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Certificate ID</p>
-                    <p className="font-semibold">COAI-EU-2026-001234</p>
+                    <p className="font-semibold">CSOAI-EU-2026-001234</p>
                   </div>
                 </div>
                 <div className="pt-4">

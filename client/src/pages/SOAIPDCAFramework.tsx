@@ -46,7 +46,7 @@ export default function SOAIPDCAFramework() {
       // Direct download from backend
       window.open(`/api/download-template/${templateId}`, '_blank');
     } else {
-      console.log(`Template not found: ${templateName}`);
+      // Template not found
     }
   };
 
@@ -57,11 +57,7 @@ export default function SOAIPDCAFramework() {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <div className="flex justify-center mb-8">
-              <img
-                src="/pdca-certification-mark.png"
-                alt="PDCA Certification Mark"
-                className="h-32 w-32"
-              />
+              <div className="h-32 w-32 bg-gradient-to-br from-green-400 to-green-600 rounded-lg" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               SOAI-PDCA Continuous Improvement Framework

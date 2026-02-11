@@ -186,7 +186,7 @@ export default function CertificationResults() {
                       Your Certificate
                     </CardTitle>
                     <CardDescription>
-                      You are now a certified COAI Watchdog Analyst
+                      You are now a certified CSOAI Watchdog Analyst
                     </CardDescription>
                   </CardHeader>
                   <CardContent>

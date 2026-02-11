@@ -95,11 +95,7 @@ export default function Accreditation() {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <div className="flex justify-center mb-8">
-              <img
-                src="/csoai-official-seal.png"
-                alt="CSOAI Official Seal"
-                className="h-32 w-32"
-              />
+              <div className="h-32 w-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Global AI Safety Accreditation Authority
@@ -185,33 +181,21 @@ export default function Accreditation() {
             </h3>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <img
-                  src="/csoai-official-seal.png"
-                  alt="CSOAI Official Seal"
-                  className="h-40 w-40 mx-auto mb-4"
-                />
+                <div className="h-40 w-40 mx-auto mb-4 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full" />
                 <h4 className="font-semibold text-gray-900 mb-2">Official Seal</h4>
                 <p className="text-sm text-gray-600">
                   Primary accreditation mark for all certified professionals
                 </p>
               </div>
               <div className="text-center">
-                <img
-                  src="/tc260-compliance-badge.png"
-                  alt="TC260 Compliance"
-                  className="h-40 w-40 mx-auto mb-4"
-                />
+                <div className="h-40 w-40 mx-auto mb-4 bg-gradient-to-br from-red-400 to-red-600 rounded-lg" />
                 <h4 className="font-semibold text-gray-900 mb-2">TC260 Compliant</h4>
                 <p className="text-sm text-gray-600">
                   China AI Systems Standard GB/T 42459-2023
                 </p>
               </div>
               <div className="text-center">
-                <img
-                  src="/pdca-certification-mark.png"
-                  alt="PDCA Certified"
-                  className="h-40 w-40 mx-auto mb-4"
-                />
+                <div className="h-40 w-40 mx-auto mb-4 bg-gradient-to-br from-green-400 to-green-600 rounded-lg" />
                 <h4 className="font-semibold text-gray-900 mb-2">PDCA Certified</h4>
                 <p className="text-sm text-gray-600 mb-4">
                   SOAI-PDCA Continuous Improvement Framework

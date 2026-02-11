@@ -1,5 +1,5 @@
 /*
- * COAI 33-Agent Council Page
+ * CSOAI 33-Agent Council Page
  * Visualize the Byzantine fault-tolerant voting system
  * Connected to real backend API
  */

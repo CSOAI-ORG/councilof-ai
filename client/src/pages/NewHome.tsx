@@ -181,10 +181,8 @@ export default function NewHome() {
 
           {/* Job Creation Visual */}
           <div className="mb-16">
-            <img 
-              src="/job-creation-visual.png" 
-              alt="Diverse analysts working from home" 
-              className="w-full max-w-5xl mx-auto rounded-2xl shadow-2xl"
+            <div
+              className="w-full max-w-5xl mx-auto rounded-2xl shadow-2xl h-96 bg-gradient-to-br from-[#1a1a2e] to-[#16213e]"
             />
           </div>
 
@@ -881,10 +879,8 @@ export default function NewHome() {
           </div>
 
           <div className="mb-12">
-            <img 
-              src="/transparency-visual.png" 
-              alt="Real-time AI safety dashboard" 
-              className="w-full max-w-4xl mx-auto rounded-2xl shadow-2xl"
+            <div
+              className="w-full max-w-4xl mx-auto rounded-2xl shadow-2xl h-96 bg-gradient-to-br from-[#1a1a2e] to-[#16213e]"
             />
           </div>
 
@@ -943,10 +939,8 @@ export default function NewHome() {
             </div>
 
             <div>
-              <img 
-                src="/council-visual.png" 
-                alt="33-Agent Byzantine Consensus" 
-                className="w-full rounded-2xl shadow-2xl"
+              <div
+                className="w-full rounded-2xl shadow-2xl h-96 bg-gradient-to-br from-[#1a1a2e] to-[#16213e]"
               />
             </div>
           </div>

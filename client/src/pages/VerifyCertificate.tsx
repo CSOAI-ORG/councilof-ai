@@ -121,7 +121,7 @@ export default function VerifyCertificate() {
             <h1 className="text-4xl font-bold">Certificate Verification</h1>
           </div>
           <p className="text-muted-foreground">
-            Official COAI Dashboard Training Certificate
+            Official CSOAI Dashboard Training Certificate
           </p>
         </div>
 
@@ -137,7 +137,7 @@ export default function VerifyCertificate() {
                   Certificate Verified
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  This is an authentic COAI Dashboard certificate
+                  This is an authentic CSOAI Dashboard certificate
                 </p>
               </div>
             </div>
@@ -196,7 +196,7 @@ export default function VerifyCertificate() {
             {/* Verification Notice */}
             <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
               <p className="text-sm text-blue-900 dark:text-blue-100">
-                <strong>Verification Confirmed:</strong> This certificate has been issued by COAI Dashboard 
+                <strong>Verification Confirmed:</strong> This certificate has been issued by CSOAI Dashboard 
                 and represents successful completion of the training course. The certificate holder has 
                 demonstrated proficiency in AI safety and governance frameworks.
               </p>
@@ -207,10 +207,10 @@ export default function VerifyCertificate() {
         {/* Additional Information */}
         <div className="max-w-3xl mx-auto">
           <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">About COAI Dashboard Certification</h3>
+            <h3 className="text-lg font-semibold mb-4">About CSOAI Dashboard Certification</h3>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>
-                COAI Dashboard provides comprehensive training in AI safety, governance, and compliance 
+                CSOAI Dashboard provides comprehensive training in AI safety, governance, and compliance 
                 frameworks including EU AI Act, NIST AI RMF, and ISO/IEC 42001.
               </p>
               <p>

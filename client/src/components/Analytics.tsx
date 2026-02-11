@@ -54,10 +54,6 @@ export function trackEvent(event: AnalyticsEvent): void {
 
   eventQueue.push(enrichedEvent);
 
-  if (ANALYTICS_CONFIG.debug) {
-    console.log("[Analytics]", enrichedEvent);
-  }
-
   // Flush if queue is full
   if (eventQueue.length >= ANALYTICS_CONFIG.batchSize) {
     flushEvents();
@@ -81,9 +77,6 @@ async function flushEvents(): Promise<void> {
       keepalive: true, // Ensures request completes even if page unloads
     }).catch(() => {
       // Silently fail - analytics should never break the app
-      if (ANALYTICS_CONFIG.debug) {
-        console.log("[Analytics] Backend not available, events logged locally only");
-      }
     });
   } catch {
     // Silently fail

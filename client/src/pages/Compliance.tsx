@@ -1,5 +1,5 @@
 /*
- * COAI Compliance Page
+ * CSOAI Compliance Page
  * Multi-framework compliance status and gap analysis
  * Connected to real backend API with PDF report generation
  */

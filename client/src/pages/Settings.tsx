@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -76,7 +75,7 @@ export default function Settings() {
                   <Button
                     variant={idx === 0 ? "secondary" : "ghost"}
                     className="w-full justify-start gap-3"
-                    onClick={() => toast.info(`${section.title} settings`, { description: "Feature coming soon" })}
+                    disabled={idx !== 0}
                   >
                     <Icon className="h-4 w-4" />
                     <div className="text-left">

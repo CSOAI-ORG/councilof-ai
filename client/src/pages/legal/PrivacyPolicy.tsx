@@ -474,7 +474,7 @@ export default function PrivacyPolicy() {
                   For privacy inquiries, contact our Data Protection Lead:
                 </p>
                 <div className="space-y-2">
-                  <p className="font-medium">Nicholas Templeman</p>
+                  <p className="font-medium">James Castle</p>
                   <p className="text-muted-foreground">Council Safety of Artificial Intelligence</p>
                   <p>
                     <a href="mailto:privacy@csoai.org" className="text-primary hover:underline">

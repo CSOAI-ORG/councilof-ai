@@ -1,5 +1,5 @@
 /*
- * COAI Reports Page
+ * CSOAI Reports Page
  * Generated compliance reports and documentation
  */
 
@@ -135,7 +135,7 @@ export default function Reports() {
               className="gap-2"
             />
             <Button
-              onClick={() => toast.info("Feature coming soon", { description: "Generate a new report" })}
+              disabled
               className="gap-2"
             >
               <FileText className="h-4 w-4" />
@@ -209,14 +209,14 @@ export default function Reports() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => toast.info("Opening report preview")}
+                        disabled
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => toast.info("Downloading report")}
+                        disabled
                       >
                         <Download className="h-4 w-4" />
                       </Button>

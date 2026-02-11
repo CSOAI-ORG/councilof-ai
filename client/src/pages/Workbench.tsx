@@ -1,5 +1,5 @@
 /*
- * COAI Analyst Workbench
+ * CSOAI Analyst Workbench
  * Case review interface for certified Watchdog Analysts
  * Connected to real backend API
  */
@@ -184,7 +184,7 @@ export default function Workbench() {
           <div>
             <h1 className="text-2xl font-semibold">Analyst Workbench</h1>
             <p className="text-muted-foreground text-sm">
-              Review AI safety cases and contribute to the COAI ecosystem
+              Review AI safety cases and contribute to the CSOAI ecosystem
             </p>
           </div>
           <Badge variant="outline" className="gap-1">

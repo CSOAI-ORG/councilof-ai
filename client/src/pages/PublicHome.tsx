@@ -32,7 +32,7 @@ export default function PublicHome() {
           <Link href="/">
             <div className="flex items-center gap-2 cursor-pointer">
               <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xs">COAI</span>
+                <span className="text-white font-bold text-xs">CSOAI</span>
               </div>
               <span className="font-semibold text-lg">Council of AIs</span>
             </div>
@@ -471,7 +471,7 @@ export default function PublicHome() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Built for Everyone</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Whether you're an AI company, regulator, or concerned citizen, COAI has tools for you
+              Whether you're an AI company, regulator, or concerned citizen, CSOAI has tools for you
             </p>
           </div>
 
@@ -552,7 +552,7 @@ export default function PublicHome() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xs">COAI</span>
+                  <span className="text-white font-bold text-xs">CSOAI</span>
                 </div>
                 <span className="font-semibold">Council of AIs</span>
               </div>

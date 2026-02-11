@@ -245,10 +245,10 @@ export default function CoursePlayer() {
               {/* Certificate Download */}
               {progress === 100 && (
                 <div className="mt-6 pt-6 border-t">
-                  <Button 
-                    className="w-full" 
+                  <Button
+                    className="w-full"
                     variant="default"
-                    onClick={() => toast.info('Certificate generation coming soon!')}
+                    disabled
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Download Certificate

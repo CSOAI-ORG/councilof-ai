@@ -191,7 +191,7 @@ const faqItems = [
   },
   {
     question: "Who wrote this Charter?",
-    answer: "The Charter was developed by CSOAI Limited (UK), founded by Nicholas Templeman. It draws on insights from leading AI safety researchers, including Geoffrey Hinton's concept of AI systems caring for humans 'like a mother cares for a child.' The Charter synthesizes best practices from the EU AI Act, NIST AI RMF, ISO 42001, and academic AI safety research into a single operational framework. It has been reviewed by legal experts, ethicists, and technical AI researchers to ensure practical implementability."
+    answer: "The Charter was developed by CSOAI Limited (UK), founded by James Castle. It draws on insights from leading AI safety researchers, including Geoffrey Hinton's concept of AI systems caring for humans 'like a mother cares for a child.' The Charter synthesizes best practices from the EU AI Act, NIST AI RMF, ISO 42001, and academic AI safety research into a single operational framework. It has been reviewed by legal experts, ethicists, and technical AI researchers to ensure practical implementability."
   },
   {
     question: "Is this legally binding?",

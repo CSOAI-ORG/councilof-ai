@@ -1,5 +1,5 @@
 /*
- * COAI Public Landing Page
+ * CSOAI Public Landing Page
  * Marketing page with Watchdog job signup CTA
  * "Are you worried about AI safety? Earn money as an AI Watchdog!"
  */
@@ -85,7 +85,7 @@ export default function Landing() {
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-xs">CO</span>
             </div>
-            <span className="font-bold text-lg">COAI</span>
+            <span className="font-bold text-lg">CSOAI</span>
             <span className="text-xs text-muted-foreground hidden sm:inline">Council of AIs</span>
           </div>
           <div className="flex items-center gap-4">
@@ -171,13 +171,13 @@ export default function Landing() {
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
-                  <span className="ml-2 text-xs text-muted-foreground">COAI Dashboard</span>
+                  <span className="ml-2 text-xs text-muted-foreground">CSOAI Dashboard</span>
                 </div>
                 <CardContent className="p-6">
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-                        <span className="text-primary-foreground font-bold text-xs">COAI</span>
+                        <span className="text-primary-foreground font-bold text-xs">CSOAI</span>
                       </div>
                       <div>
                         <p className="font-semibold">Hello, Admin</p>
@@ -396,7 +396,7 @@ export default function Landing() {
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
               Join the movement. Whether you're a business ensuring compliance or an individual 
-              wanting to protect humanity, COAI is for you.
+              wanting to protect humanity, CSOAI is for you.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/">
@@ -424,7 +424,7 @@ export default function Landing() {
               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-xs">CO</span>
               </div>
-              <span className="font-bold">COAI</span>
+              <span className="font-bold">CSOAI</span>
               <span className="text-sm text-muted-foreground">Council of AIs</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">

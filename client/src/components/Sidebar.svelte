@@ -206,7 +206,6 @@
 
 	const initChatList = async () => {
 		// Reset pagination variables
-		console.log('initChatList');
 		currentChatPage.set(1);
 		allChatsLoaded = false;
 		scrollPaginationEnabled.set(false);
@@ -214,17 +213,14 @@
 		initFolders();
 		await Promise.all([
 			await (async () => {
-				console.log('Init tags');
 				const _tags = await getAllTags(localStorage.token);
 				tags.set(_tags);
 			})(),
 			await (async () => {
-				console.log('Init pinned chats');
 				const _pinnedChats = await getPinnedChatList(localStorage.token);
 				pinnedChats.set(_pinnedChats);
 			})(),
 			await (async () => {
-				console.log('Init chat list');
 				const _chats = await getChatList(localStorage.token, $currentChatPage);
 				await chats.set(_chats);
 			})()
@@ -251,9 +247,7 @@
 	};
 
 	const importChatHandler = async (items, pinned = false, folderId = null) => {
-		console.log('importChatHandler', items, pinned, folderId);
 		for (const item of items) {
-			console.log(item);
 			if (item.chat) {
 				await importChats(localStorage.token, [
 					{
@@ -272,8 +266,6 @@
 	};
 
 	const inputFilesHandler = async (files) => {
-		console.log(files);
-
 		for (const file of files) {
 			const reader = new FileReader();
 			reader.onload = async (e) => {
@@ -292,7 +284,6 @@
 	};
 
 	const tagEventHandler = async (type, tagName, chatId) => {
-		console.log(type, tagName, chatId);
 		if (type === 'delete') {
 			initChatList();
 		} else if (type === 'add') {
@@ -319,14 +310,12 @@
 
 	const onDrop = async (e) => {
 		e.preventDefault();
-		console.log(e); // Log the drop event
 
 		// Perform file drop check and handle it accordingly
 		if (e.dataTransfer?.files) {
 			const inputFiles = Array.from(e.dataTransfer?.files);
 
 			if (inputFiles && inputFiles.length > 0) {
-				console.log(inputFiles); // Log the dropped files
 				inputFilesHandler(inputFiles); // Handle the dropped files
 			}
 		}
@@ -352,7 +341,6 @@
 
 	const onTouchStart = (e) => {
 		touchstart = e.changedTouches[0];
-		console.log(touchstart.clientX);
 	};
 
 	const onTouchEnd = (e) => {

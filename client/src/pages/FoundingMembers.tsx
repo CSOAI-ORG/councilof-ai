@@ -86,7 +86,7 @@ const membershipTiers = [
 
 // Mock founding members (would come from API in production)
 const currentFoundingMembers = [
-  { name: "Nicholas Templeman", role: "Founder", org: "CSOAI", location: "UK" },
+  { name: "James Castle", role: "Founder", org: "CSOAI", location: "UK" },
   // Add more as they join
 ];
 

@@ -1,5 +1,5 @@
 /*
- * COAI Risk Assessment Page
+ * CSOAI Risk Assessment Page
  * Multi-framework risk assessment wizard
  */
 
@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import { AlertTriangle, ArrowRight, CheckCircle2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 
 const assessmentTypes = [
@@ -82,7 +81,7 @@ export default function RiskAssessment() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => toast.info("Feature coming soon")}
+                        disabled
                       >
                         <ArrowRight className="h-4 w-4" />
                       </Button>

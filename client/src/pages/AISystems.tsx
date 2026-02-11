@@ -1,5 +1,5 @@
 /*
- * COAI AI Systems Page
+ * CSOAI AI Systems Page
  * Full CRUD functionality for managing AI systems
  * Connected to backend API with real data
  */
@@ -368,11 +368,11 @@ export default function AISystems() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => toast.info("View details coming soon")}>
+                            <DropdownMenuItem disabled>
                               <ChevronRight className="h-4 w-4 mr-2" />
                               View Details
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => toast.info("Assessment wizard coming soon")}>
+                            <DropdownMenuItem disabled>
                               <Shield className="h-4 w-4 mr-2" />
                               Run Assessment
                             </DropdownMenuItem>
