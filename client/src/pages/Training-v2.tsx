@@ -92,72 +92,86 @@ const courseCatalog = {
     {
       id: "eu-ai-act",
       name: "EU AI Act",
-      modules: 8,
+      modules: 7,
       status: "available",
       description: "Master Europe's comprehensive AI regulation including risk categories, compliance requirements, and penalties.",
-      topics: ["Risk Classification", "High-Risk Requirements", "Conformity Assessment", "Documentation", "Transparency", "Prohibited Practices", "Governance", "Penalties"],
-      hours: "6-8",
-      color: "blue"
+      topics: ["Risk Classification", "High-Risk Requirements", "Conformity Assessment", "Prohibited Practices", "Enforcement", "Implementation", "Certification"],
+      hours: "10",
+      color: "blue",
+      widgetCourseId: 100001,
+      hasContent: true
     },
     {
       id: "nist-ai-rmf",
       name: "NIST AI RMF",
-      modules: 8,
+      modules: 7,
       status: "available",
       description: "Learn the US National Institute of Standards and Technology's AI Risk Management Framework.",
-      topics: ["Govern", "Map", "Measure", "Manage", "AI Lifecycle", "Risk Assessment", "Trustworthy AI", "Implementation"],
-      hours: "6-8",
-      color: "blue"
+      topics: ["NIST Overview", "Govern", "Map", "Measure", "Manage", "Implementation", "Certification"],
+      hours: "10",
+      color: "blue",
+      widgetCourseId: 100002,
+      hasContent: true
     },
     {
       id: "iso-42001",
-      name: "ISO 42001",
-      modules: 8,
+      name: "ISO/IEC 42001",
+      modules: 7,
       status: "available",
       description: "Understand the international standard for AI Management Systems used by global organisations.",
-      topics: ["Context & Scope", "Leadership", "Planning", "Support", "Operation", "Performance Evaluation", "Improvement", "Certification"],
-      hours: "6-8",
-      color: "blue"
+      topics: ["ISO Overview", "AI Management Systems", "Risk Management", "Documentation", "Audit", "Certification", "Improvement"],
+      hours: "10",
+      color: "blue",
+      widgetCourseId: 100006,
+      hasContent: true
     },
     {
       id: "tc260",
-      name: "TC260 Framework",
-      modules: 6,
+      name: "China TC260 Framework",
+      modules: 7,
       status: "available",
       description: "China's national AI governance framework from the TC260 standardisation committee.",
-      topics: ["Chinese AI Standards", "Data Governance", "Algorithm Auditing", "Cross-border Compliance", "Industry Applications", "Future Developments"],
-      hours: "4-6",
-      color: "blue"
+      topics: ["TC260 Overview", "Risk Classification", "Algorithm Registration", "Data Security", "Compliance", "Cross-Border", "Certification"],
+      hours: "10",
+      color: "blue",
+      widgetCourseId: 100007,
+      hasContent: true
     },
     {
       id: "uk-ai-framework",
-      name: "UK AI Framework",
-      modules: 6,
+      name: "UK AI Safety Institute",
+      modules: 7,
       status: "available",
-      description: "UK's pro-innovation approach to AI regulation and sector-specific guidelines.",
-      topics: ["UK AI Strategy", "Sector Regulators", "Pro-Innovation Approach", "Safety", "Fairness", "Accountability"],
-      hours: "4-6",
-      color: "blue"
+      description: "UK AI Safety Institute framework including testing methodologies and safety assurance principles.",
+      topics: ["UK AI Landscape", "Safety Institute", "Testing Methods", "Safety Assurance", "Compliance", "Case Studies", "Certification"],
+      hours: "10",
+      color: "blue",
+      widgetCourseId: 100003,
+      hasContent: true
     },
     {
       id: "canada-aida",
       name: "Canada AIDA",
-      modules: 5,
+      modules: 7,
       status: "available",
       description: "Canada's Artificial Intelligence and Data Act and compliance requirements.",
-      topics: ["AIDA Overview", "High-Impact Systems", "Compliance Duties", "Enforcement", "Privacy Integration"],
-      hours: "4-5",
-      color: "blue"
+      topics: ["AIDA Overview", "High-Impact Systems", "Risk Mitigation", "Transparency", "Enforcement", "Implementation", "Certification"],
+      hours: "10",
+      color: "blue",
+      widgetCourseId: 100004,
+      hasContent: true
     },
     {
       id: "australia-ethics",
       name: "Australia AI Ethics",
-      modules: 5,
+      modules: 7,
       status: "available",
       description: "Australia's AI Ethics Framework and voluntary principles for responsible AI.",
-      topics: ["Ethics Principles", "Human Rights", "Privacy", "Accountability", "Implementation Guide"],
-      hours: "4-5",
-      color: "blue"
+      topics: ["Ethics Principles", "Voluntary Standard", "Privacy Law", "Fairness", "Transparency", "Implementation", "Certification"],
+      hours: "10",
+      color: "blue",
+      widgetCourseId: 100005,
+      hasContent: true
     }
   ],
   industry: [
@@ -369,7 +383,11 @@ function FAQAccordion() {
   );
 }
 
-function CourseCard({ course }: { course: typeof courseCatalog.foundation[0] }) {
+function CourseCard({ course }: { course: any }) {
+  const courseLink = course.hasContent && course.widgetCourseId
+    ? `/free-course/${course.widgetCourseId}`
+    : "/register";
+
   return (
     <Card
       className={`p-6 border-2 hover:shadow-lg transition-all relative ${
@@ -379,6 +397,13 @@ function CourseCard({ course }: { course: typeof courseCatalog.foundation[0] }) 
       <div className="absolute -top-3 -right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
         FREE
       </div>
+
+      {course.hasContent && (
+        <div className="absolute -top-3 -left-3 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+          <Play className="h-3 w-3" />
+          LIVE
+        </div>
+      )}
 
       <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${
         course.color === 'blue' ? 'bg-blue-100' :
@@ -411,7 +436,7 @@ function CourseCard({ course }: { course: typeof courseCatalog.foundation[0] }) 
       </div>
 
       <div className="flex flex-wrap gap-1.5 mb-4">
-        {course.topics.slice(0, 4).map((topic, i) => (
+        {course.topics.slice(0, 4).map((topic: string, i: number) => (
           <span key={i} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
             {topic}
           </span>
@@ -423,15 +448,17 @@ function CourseCard({ course }: { course: typeof courseCatalog.foundation[0] }) 
         )}
       </div>
 
-      <Link href="/register">
+      <Link href={courseLink}>
         <Button className={`w-full ${
-          course.color === 'blue' ? 'bg-blue-600 hover:bg-blue-700' :
-          course.color === 'green' ? 'bg-green-600 hover:bg-green-700' :
-          course.color === 'purple' ? 'bg-purple-600 hover:bg-purple-700' :
-          course.color === 'pink' ? 'bg-pink-600 hover:bg-pink-700' :
-          'bg-amber-600 hover:bg-amber-700'
+          course.hasContent
+            ? 'bg-[#1a1a2e] hover:bg-[#16213e]'
+            : course.color === 'blue' ? 'bg-blue-600 hover:bg-blue-700' :
+              course.color === 'green' ? 'bg-green-600 hover:bg-green-700' :
+              course.color === 'purple' ? 'bg-purple-600 hover:bg-purple-700' :
+              course.color === 'pink' ? 'bg-pink-600 hover:bg-pink-700' :
+              'bg-amber-600 hover:bg-amber-700'
         } text-white`}>
-          Start Free Course
+          {course.hasContent ? 'Start Course Now' : 'Start Free Course'}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </Link>
@@ -453,7 +480,7 @@ export default function TrainingV2() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-              ALL 33 Courses<br />
+              7 Live Courses with Quizzes<br />
               <span className="text-yellow-300">100% FREE</span>
             </h1>
 

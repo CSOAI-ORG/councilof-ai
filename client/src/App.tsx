@@ -29,6 +29,7 @@ import TrainingV2 from "./pages/Training-v2";
 import Courses from "./pages/Courses";
 import MyCourses from "./pages/MyCourses";
 import CoursePlayer from "./pages/CoursePlayer";
+import FreeCoursePlayer from "./pages/FreeCoursePlayer";
 import Certification from "./pages/Certification";
 import CertificationV2 from "./pages/Certification-v2";
 import CertificationExam from "./pages/CertificationExam";
@@ -280,6 +281,7 @@ function App() {
                   <Route path="/my-courses" component={MyCourses} />
                   <Route path="/dashboard/progress" component={StudentProgress} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
+                  <Route path="/free-course/:courseId" component={FreeCoursePlayer} />
                   <Route path="/verify-certificate/:id" component={VerifyCertificate} />
                   <Route path="/features/33-agent-council" component={AgentCouncilFeature} />
                   <Route path="/features/pdca-framework" component={PDCAFrameworkFeature} />
