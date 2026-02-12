@@ -75,7 +75,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     children,
     ...props
   }, ref) => {
-    const Comp = asChild ? Slot : "button"
     const isDisabled = disabled || loading
 
     // Generate unique ID for description if provided
@@ -87,9 +86,28 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Build aria-describedby
     const ariaDescribedBy = description ? descriptionId : props['aria-describedby']
 
+    // When asChild is true, Radix Slot requires exactly one React element child.
+    // We must not wrap in Fragment or add extra children inside Slot.
+    if (asChild) {
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          disabled={isDisabled}
+          aria-disabled={isDisabled || undefined}
+          aria-pressed={ariaPressed}
+          aria-busy={loading || undefined}
+          aria-describedby={ariaDescribedBy}
+          {...props}
+        >
+          {children}
+        </Slot>
+      )
+    }
+
     return (
       <>
-        <Comp
+        <button
           className={cn(
             buttonVariants({ variant, size, className }),
             loading && "cursor-wait",
@@ -127,7 +145,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             </svg>
           )}
           {children}
-        </Comp>
+        </button>
         {/* Visually hidden description for screen readers */}
         {description && (
           <span

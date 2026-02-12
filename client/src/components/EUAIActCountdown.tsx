@@ -16,22 +16,43 @@ interface TimeLeft {
 
 export default function EUAIActCountdown() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [deadlinePassed, setDeadlinePassed] = useState(false);
+  const [currentMilestone, setCurrentMilestone] = useState("EU AI Act Enforcement Deadline");
 
   useEffect(() => {
-    // EU AI Act enforcement deadline: February 2, 2026
-    const deadline = new Date("2026-02-02T00:00:00Z").getTime();
+    // EU AI Act key milestones:
+    // Feb 2, 2025: Prohibited AI systems banned
+    // Aug 2, 2025: General-purpose AI rules apply
+    // Feb 2, 2026: AI literacy obligations begin
+    // Aug 2, 2026: High-risk AI system obligations begin (MAJOR)
+    // Aug 2, 2027: All rules fully applied
+    const milestones = [
+      { date: "2026-02-02T00:00:00Z", label: "AI Literacy Obligations Begin" },
+      { date: "2026-08-02T00:00:00Z", label: "High-Risk AI Obligations Begin" },
+      { date: "2027-08-02T00:00:00Z", label: "Full EU AI Act Enforcement" },
+    ];
 
     const updateCountdown = () => {
       const now = new Date().getTime();
-      const difference = deadline - now;
 
-      if (difference > 0) {
+      // Find the next upcoming milestone
+      const nextMilestone = milestones.find(m => new Date(m.date).getTime() > now);
+
+      if (nextMilestone) {
+        const deadline = new Date(nextMilestone.date).getTime();
+        const difference = deadline - now;
+        setCurrentMilestone(nextMilestone.label);
+        setDeadlinePassed(false);
         setTimeLeft({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
           hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
           minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((difference % (1000 * 60)) / 1000),
         });
+      } else {
+        // All milestones have passed
+        setDeadlinePassed(true);
+        setCurrentMilestone("EU AI Act Fully Enforced");
       }
     };
 
@@ -73,11 +94,28 @@ export default function EUAIActCountdown() {
   // Calculate if we're in the "urgent" zone (less than 30 days)
   const isUrgent = timeLeft.days < 30;
 
+  if (deadlinePassed) {
+    return (
+      <div className="text-center">
+        <div className="inline-flex items-center gap-2 mb-3">
+          <Clock className="h-4 w-4 text-emerald-400" />
+          <span className="text-emerald-300 text-sm font-semibold">{currentMilestone}</span>
+        </div>
+        <p className="text-gray-400 text-sm mb-4">
+          The EU AI Act is now in full effect. Ensure your AI systems are compliant.
+        </p>
+        <div className="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/30 rounded-full px-6 py-2">
+          <span className="text-emerald-300 font-semibold text-sm">Compliance is now mandatory</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center">
       <div className="inline-flex items-center gap-2 mb-3">
         <AlertTriangle className="h-4 w-4 text-amber-400" />
-        <span className="text-amber-300 text-sm font-semibold">EU AI Act Enforcement Deadline</span>
+        <span className="text-amber-300 text-sm font-semibold">{currentMilestone}</span>
       </div>
 
       <p className="text-gray-400 text-sm mb-4">
