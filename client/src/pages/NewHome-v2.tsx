@@ -1580,7 +1580,134 @@ export default function NewHomeV2() {
                 </AccordionItem>
               ))}
             </Accordion>
+
+            <div className="text-center mt-8">
+              <Link href="/faq">
+                <Button variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+                  View All 60+ FAQs <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ============================================ */}
+      {/* SECTION 12.5: RESOURCES & TOOLS */}
+      {/* ============================================ */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-4 bg-blue-100 text-blue-700 border-blue-200 text-sm px-4 py-1">
+              Resources & Tools
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Everything You Need to <span className="text-emerald-600">Get Started</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Free tools, guides, and resources to help your organization navigate AI governance with confidence.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {[
+              {
+                title: "AI Governance Readiness Assessment",
+                description: "Take our free 5-minute assessment to evaluate your organization's AI governance maturity and get personalized recommendations.",
+                href: "/readiness-assessment",
+                icon: Target,
+                color: "bg-blue-500",
+                badge: "Free Tool",
+              },
+              {
+                title: "Global Regulation Tracker",
+                description: "Track AI governance frameworks across 40+ nations in real-time. Filter by region, status, and framework type.",
+                href: "/global-regulations",
+                icon: Globe2,
+                color: "bg-emerald-500",
+                badge: "40+ Nations",
+              },
+              {
+                title: "AI Glossary",
+                description: "60+ AI governance terms defined clearly. From algorithmic accountability to zero-shot learning — everything you need to know.",
+                href: "/glossary",
+                icon: BookOpen,
+                color: "bg-purple-500",
+                badge: "60+ Terms",
+              },
+              {
+                title: "Industry Solutions",
+                description: "Tailored governance frameworks for Financial Services, Healthcare, Government, Technology, and 4 more sectors.",
+                href: "/industry-solutions",
+                icon: Building2,
+                color: "bg-orange-500",
+                badge: "8 Sectors",
+              },
+              {
+                title: "Case Studies",
+                description: "See how organizations worldwide are implementing AI governance with CSOAI. Real results, real impact.",
+                href: "/case-studies",
+                icon: TrendingUp,
+                color: "bg-green-500",
+                badge: "Real-World",
+              },
+              {
+                title: "Trust Center",
+                description: "Our security certifications, compliance frameworks, data protection measures, and infrastructure details.",
+                href: "/trust-center",
+                icon: Shield,
+                color: "bg-slate-600",
+                badge: "Security",
+              },
+            ].map((resource, index) => (
+              <Link key={index} href={resource.href}>
+                <Card className="h-full border-2 border-gray-100 hover:border-emerald-200 hover:shadow-lg transition-all duration-300 cursor-pointer group">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={`${resource.color} p-3 rounded-xl text-white`}>
+                        <resource.icon className="h-6 w-6" />
+                      </div>
+                      <Badge variant="outline" className="text-xs">{resource.badge}</Badge>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-emerald-700 transition-colors mb-2">
+                      {resource.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {resource.description}
+                    </p>
+                    <div className="mt-4 flex items-center text-emerald-600 text-sm font-medium group-hover:gap-2 transition-all">
+                      Explore <ArrowRight className="ml-1 h-4 w-4" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </motion.div>
+
+          <div className="text-center mt-12 flex justify-center gap-4">
+            <Link href="/partners">
+              <Button variant="outline" size="lg" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+                Partners & Advisory
+              </Button>
+            </Link>
+            <Link href="/compare">
+              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                Why Choose CSOAI <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

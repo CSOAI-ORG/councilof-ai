@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 // Placeholder blog posts
 const blogPosts = [
@@ -86,14 +87,17 @@ const blogPosts = [
 const categories = ["All", "Regulatory", "Product", "Research", "Community", "Best Practices"];
 
 export default function Blog() {
+  const [subscribed, setSubscribed] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thanks for subscribing! You'll receive our latest updates.");
+    setSubscribed(true);
   };
 
-  const handleReadMore = () => {
-    // Coming soon
-  };
+  const filteredPosts = selectedCategory === "All"
+    ? blogPosts
+    : blogPosts.filter(post => post.category === selectedCategory);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
@@ -143,15 +147,21 @@ export default function Blog() {
                   </p>
                 </div>
               </div>
-              <form onSubmit={handleSubscribe} className="flex gap-2 w-full md:w-auto">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full md:w-64"
-                  required
-                />
-                <Button type="submit">Subscribe</Button>
-              </form>
+              {subscribed ? (
+                <div className="text-emerald-600 font-medium flex items-center gap-2">
+                  <span className="text-lg">✓</span> Thanks for subscribing! You'll receive our latest updates.
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex gap-2 w-full md:w-auto">
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full md:w-64"
+                    required
+                  />
+                  <Button type="submit">Subscribe</Button>
+                </form>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -161,9 +171,9 @@ export default function Blog() {
           {categories.map((category) => (
             <Button
               key={category}
-              variant={category === "All" ? "default" : "outline"}
+              variant={selectedCategory === category ? "default" : "outline"}
               size="sm"
-              disabled={category !== "All"}
+              onClick={() => setSelectedCategory(category)}
             >
               {category}
             </Button>
@@ -172,14 +182,14 @@ export default function Blog() {
 
         {/* Featured Posts */}
         <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {blogPosts.filter(p => p.featured).map((post, idx) => (
+          {filteredPosts.filter(p => p.featured).map((post, idx) => (
             <motion.div
               key={post.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
             >
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer" onClick={handleReadMore}>
+              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer" onClick={() => {}}>
                 <div className="h-48 bg-gradient-to-br from-primary/20 to-primary/5 rounded-t-lg flex items-center justify-center">
                   <Newspaper className="h-16 w-16 text-primary/40" />
                 </div>
@@ -214,14 +224,14 @@ export default function Blog() {
         {/* All Posts */}
         <h2 className="text-2xl font-bold mb-6">Latest Articles</h2>
         <div className="space-y-4">
-          {blogPosts.filter(p => !p.featured).map((post, idx) => (
+          {filteredPosts.filter(p => !p.featured).map((post, idx) => (
             <motion.div
               key={post.id}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: idx * 0.05 }}
             >
-              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleReadMore}>
+              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => {}}>
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
