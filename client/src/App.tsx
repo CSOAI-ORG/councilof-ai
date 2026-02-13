@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Switch, useLocation, Redirect } from "wouter";
 import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -301,6 +301,7 @@ function App() {
                   <Route path="/api-keys" component={ApiKeys} />
                   <Route path="/pdca" component={PDCACycles} />
                   <Route path="/transparency" component={PublicDashboard} />
+                  <Route path="/public-dashboard">{() => <Redirect to="/transparency" />}</Route>
                   <Route path="/scorecard/:systemId" component={ComplianceScorecard} />
                   <Route path="/knowledge-base" component={KnowledgeBase} />
                   <Route path="/enterprise-onboarding" component={EnterpriseOnboarding} />

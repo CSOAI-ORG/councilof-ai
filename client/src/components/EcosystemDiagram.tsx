@@ -269,7 +269,7 @@ const ecosystemNodes: EcosystemNode[] = [
     description: "Reporting, transparency access",
     category: "stakeholder",
     icon: Users,
-    link: "/public-dashboard",
+    link: "/transparency",
     connections: ["maternal", "watchdog", "prosperity"],
   },
   {

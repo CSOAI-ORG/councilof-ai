@@ -325,7 +325,7 @@ export default function FoundingMembers() {
 
           <div className="space-y-6">
             {[
-              { date: "January 15, 2026", event: "Charter Launch", status: "upcoming" },
+              { date: "January 15, 2026", event: "Charter Launch", status: "completed" },
               { date: "January - March 2026", event: "Founding Member Enrollment", status: "active" },
               { date: "March 31, 2026", event: "Founding Member Deadline", status: "upcoming" },
               { date: "April 2026", event: "First Founding Members Summit", status: "upcoming" },

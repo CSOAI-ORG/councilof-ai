@@ -885,7 +885,7 @@ export default function NewHome() {
           </div>
 
           <div className="text-center">
-            <Link href="/public-dashboard">
+            <Link href="/transparency">
               <Button size="lg" className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-12 py-6 text-lg font-semibold shadow-lg">
                 Explore Public Dashboard
                 <ArrowRight className="ml-2 h-5 w-5" />
