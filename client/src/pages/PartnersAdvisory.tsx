@@ -19,6 +19,7 @@ import {
   Clock,
   Layers,
   Plus,
+  AlertCircle,
 } from 'lucide-react';
 
 interface Partner {
@@ -147,7 +148,6 @@ const advisoryServices: AdvisoryService[] = [
   },
 ];
 
-const AlertCircle = Shield; // Using Shield as alternative since AlertCircle used above
 
 const partnerTiers: PartnerTier[] = [
   {
