@@ -44,6 +44,7 @@ export function Footer() {
         { name: 'Case Studies', href: '/case-studies' },
         { name: 'Trust Center', href: '/trust-center' },
         { name: 'Why CSOAI', href: '/compare' },
+        { name: 'ROI Calculator', href: '/roi-calculator' },
         { name: 'Blog', href: '/blog' },
       ],
     },
@@ -51,6 +52,8 @@ export function Footer() {
       title: 'Company',
       links: [
         { name: 'About Us', href: '/about' },
+        { name: 'Technology', href: '/technology' },
+        { name: 'Integrations', href: '/integrations' },
         { name: 'Pricing', href: '/pricing' },
         { name: 'Careers', href: '/careers' },
         { name: 'Accreditation', href: '/accreditation' },

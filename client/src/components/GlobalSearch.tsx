@@ -297,6 +297,9 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'new-casestudies', title: 'Case Studies', description: 'Real-world AI governance implementation success stories', category: 'faq', href: '/case-studies', icon: BookOpen, keywords: ['case', 'studies', 'success', 'stories', 'implementations', 'results', 'ROI'] },
   { id: 'new-trustcenter', title: 'Trust Center', description: 'Security certifications, compliance, data protection, and infrastructure details', category: 'faq', href: '/trust-center', icon: Shield, keywords: ['trust', 'security', 'compliance', 'certifications', 'ISO', 'SOC', 'GDPR', 'encryption', 'privacy'] },
   { id: 'new-compare', title: 'Why Choose CSOAI', description: 'Compare CSOAI against traditional GRC tools, AI-specific platforms, and consulting firms', category: 'faq', href: '/compare', icon: BarChart3, keywords: ['compare', 'comparison', 'versus', 'vs', 'alternative', 'why', 'choose', 'better', 'difference'] },
+  { id: 'new-roi', title: 'ROI Calculator', description: 'Calculate your return on investment for AI governance implementation', category: 'faq', href: '/roi-calculator', icon: BarChart3, keywords: ['roi', 'calculator', 'return', 'investment', 'cost', 'savings', 'money', 'budget', 'estimate'] },
+  { id: 'new-technology', title: 'Technology & Architecture', description: 'How the 33-Agent Byzantine Council and CSOAI platform architecture works', category: 'faq', href: '/technology', icon: Shield, keywords: ['technology', 'architecture', 'byzantine', 'council', 'agents', 'infrastructure', 'platform', 'technical', 'how it works'] },
+  { id: 'new-integrations', title: 'Integrations & Ecosystem', description: '50+ enterprise integrations and the Terranova Group 11-platform ecosystem', category: 'faq', href: '/integrations', icon: Shield, keywords: ['integrations', 'ecosystem', 'api', 'connect', 'terranova', 'platforms', 'aws', 'azure', 'slack', 'sdk'] },
 ];
 
 // Quick Actions

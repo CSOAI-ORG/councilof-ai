@@ -110,6 +110,9 @@ import PartnersAdvisory from "./pages/PartnersAdvisory";
 import CaseStudies from "./pages/CaseStudies";
 import TrustCenter from "./pages/TrustCenter";
 import ComparisonPage from "./pages/ComparisonPage";
+import ROICalculator from "./pages/ROICalculator";
+import Technology from "./pages/Technology";
+import Integrations from "./pages/Integrations";
 import { AnalyticsProvider } from "./components/Analytics";
 
 function ScrollToTop() {
@@ -371,6 +374,12 @@ function App() {
                   <Route path="/compare" component={ComparisonPage} />
                   <Route path="/comparison" component={ComparisonPage} />
                   <Route path="/why-csoai" component={ComparisonPage} />
+                  <Route path="/roi-calculator" component={ROICalculator} />
+                  <Route path="/roi" component={ROICalculator} />
+                  <Route path="/technology" component={Technology} />
+                  <Route path="/architecture" component={Technology} />
+                  <Route path="/integrations" component={Integrations} />
+                  <Route path="/ecosystem" component={Integrations} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />

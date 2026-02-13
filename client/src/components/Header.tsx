@@ -93,6 +93,8 @@ const navigation = [
       { name: 'Enterprise Dashboard', href: '/enterprise-dashboard', description: 'CISO compliance hub' },
       { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
       { name: 'Readiness Assessment', href: '/readiness-assessment', description: 'Evaluate your AI governance maturity' },
+      { name: 'ROI Calculator', href: '/roi-calculator', description: 'Calculate your governance ROI' },
+      { name: 'Integrations', href: '/integrations', description: '50+ enterprise integrations' },
       { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
       { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
     ]
@@ -122,6 +124,8 @@ const navigation = [
       { name: 'Partners & Advisory', href: '/partners', description: 'Expert advisory services' },
       { name: 'Case Studies', href: '/case-studies', description: 'Real-world implementations' },
       { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
+      { name: 'Technology', href: '/technology', description: 'Our architecture & Byzantine Council' },
+      { name: 'ROI Calculator', href: '/roi-calculator', description: 'Estimate your governance ROI' },
     ]
   },
 ];
