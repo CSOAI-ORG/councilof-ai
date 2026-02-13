@@ -19,7 +19,8 @@ import {
   Lock,
   Server,
   ExternalLink,
-  Link2
+  Link2,
+  Eye
 } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -213,8 +214,6 @@ const integrationSteps = [
 
 export default function Integrations() {
   const [selectedCategory, setSelectedCategory] = useState<string>('Cloud Platforms');
-
-  const Icon = require('lucide-react').Eye;
 
   return (
     <div className="min-h-screen bg-white">
