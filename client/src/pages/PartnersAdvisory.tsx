@@ -427,20 +427,44 @@ const PartnersAdvisory: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 px-4 py-20 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 px-4 py-24 sm:px-6 lg:px-8">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:30px_30px]" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
         </div>
         <div className="relative mx-auto max-w-4xl text-center">
-          <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-300 text-sm font-medium mb-8">
+            <Hand className="w-4 h-4" />
+            Trusted by Leading Organizations Worldwide
+          </div>
+          <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6">
             Partners & Advisory Services
           </h1>
-          <p className="text-xl text-slate-300 mb-8">
+          <p className="text-xl text-slate-300 mb-4">
             Building the world's largest AI governance ecosystem
           </p>
-          <p className="text-lg text-slate-400 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-400 max-w-3xl mx-auto mb-10">
             Partner with CSOAI to deliver AI governance solutions globally, or access expert advisory services to accelerate your governance journey.
           </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">50+</div>
+              <div className="text-sm text-slate-400">Global Partners</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-emerald-400">6</div>
+              <div className="text-sm text-slate-400">Advisory Services</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-400">3</div>
+              <div className="text-sm text-slate-400">Partner Tiers</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-purple-400">24/7</div>
+              <div className="text-sm text-slate-400">Expert Support</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -459,7 +483,7 @@ const PartnersAdvisory: React.FC = () => {
           {advisoryServices.map((service) => (
             <div
               key={service.id}
-              className="bg-white rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+              className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-0.5"
             >
               {/* Service Header */}
               <button
@@ -468,7 +492,7 @@ const PartnersAdvisory: React.FC = () => {
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-start gap-4 flex-1">
-                    <div className="text-blue-600 mt-1">{service.icon}</div>
+                    <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg shadow-blue-500/25">{service.icon}</div>
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-slate-900">
                         {service.title}
