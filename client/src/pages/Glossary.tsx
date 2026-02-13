@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Filter, AlertCircle, ExternalLink } from "lucide-react";
+import { Search, Filter, AlertCircle, ExternalLink, BookOpen, Hash, Layers, Link2, ArrowUpRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -1065,6 +1065,23 @@ export default function Glossary() {
     return colors[category];
   };
 
+  const getCategoryGradient = (category: CategoryType) => {
+    const gradients: Record<CategoryType, string> = {
+      Governance: "from-blue-500 to-blue-600",
+      Technical: "from-purple-500 to-purple-600",
+      Legal: "from-red-500 to-red-600",
+      Compliance: "from-emerald-500 to-emerald-600",
+      Risk: "from-orange-500 to-orange-600",
+    };
+    return gradients[category];
+  };
+
+  const getStatIcon = (index: number) => {
+    const icons = [Layers, Hash, ArrowUpRight, Link2];
+    const Icon = icons[index % icons.length];
+    return <Icon className="h-5 w-5" />;
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -1074,21 +1091,65 @@ export default function Glossary() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
               AI Governance Glossary
             </h1>
-            <p className="text-xl text-gray-300 mb-8">
+            <p className="text-xl text-gray-300">
               Comprehensive definitions of 60+ AI governance, technical, legal, and compliance terms.
             </p>
           </div>
 
           {/* Search Bar */}
           <div className="relative">
-            <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
             <Input
               type="text"
               placeholder="Search terms by name or definition..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 py-3 bg-white/10 border-white/20 text-white placeholder-gray-400"
+              className="pl-12 py-4 bg-white text-gray-900 placeholder-gray-500 rounded-xl shadow-lg focus:ring-2 focus:ring-emerald-400 border-0"
             />
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Bar */}
+      <div className="bg-gradient-to-r from-slate-50 to-emerald-50 border-b border-emerald-200">
+        <div className="container max-w-5xl py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <BookOpen className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-600">Total Terms</p>
+                <p className="text-lg font-bold text-gray-900">60+</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-purple-100 rounded-lg">
+                <Hash className="h-5 w-5 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-600">Categories</p>
+                <p className="text-lg font-bold text-gray-900">5</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-emerald-100 rounded-lg">
+                <Layers className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-600">A-Z Navigation</p>
+                <p className="text-lg font-bold text-gray-900">26</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-orange-100 rounded-lg">
+                <Link2 className="h-5 w-5 text-orange-600" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-600">Cross-Referenced</p>
+                <p className="text-lg font-bold text-gray-900">Yes</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1097,20 +1158,20 @@ export default function Glossary() {
       <div className="container max-w-5xl py-16">
         {/* Category Filters */}
         <div className="mb-12">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-6">
             <Filter className="h-5 w-5 text-gray-700" />
-            <h3 className="text-sm font-semibold text-gray-700">
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
               Filter by Category
             </h3>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => toggleCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-6 py-3 rounded-full text-sm font-semibold transition-all duration-200 ${
                   selectedCategories.has(category)
-                    ? "bg-emerald-600 text-white"
+                    ? `bg-gradient-to-r ${getCategoryGradient(category)} text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5`
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -1120,10 +1181,10 @@ export default function Glossary() {
           </div>
         </div>
 
-        {/* Alphabet Navigation */}
+        {/* Alphabet Navigation - Sticky */}
         {filteredTerms.length > 0 && (
-          <div className="mb-12 p-6 bg-gray-50 rounded-lg border border-gray-200">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">
+          <div className="sticky top-0 z-10 mb-12 p-6 bg-white rounded-xl border border-gray-200 shadow-md">
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
               Quick Navigation
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -1134,10 +1195,10 @@ export default function Glossary() {
                     const element = document.getElementById(`letter-${letter}`);
                     element?.scrollIntoView({ behavior: "smooth" });
                   }}
-                  className={`w-8 h-8 rounded text-sm font-semibold transition-all ${
+                  className={`w-10 h-10 rounded-lg text-sm font-bold transition-all duration-200 ${
                     groupedByLetter[letter]
-                      ? "bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      ? "bg-gradient-to-br from-emerald-400 to-emerald-600 text-white hover:from-emerald-500 hover:to-emerald-700 cursor-pointer hover:shadow-md hover:-translate-y-0.5"
+                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
                   }`}
                 >
                   {letter}
@@ -1154,44 +1215,48 @@ export default function Glossary() {
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([letter, terms]) => (
                 <div key={letter}>
-                  <div id={`letter-${letter}`} className="scroll-mt-24">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-emerald-500">
-                      {letter}
-                    </h2>
+                  <div id={`letter-${letter}`} className="scroll-mt-32">
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="h-12 w-1 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded-full" />
+                      <h2 className="text-4xl font-bold text-gray-900">
+                        {letter}
+                      </h2>
+                      <div className="flex-1 h-0.5 bg-gradient-to-r from-emerald-200 to-transparent" />
+                    </div>
                   </div>
 
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {terms.map((term, index) => (
                       <Card
                         key={`${letter}-${index}`}
-                        className="p-6 border border-gray-200 hover:border-emerald-300 hover:shadow-md transition-all"
+                        className="p-7 border border-gray-200 rounded-xl hover:border-emerald-300 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                       >
-                        <div className="mb-3">
-                          <div className="flex items-start justify-between gap-4 mb-2">
-                            <h3 className="text-xl font-bold text-gray-900">
+                        <div className="mb-4">
+                          <div className="flex items-start justify-between gap-4 mb-3">
+                            <h3 className="text-xl font-bold text-gray-900 flex-1">
                               {term.term}
                             </h3>
-                            <Badge className={getCategoryColor(term.category as CategoryType)}>
+                            <Badge className={`${getCategoryColor(term.category as CategoryType)} flex-shrink-0`}>
                               {term.category}
                             </Badge>
                           </div>
                         </div>
 
-                        <p className="text-gray-700 leading-relaxed mb-4">
+                        <p className="text-gray-700 leading-relaxed mb-5">
                           {term.definition}
                         </p>
 
                         {term.relatedTerms && term.relatedTerms.length > 0 && (
-                          <div className="mt-4 pt-4 border-t border-gray-200">
-                            <p className="text-xs font-semibold text-gray-600 mb-2">
-                              RELATED TERMS:
+                          <div className="mt-5 pt-5 border-t border-gray-200">
+                            <p className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide">
+                              Related Terms
                             </p>
                             <div className="flex flex-wrap gap-2">
                               {term.relatedTerms.map((relatedTerm) => (
                                 <Badge
                                   key={relatedTerm}
                                   variant="outline"
-                                  className="text-xs cursor-pointer hover:bg-gray-100"
+                                  className="text-xs cursor-pointer transition-all duration-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300"
                                 >
                                   {relatedTerm}
                                 </Badge>
@@ -1206,7 +1271,7 @@ export default function Glossary() {
               ))}
           </div>
         ) : (
-          <Card className="p-12 text-center border-2 border-dashed border-gray-300">
+          <Card className="p-12 text-center border-2 border-dashed border-gray-300 rounded-xl">
             <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               No terms found
@@ -1227,61 +1292,81 @@ export default function Glossary() {
         )}
 
         {/* Results Count */}
-        <div className="mt-12 text-center text-sm text-gray-600">
+        <div className="mt-12 text-center text-sm text-gray-600 font-medium">
           Showing {filteredTerms.length} of {glossaryTerms.length} terms
         </div>
 
         {/* Additional Resources */}
-        <div className="mt-20 bg-gradient-to-br from-blue-50 to-emerald-50 rounded-2xl p-12 border border-emerald-200">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+        <div className="mt-20 bg-gradient-to-br from-blue-50 via-purple-50 to-emerald-50 rounded-xl p-12 border border-emerald-200">
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
             Need More Information?
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="p-6 border-none shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Free Training Courses
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="p-8 border-none shadow-md hover:shadow-xl rounded-xl transition-all duration-300 hover:-translate-y-0.5">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="p-3 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex-shrink-0">
+                  <BookOpen className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900 text-lg">
+                  Free Training Courses
+                </h3>
+              </div>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Learn AI governance through CSOAI's comprehensive free courses covering all major frameworks.
               </p>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="hover:bg-blue-50 hover:text-blue-700">
                 Browse Courses
               </Button>
             </Card>
 
-            <Card className="p-6 border-none shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Get Certified
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
+            <Card className="p-8 border-none shadow-md hover:shadow-xl rounded-xl transition-all duration-300 hover:-translate-y-0.5">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="p-3 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex-shrink-0">
+                  <Layers className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900 text-lg">
+                  Get Certified
+                </h3>
+              </div>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Earn internationally recognized certifications in AI governance, safety, and compliance.
               </p>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="hover:bg-purple-50 hover:text-purple-700">
                 View Certifications
               </Button>
             </Card>
 
-            <Card className="p-6 border-none shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="font-semibold text-gray-900 mb-3">
-                FAQ Page
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
+            <Card className="p-8 border-none shadow-md hover:shadow-xl rounded-xl transition-all duration-300 hover:-translate-y-0.5">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="p-3 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex-shrink-0">
+                  <Hash className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900 text-lg">
+                  FAQ Page
+                </h3>
+              </div>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Find answers to common questions about CSOAI, governance, and compliance.
               </p>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="hover:bg-emerald-50 hover:text-emerald-700">
                 View FAQs
               </Button>
             </Card>
 
-            <Card className="p-6 border-none shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Contact Support
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
+            <Card className="p-8 border-none shadow-md hover:shadow-xl rounded-xl transition-all duration-300 hover:-translate-y-0.5">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="p-3 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex-shrink-0">
+                  <ArrowUpRight className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900 text-lg">
+                  Contact Support
+                </h3>
+              </div>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Get help from CSOAI experts and the community. Always free, always responsive.
               </p>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:text-orange-700">
                 Contact Us
               </Button>
             </Card>

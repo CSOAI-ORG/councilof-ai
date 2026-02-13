@@ -1,5 +1,19 @@
 import { useState, useMemo } from "react";
-import { ChevronDown, Search, MessageCircle, Mail, Phone, AlertCircle } from "lucide-react";
+import {
+  ChevronDown,
+  Search,
+  MessageCircle,
+  Mail,
+  Phone,
+  AlertCircle,
+  BookOpen,
+  GraduationCap,
+  Shield,
+  Briefcase,
+  Code,
+  Eye,
+  HelpCircle,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -446,6 +460,84 @@ const categories: CategoryType[] = [
   "TECHNICAL",
 ];
 
+// Category color and icon mapping
+const categoryConfig: Record<
+  CategoryType,
+  { color: string; bgColor: string; textColor: string; icon: React.ReactNode }
+> = {
+  GENERAL: {
+    color: "blue",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+    icon: <HelpCircle className="h-4 w-4" />,
+  },
+  "AI GOVERNANCE": {
+    color: "emerald",
+    bgColor: "bg-emerald-100",
+    textColor: "text-emerald-800",
+    icon: <BookOpen className="h-4 w-4" />,
+  },
+  "COMPLIANCE & REGULATIONS": {
+    color: "purple",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-800",
+    icon: <Shield className="h-4 w-4" />,
+  },
+  "TRAINING & CERTIFICATION": {
+    color: "orange",
+    bgColor: "bg-orange-100",
+    textColor: "text-orange-800",
+    icon: <GraduationCap className="h-4 w-4" />,
+  },
+  "WATCHDOG PROGRAM": {
+    color: "cyan",
+    bgColor: "bg-cyan-100",
+    textColor: "text-cyan-800",
+    icon: <Eye className="h-4 w-4" />,
+  },
+  ENTERPRISE: {
+    color: "indigo",
+    bgColor: "bg-indigo-100",
+    textColor: "text-indigo-800",
+    icon: <Briefcase className="h-4 w-4" />,
+  },
+  TECHNICAL: {
+    color: "rose",
+    bgColor: "bg-rose-100",
+    textColor: "text-rose-800",
+    icon: <Code className="h-4 w-4" />,
+  },
+};
+
+// Get category color class for filter pills
+const getCategoryPillClass = (
+  category: CategoryType,
+  isSelected: boolean
+): string => {
+  const colors: Record<CategoryType, string> = {
+    GENERAL: isSelected ? "bg-blue-600 text-white" : "bg-blue-50 text-blue-700 border-blue-200",
+    "AI GOVERNANCE": isSelected
+      ? "bg-emerald-600 text-white"
+      : "bg-emerald-50 text-emerald-700 border-emerald-200",
+    "COMPLIANCE & REGULATIONS": isSelected
+      ? "bg-purple-600 text-white"
+      : "bg-purple-50 text-purple-700 border-purple-200",
+    "TRAINING & CERTIFICATION": isSelected
+      ? "bg-orange-600 text-white"
+      : "bg-orange-50 text-orange-700 border-orange-200",
+    "WATCHDOG PROGRAM": isSelected
+      ? "bg-cyan-600 text-white"
+      : "bg-cyan-50 text-cyan-700 border-cyan-200",
+    ENTERPRISE: isSelected
+      ? "bg-indigo-600 text-white"
+      : "bg-indigo-50 text-indigo-700 border-indigo-200",
+    TECHNICAL: isSelected
+      ? "bg-rose-600 text-white"
+      : "bg-rose-50 text-rose-700 border-rose-200",
+  };
+  return colors[category];
+};
+
 export default function FAQ() {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedItems, setExpandedItems] = useState<Set<string>>(
@@ -472,6 +564,23 @@ export default function FAQ() {
     });
   }, [searchQuery, selectedCategories]);
 
+  // Count FAQ items by category
+  const categoryCounts = useMemo(() => {
+    const counts: Record<CategoryType, number> = {
+      GENERAL: 0,
+      "AI GOVERNANCE": 0,
+      "COMPLIANCE & REGULATIONS": 0,
+      "TRAINING & CERTIFICATION": 0,
+      "WATCHDOG PROGRAM": 0,
+      ENTERPRISE: 0,
+      TECHNICAL: 0,
+    };
+    faqData.forEach((item) => {
+      counts[item.category as CategoryType]++;
+    });
+    return counts;
+  }, []);
+
   const toggleCategory = (category: CategoryType) => {
     const newCategories = new Set(selectedCategories);
     if (newCategories.has(category)) {
@@ -495,7 +604,7 @@ export default function FAQ() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-20">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 md:py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-12">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
@@ -506,16 +615,44 @@ export default function FAQ() {
             </p>
           </div>
 
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+          {/* Search Bar - Enhanced */}
+          <div className="relative shadow-lg">
+            <Search className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
             <Input
               type="text"
               placeholder="Search by question, topic, or keyword..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 py-3 bg-white/10 border-white/20 text-white placeholder-gray-400"
+              className="pl-12 py-4 bg-white text-gray-900 placeholder-gray-500 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
+          </div>
+
+          {/* Stats Bar */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                60+
+              </div>
+              <div className="text-sm text-gray-300">Questions</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                7
+              </div>
+              <div className="text-sm text-gray-300">Categories</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                Weekly
+              </div>
+              <div className="text-sm text-gray-300">Updates</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                Free
+              </div>
+              <div className="text-sm text-gray-300">Access</div>
+            </div>
           </div>
         </div>
       </div>
@@ -523,38 +660,43 @@ export default function FAQ() {
       {/* Main Content */}
       <div className="container max-w-5xl py-16">
         {/* Category Filters */}
-        <div className="mb-12">
-          <h3 className="text-sm font-semibold text-gray-700 mb-4">
+        <div className="mb-14">
+          <h3 className="text-sm font-semibold text-gray-700 mb-5 uppercase tracking-wide">
             Filter by Category
           </h3>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => toggleCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  selectedCategories.has(category)
-                    ? "bg-emerald-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-3">
+            {categories.map((category) => {
+              const count = categoryCounts[category];
+              const isSelected = selectedCategories.has(category);
+              return (
+                <button
+                  key={category}
+                  onClick={() => toggleCategory(category)}
+                  className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all border ${getCategoryPillClass(
+                    category,
+                    isSelected
+                  )} hover:shadow-md`}
+                >
+                  {category}
+                  <span className="ml-2 font-semibold">({count})</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* FAQ Items */}
         {filteredFAQ.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {filteredFAQ.map((item, index) => {
               const itemId = `${item.category}-${index}`;
               const isExpanded = expandedItems.has(itemId);
+              const config = categoryConfig[item.category as CategoryType];
 
               return (
                 <Card
                   key={itemId}
-                  className="border border-gray-200 hover:border-emerald-300 transition-all"
+                  className="border border-gray-200 rounded-xl overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <button
                     onClick={() => toggleItem(itemId)}
@@ -562,7 +704,8 @@ export default function FAQ() {
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300">
+                        <Badge className={`${config.bgColor} ${config.textColor} border-0 flex items-center gap-1.5`}>
+                          {config.icon}
                           {item.category}
                         </Badge>
                       </div>
@@ -571,14 +714,19 @@ export default function FAQ() {
                       </h3>
                     </div>
                     <ChevronDown
-                      className={`h-5 w-5 text-gray-600 mt-1 flex-shrink-0 transition-transform ${
+                      className={`h-5 w-5 text-gray-600 mt-1 flex-shrink-0 transition-transform duration-300 ${
                         isExpanded ? "transform rotate-180" : ""
                       }`}
                     />
                   </button>
 
                   {isExpanded && (
-                    <div className="px-6 pb-6 border-t border-gray-200 bg-gray-50">
+                    <div
+                      className="px-6 pb-6 border-t border-gray-200 bg-gray-50 overflow-hidden"
+                      style={{
+                        animation: "expandIn 0.3s ease-out",
+                      }}
+                    >
                       <p className="text-gray-700 leading-relaxed mb-4">
                         {item.answer}
                       </p>
@@ -588,7 +736,7 @@ export default function FAQ() {
                             <Badge
                               key={tag}
                               variant="outline"
-                              className="text-xs"
+                              className="text-xs bg-white"
                             >
                               {tag}
                             </Badge>
@@ -602,7 +750,7 @@ export default function FAQ() {
             })}
           </div>
         ) : (
-          <Card className="p-12 text-center">
+          <Card className="p-12 text-center border-gray-200 rounded-xl">
             <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               No questions found
@@ -619,43 +767,52 @@ export default function FAQ() {
         </div>
 
         {/* Contact Section */}
-        <div className="mt-20 bg-gradient-to-br from-emerald-50 to-blue-50 rounded-2xl p-12 border border-emerald-200">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+        <div className="mt-20 bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50 rounded-2xl p-12 border border-emerald-200">
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
             Still have questions?
           </h2>
 
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <Card className="p-6 text-center border-none shadow-sm hover:shadow-md transition-shadow">
-              <MessageCircle className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
+            {/* Live Chat Card */}
+            <Card className="p-8 text-center border-0 shadow-sm hover:shadow-md transition-all rounded-xl">
+              <div className="inline-flex p-3 mb-4 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white">
+                <MessageCircle className="h-6 w-6" />
+              </div>
               <h3 className="font-semibold text-gray-900 mb-2">Live Chat</h3>
               <p className="text-sm text-gray-600 mb-4">
                 Chat with our support team in real-time
               </p>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full rounded-lg">
                 Start Chat
               </Button>
             </Card>
 
-            <Card className="p-6 text-center border-none shadow-sm hover:shadow-md transition-shadow">
-              <Mail className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
+            {/* Email Card */}
+            <Card className="p-8 text-center border-0 shadow-sm hover:shadow-md transition-all rounded-xl">
+              <div className="inline-flex p-3 mb-4 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white">
+                <Mail className="h-6 w-6" />
+              </div>
               <h3 className="font-semibold text-gray-900 mb-2">Email</h3>
               <p className="text-sm text-gray-600 mb-4">
                 support@csoai.org - Typically responds in 2-4 hours
               </p>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full rounded-lg">
                 Send Email
               </Button>
             </Card>
 
-            <Card className="p-6 text-center border-none shadow-sm hover:shadow-md transition-shadow">
-              <Phone className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
+            {/* Phone Card */}
+            <Card className="p-8 text-center border-0 shadow-sm hover:shadow-md transition-all rounded-xl">
+              <div className="inline-flex p-3 mb-4 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 text-white">
+                <Phone className="h-6 w-6" />
+              </div>
               <h3 className="font-semibold text-gray-900 mb-2">
                 Schedule a Call
               </h3>
               <p className="text-sm text-gray-600 mb-4">
                 Book time with an expert for personalized help
               </p>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full rounded-lg">
                 Schedule Now
               </Button>
             </Card>
@@ -665,12 +822,25 @@ export default function FAQ() {
             <p className="text-gray-600 mb-4">
               Enterprise customers have 24/7 support available
             </p>
-            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 rounded-lg">
               View Support Plans
             </Button>
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes expandIn {
+          from {
+            opacity: 0;
+            max-height: 0;
+          }
+          to {
+            opacity: 1;
+            max-height: 1000px;
+          }
+        }
+      `}</style>
     </div>
   );
 }
