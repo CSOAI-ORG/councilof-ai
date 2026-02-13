@@ -286,6 +286,14 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'faq-8', title: 'How do I become a Watchdog analyst?', description: 'Complete Watchdog training and apply for analyst positions', category: 'faq', href: '/watchdog-signup', icon: HelpCircle, keywords: ['watchdog', 'analyst', 'become'] },
   { id: 'faq-9', title: 'When does the Charter take effect?', description: 'The Partnership Charter launches January 15, 2026 at 09:00 GMT', category: 'faq', href: '/charter', icon: HelpCircle, keywords: ['charter', 'effective', 'date'] },
   { id: 'faq-10', title: 'How do I join as a Founding Member?', description: 'Apply to be one of the first 100 founding members', category: 'faq', href: '/founding-members', icon: HelpCircle, keywords: ['founding', 'member', 'join'] },
+
+  // ===== NEW PAGES =====
+  { id: 'new-tracker', title: 'Global AI Regulation Tracker', description: 'Track 40+ AI governance frameworks across all nations in real-time', category: 'frameworks', href: '/global-regulations', icon: Globe2, keywords: ['global', 'regulation', 'tracker', 'nations', '40', 'countries'], highlight: true },
+  { id: 'new-faq', title: 'FAQ - Frequently Asked Questions', description: 'Comprehensive answers to all questions about CSOAI and AI governance', category: 'faq', href: '/faq', icon: HelpCircle, keywords: ['faq', 'questions', 'answers', 'help'] },
+  { id: 'new-glossary', title: 'AI Governance Glossary', description: '60+ terms and definitions for AI governance, compliance, and risk', category: 'faq', href: '/glossary', icon: BookOpen, keywords: ['glossary', 'terms', 'definitions', 'dictionary'] },
+  { id: 'new-assessment', title: 'AI Governance Readiness Assessment', description: 'Free 5-minute assessment to evaluate your AI governance maturity', category: 'faq', href: '/readiness-assessment', icon: FileCheck, keywords: ['assessment', 'readiness', 'maturity', 'quiz', 'evaluation'] },
+  { id: 'new-industries', title: 'Industry Solutions', description: 'AI governance solutions tailored for finance, healthcare, government, and more', category: 'frameworks', href: '/industry-solutions', icon: Building2, keywords: ['industry', 'solutions', 'finance', 'healthcare', 'government', 'sector'] },
+  { id: 'new-partners', title: 'Partners & Advisory Services', description: 'Strategic partnerships, advisory services, and partner program', category: 'faq', href: '/partners', icon: Users, keywords: ['partners', 'advisory', 'consulting', 'services', 'ecosystem'] },
 ];
 
 // Quick Actions

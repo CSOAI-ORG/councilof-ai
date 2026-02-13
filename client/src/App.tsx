@@ -100,6 +100,13 @@ import DataProcessingAgreement from "./pages/legal/DataProcessingAgreement";
 import CookiePolicy from "./pages/legal/CookiePolicy";
 import ServiceLevelAgreement from "./pages/legal/ServiceLevelAgreement";
 import Council from "./pages/Council";
+// New competitive improvement pages
+import GlobalRegulationTracker from "./pages/GlobalRegulationTracker";
+import FAQ from "./pages/FAQ";
+import Glossary from "./pages/Glossary";
+import ReadinessAssessment from "./pages/ReadinessAssessment";
+import IndustrySolutions from "./pages/IndustrySolutions";
+import PartnersAdvisory from "./pages/PartnersAdvisory";
 import { AnalyticsProvider } from "./components/Analytics";
 
 function ScrollToTop() {
@@ -342,6 +349,19 @@ function App() {
                   <Route path="/sla" component={ServiceLevelAgreement} />
                   <Route path="/service-level-agreement" component={ServiceLevelAgreement} />
                   <Route path="/legal/sla" component={ServiceLevelAgreement} />
+                  {/* New Competitive Improvement Pages */}
+                  <Route path="/global-regulations" component={GlobalRegulationTracker} />
+                  <Route path="/regulation-tracker" component={GlobalRegulationTracker} />
+                  <Route path="/faq" component={FAQ} />
+                  <Route path="/frequently-asked-questions" component={FAQ} />
+                  <Route path="/glossary" component={Glossary} />
+                  <Route path="/ai-glossary" component={Glossary} />
+                  <Route path="/readiness-assessment" component={ReadinessAssessment} />
+                  <Route path="/assessment" component={ReadinessAssessment} />
+                  <Route path="/industry-solutions" component={IndustrySolutions} />
+                  <Route path="/industries" component={IndustrySolutions} />
+                  <Route path="/partners" component={PartnersAdvisory} />
+                  <Route path="/advisory" component={PartnersAdvisory} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />

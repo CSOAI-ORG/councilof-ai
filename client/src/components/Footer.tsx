@@ -25,21 +25,32 @@ export function Footer() {
     {
       title: 'Frameworks',
       links: [
+        { name: 'Global Regulation Tracker', href: '/global-regulations' },
         { name: 'SOAI-PDCA Framework', href: '/soai-pdca' },
-        { name: 'Accreditation', href: '/accreditation' },
         { name: 'EU AI Act', href: '/frameworks/eu-ai-act' },
         { name: 'NIST AI RMF', href: '/frameworks/nist' },
+        { name: 'ISO 42001', href: '/guides/iso-42001' },
         { name: 'China TC260', href: '/frameworks/tc260' },
+      ],
+    },
+    {
+      title: 'Resources',
+      links: [
+        { name: 'FAQ', href: '/faq' },
+        { name: 'AI Glossary', href: '/glossary' },
+        { name: 'Readiness Assessment', href: '/readiness-assessment' },
+        { name: 'Industry Solutions', href: '/industry-solutions' },
+        { name: 'Partners & Advisory', href: '/partners' },
+        { name: 'Blog', href: '/blog' },
       ],
     },
     {
       title: 'Company',
       links: [
         { name: 'About Us', href: '/about' },
-        { name: 'Our Mission', href: '/about#mission' },
         { name: 'Pricing', href: '/pricing' },
-        { name: 'Blog', href: '/blog' },
         { name: 'Careers', href: '/careers' },
+        { name: 'Accreditation', href: '/accreditation' },
       ],
     },
     {
