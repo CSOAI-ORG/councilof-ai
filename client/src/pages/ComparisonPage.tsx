@@ -483,7 +483,7 @@ export default function ComparisonPage() {
         <span className="text-sm text-amber-700 font-medium bg-amber-100 px-2 py-1 rounded">
           {value}
         </span>
-      );
+      </div>
     );
   };
 
