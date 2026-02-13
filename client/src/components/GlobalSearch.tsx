@@ -294,6 +294,9 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'new-assessment', title: 'AI Governance Readiness Assessment', description: 'Free 5-minute assessment to evaluate your AI governance maturity', category: 'faq', href: '/readiness-assessment', icon: FileCheck, keywords: ['assessment', 'readiness', 'maturity', 'quiz', 'evaluation'] },
   { id: 'new-industries', title: 'Industry Solutions', description: 'AI governance solutions tailored for finance, healthcare, government, and more', category: 'frameworks', href: '/industry-solutions', icon: Building2, keywords: ['industry', 'solutions', 'finance', 'healthcare', 'government', 'sector'] },
   { id: 'new-partners', title: 'Partners & Advisory Services', description: 'Strategic partnerships, advisory services, and partner program', category: 'faq', href: '/partners', icon: Users, keywords: ['partners', 'advisory', 'consulting', 'services', 'ecosystem'] },
+  { id: 'new-casestudies', title: 'Case Studies', description: 'Real-world AI governance implementation success stories', category: 'faq', href: '/case-studies', icon: BookOpen, keywords: ['case', 'studies', 'success', 'stories', 'implementations', 'results', 'ROI'] },
+  { id: 'new-trustcenter', title: 'Trust Center', description: 'Security certifications, compliance, data protection, and infrastructure details', category: 'faq', href: '/trust-center', icon: Shield, keywords: ['trust', 'security', 'compliance', 'certifications', 'ISO', 'SOC', 'GDPR', 'encryption', 'privacy'] },
+  { id: 'new-compare', title: 'Why Choose CSOAI', description: 'Compare CSOAI against traditional GRC tools, AI-specific platforms, and consulting firms', category: 'faq', href: '/compare', icon: BarChart3, keywords: ['compare', 'comparison', 'versus', 'vs', 'alternative', 'why', 'choose', 'better', 'difference'] },
 ];
 
 // Quick Actions

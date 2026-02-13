@@ -107,6 +107,9 @@ import Glossary from "./pages/Glossary";
 import ReadinessAssessment from "./pages/ReadinessAssessment";
 import IndustrySolutions from "./pages/IndustrySolutions";
 import PartnersAdvisory from "./pages/PartnersAdvisory";
+import CaseStudies from "./pages/CaseStudies";
+import TrustCenter from "./pages/TrustCenter";
+import ComparisonPage from "./pages/ComparisonPage";
 import { AnalyticsProvider } from "./components/Analytics";
 
 function ScrollToTop() {
@@ -362,6 +365,12 @@ function App() {
                   <Route path="/industries" component={IndustrySolutions} />
                   <Route path="/partners" component={PartnersAdvisory} />
                   <Route path="/advisory" component={PartnersAdvisory} />
+                  <Route path="/case-studies" component={CaseStudies} />
+                  <Route path="/trust-center" component={TrustCenter} />
+                  <Route path="/security" component={TrustCenter} />
+                  <Route path="/compare" component={ComparisonPage} />
+                  <Route path="/comparison" component={ComparisonPage} />
+                  <Route path="/why-csoai" component={ComparisonPage} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />

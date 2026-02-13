@@ -5,7 +5,7 @@
 
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Shield, GraduationCap, Award, Eye, Building2, Landmark, FileText } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Shield, GraduationCap, Award, Eye, Building2, Landmark, FileText, Globe2, HelpCircle, BookMarked, ClipboardCheck, Factory, Handshake, ShieldCheck, BarChart2 } from 'lucide-react';
 import { NotificationCenter } from '@/pages/NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -91,6 +91,8 @@ const navigation = [
     submenu: [
       { name: 'Overview', href: '/enterprise', description: 'Enterprise solutions overview' },
       { name: 'Enterprise Dashboard', href: '/enterprise-dashboard', description: 'CISO compliance hub' },
+      { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
+      { name: 'Readiness Assessment', href: '/readiness-assessment', description: 'Evaluate your AI governance maturity' },
       { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
       { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
     ]
@@ -104,6 +106,22 @@ const navigation = [
       { name: 'Regulator Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
       { name: 'Framework Status', href: '/government?view=frameworks', description: 'Multi-framework compliance' },
       { name: 'Transparency Portal', href: '/transparency', description: 'Public transparency data' },
+      { name: 'Global Regulation Tracker', href: '/global-regulations', description: 'AI regulations across 40+ nations' },
+    ]
+  },
+  {
+    name: 'Resources',
+    href: '/resources',
+    icon: BookMarked,
+    description: 'Knowledge & tools',
+    submenu: [
+      { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
+      { name: 'AI Glossary', href: '/glossary', description: '60+ governance terms defined' },
+      { name: 'Readiness Assessment', href: '/readiness-assessment', description: 'Evaluate your AI governance maturity' },
+      { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
+      { name: 'Partners & Advisory', href: '/partners', description: 'Expert advisory services' },
+      { name: 'Case Studies', href: '/case-studies', description: 'Real-world implementations' },
+      { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
     ]
   },
 ];
