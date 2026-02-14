@@ -113,6 +113,8 @@ import ComparisonPage from "./pages/ComparisonPage";
 import ROICalculator from "./pages/ROICalculator";
 import Technology from "./pages/Technology";
 import Integrations from "./pages/Integrations";
+import Crosswalks from "./pages/Crosswalks";
+import CharterArticle from "./pages/CharterArticle";
 import { AnalyticsProvider } from "./components/Analytics";
 
 function ScrollToTop() {
@@ -380,6 +382,11 @@ function App() {
                   <Route path="/architecture" component={Technology} />
                   <Route path="/integrations" component={Integrations} />
                   <Route path="/ecosystem" component={Integrations} />
+                  {/* Framework Crosswalks */}
+                  <Route path="/crosswalks" component={Crosswalks} />
+                  <Route path="/framework-crosswalks" component={Crosswalks} />
+                  {/* Individual Charter Articles */}
+                  <Route path="/charter/article/:id" component={CharterArticle} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />

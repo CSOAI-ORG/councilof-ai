@@ -28,6 +28,7 @@ const navigation = [
     description: 'Our founding principles',
     submenu: [
       { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
+      { name: 'Browse All 52 Articles', href: '/charter#articles', description: 'Individual article deep-dives' },
       { name: 'The Maternal Covenant', href: '/charter#maternal', description: 'Care-based AI safety paradigm' },
       { name: 'Prosperity Fund', href: '/prosperity', description: 'AI wealth redistribution & UBI' },
       { name: 'Byzantine Council', href: '/byzantine', description: '33-agent monitoring system' },
@@ -35,40 +36,37 @@ const navigation = [
     ]
   },
   {
-    name: 'Training',
+    name: 'Learn',
     href: '/courses',
     icon: GraduationCap,
-    description: 'Learn AI safety',
+    description: 'Training & certification',
     submenu: [
       { name: 'All Courses', href: '/courses', description: 'Browse our complete course catalog' },
       { name: 'My Learning', href: '/my-courses', description: 'Your enrolled courses and progress' },
       { name: 'EU AI Act', href: '/courses?framework=eu', description: 'European AI regulation training' },
       { name: 'NIST AI RMF', href: '/courses?framework=nist', description: 'US AI risk management framework' },
       { name: 'ISO 42001', href: '/courses?framework=iso', description: 'International AI management system' },
-    ]
-  },
-  {
-    name: 'Certification',
-    href: '/certification',
-    icon: Award,
-    description: 'Get certified',
-    submenu: [
-      { name: 'Overview', href: '/certification', description: 'Certification paths and requirements' },
+      { name: 'Certification Overview', href: '/certification', description: 'Certification paths and requirements' },
       { name: 'Take Exam', href: '/certification/exam', description: 'Start your certification exam' },
       { name: 'My Certificates', href: '/certificates', description: 'View your earned certificates' },
-      { name: 'Verify Certificate', href: '/verify-certificate', description: 'Verify any certificate' },
+      { name: 'Verify Certificate', href: '/verify-certificate', description: 'Verify any CSOAI certificate' },
     ]
   },
   {
-    name: 'SOAI-PDCA',
-    href: '/soai-pdca',
-    icon: Shield,
-    description: 'Our methodology',
+    name: 'Solutions',
+    href: '/enterprise',
+    icon: Building2,
+    description: 'Enterprise & government',
     submenu: [
-      { name: 'Framework Overview', href: '/soai-pdca', description: 'Learn about SOAI-PDCA methodology' },
+      { name: 'Enterprise Overview', href: '/enterprise', description: 'Enterprise solutions overview' },
+      { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
+      { name: 'Government Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
+      { name: 'Global Regulation Tracker', href: '/global-regulations', description: 'AI regulations across 40+ nations' },
+      { name: 'SOAI-PDCA Framework', href: '/soai-pdca', description: 'Learn about SOAI-PDCA methodology' },
       { name: 'PDCA Simulator', href: '/pdca-simulator', description: 'Interactive PDCA walkthrough' },
       { name: '33-Agent Council', href: '/agent-council', description: 'Byzantine consensus system' },
-      { name: 'Templates', href: '/soai-pdca#templates', description: 'Download PDCA templates' },
+      { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
+      { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
     ]
   },
   {
@@ -84,34 +82,6 @@ const navigation = [
     ]
   },
   {
-    name: 'Enterprise',
-    href: '/enterprise',
-    icon: Building2,
-    description: 'For businesses',
-    submenu: [
-      { name: 'Overview', href: '/enterprise', description: 'Enterprise solutions overview' },
-      { name: 'Enterprise Dashboard', href: '/enterprise-dashboard', description: 'CISO compliance hub' },
-      { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
-      { name: 'Readiness Assessment', href: '/readiness-assessment', description: 'Evaluate your AI governance maturity' },
-      { name: 'ROI Calculator', href: '/roi-calculator', description: 'Calculate your governance ROI' },
-      { name: 'Integrations', href: '/integrations', description: '50+ enterprise integrations' },
-      { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
-      { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
-    ]
-  },
-  {
-    name: 'Government',
-    href: '/government',
-    icon: Landmark,
-    description: 'For regulators',
-    submenu: [
-      { name: 'Regulator Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
-      { name: 'Framework Status', href: '/government?view=frameworks', description: 'Multi-framework compliance' },
-      { name: 'Transparency Portal', href: '/transparency', description: 'Public transparency data' },
-      { name: 'Global Regulation Tracker', href: '/global-regulations', description: 'AI regulations across 40+ nations' },
-    ]
-  },
-  {
     name: 'Resources',
     href: '/resources',
     icon: BookMarked,
@@ -119,13 +89,14 @@ const navigation = [
     submenu: [
       { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
       { name: 'AI Glossary', href: '/glossary', description: '60+ governance terms defined' },
+      { name: 'Framework Crosswalks', href: '/crosswalks', description: 'Compare EU AI Act, NIST, ISO 42001, TC260' },
       { name: 'Readiness Assessment', href: '/readiness-assessment', description: 'Evaluate your AI governance maturity' },
-      { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
       { name: 'Partners & Advisory', href: '/partners', description: 'Expert advisory services' },
       { name: 'Case Studies', href: '/case-studies', description: 'Real-world implementations' },
       { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
       { name: 'Technology', href: '/technology', description: 'Our architecture & Byzantine Council' },
       { name: 'ROI Calculator', href: '/roi-calculator', description: 'Estimate your governance ROI' },
+      { name: 'Blog', href: '/blog', description: 'Latest news & insights' },
     ]
   },
 ];
@@ -319,23 +290,27 @@ export function Header() {
             {user ? (
               <>
                 <NotificationCenter />
-                <Link href="/dashboard">
-                  <Button variant="ghost" size="sm" className="text-gray-600">
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    Dashboard
-                  </Button>
-                </Link>
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-gray-600">
-                      <User className="h-4 w-4 mr-2" />
-                      <span className="max-w-[100px] truncate">{user.name || user.email}</span>
+                    <Button variant="ghost" size="icon" className="text-gray-600 h-9 w-9 rounded-full bg-emerald-50 hover:bg-emerald-100">
+                      <User className="h-4 w-4 text-emerald-700" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium">{user.name || 'User'}</p>
+                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                      </div>
+                    </DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <a href="/dashboard" className="flex items-center">
+                        <BarChart3 className="h-4 w-4 mr-2" />
+                        Dashboard
+                      </a>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <a href="/my-courses" className="flex items-center">
                         <BookOpen className="h-4 w-4 mr-2" />
