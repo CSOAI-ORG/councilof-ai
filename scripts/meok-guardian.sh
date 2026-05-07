@@ -12,7 +12,12 @@ PYTHON="/Library/Developer/CommandLineTools/usr/bin/python3"
 CHECK_INTERVAL=30
 MAX_FAILS=3
 
-mkdir -p "$STATUS_DIR" "$MEMORY_DIR"
+# Ensure status dir exists; fall back to local path if iCloud symlink is broken
+if ! mkdir -p "$STATUS_DIR" 2>/dev/null || ! [ -w "$STATUS_DIR" ]; then
+  STATUS_DIR="/tmp/meok-guardian-status"
+  mkdir -p "$STATUS_DIR"
+fi
+mkdir -p "$MEMORY_DIR"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG"; }
 

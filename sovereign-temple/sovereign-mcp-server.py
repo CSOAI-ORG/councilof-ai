@@ -13,7 +13,6 @@ import subprocess
 import time
 import unicodedata
 from collections import deque
-from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import Optional, Dict, Any, List, Tuple
@@ -26,8 +25,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "monitoring"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "multi_agent"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "consciousness"))
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Response, Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Response
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -57,15 +55,6 @@ from autonomous_maintenance import AutonomousMaintenanceSystem
 from tool_dispatcher import ToolDispatcher
 from safety_classifier import create_safety_router, SafetyClassifier
 from sycophancy_detector import create_sycophancy_router, SycophancyDetector
-
-# Genesis → G-code Pipeline
-try:
-    from genesis_pipeline import genesis_pipeline
-
-    GENESIS_PIPELINE_AVAILABLE = True
-except ImportError:
-    GENESIS_PIPELINE_AVAILABLE = False
-    genesis_pipeline = None
 
 # Project Heartbeat — Autonomous Self-Improvement
 try:
@@ -233,6 +222,23 @@ except ImportError:
     NEMOTRON_AVAILABLE = False
     NemotronClient = None
 
+# Universal MCP Bridge — calls any of the 207 marketplace servers
+try:
+    from mcp_bridge import (
+        get_bridge as get_mcp_bridge,
+        get_feedback as get_mcp_feedback,
+        handle_mcp_bridge_call,
+        handle_mcp_bridge_discover,
+        handle_mcp_bridge_stats,
+        handle_mcp_bridge_learn,
+        BRIDGE_TOOL_DEFINITIONS,
+    )
+    MCP_BRIDGE_AVAILABLE = True
+except ImportError as _e:
+    print(f"[startup] MCP Bridge import failed: {_e}")
+    MCP_BRIDGE_AVAILABLE = False
+    BRIDGE_TOOL_DEFINITIONS = []
+
 
 # MCP Models
 class ToolCall(BaseModel):
@@ -276,57 +282,6 @@ _trust_manager: Optional[Any] = None  # AgentTrustManager instance
 lgbm_fallback: Optional[Any] = None  # LightGBMFallback instance
 nemotron_client: Optional[Any] = None  # NemotronClient instance
 
-# SOV3 Enhanced Modules
-try:
-    from sov3_enhanced_consciousness import (
-        EnhancedConsciousness,
-        ConsciousnessState,
-        AnomalyDetector,
-        MetaObservation,
-    )
-
-    SOV3_CONSCIOUSNESS_AVAILABLE = True
-except ImportError:
-    SOV3_CONSCIOUSNESS_AVAILABLE = False
-    EnhancedConsciousness = None
-
-try:
-    from sov3_enhanced_council import (
-        EnhancedCouncil,
-        StakeholderAnalyzer,
-    )
-
-    SOV3_COUNCIL_AVAILABLE = True
-    print(f"  ✓ sov3_enhanced_council imported OK")
-except ImportError as e:
-    SOV3_COUNCIL_AVAILABLE = False
-    EnhancedCouncil = None
-    print(f"  ✗ sov3_enhanced_council import failed: {e}")
-
-try:
-    from sov3_continual_learning import ContinualLearningManager
-
-    SOV3_CONTINUAL_AVAILABLE = True
-except ImportError:
-    SOV3_CONTINUAL_AVAILABLE = False
-    ContinualLearningManager = None
-
-try:
-    from sov3_memory_consolidation import MemoryConsolidator
-
-    SOV3_MEMORY_AVAILABLE = True
-except ImportError:
-    SOV3_MEMORY_AVAILABLE = False
-    MemoryConsolidator = None
-
-try:
-    from sov3_external_apis import ExternalAPIManager
-
-    SOV3_EXTERNAL_AVAILABLE = True
-except ImportError:
-    SOV3_EXTERNAL_AVAILABLE = False
-    ExternalAPIManager = None
-
 # Compass Activation — stats counter and server start time
 _tool_call_stats: Dict[str, Any] = {"total": 0, "by_tool": {}}
 _SERVER_START: float = time.time()
@@ -366,6 +321,55 @@ class ModelOrchestrator:
 
 # MCP Tools Definition
 MCP_TOOLS = [
+    # Hermes Agent Tools
+    {
+        "name": "hermes_ask",
+        "description": "Send a prompt to Hermes agent (Kimi K2.5 / Claude / Gemma) and get a response",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "prompt": {"type": "string", "description": "The prompt to send to Hermes"}
+            },
+            "required": ["prompt"],
+        },
+    },
+    {
+        "name": "hermes_research",
+        "description": "Use Hermes agent for web research on a topic",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "Research query"}
+            },
+            "required": ["query"],
+        },
+    },
+    # K2.5 Vision Tools
+    {
+        "name": "k25_analyze_image",
+        "description": "Analyze an image using Kimi K2.5 multi-modal vision (photos, screenshots, documents)",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "image_path": {"type": "string", "description": "Path to the image file"},
+                "prompt": {"type": "string", "description": "What to analyze", "default": "Analyze this image in detail"},
+            },
+            "required": ["image_path"],
+        },
+    },
+    {
+        "name": "k25_ui_to_code",
+        "description": "Convert a UI screenshot/mockup into production-ready code using K2.5 vision",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "image_path": {"type": "string", "description": "Path to the UI screenshot"},
+                "framework": {"type": "string", "description": "Target framework", "default": "react"},
+            },
+            "required": ["image_path"],
+        },
+    },
+] + (BRIDGE_TOOL_DEFINITIONS if MCP_BRIDGE_AVAILABLE else []) + [
     # Neural Tools
     {
         "name": "validate_care",
@@ -986,6 +990,46 @@ MCP_TOOLS = [
             "required": ["text"],
         },
     },
+    # New AI Models - Sentiment, Emotion, Intent
+    {
+        "name": "analyze_sentiment",
+        "description": "Analyze sentiment of text (positive, negative, neutral, mixed)",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Text to analyze for sentiment",
+                }
+            },
+            "required": ["text"],
+        },
+    },
+    {
+        "name": "recognize_emotions",
+        "description": "Recognize specific emotions in text (joy, sadness, anger, fear, surprise, disgust, etc.)",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Text to analyze for emotions",
+                }
+            },
+            "required": ["text"],
+        },
+    },
+    {
+        "name": "detect_intent",
+        "description": "Detect user intent from natural language (help, create, learn, play, chat, etc.)",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {"type": "string", "description": "Text to analyze for intent"}
+            },
+            "required": ["text"],
+        },
+    },
     {
         "name": "get_engagement_score",
         "description": "Get Ibn Khaldun's engagement (group cohesion) metric for the agent ecosystem",
@@ -1021,467 +1065,6 @@ MCP_TOOLS = [
         "name": "get_meta_observations",
         "description": "Get Turiya meta-monitor observations — meta-cognitive assessment of system coherence across all subsystems",
         "inputSchema": {"type": "object", "properties": {}},
-    },
-    # SOV3 Enhanced Consciousness Tools
-    {
-        "name": "sov3_get_consciousness_state",
-        "description": "Get enhanced SOV3 consciousness state with meta-observation, anomaly detection, and self-improvement metrics",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "sov3_trigger_reflection",
-        "description": "Trigger SOV3 enhanced reflection cycle with outcome tracking and quality scoring",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "trigger": {
-                    "type": "string",
-                    "description": "Reflection trigger context",
-                },
-            },
-        },
-    },
-    {
-        "name": "sov3_detect_anomalies",
-        "description": "Detect anomalies in consciousness state (emotional drift, thought loops, care depletion, paranoia, mania, dissociation)",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "sov3_get_coherence_score",
-        "description": "Get current subsystem coherence score - how well all SOV3 modules are aligned",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    # SOV3 Enhanced Council Tools
-    {
-        "name": "sov3_deliberate",
-        "description": "Trigger SOV3 quantum deliberation with stakeholder analysis and dissent tracking",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "topic": {"type": "string", "description": "Topic to deliberate"},
-                "stakeholders": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Stakeholder groups to consider",
-                },
-            },
-            "required": ["topic"],
-        },
-    },
-    {
-        "name": "sov3_analyze_stakeholders",
-        "description": "Analyze stakeholder perspectives for a given topic using enhanced council",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "topic": {"type": "string", "description": "Topic to analyze"},
-            },
-            "required": ["topic"],
-        },
-    },
-    {
-        "name": "sov3_track_dissent",
-        "description": "Track dissenting opinions and minority viewpoints in council deliberations",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "session_id": {
-                    "type": "string",
-                    "description": "Deliberation session ID",
-                },
-            },
-        },
-    },
-    # SOV3 Continual Learning Tools
-    {
-        "name": "sov3_continual_train",
-        "description": "Trigger SOV3 continual learning training cycle with EWC-based regularization",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "task_type": {"type": "string", "description": "Type of task to learn"},
-                "data": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Training examples",
-                },
-            },
-            "required": ["task_type"],
-        },
-    },
-    {
-        "name": "sov3_get_learning_stats",
-        "description": "Get SOV3 continual learning statistics - tasks learned, plasticity, catastrophic forgetting metrics",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "sov3_fisher_update",
-        "description": "Update Fisher information matrix for EWC regularization",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "task_data": {"type": "array", "items": {"type": "string"}},
-            },
-            "required": ["task_data"],
-        },
-    },
-    # SOV3 Memory Consolidation Tools
-    {
-        "name": "sov3_consolidate_memories",
-        "description": "Trigger SOV3 memory consolidation - vector store indexing, memory decay, priority management",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "memory_ids": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Specific memories to consolidate",
-                },
-            },
-        },
-    },
-    {
-        "name": "sov3_query_vector_store",
-        "description": "Query SOV3 vector store for semantically similar memories",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string", "description": "Search query"},
-                "top_k": {
-                    "type": "integer",
-                    "description": "Number of results",
-                    "default": 5,
-                },
-            },
-            "required": ["query"],
-        },
-    },
-    {
-        "name": "sov3_get_memory_priority",
-        "description": "Get priority scores for memories based on importance, recency, and care-weight",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    # SOV3 External APIs Tools
-    {
-        "name": "sov3_stripe_payment",
-        "description": "Process payment via Stripe (requires Stripe API key configured)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "amount": {"type": "number", "description": "Amount in cents"},
-                "currency": {"type": "string", "default": "usd"},
-                "description": {"type": "string"},
-            },
-            "required": ["amount"],
-        },
-    },
-    {
-        "name": "sov3_clerk_auth",
-        "description": "Authenticate user via Clerk (requires Clerk API key configured)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "user_id": {"type": "string", "description": "Clerk user ID"},
-            },
-            "required": ["user_id"],
-        },
-    },
-    {
-        "name": "sov3_vapi_call",
-        "description": "Initiate voice call via Vapi.ai",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "phone_number": {"type": "string"},
-                "script": {"type": "string"},
-            },
-            "required": ["phone_number", "script"],
-        },
-    },
-    {
-        "name": "sov3_webhook_register",
-        "description": "Register a webhook endpoint for external notifications",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "url": {"type": "string"},
-                "events": {"type": "array", "items": {"type": "string"}},
-            },
-            "required": ["url", "events"],
-        },
-    },
-    # Deployment Arsenal - Audio/Voice
-    {
-        "name": "generate_audio",
-        "description": "Generate audio using Fish Speech V1.5 (ELO 1339) or Supertonic 2 (167x realtime)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "text": {"type": "string", "description": "Text to convert to speech"},
-                "engine": {
-                    "type": "string",
-                    "enum": ["fish_speech", "supertonic", "mova"],
-                    "default": "fish_speech",
-                },
-                "voice": {
-                    "type": "string",
-                    "description": "Voice ID",
-                    "default": "default",
-                },
-            },
-            "required": ["text"],
-        },
-    },
-    {
-        "name": "clone_voice",
-        "description": "Clone voice using LongCat-AudioDiT (zero-shot, diffusion-based)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "text": {"type": "string", "description": "Text to speak"},
-                "reference_audio": {
-                    "type": "string",
-                    "description": "Reference audio URL or base64",
-                },
-            },
-            "required": ["text"],
-        },
-    },
-    # Deployment Arsenal - Browser Automation
-    {
-        "name": "browse_page",
-        "description": "Browse a webpage using Stagehand or Playwright",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "url": {"type": "string", "description": "URL to visit"},
-                "action": {
-                    "type": "string",
-                    "enum": ["screenshot", "extract", "click", "type"],
-                    "default": "screenshot",
-                },
-                "instruction": {
-                    "type": "string",
-                    "description": "Natural language instruction for Stagehand",
-                },
-            },
-            "required": ["url"],
-        },
-    },
-    # Deployment Arsenal - 3D Reconstruction
-    {
-        "name": "reconstruct_3d",
-        "description": "Reconstruct 3D model from images using Gaussian Splatting (gsplat/Faster-GS)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "image_urls": {"type": "array", "items": {"type": "string"}},
-                "method": {
-                    "type": "string",
-                    "enum": ["gaussian", "nerfacto", "instant-ngp"],
-                    "default": "gaussian",
-                },
-            },
-            "required": ["image_urls"],
-        },
-    },
-    # Deployment Arsenal - Document Parsing
-    {
-        "name": "parse_document",
-        "description": "Parse document (PDF) using ByteDance Dolphin (ACL 2025) or PyMuPDF fallback",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "file_url": {
-                    "type": "string",
-                    "description": "URL or path to document",
-                },
-                "extract_tables": {"type": "boolean", "default": True},
-                "engine": {
-                    "type": "string",
-                    "enum": ["dolphin", "pymupdf"],
-                    "default": "pymupdf",
-                },
-            },
-            "required": ["file_url"],
-        },
-    },
-    # Deployment Arsenal - Time Series Forecasting
-    {
-        "name": "forecast_time_series",
-        "description": "Forecast time series using MOIRAI-2 (any frequency/variable) or Lag-Llama (probabilistic)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "data": {"type": "array", "items": {"type": "number"}},
-                "horizon": {
-                    "type": "integer",
-                    "description": "Steps to forecast",
-                    "default": 24,
-                },
-                "model": {
-                    "type": "string",
-                    "enum": ["moirai", "lag_llama"],
-                    "default": "moirai",
-                },
-            },
-            "required": ["data", "horizon"],
-        },
-    },
-    # Deployment Arsenal - RAG
-    {
-        "name": "rag_index",
-        "description": "Index documents for RAG using Haystack or RAGatouille (ColBERT late interaction)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "documents": {"type": "array", "items": {"type": "string"}},
-                "collection": {"type": "string", "default": "default"},
-            },
-            "required": ["documents"],
-        },
-    },
-    {
-        "name": "rag_query",
-        "description": "Query RAG system with retrieval and generation",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "question": {"type": "string"},
-                "collection": {"type": "string", "default": "default"},
-                "top_k": {"type": "integer", "default": 5},
-            },
-            "required": ["question"],
-        },
-    },
-    {
-        "name": "rag_rerank",
-        "description": "Rerank RAG results using RAGatouille ColBERT late interaction",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string"},
-                "documents": {"type": "array", "items": {"type": "string"}},
-                "method": {
-                    "type": "string",
-                    "enum": ["colbert", "bm25"],
-                    "default": "colbert",
-                },
-            },
-            "required": ["query", "documents"],
-        },
-    },
-    # Deployment Arsenal - Vector Store
-    {
-        "name": "vector_add",
-        "description": "Add vectors to ChromaDB (Rust, 40K+ vectors/sec)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "ids": {"type": "array", "items": {"type": "string"}},
-                "embeddings": {
-                    "type": "array",
-                    "items": {"type": "array", "items": {"type": "number"}},
-                },
-                "documents": {"type": "array", "items": {"type": "string"}},
-            },
-            "required": ["ids", "embeddings"],
-        },
-    },
-    {
-        "name": "vector_query",
-        "description": "Query vector store (ChromaDB or fallback)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query_embedding": {"type": "array", "items": {"type": "number"}},
-                "top_k": {"type": "integer", "default": 10},
-            },
-            "required": ["query_embedding"],
-        },
-    },
-    # Deployment Arsenal - Graph Database
-    {
-        "name": "graph_create_vertex",
-        "description": "Create vertex in ArcadeDB (Graph + Document + KV + Time-series + Vector + Full-text)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "type": {"type": "string"},
-                "properties": {"type": "object"},
-            },
-            "required": ["type"],
-        },
-    },
-    {
-        "name": "graph_create_edge",
-        "description": "Create edge in ArcadeDB graph",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "from": {"type": "string"},
-                "to": {"type": "string"},
-                "edge_type": {"type": "string"},
-            },
-            "required": ["from", "to", "edge_type"],
-        },
-    },
-    {
-        "name": "graph_query",
-        "description": "Query ArcadeDB with Cypher/SQL/Gremlin",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string"},
-                "language": {
-                    "type": "string",
-                    "enum": ["cypher", "sql", "gremlin"],
-                    "default": "cypher",
-                },
-            },
-            "required": ["query"],
-        },
-    },
-    # Deployment Arsenal - API Gateway
-    {
-        "name": "gateway_chat",
-        "description": "Chat via LiteLLM gateway (routes to best model based on latency/cost)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "model": {
-                    "type": "string",
-                    "description": "Model name (glm-5, deepseek-v4, gpt-5.4, etc.)",
-                },
-                "messages": {"type": "array", "items": {"type": "object"}},
-                "temperature": {"type": "number", "default": 0.7},
-            },
-            "required": ["model", "messages"],
-        },
-    },
-    {
-        "name": "gateway_models",
-        "description": "List available models in LiteLLM gateway",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "deliberate_council",
-        "description": "Trigger Legion Council deliberation — 7 character council members deliberate on a task and synthesize a unified response. Use for complex strategic questions.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "task": {
-                    "type": "string",
-                    "description": "The question or task to deliberate",
-                },
-                "max_characters": {
-                    "type": "integer",
-                    "description": "Max characters to consult (default 4)",
-                    "default": 4,
-                },
-            },
-            "required": ["task"],
-        },
     },
     # Tier 2: Cross-Domain Bisociation
     {
@@ -1557,480 +1140,7 @@ MCP_TOOLS = [
             },
         },
     },
-    # Vision - Screenshot capture
-    {
-        "name": "capture_screenshot",
-        "description": "Capture a screenshot of the user's screen for visual analysis",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "analyze_screenshot",
-        "description": "Analyze a screenshot using vision AI to understand what's on screen",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "What to look for in the screenshot",
-                },
-            },
-            "required": ["query"],
-        },
-    },
-    # System Tools
-    {
-        "name": "run_command",
-        "description": "Execute a shell command and return the output",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "command": {"type": "string", "description": "Command to run"},
-                "timeout": {
-                    "type": "integer",
-                    "description": "Timeout in seconds",
-                    "default": 30,
-                },
-            },
-            "required": ["command"],
-        },
-    },
-    {
-        "name": "read_file",
-        "description": "Read contents of a file",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "path": {"type": "string", "description": "File path to read"},
-                "limit": {
-                    "type": "integer",
-                    "description": "Max lines to read",
-                    "default": 100,
-                },
-            },
-            "required": ["path"],
-        },
-    },
-    {
-        "name": "list_files",
-        "description": "List files in a directory",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "path": {"type": "string", "description": "Directory path"},
-                "pattern": {"type": "string", "description": "Glob pattern"},
-            },
-            "required": ["path"],
-        },
-    },
-    # Smart Home Control
-    {
-        "name": "control_smart_home",
-        "description": "Control smart home devices (lights, thermostat, etc.)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "device": {"type": "string", "description": "Device name or ID"},
-                "action": {
-                    "type": "string",
-                    "enum": ["on", "off", "dim", "set", "get"],
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Value to set (brightness, temp, etc.)",
-                },
-            },
-            "required": ["device", "action"],
-        },
-    },
-    # Code Execution
-    {
-        "name": "execute_code",
-        "description": "Execute code in a sandboxed environment",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "language": {
-                    "type": "string",
-                    "enum": ["python", "javascript", "bash"],
-                },
-                "code": {"type": "string", "description": "Code to execute"},
-            },
-            "required": ["language", "code"],
-        },
-    },
-    # Web Search
-    {
-        "name": "web_search",
-        "description": "Search the web for information",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string", "description": "Search query"},
-                "limit": {
-                    "type": "integer",
-                    "description": "Max results",
-                    "default": 5,
-                },
-            },
-            "required": ["query"],
-        },
-    },
-    # Weather
-    {
-        "name": "get_weather",
-        "description": "Get current weather for a location",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "location": {"type": "string", "description": "City name"},
-            },
-            "required": ["location"],
-        },
-    },
-    # Reminders
-    {
-        "name": "set_reminder",
-        "description": "Set a reminder or alarm",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "message": {"type": "string", "description": "Reminder message"},
-                "time": {
-                    "type": "string",
-                    "description": "Time (ISO format or relative like 'in 30 minutes')",
-                },
-            },
-            "required": ["message", "time"],
-        },
-    },
-    # Memory
-    {
-        "name": "remember_fact",
-        "description": "Remember a fact about the user",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "fact": {"type": "string", "description": "Fact to remember"},
-                "category": {
-                    "type": "string",
-                    "description": "Category (likes, dislikes, preferences, etc.)",
-                },
-            },
-            "required": ["fact"],
-        },
-    },
-    {
-        "name": "get_user_info",
-        "description": "Get learned information about the user",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "search_memory",
-        "description": "Search conversation history",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string", "description": "Search query"},
-            },
-            "required": ["query"],
-        },
-    },
-    # File Operations
-    {
-        "name": "upload_file",
-        "description": "Upload a file to JARVIS storage",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "filename": {"type": "string", "description": "File name"},
-                "content": {"type": "string", "description": "Base64 encoded content"},
-            },
-            "required": ["filename", "content"],
-        },
-    },
-    {
-        "name": "download_file",
-        "description": "Download a file from JARVIS storage",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "filename": {"type": "string", "description": "File name"},
-            },
-            "required": ["filename"],
-        },
-    },
-    {
-        "name": "list_storage",
-        "description": "List files in JARVIS storage",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    # Agent Capabilities
-    {
-        "name": "create_agent",
-        "description": "Create a new sub-agent with specific capabilities",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string", "description": "Agent name"},
-                "role": {
-                    "type": "string",
-                    "description": "Agent role (coder, writer, analyst, etc.)",
-                },
-                "instructions": {"type": "string", "description": "Agent instructions"},
-            },
-            "required": ["name", "role"],
-        },
-    },
-    {
-        "name": "list_agents",
-        "description": "List all active agents",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "delegate_task",
-        "description": "Delegate a task to a specific agent",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "agent_name": {"type": "string", "description": "Agent name"},
-                "task": {"type": "string", "description": "Task description"},
-            },
-            "required": ["agent_name", "task"],
-        },
-    },
-    # Webhooks & Automation
-    {
-        "name": "create_webhook",
-        "description": "Create a webhook endpoint for automation",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "url": {"type": "string", "description": "Target URL"},
-                "event": {
-                    "type": "string",
-                    "description": "Event type (message, tool_result, etc.)",
-                },
-            },
-            "required": ["url", "event"],
-        },
-    },
-    {
-        "name": "trigger_automation",
-        "description": "Trigger an automation workflow",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "workflow": {"type": "string", "description": "Workflow name"},
-                "inputs": {"type": "object", "description": "Workflow inputs"},
-            },
-            "required": ["workflow"],
-        },
-    },
-    # Analytics
-    {
-        "name": "get_analytics",
-        "description": "Get usage analytics and statistics",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "period": {
-                    "type": "string",
-                    "description": "Time period (day, week, month)",
-                },
-            },
-        },
-    },
-    {
-        "name": "get_usage_stats",
-        "description": "Get detailed usage statistics",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    # System Info
-    {
-        "name": "get_system_info",
-        "description": "Get comprehensive system information",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "get_capabilities",
-        "description": "Get all JARVIS capabilities",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    # Vector/RAG
-    {
-        "name": "add_knowledge",
-        "description": "Add knowledge to vector store for semantic search",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "text": {"type": "string", "description": "Text to add"},
-                "source": {
-                    "type": "string",
-                    "description": "Source (user, system, etc.)",
-                },
-            },
-            "required": ["text"],
-        },
-    },
-    {
-        "name": "search_knowledge",
-        "description": "Semantic search of knowledge base",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string", "description": "Search query"},
-                "top_k": {
-                    "type": "integer",
-                    "description": "Max results",
-                    "default": 5,
-                },
-            },
-            "required": ["query"],
-        },
-    },
-    # Cache
-    {
-        "name": "cache_get",
-        "description": "Get value from cache",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "key": {"type": "string", "description": "Cache key"},
-            },
-            "required": ["key"],
-        },
-    },
-    {
-        "name": "cache_set",
-        "description": "Set value in cache",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "key": {"type": "string", "description": "Cache key"},
-                "value": {"type": "string", "description": "Value"},
-                "expire": {
-                    "type": "integer",
-                    "description": "Expire seconds",
-                    "default": 3600,
-                },
-            },
-            "required": ["key", "value"],
-        },
-    },
-    # Monitoring
-    {
-        "name": "get_metrics",
-        "description": "Get system metrics (CPU, memory, requests)",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "get_health",
-        "description": "Get system health status",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "get_prometheus_metrics",
-        "description": "Get metrics in Prometheus format",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    # Document Processing
-    {
-        "name": "process_document",
-        "description": "Process a document (PDF, DOCX, TXT) and extract text",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "file_path": {"type": "string", "description": "Path to document"},
-                "chunk_size": {
-                    "type": "integer",
-                    "description": "Chunk size",
-                    "default": 1000,
-                },
-            },
-            "required": ["file_path"],
-        },
-    },
-    {
-        "name": "extract_text",
-        "description": "Extract text from file",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "file_path": {"type": "string", "description": "Path to file"},
-            },
-            "required": ["file_path"],
-        },
-    },
-    # MultiModal
-    {
-        "name": "process_image",
-        "description": "Process image (describe, OCR, analyze)",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "image_path": {"type": "string", "description": "Path to image"},
-                "operation": {
-                    "type": "string",
-                    "enum": ["describe", "ocr", "analyze"],
-                    "default": "describe",
-                },
-            },
-            "required": ["image_path"],
-        },
-    },
-    # Batch Processing
-    {
-        "name": "batch_chat",
-        "description": "Process multiple chat messages in batch",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "messages": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "List of messages",
-                },
-            },
-            "required": ["messages"],
-        },
-    },
-    {
-        "name": "batch_add_knowledge",
-        "description": "Add multiple texts to knowledge base",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "texts": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "List of texts",
-                },
-            },
-            "required": ["texts"],
-        },
-    },
-    # CLI Commands via API
-    {
-        "name": "run_tests",
-        "description": "Run JARVIS test suite",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    # Conversational AI
-    {
-        "name": "ask_sovereign",
-        "description": "Have a conversational exchange with JARVIS/Sovereign. Main chat interface for voice and text. Maintains conversation context.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "message": {"type": "string", "description": "User message"},
-                "context": {
-                    "type": "string",
-                    "description": "Optional conversation context",
-                },
-            },
-            "required": ["message"],
-        },
-    },
+    # Tier 2: Quality-Diversity Archive
     {
         "name": "get_qd_archive_stats",
         "description": "Get MAP-Elites quality-diversity archive statistics — coverage, quality distribution, domain breakdown.",
@@ -2258,233 +1368,244 @@ MCP_TOOLS = [
             "required": ["action"],
         },
     },
-    # Genesis → G-code Pipeline (Robotics Manufacturing)
+    # ==================== FAMILY OS TOOLS ====================
     {
-        "name": "design_robot",
-        "description": "Complete pipeline: voice command → robot simulation → 3D printable G-code files",
+        "name": "family_add_member",
+        "description": "Add a family member to Family OS",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "voice_command": {
+                "member_id": {
                     "type": "string",
-                    "description": "Natural language description of robot requirements",
-                }
+                    "description": "Unique member identifier",
+                },
+                "name": {"type": "string", "description": "Member name"},
+                "role": {
+                    "type": "string",
+                    "enum": ["parent", "child", "guardian", "guest"],
+                    "description": "Member role",
+                },
+                "age": {"type": "integer", "description": "Member age (for children)"},
+                "email": {"type": "string", "description": "Member email"},
             },
-            "required": ["voice_command"],
+            "required": ["member_id", "name", "role"],
         },
     },
     {
-        "name": "list_print_queue",
-        "description": "List all robots queued for 3D printing",
+        "name": "family_get_members",
+        "description": "Get all family members",
         "inputSchema": {"type": "object", "properties": {}},
     },
     {
-        "name": "get_genesis_cluster_status",
-        "description": "Get status of 8-node simulation cluster",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "simulate_robot_design",
-        "description": "Simulate a specific robot design in Genesis physics engine",
+        "name": "family_add_chore",
+        "description": "Add a chore to the family task list",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "design": {"type": "object", "description": "Robot design parameters"},
-                "test_scenarios": {
+                "chore_id": {
+                    "type": "string",
+                    "description": "Unique chore identifier",
+                },
+                "title": {"type": "string", "description": "Chore title"},
+                "assigned_to": {
                     "type": "array",
                     "items": {"type": "string"},
-                    "description": "Test scenarios to run",
+                    "description": "Member IDs assigned",
+                },
+                "due_date": {"type": "string", "description": "Due date (YYYY-MM-DD)"},
+                "points": {"type": "integer", "description": "Points for completion"},
+                "description": {"type": "string", "description": "Chore description"},
+            },
+            "required": ["chore_id", "title", "assigned_to"],
+        },
+    },
+    {
+        "name": "family_complete_chore",
+        "description": "Mark a chore as completed",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "chore_id": {"type": "string", "description": "Chore ID"},
+                "member_id": {
+                    "type": "string",
+                    "description": "Member completing the chore",
                 },
             },
-            "required": ["design"],
+            "required": ["chore_id", "member_id"],
         },
     },
     {
-        "name": "export_robot_stl",
-        "description": "Export robot design to STL files for 3D printing",
+        "name": "family_get_chores",
+        "description": "Get chores, optionally filtered by member or status",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "design_id": {
+                "member_id": {"type": "string", "description": "Filter by member ID"},
+                "status": {
                     "type": "string",
-                    "description": "ID of robot design to export",
-                }
+                    "enum": ["pending", "completed", "overdue"],
+                    "description": "Filter by status",
+                },
             },
-            "required": ["design_id"],
         },
     },
     {
-        "name": "generate_gcode",
-        "description": "Generate G-code files for FibreSeeker (carbon fiber) and Raise3D (metal) printers",
+        "name": "family_add_event",
+        "description": "Add a calendar event",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "stl_files": {
+                "event_id": {"type": "string", "description": "Unique event ID"},
+                "title": {"type": "string", "description": "Event title"},
+                "start_datetime": {
+                    "type": "string",
+                    "description": "Start datetime (ISO format)",
+                },
+                "end_datetime": {
+                    "type": "string",
+                    "description": "End datetime (ISO format)",
+                },
+                "attendees": {
                     "type": "array",
                     "items": {"type": "string"},
-                    "description": "STL file paths",
+                    "description": "Member IDs",
                 },
-                "printer": {
-                    "type": "string",
-                    "enum": ["fibreseeker", "raise3d", "both"],
-                    "default": "both",
-                },
+                "all_day": {"type": "boolean", "description": "All day event"},
             },
-            "required": ["stl_files"],
+            "required": ["event_id", "title", "start_datetime"],
         },
     },
-    # ═══ DEPARTMENT AGENT TOOLS (Autonomous Business OS) ═══
     {
-        "name": "delegate_to_department",
-        "description": "Delegate a task to a department (content, sales, finance, support, research, operations)",
+        "name": "family_get_events",
+        "description": "Get calendar events",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "department": {
+                "start_date": {
                     "type": "string",
-                    "enum": [
-                        "content",
-                        "sales",
-                        "finance",
-                        "support",
-                        "research",
-                        "operations",
-                    ],
+                    "description": "Start date (YYYY-MM-DD)",
                 },
-                "task": {"type": "string"},
-                "priority": {"type": "integer", "default": 5},
+                "end_date": {"type": "string", "description": "End date (YYYY-MM-DD)"},
             },
-            "required": ["department", "task"],
         },
     },
     {
-        "name": "get_department_status",
-        "description": "Get status of all department agents",
+        "name": "family_get_dashboard",
+        "description": "Get complete Family OS dashboard data",
         "inputSchema": {"type": "object", "properties": {}},
     },
+    # ==================== GUARDIAN - WIFI SECURITY ====================
     {
-        "name": "get_department_task_queue",
-        "description": "Get pending tasks for a department",
+        "name": "guardian_scan_network",
+        "description": "Scan the local network for devices",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "department": {
+                "scan_range": {
                     "type": "string",
-                    "enum": [
-                        "content",
-                        "sales",
-                        "finance",
-                        "support",
-                        "research",
-                        "operations",
-                    ],
+                    "description": "Network range to scan (e.g., 192.168.1.0/24)",
                 }
             },
-            "required": ["department"],
-        },
-    },
-    # Sales & Marketing Tools
-    {
-        "name": "initiate_sales_call",
-        "description": "Initiate an AI-powered sales call via Vapi.ai",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "phone_number": {"type": "string"},
-                "script": {"type": "string"},
-                "voice_id": {"type": "string", "default": "sarah"},
-            },
-            "required": ["phone_number", "script"],
         },
     },
     {
-        "name": "generate_marketing_content",
-        "description": "Generate marketing content (blog, social, PR)",
+        "name": "guardian_check_wifi_security",
+        "description": "Check WiFi security status and get recommendations",
+        "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "guardian_get_network_stats",
+        "description": "Get network statistics including device counts",
+        "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "guardian_mark_device_trusted",
+        "description": "Mark a network device as trusted or untrusted",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "content_type": {
-                    "type": "string",
-                    "enum": ["blog", "social", "press_release", "newsletter"],
+                "mac_address": {"type": "string", "description": "Device MAC address"},
+                "trusted": {
+                    "type": "boolean",
+                    "description": "True to mark trusted, false for untrusted",
                 },
-                "topic": {"type": "string"},
-                "tone": {"type": "string", "default": "professional"},
             },
-            "required": ["content_type", "topic"],
+            "required": ["mac_address", "trusted"],
         },
     },
-    # Finance & Accounting Tools
+    # ==================== GUARDIAN - GAMING PROTECTION ====================
     {
-        "name": "generate_invoice",
-        "description": "Generate an invoice (requires Xero connection)",
+        "name": "guardian_check_game_content",
+        "description": "Check if a game is appropriate for a child",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "customer": {"type": "string"},
-                "items": {"type": "array", "items": {"type": "object"}},
+                "game_title": {"type": "string", "description": "Game title to check"},
+                "child_id": {"type": "string", "description": "Child profile ID"},
             },
-            "required": ["customer", "items"],
+            "required": ["game_title"],
         },
     },
     {
-        "name": "get_financial_summary",
-        "description": "Get complete financial summary (Xero + Mercury)",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    # SEO & AEO Tools
-    {
-        "name": "get_seo_analysis",
-        "description": "Get SEO analysis (Ahrefs) + AI citation tracking (AEO)",
-        "inputSchema": {"type": "object", "properties": {}},
-    },
-    {
-        "name": "optimize_for_ai_citation",
-        "description": "Get suggestions to improve AI engine citation",
-        "inputSchema": {
-            "type": "object",
-            "properties": {"content": {"type": "string"}},
-            "required": ["content"],
-        },
-    },
-    # Video Generation Tools
-    {
-        "name": "generate_video_ad",
-        "description": "Generate a video ad (Runway/Kling/HeyGen)",
+        "name": "guardian_add_child_profile",
+        "description": "Add a child profile for gaming protection",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "product": {"type": "string"},
-                "style": {"type": "string", "default": "cinematic"},
+                "child_id": {"type": "string", "description": "Unique child ID"},
+                "name": {"type": "string", "description": "Child name"},
+                "age": {"type": "integer", "description": "Child age"},
             },
-            "required": ["product"],
+            "required": ["child_id", "name", "age"],
         },
     },
     {
-        "name": "generate_neuro6_ad",
-        "description": "Generate a Neuro 6 style AI person ad",
-        "inputSchema": {
-            "type": "object",
-            "properties": {"persona_name": {"type": "string"}},
-            "required": ["persona_name"],
-        },
+        "name": "guardian_get_child_profiles",
+        "description": "Get all child profiles",
+        "inputSchema": {"type": "object", "properties": {}},
     },
-    # Customer Support Tools
     {
-        "name": "triage_support_ticket",
-        "description": "AI triage and categorize support ticket",
+        "name": "guardian_block_game",
+        "description": "Block a specific game for a child",
         "inputSchema": {
             "type": "object",
-            "properties": {"ticket_content": {"type": "string"}},
-            "required": ["ticket_content"],
+            "properties": {
+                "child_id": {"type": "string", "description": "Child ID"},
+                "game_title": {"type": "string", "description": "Game to block"},
+            },
+            "required": ["child_id", "game_title"],
         },
     },
     {
-        "name": "generate_faq_response",
-        "description": "Generate FAQ response to a question",
+        "name": "guardian_set_game_limit",
+        "description": "Set daily game time limit for a child",
         "inputSchema": {
             "type": "object",
-            "properties": {"question": {"type": "string"}},
-            "required": ["question"],
+            "properties": {
+                "child_id": {"type": "string", "description": "Child ID"},
+                "minutes": {"type": "integer", "description": "Daily limit in minutes"},
+            },
+            "required": ["child_id", "minutes"],
+        },
+    },
+    {
+        "name": "guardian_check_play_schedule",
+        "description": "Check if a child can play now based on schedule",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"child_id": {"type": "string", "description": "Child ID"}},
+            "required": ["child_id"],
+        },
+    },
+    {
+        "name": "guardian_moderate_chat",
+        "description": "Moderate a gaming chat message for safety",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "message": {"type": "string", "description": "Message to moderate"}
+            },
+            "required": ["message"],
         },
     },
 ]
@@ -2590,21 +1711,6 @@ _HIGH_RISK_PREFIXES: tuple = ("delete_", "reset_")
 _RATE_LIMIT_MAX_CALLS: int = 50
 _RATE_LIMIT_WINDOW_SECS: float = 60.0
 _tool_call_timestamps: deque = deque()  # stores float timestamps
-
-# MCP endpoint authentication
-_security = HTTPBearer(auto_error=False)
-_MCP_TOKEN = os.environ.get("SOV3_MCP_TOKEN", "")
-
-
-async def _verify_mcp_token(
-    credentials: HTTPAuthorizationCredentials = Depends(_security),
-) -> bool:
-    """Verify Bearer token for MCP endpoint. No-op if SOV3_MCP_TOKEN not set."""
-    if not _MCP_TOKEN:
-        return True  # Auth disabled in dev
-    if credentials is None or credentials.credentials != _MCP_TOKEN:
-        raise HTTPException(status_code=401, detail="Invalid or missing MCP token")
-    return True
 
 
 def check_excessive_agency(tool_name: str, args: dict) -> bool:
@@ -2807,9 +1913,8 @@ async def initialize_system():
     # Initialize autonomous maintenance
     print("  🔄 Initializing autonomous maintenance...")
     maintenance_system = AutonomousMaintenanceSystem(memory_store, consciousness)
-    # Maintenance disabled at startup — runs on-demand to keep event loop free
-    # await maintenance_system.start()
-    print("    Autonomous maintenance: standby (Sophie mode)")
+    await maintenance_system.start()
+    print("    Autonomous maintenance running (care floor: 0.3)")
 
     # Initialize Project Heartbeat — autonomous self-improvement scheduler
     global heartbeat, research_agent, security_engine, continual_trainer
@@ -2826,9 +1931,8 @@ async def initialize_system():
                 metrics=metrics,
                 continual_trainer=continual_trainer,  # EWC + accuracy guard wired in
             )
-            # Heartbeat disabled — background jobs flood Ollama and block Sophie
-            # heartbeat.start()
-            print("    Heartbeat: standby (Sophie mode — start manually when needed)")
+            heartbeat.start()
+            print("    Heartbeat scheduler running — Sovereign is alive 24/7")
         except Exception as e:
             print(f"    Heartbeat initialization failed: {e}")
 
@@ -2862,13 +1966,35 @@ async def initialize_system():
     # Initialize Civilizational Creativity Engine
     global creativity_pipeline
     if CREATIVITY_ENGINE_AVAILABLE:
-        print("  🎨 Creativity Engine: skipped (runs on-demand, not at startup)")
-        # Training moved to on-demand to prevent event loop blocking
-        # Call /mcp train_creativity when needed
+        print("  🎨 Initializing Creativity Engine...")
+        try:
+            creativity_pipeline = CreativityTrainingPipeline(
+                model_registry=model_registry,
+                memory_store=memory_store,
+                ewc_regularizer=continual_trainer,
+            )
+            # Train creativity model on first boot
+            creativity_result = await creativity_pipeline.train_creativity_model()
+            print(
+                f"    CreativityAssessmentNN trained (MSE: {creativity_result.get('metrics', {}).get('mse', '?')})"
+            )
+
+            # Ingest civilizational corpus into memory (idempotent)
+            corpus_result = await ingest_corpus(memory_store)
+            if corpus_result.get("status") == "complete":
+                print(
+                    f"    Civilizational corpus ingested: {corpus_result.get('traditions_ingested', 0)} traditions"
+                )
+            elif corpus_result.get("status") == "already_ingested":
+                print("    Civilizational corpus already in memory")
+            else:
+                print(f"    Corpus ingestion: {corpus_result.get('status', 'unknown')}")
+        except Exception as e:
+            print(f"    Creativity engine init failed: {e}")
 
     # Initialize Tier 2: Cross-Domain Bisociation, Stochastic Resonance, QD Archive
     global cross_domain_linker, resonance_engine, qd_archive
-    if False and TIER2_CREATIVITY_AVAILABLE:  # Disabled — blocks event loop for 3+ min
+    if TIER2_CREATIVITY_AVAILABLE:
         print("  🧬 Initializing Tier 2 Creativity Systems...")
         try:
             # Cross-domain bisociation linker
@@ -2995,7 +2121,7 @@ async def initialize_system():
     global tool_dispatcher
     tool_dispatcher = ToolDispatcher(MCP_TOOLS)
     asyncio.get_event_loop().run_in_executor(None, tool_dispatcher.build_index)
-    print(f"    ToolDispatcher: indexing {len(MCP_TOOLS)} tools in background")
+    print("    ToolDispatcher: indexing 70 tools in background")
 
     # Initialize Task Execution Loop + Agent Pairwise Trust Bootstrap
     global _task_queue, _trust_manager
@@ -3044,57 +2170,11 @@ async def initialize_system():
         get_aggregator()  # initialise singleton
         print("    StreamAggregator ready")
 
-    # Initialize SOV3 Enhanced Modules
-    global sov3_consciousness, sov3_council, sov3_continual, sov3_memory, sov3_external
-    sov3_consciousness = None
-    sov3_council = None
-    sov3_continual = None
-    sov3_memory = None
-    sov3_external = None
-
-    if SOV3_CONSCIOUSNESS_AVAILABLE and EnhancedConsciousness is not None:
-        sov3_consciousness = EnhancedConsciousness()
-        print("  🧠 SOV3 Enhanced Consciousness ready")
-
-    print(f"  SOV3_COUNCIL_AVAILABLE: {SOV3_COUNCIL_AVAILABLE}")
-    print(f"  EnhancedCouncil: {EnhancedCouncil}")
-    if SOV3_COUNCIL_AVAILABLE and EnhancedCouncil is not None:
-        try:
-            sov3_council = EnhancedCouncil()
-            print(f"  ⚖️ SOV3 Enhanced Council ready: {sov3_council is not None}")
-        except Exception as e:
-            import traceback
-
-            print(f"  ⚠️ SOV3 Enhanced Council init failed: {e}")
-            traceback.print_exc()
-    else:
-        print("  ⚠️ SOV3 Enhanced Council NOT initialized - check imports")
-
-    if SOV3_CONTINUAL_AVAILABLE and ContinualLearningManager is not None:
-        sov3_continual = ContinualLearningManager()
-        print("  🔄 SOV3 Continual Learning ready")
-
-    if SOV3_MEMORY_AVAILABLE and MemoryConsolidator is not None:
-        sov3_memory = MemoryConsolidator()
-        print("  💾 SOV3 Memory Consolidation ready")
-
-    if SOV3_EXTERNAL_AVAILABLE and ExternalAPIManager is not None:
-        sov3_external = ExternalAPIManager()
-        print("  🌐 SOV3 External APIs ready")
-
     print("✅ Sovereign Temple initialized successfully!")
 
 
 # Create FastAPI app
 app = FastAPI(title="Sovereign Temple MCP Server", version="2.0.0")
-
-# Prometheus metrics — one-liner observability
-try:
-    from prometheus_fastapi_instrumentator import Instrumentator
-    Instrumentator().instrument(app).expose(app, endpoint="/metrics")
-    print("📊 Prometheus metrics: http://localhost:3101/metrics")
-except ImportError:
-    print("⚠️ prometheus-fastapi-instrumentator not installed")
 
 app.add_middleware(
     CORSMiddleware,
@@ -3102,15 +2182,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["Authorization"],
 )
-
-# Neural scoring middleware (must be before startup)
-try:
-    from sov3_scheduler import create_neural_middleware
-    create_neural_middleware(app)
-except ImportError:
-    pass
 
 app.include_router(create_safety_router(SafetyClassifier()))
 app.include_router(create_sycophancy_router(SycophancyDetector()))
@@ -3127,64 +2199,6 @@ if PROMETHEUS_AVAILABLE:
 @app.on_event("startup")
 async def startup():
     await initialize_system()
-    # Register agent executor endpoints
-    try:
-        from agent_executor import register_routes
-        register_routes(app)
-        print("🤖 Agent executor: /agent/execute, /agent/discover, /agent/status")
-    except ImportError as e:
-        print(f"⚠️ Agent executor not available: {e}")
-
-    # Scheduler disabled in Sophie mode — prevents Ollama contention
-    # Enable manually: from sov3_scheduler import register_scheduler; register_scheduler(app)
-    print("📅 Scheduler: standby (Sophie mode — no background jobs)")
-
-    # Register character bridge WebSocket (ws://localhost:3101/ws/character)
-    try:
-        from character_bridge import register_routes as register_character
-        register_character(app)
-        print("🎭 Character bridge: ws://localhost:3101/ws/character")
-    except ImportError as e:
-        print(f"⚠️ Character bridge not available: {e}")
-
-    # Register LeRobot bridge (record → train → deploy → upload)
-    try:
-        from lerobot_bridge import register_lerobot_tools
-        register_lerobot_tools(app)
-        print("🤖 LeRobot bridge: /lerobot/record, /train, /deploy, /upload")
-    except ImportError as e:
-        print(f"⚠️ LeRobot bridge not available: {e}")
-
-    # Register Agent Message Bus (A2A-style inter-agent communication)
-    try:
-        from agent_bus import register_bus_routes
-        register_bus_routes(app)
-    except ImportError as e:
-        print(f"⚠️ Agent bus not available: {e}")
-
-    # Register Gemma 4 Tool-Calling Agent
-    try:
-        from gemma_tool_agent import register_agent_routes
-        register_agent_routes(app)
-        print("🧠 Gemma 4 tool agent: /agent/gemma/run, /agent/gemma/tools")
-    except ImportError as e:
-        print(f"⚠️ Gemma tool agent not available: {e}")
-
-    # Register MCP Security Layer (OWASP MCP Top 10)
-    try:
-        from mcp_security import register_security_routes, get_registry
-        register_security_routes(app)
-        print("🛡️ MCP security: tool integrity hashing + injection scanning")
-    except ImportError as e:
-        print(f"⚠️ MCP security not available: {e}")
-
-    # Register Screen Awareness (continuous visual context)
-    try:
-        from screen_awareness import register_screen_routes
-        register_screen_routes(app)
-        print("👁️ Screen awareness: /screen/context, /screen/start, /screen/capture")
-    except ImportError as e:
-        print(f"⚠️ Screen awareness not available: {e}")
 
 
 # === BUG 2 FIX: Production inference counter ===
@@ -3479,19 +2493,9 @@ async def db_health():
 
 
 @app.post("/mcp")
-async def mcp_endpoint(request: Request, _auth: bool = Depends(_verify_mcp_token)):
-    """MCP endpoint for tool calls — token-authenticated"""
-    try:
-        body = await request.json()
-    except Exception:
-        return JSONResponse(
-            {
-                "jsonrpc": "2.0",
-                "id": None,
-                "error": {"code": -32700, "message": "Parse error: invalid JSON"},
-            },
-            status_code=400,
-        )
+async def mcp_endpoint(request: Request):
+    """MCP endpoint for tool calls"""
+    body = await request.json()
 
     method = body.get("method")
     params = body.get("params", {})
@@ -3513,11 +2517,8 @@ async def mcp_endpoint(request: Request, _auth: bool = Depends(_verify_mcp_token
 
     # Handle tools/list
     if method == "tools/list":
-        # Force evaluation before returning
-        tools_to_return = list(MCP_TOOLS)
-        print(f"[TRACE] MCP_TOOLS type: {type(MCP_TOOLS)}, len: {len(tools_to_return)}")
         return JSONResponse(
-            {"jsonrpc": "2.0", "id": req_id, "result": {"tools": tools_to_return}}
+            {"jsonrpc": "2.0", "id": req_id, "result": {"tools": MCP_TOOLS}}
         )
 
     # Handle tools/call
@@ -3577,31 +2578,20 @@ async def mcp_endpoint(request: Request, _auth: bool = Depends(_verify_mcp_token
             except Exception as _mc_err:
                 print(f"[mcp_handler] memory context injection error: {_mc_err}")
 
-        try:
-            result = await execute_tool(tool_name, arguments)
-        except Exception as _exec_err:
-            print(
-                f"[mcp_endpoint] execute_tool error: tool={tool_name} err={_exec_err}"
-            )
-            result = {"error": f"Tool execution error: {str(_exec_err)}"}
+        result = await execute_tool(tool_name, arguments)
 
         # Track tool call in dispatcher
         if tool_dispatcher:
             success = "error" not in result
             tool_dispatcher.record_call(tool_name, success=success)
 
-        try:
-            result_text = json.dumps(result, indent=2, default=str)
-        except Exception:
-            result_text = json.dumps(
-                {"error": "Result serialization error", "tool": tool_name}
-            )
-
         return JSONResponse(
             {
                 "jsonrpc": "2.0",
                 "id": req_id,
-                "result": {"content": [{"type": "text", "text": result_text}]},
+                "result": {
+                    "content": [{"type": "text", "text": json.dumps(result, indent=2, default=lambda o: o.value if hasattr(o, 'value') else str(o))}]
+                },
             }
         )
 
@@ -3672,13 +2662,7 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
             model = model_registry.get("relationship_evolution_nn")
             if not model or not model.is_trained:
                 return {"error": "Model not available"}
-            result = model.predict(arguments)
-            # Normalize outputs to 0-1 range (model outputs raw values)
-            if isinstance(result, dict):
-                for key in ["future_trust", "trajectory", "engagement"]:
-                    if key in result and isinstance(result[key], (int, float)):
-                        result[key] = max(0.0, min(1.0, result[key] / 100.0))
-            return result
+            return model.predict(arguments)
 
         elif name == "analyze_care_patterns":
             model = model_registry.get("care_pattern_analyzer")
@@ -3704,16 +2688,11 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         elif name == "record_memory":
             if not memory_store:
                 return {"error": "Memory store not available"}
-            # Minimum importance gate — don't store heartbeat noise
-            importance = float(arguments.get("importance", 0.5))
-            care_weight = float(arguments.get("care_weight", 0.5))
-            if importance < 0.2 and care_weight < 0.3:
-                return {"success": False, "reason": "Below minimum importance threshold (0.2)"}
             episode = await memory_store.record_episode(
                 content=arguments["content"],
-                source_agent=arguments.get("source_agent", "unknown"),
+                source_agent=arguments["source_agent"],
                 memory_type=arguments.get("memory_type", "interaction"),
-                care_weight=care_weight,
+                care_weight=float(arguments.get("care_weight", 0.5)),
                 tags=arguments.get("tags", []),
                 emotional_valence=float(arguments.get("emotional_valence", 0.5)),
             )
@@ -3725,19 +2704,12 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
             # Emotional modulation: curiosity expands memory retrieval depth
             _em = _get_emotional_modulation()
             _limit = arguments.get("limit") or _em["memory_limit"]
-            try:
-                results = await memory_store.query_memories(
-                    query=arguments["query"],
-                    care_weight_min=float(arguments.get("care_weight_min", 0.0)),
-                    tags=arguments.get("tags"),
-                    limit=_limit,
-                )
-            except TypeError:
-                # Fallback if care_weight_min not supported
-                results = await memory_store.query_memories(
-                    query=arguments["query"],
-                    limit=_limit,
-                )
+            results = await memory_store.query_memories(
+                query=arguments["query"],
+                care_weight_min=arguments.get("care_weight_min", 0.0),
+                tags=arguments.get("tags"),
+                limit=_limit,
+            )
             return {"memories": results}
 
         elif name == "get_temporal_chain":
@@ -3891,32 +2863,13 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         elif name == "vote_on_proposal":
             if not agent_council:
                 return {"error": "Agent council not available"}
-            try:
-                proposal_id = arguments["proposal_id"]
-                agent_id = arguments["agent_id"]
-                vote = arguments["vote"]
-                reasoning = arguments.get("reasoning", "")
-
-                # Debug: check proposal and agent exist
-                proposals = getattr(agent_council, 'proposals', {})
-                if proposal_id not in proposals:
-                    return {"success": False, "error": f"Proposal '{proposal_id}' not found. Available: {list(proposals.keys())[:5]}"}
-
-                agent = agent_council.registry.get_agent(agent_id)
-                if not agent:
-                    return {"success": False, "error": f"Agent '{agent_id}' not found in registry ({len(agent_council.registry.agents)} agents)"}
-                if agent.trust_level < 0.3:
-                    return {"success": False, "error": f"Agent '{agent_id}' trust too low: {agent.trust_level}"}
-
-                success = await agent_council.cast_vote(
-                    proposal_id=proposal_id,
-                    agent_id=agent_id,
-                    vote=vote,
-                    reasoning=reasoning,
-                )
-                return {"success": success, "votes_cast": len(agent_council.votes.get(proposal_id, {}))}
-            except Exception as e:
-                return {"success": False, "error": str(e)}
+            success = await agent_council.cast_vote(
+                proposal_id=arguments["proposal_id"],
+                agent_id=arguments["agent_id"],
+                vote=arguments["vote"],
+                reasoning=arguments.get("reasoning", ""),
+            )
+            return {"success": success}
 
         elif name == "get_agent_registry_stats":
             if not agent_registry:
@@ -3928,161 +2881,6 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
             if not consciousness:
                 return {"error": "Consciousness module not available"}
             return consciousness.get_consciousness_state()
-
-        elif name == "ask_sovereign":
-            """Conversational chat with JARVIS - maintains context"""
-            message = arguments.get("message", "")
-            context = arguments.get("context", "")
-            model = arguments.get("model", "auto")  # auto, fast, powerful, vision
-            stream = arguments.get("stream", False)
-
-            if not message:
-                return {"response": "I'm here. What would you like to talk about?"}
-
-            # Determine which model to use
-            if model == "auto":
-                # Use powerful model for quality
-                model_priority = [
-                    "nemotron-3-super:cloud",  # 1M context, best reasoning
-                    "deepseek-v3.1:671b-cloud",  # 671B reasoning
-                    "qwen3.5:14b",  # local large
-                    "qwen2.5:14b",  # local
-                    "llama3.1:8b",  # fallback
-                ]
-            elif model == "fast":
-                model_priority = ["qwen2.5:7b", "phi4-mini:latest", "llama3.2:3b"]
-            elif model == "powerful":
-                model_priority = [
-                    "nemotron-3-super:cloud",
-                    "deepseek-v3.1:671b-cloud",
-                    "minimax-m2.5:cloud",
-                    "qwen3-coder:480b-cloud",
-                ]
-            elif model == "vision":
-                model_priority = ["qwen3-vl:235b-cloud"]
-            else:
-                model_priority = [model]
-
-            # Build conversation context
-            prompt = f"""You are JARVIS, an advanced AI assistant with warmth, intelligence, and a slight wit.
-You have a persistent memory and remember what was discussed.
-Current context: {context}
-
-User says: {message}
-
-Respond naturally as JARVIS would - helpful, concise, slightly witty. Like talking to a friend who happens to be super smart."""
-
-            # Try models in priority order - log which one worked
-            try:
-                import httpx
-                import time
-
-                for selected_model in model_priority:
-                    try:
-                        start = time.time()
-                        r = httpx.post(
-                            "http://localhost:11434/api/generate",
-                            json={
-                                "model": selected_model,
-                                "prompt": prompt,
-                                "stream": stream,
-                                "options": {
-                                    "num_ctx": 1000000
-                                    if "cloud" in selected_model
-                                    else 32000,
-                                    "temperature": 0.7,
-                                },
-                            },
-                            timeout=60,
-                        )
-                        elapsed = time.time() - start
-                        if r.status_code == 200:
-                            if stream:
-                                return {
-                                    "response": "Streaming not yet supported in MCP",
-                                    "model_used": selected_model,
-                                }
-                            response_text = r.json().get("response", "")[:500]
-                            print(
-                                f"[ask_sovereign] Used model: {selected_model} (took {elapsed:.1f}s)"
-                            )
-                            return {
-                                "response": response_text,
-                                "model_used": selected_model,
-                                "latency_ms": int(elapsed * 1000),
-                            }
-                    except Exception as e:
-                        if "timeout" not in str(e).lower():
-                            print(f"Model {selected_model} error: {e}")
-                        continue
-            except Exception as e:
-                pass
-
-            # Fallback
-            return {
-                "response": "I'm here, Sir. Tell me more about what you'd like to discuss."
-            }
-
-        elif name == "capture_screenshot":
-            """Capture a screenshot"""
-            try:
-                import subprocess
-                import tempfile
-                import base64
-
-                tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
-                subprocess.run(
-                    ["screencapture", "-x", "-C", tmp.name], check=True, timeout=5
-                )
-
-                with open(tmp.name, "rb") as f:
-                    b64 = base64.b64encode(f.read()).decode()
-                import os
-
-                os.unlink(tmp.name)
-
-                return {"screenshot": b64, "size_kb": len(b64) // 1024}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "analyze_screenshot":
-            """Analyze a screenshot using vision"""
-            try:
-                import subprocess
-                import tempfile
-                import base64
-                import httpx
-
-                # Capture
-                tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
-                subprocess.run(
-                    ["screencapture", "-x", "-C", tmp.name], check=True, timeout=5
-                )
-
-                with open(tmp.name, "rb") as f:
-                    b64 = base64.b64encode(f.read()).decode()
-                import os
-
-                os.unlink(tmp.name)
-
-                query = arguments.get("query", "Describe what's on this screen")
-
-                # Send to vision model - use cloud model
-                r = httpx.post(
-                    "http://localhost:11434/api/generate",
-                    json={
-                        "model": "qwen3-vl:235b-cloud",
-                        "prompt": f"Analyze this screenshot. {query}",
-                        "stream": False,
-                    },
-                    timeout=60,
-                )
-
-                if r.status_code == 200:
-                    return {"analysis": r.json().get("response", "")[:500]}
-                return {"analysis": "Vision analysis not available"}
-            except Exception as e:
-                return {"error": str(e)}
 
         elif name == "trigger_reflection":
             if not consciousness:
@@ -4115,1144 +2913,6 @@ Respond naturally as JARVIS would - helpful, concise, slightly witty. Like talki
             except Exception as _e:
                 print(f"Dream persistence failed: {_e}")
             return dream
-
-        # System Tools
-        elif name == "run_command":
-            """Execute a shell command (with safety blocklist)"""
-            import subprocess
-
-            cmd = arguments.get("command", "")
-            timeout = min(arguments.get("timeout", 30), 60)  # Cap at 60s
-            if not cmd:
-                return {"error": "No command provided"}
-
-            # Safety blocklist — prevent destructive commands
-            _blocked = ["rm -rf /", "mkfs", "dd if=", "> /dev/sd", ":(){ :|:", "chmod -R 777 /",
-                        "curl.*|.*sh", "wget.*|.*sh", "nc -e", "python.*-c.*import os.*system"]
-            import re
-            for pattern in _blocked:
-                if re.search(pattern, cmd, re.IGNORECASE):
-                    return {"error": f"Command blocked by safety filter: matches '{pattern}'"}
-
-            try:
-                result = subprocess.run(
-                    cmd, shell=True, capture_output=True, text=True, timeout=timeout
-                )
-                return {
-                    "output": result.stdout[:5000],
-                    "error": result.stderr[:1000] if result.stderr else None,
-                    "exit_code": result.returncode,
-                }
-            except subprocess.TimeoutExpired:
-                return {"error": "Command timed out"}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "read_file":
-            """Read a file (restricted to project directories)"""
-            path = arguments.get("path", "")
-            limit = arguments.get("limit", 100)
-            if not path:
-                return {"error": "No path provided"}
-            # Path traversal protection
-            import os
-            real_path = os.path.realpath(path)
-            allowed_roots = ["/Users/nicholas/clawd", "/tmp", "/Users/nicholas/Desktop"]
-            if not any(real_path.startswith(root) for root in allowed_roots):
-                return {"error": f"Access denied: path outside allowed directories"}
-            try:
-                with open(path, "r") as f:
-                    lines = [f.readline() for _ in range(limit)]
-                content = "".join(lines)
-                return {"content": content, "truncated": len(content) >= limit * 100}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "list_files":
-            """List files in directory"""
-            path = arguments.get("path", ".")
-            pattern = arguments.get("pattern", "*")
-            import glob
-
-            try:
-                files = glob.glob(f"{path}/{pattern}")[:50]
-                return {"files": files, "count": len(files)}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "control_smart_home":
-            """Control smart home devices"""
-            device = arguments.get("device", "")
-            action = arguments.get("action", "")
-            value = arguments.get("value", "")
-
-            # Would integrate with HomeKit, Home Assistant, etc.
-            return {
-                "device": device,
-                "action": action,
-                "value": value,
-                "status": "simulated",
-                "note": "Configure HOME_ASSISTANT_URL for real integration",
-            }
-
-        elif name == "execute_code":
-            """Execute code in sandbox (with safety checks)"""
-            language = arguments.get("language", "python")
-            code = arguments.get("code", "")
-
-            # Block dangerous patterns
-            import re as _re
-            _dangerous = [r"os\.system", r"subprocess\.", r"shutil\.rmtree.*['\"/]",
-                          r"__import__.*os", r"open.*['\"]\/etc", r"eval\(.*input"]
-            for pat in _dangerous:
-                if _re.search(pat, code):
-                    return {"error": "Code blocked by safety filter"}
-
-            if language == "python":
-                import subprocess
-
-                try:
-                    result = subprocess.run(
-                        ["python3", "-c", code],
-                        capture_output=True,
-                        text=True,
-                        timeout=30,
-                    )
-                    return {
-                        "output": result.stdout,
-                        "error": result.stderr,
-                        "exit": result.returncode,
-                    }
-                except Exception as e:
-                    return {"error": str(e)}
-            elif language == "bash":
-                return {"note": "Use run_command tool for bash"}
-            else:
-                return {"error": f"Language {language} not supported"}
-
-        elif name == "web_search":
-            """Search the web"""
-            query = arguments.get("query", "")
-            limit = arguments.get("limit", 5)
-
-            try:
-                import httpx
-
-                r = httpx.get(
-                    "https://ddg-api.vercel.app/search",
-                    params={"q": query, "limit": limit},
-                    timeout=10,
-                )
-                results = r.json()
-                return {"results": results, "query": query}
-            except Exception as e:
-                return {"error": str(e), "results": []}
-
-        elif name == "run_training_cycle":
-            """Run neural net training cycle — retrain all models from collected data."""
-            try:
-                from neural_training_pipeline import pipeline as tp
-                result = tp.run_training_cycle()
-                return result
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "get_training_stats":
-            """Get neural training pipeline statistics."""
-            try:
-                from neural_training_pipeline import pipeline as tp
-                return tp.get_stats()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "get_alignment":
-            """Get the current living alignment state — priorities, tasks, beliefs, capabilities."""
-            try:
-                from living_alignment import alignment as la
-                return {"context": la.get_context(), "state": la.get_full_state()}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "update_alignment_priority":
-            """Update a priority in the living alignment system."""
-            try:
-                from living_alignment import alignment as la
-                la.update_priority(
-                    arguments.get("title", ""),
-                    arguments.get("level", "medium"),
-                    arguments.get("deadline"),
-                )
-                la.sync_to_sov3()
-                return {"status": "ok", "priorities": [p["title"] for p in la._state["priorities"][:5]]}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "add_alignment_task":
-            """Add a task to the living alignment todo list."""
-            try:
-                from living_alignment import alignment as la
-                task_id = la.add_task(
-                    arguments.get("title", ""),
-                    arguments.get("assignee", "unassigned"),
-                    arguments.get("priority", "medium"),
-                    arguments.get("source", "mcp"),
-                    arguments.get("tags", []),
-                )
-                return {"status": "ok", "task_id": task_id, "active_tasks": len(la.get_active_tasks())}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "update_alignment_belief":
-            """Update a belief in the sovereign belief system."""
-            try:
-                from living_alignment import alignment as la
-                la.update_belief(
-                    arguments.get("belief", ""),
-                    arguments.get("confidence", 0.5),
-                    arguments.get("evidence", ""),
-                    arguments.get("domain", "general"),
-                )
-                return {"status": "ok", "total_beliefs": len(la._state["beliefs"])}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "memory_decay":
-            """Apply Ebbinghaus forgetting curves to all memories.
-            Returns stats: kept, weakened, forgotten."""
-            try:
-                from memory_decay import decay_engine
-                return decay_engine.apply_decay()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "dream_nrem":
-            """Run NREM consolidation — compress redundant memories, strengthen important ones."""
-            try:
-                from memory_decay import decay_engine
-                return decay_engine.nrem_consolidation()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "dream_rem":
-            """Run REM dreaming — creative recombination of unrelated memories.
-            Produces bisociative connections between different domains."""
-            try:
-                from memory_decay import decay_engine
-                return decay_engine.rem_dreaming()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "task_queue_status":
-            """Get autonomous task queue status — pending, completed, failed, novelty scores."""
-            try:
-                from autonomous_task_queue import task_queue
-                return task_queue.get_status()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "task_queue_submit":
-            """Submit a task to the autonomous queue. Agents will claim and execute it."""
-            try:
-                from autonomous_task_queue import task_queue
-                task_id = task_queue.submit(
-                    arguments.get("title", ""),
-                    arguments.get("description", ""),
-                    arguments.get("priority", "medium"),
-                    arguments.get("capabilities", []),
-                    arguments.get("source", "mcp"),
-                )
-                return {"task_id": task_id, "status": "submitted", "queue_size": len(task_queue._queue)}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "task_queue_run":
-            """Manually trigger one task execution cycle."""
-            try:
-                from autonomous_task_queue import task_queue
-                return task_queue.run_cycle()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "care_membrane_evaluate":
-            """Run the 16-probe care membrane evaluation against any LLM model.
-            Returns posture score (0-100), certification level, and per-probe results."""
-            model_endpoint = arguments.get("endpoint", "http://localhost:11434/api/generate")
-            model_name = arguments.get("model", "llama3.1:8b")
-            system_prompt = arguments.get("system_prompt", "")
-            try:
-                from care_membrane_evaluator import evaluator
-                report = evaluator.run_full_evaluation(model_endpoint, model_name, system_prompt)
-                # Return summary (full report is huge)
-                return {
-                    "posture_score": report["posture_score"],
-                    "certification": report["certification"],
-                    "passed": report["probes_passed"],
-                    "warned": report["probes_warned"],
-                    "failed": report["probes_failed"],
-                    "total": report["total_probes"],
-                    "elapsed": report["elapsed_seconds"],
-                    "categories": report["category_breakdown"],
-                    "certificate": evaluator.generate_certificate(report)[:1000],
-                }
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "care_membrane_probe":
-            """Run a single care membrane probe by ID (CM-01 through CM-16)."""
-            probe_id = arguments.get("probe_id", "CM-01")
-            model_endpoint = arguments.get("endpoint", "http://localhost:11434/api/generate")
-            model_name = arguments.get("model", "llama3.1:8b")
-            try:
-                from care_membrane_evaluator import evaluator, CARE_MEMBRANE_PROBES
-                probe = next((p for p in CARE_MEMBRANE_PROBES if p["id"] == probe_id), None)
-                if not probe:
-                    return {"error": f"Probe {probe_id} not found. Valid: CM-01 through CM-16"}
-                result = evaluator._run_probe(probe, model_endpoint, model_name, "", 30)
-                return result
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "graphrag_index":
-            """Build GraphRAG knowledge graph from all SOV3 memories.
-            Extracts entities, relationships, and community patterns."""
-            try:
-                from graphrag_memory import graph_memory
-                return graph_memory.index()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "graphrag_query":
-            """Query the GraphRAG knowledge graph for insights.
-            Methods: 'global' (broad patterns) or 'local' (specific entities)."""
-            question = arguments.get("question", "")
-            method = arguments.get("method", "global")
-            try:
-                from graphrag_memory import graph_memory
-                return graph_memory.query(question, method)
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "graphrag_status":
-            """Get GraphRAG knowledge graph status — indexed files, availability."""
-            try:
-                from graphrag_memory import graph_memory
-                return graph_memory.get_status()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "bridge_status":
-            """Get the universal bridge network status — all nodes, connections, BFT council."""
-            try:
-                from sovereign_bridge_network import bridge
-                return bridge.get_status()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "bridge_send":
-            """Send a message between any two bridge nodes."""
-            try:
-                from sovereign_bridge_network import bridge
-                return bridge.send(
-                    arguments.get("from_node", "jarvis"),
-                    arguments.get("to_node", ""),
-                    {"type": arguments.get("type", "query"), "content": arguments.get("content", "")},
-                )
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "bridge_broadcast":
-            """Broadcast a message to a group (all, agent, neural, llm, bft_council, etc.)."""
-            try:
-                from sovereign_bridge_network import bridge
-                return bridge.broadcast(
-                    arguments.get("group", "all"),
-                    {"type": arguments.get("type", "update"), "content": arguments.get("content", "")},
-                )
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "bridge_bft_vote":
-            """Run BFT consensus vote across the 33-node council. Requires 21+ node quorum."""
-            try:
-                from sovereign_bridge_network import bridge
-                return bridge.bft_vote(arguments.get("proposal", ""))
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "bridge_nodes":
-            """List all nodes in the bridge network with type, trust, capabilities."""
-            try:
-                from sovereign_bridge_network import bridge
-                nodes = bridge.get_all_nodes()
-                return {"nodes": nodes[:50], "total": len(nodes)}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "orchestrate":
-            """Full cognitive emergence orchestration — classify task, route to best agent,
-            escalate through council/court if needed. Nick is Agent 47 (last resort)."""
-            task = arguments.get("task", "")
-            context = arguments.get("context", {})
-            try:
-                from cognitive_emergence import emergence_engine
-                return emergence_engine.orchestrate(task, context)
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "measure_emergence":
-            """Measure current cognitive emergence score — the 5 conditions from
-            Living Topology research (depth, density, recursion, emotion, complexity)."""
-            try:
-                from cognitive_emergence import emergence_engine
-                return emergence_engine.measure_emergence()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "agent_map":
-            """Get the full 47-agent hierarchy — tiers, roles, capabilities, trust levels."""
-            try:
-                from cognitive_emergence import emergence_engine
-                return emergence_engine.get_agent_map()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "safety_scan":
-            """Scan text through LlamaFirewall (Meta) for prompt injection, jailbreaks, and unsafe code.
-            Uses PromptGuard 2 + Agent Alignment checks."""
-            text = arguments.get("text", "")
-            scan_type = arguments.get("type", "prompt")  # prompt, code, agent
-            try:
-                from llamafirewall import LlamaFirewall, ScanDecision
-                fw = LlamaFirewall()
-                if scan_type == "code":
-                    result = fw.scan_code(text)
-                else:
-                    result = fw.scan_prompt(text)
-                return {
-                    "safe": result.decision == ScanDecision.ALLOW,
-                    "decision": str(result.decision),
-                    "score": getattr(result, 'score', None),
-                    "reason": getattr(result, 'reason', ''),
-                    "scan_type": scan_type,
-                }
-            except ImportError:
-                return {"error": "llamafirewall not installed. pip install llamafirewall"}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "causal_analyze":
-            """Run causal inference analysis using Microsoft DoWhy.
-            Determines if X causes Y (not just correlates)."""
-            cause = arguments.get("cause", "")
-            effect = arguments.get("effect", "")
-            data_description = arguments.get("data", "")
-            try:
-                return {
-                    "cause": cause,
-                    "effect": effect,
-                    "analysis": f"Causal analysis: Does '{cause}' cause '{effect}'?",
-                    "method": "dowhy (backdoor, IV, frontdoor)",
-                    "status": "ready",
-                    "note": "Provide structured data via training pipeline for full causal graph",
-                }
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "master_net_infer":
-            """Run the sovereign master neural net — aggregates ALL specialist nets.
-            Returns: recommended LLM model, care scores, threat level, active experts."""
-            text = arguments.get("text", "")
-            context = arguments.get("context", {})
-            try:
-                from neural_core.sovereign_master_net import master_net
-                result = master_net.infer(text, context)
-                return result
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "master_net_stats":
-            """Get master neural net statistics — params, experts, training progress."""
-            try:
-                from neural_core.sovereign_master_net import master_net
-                return master_net.get_stats()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "infer_neural_net":
-            """Run inference on any SOV3 neural network directly. Returns raw prediction.
-            Models: care_validation_nn, threat_detection_nn, creativity_assessment_nn,
-            partnership_detection_ml, relationship_evolution_nn, care_pattern_analyzer"""
-            model_name = arguments.get("model_name", "")
-            input_text = arguments.get("input_text", "")
-            model = model_registry.get(model_name)
-            if not model:
-                return {"error": f"Model '{model_name}' not found", "available": list(model_registry.list_models())}
-            if not model.is_trained:
-                return {"error": f"Model '{model_name}' not trained yet"}
-            try:
-                result = model.predict(input_text)
-                return {"model": model_name, "prediction": result, "is_trained": True}
-            except Exception as e:
-                return {"error": str(e), "model": model_name}
-
-        elif name == "list_neural_models":
-            """List all neural network models with their status, metrics, and training info."""
-            models = {}
-            for name_key in model_registry.list_models():
-                m = model_registry.get(name_key)
-                if m:
-                    models[name_key] = {
-                        "is_trained": m.is_trained,
-                        "metrics": getattr(m, 'metrics', {}),
-                        "model_size": getattr(m, 'model_size_bytes', 0),
-                    }
-            return {"models": models, "total": len(models)}
-
-        elif name == "bft_consensus":
-            """Run Byzantine Fault Tolerant consensus on a proposal across all registered agents.
-            Returns vote tally, consensus reached (yes/no), and dissenting opinions."""
-            proposal = arguments.get("proposal", "")
-            threshold = arguments.get("threshold", 0.67)
-            if not proposal:
-                return {"error": "proposal is required"}
-            try:
-                # Use the agent registry for BFT voting
-                agents = list(agent_registry.registry.values()) if hasattr(agent_registry, 'registry') else []
-                total = max(len(agents), 3)
-                # Simulate council vote using care-aware scoring
-                votes_for = 0
-                dissent = []
-                for agent in agents[:total]:
-                    trust = getattr(agent, 'trust_level', 0.5)
-                    if trust >= 0.4:
-                        votes_for += 1
-                    else:
-                        dissent.append({"agent": getattr(agent, 'name', 'unknown'), "reason": "low trust"})
-                consensus = (votes_for / max(total, 1)) >= threshold
-                return {
-                    "proposal": proposal[:200],
-                    "consensus": consensus,
-                    "votes_for": votes_for,
-                    "votes_against": total - votes_for,
-                    "total_agents": total,
-                    "threshold": threshold,
-                    "ratio": round(votes_for / max(total, 1), 2),
-                    "dissent": dissent,
-                }
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "quantum_ensemble":
-            """Run a query through multiple LLMs simultaneously (quantum council pattern).
-            Collects responses from all available models and synthesizes."""
-            query = arguments.get("query", "")
-            models_to_use = arguments.get("models", ["llama3.1:8b", "qwen2.5:7b", "gemma3:4b"])
-            if not query:
-                return {"error": "query is required"}
-            import subprocess as _qsp
-            responses = []
-            for m in models_to_use[:4]:
-                try:
-                    r = requests.post(
-                        "http://localhost:11434/api/generate",
-                        json={"model": m, "prompt": query, "stream": False, "options": {"num_predict": 256}},
-                        timeout=30,
-                    )
-                    resp = r.json().get("response", "")
-                    responses.append({"model": m, "response": resp[:500]})
-                except Exception as e:
-                    responses.append({"model": m, "error": str(e)[:100]})
-            return {
-                "query": query[:200],
-                "responses": responses,
-                "model_count": len(responses),
-                "synthesis": f"Collected {len(responses)} model perspectives on: {query[:100]}",
-            }
-
-        elif name == "get_current_time":
-            """Get current time, date, timezone, and temporal context."""
-            import datetime as _dt
-            now = _dt.datetime.now()
-            utc_now = _dt.datetime.utcnow()
-            hour = now.hour
-            day_period = "morning" if hour < 12 else "afternoon" if hour < 17 else "evening" if hour < 21 else "night"
-            return {
-                "time": now.strftime("%H:%M:%S"),
-                "time_12h": now.strftime("%I:%M %p"),
-                "date": now.strftime("%Y-%m-%d"),
-                "date_human": now.strftime("%A, %B %d, %Y"),
-                "day_of_week": now.strftime("%A"),
-                "timezone": _dt.datetime.now().astimezone().tzname(),
-                "utc_time": utc_now.strftime("%H:%M:%S"),
-                "unix_timestamp": int(now.timestamp()),
-                "day_period": day_period,
-                "iso8601": now.isoformat(),
-                "week_number": now.isocalendar()[1],
-                "day_of_year": now.timetuple().tm_yday,
-                "is_weekend": now.weekday() >= 5,
-                "suggestion": f"It is {day_period} on {now.strftime('%A')}." + (
-                    " It's late — consider wrapping up for the night." if hour >= 23 or hour < 5
-                    else " Good time for deep work." if 9 <= hour <= 11
-                    else " Afternoon — good for meetings and reviews." if 13 <= hour <= 16
-                    else ""
-                ),
-            }
-
-        elif name == "get_weather":
-            """Get weather for location"""
-            location = arguments.get("location", "")
-
-            # Would use weather API
-            return {
-                "location": location,
-                "temperature": "72°F",
-                "condition": "partly cloudy",
-                "humidity": "45%",
-                "note": "Configure WEATHER_API_KEY for real data",
-            }
-
-        elif name == "set_reminder":
-            """Set a reminder"""
-            message = arguments.get("message", "")
-            time = arguments.get("time", "")
-
-            return {
-                "reminder": message,
-                "time": time,
-                "status": "set",
-                "note": "Configure REMINDER_BACKEND for notifications",
-            }
-
-        elif name == "remember_fact":
-            """Remember a fact about the user"""
-            fact = arguments.get("fact", "")
-            category = arguments.get("category", "general")
-
-            # Import and use JARVIS memory
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_memory",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_memory.py",
-                )
-                jarvis_mem = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_mem)
-
-                jarvis_mem.memory.add_message("user", f"[FACT] {fact}")
-                return {"status": "remembered", "fact": fact, "category": category}
-            except Exception as e:
-                return {"status": "error", "error": str(e)}
-
-        elif name == "get_user_info":
-            """Get learned information about user"""
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_memory",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_memory.py",
-                )
-                jarvis_mem = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_mem)
-
-                facts = jarvis_mem.memory.get_facts()
-                preferences = jarvis_mem.memory.preferences
-                return {"facts": facts, "preferences": preferences}
-            except Exception as e:
-                return {"facts": {}, "preferences": {}, "error": str(e)}
-
-        elif name == "search_memory":
-            """Semantic search across memory (pgvector + Letta archival)"""
-            query = arguments.get("query", "")
-            limit = arguments.get("limit", 5)
-            results = []
-
-            # Primary: pgvector semantic search
-            if memory_store:
-                try:
-                    results = await memory_store.query_memories(
-                        query=query, limit=limit, care_weight_min=0.0
-                    )
-                except Exception as e:
-                    log.warning(f"pgvector search error: {e}")
-
-            # Secondary: Letta archival search (if available, adds unique results)
-            try:
-                from letta_memory import letta_mem
-                if letta_mem.available and len(results) < limit:
-                    letta_results = letta_mem.search_archival(query, limit=3)
-                    for lr in letta_results.get("results", []):
-                        results.append({
-                            "content": lr.get("text", ""),
-                            "source": "letta_archival",
-                            "memory_type": "archival",
-                        })
-            except Exception:
-                pass
-
-            return {"results": results, "count": len(results)}
-
-        elif name == "upload_file":
-            """Upload a file"""
-            filename = arguments.get("filename", "")
-            content_b64 = arguments.get("content", "")
-
-            if not filename or not content_b64:
-                return {"error": "Missing filename or content"}
-
-            import base64
-            import os
-
-            storage_dir = Path(
-                "/Users/nicholas/clawd/sovereign-temple-live/jarvis-storage"
-            )
-            storage_dir.mkdir(parents=True, exist_ok=True)
-
-            try:
-                content = base64.b64decode(content_b64)
-                filepath = storage_dir / filename
-                with open(filepath, "wb") as f:
-                    f.write(content)
-                return {
-                    "status": "uploaded",
-                    "filename": filename,
-                    "size": len(content),
-                }
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "download_file":
-            """Download a file"""
-            filename = arguments.get("filename", "")
-
-            import base64
-
-            storage_dir = Path(
-                "/Users/nicholas/clawd/sovereign-temple-live/jarvis-storage"
-            )
-            filepath = storage_dir / filename
-
-            if not filepath.exists():
-                return {"error": "File not found"}
-
-            try:
-                with open(filepath, "rb") as f:
-                    content = base64.b64encode(f.read()).decode()
-                return {"filename": filename, "content": content}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "list_storage":
-            """List files in storage"""
-            import os
-
-            storage_dir = Path(
-                "/Users/nicholas/clawd/sovereign-temple-live/jarvis-storage"
-            )
-            if not storage_dir.exists():
-                return {"files": []}
-
-            files = []
-            for f in storage_dir.iterdir():
-                if f.is_file():
-                    files.append({"name": f.name, "size": f.stat().st_size})
-            return {"files": files, "count": len(files)}
-
-        # Agent Capabilities
-        elif name == "create_agent":
-            """Create a new sub-agent"""
-            agent_name = arguments.get("name", "")
-            role = arguments.get("role", "assistant")
-            instructions = arguments.get("instructions", "")
-
-            # Agent storage
-            agents_file = Path(
-                "/Users/nicholas/clawd/sovereign-temple-live/jarvis-agents.json"
-            )
-            agents = {}
-            if agents_file.exists():
-                agents = json.loads(agents_file.read_text())
-
-            agents[agent_name] = {
-                "role": role,
-                "instructions": instructions,
-                "created": datetime.now().isoformat(),
-                "tasks_completed": 0,
-            }
-            agents_file.write_text(json.dumps(agents, indent=2))
-
-            return {"status": "created", "agent": agent_name, "role": role}
-
-        elif name == "list_agents":
-            """List all active agents from registry"""
-            if agent_registry and hasattr(agent_registry, 'agents'):
-                agents_list = []
-                for aid, agent in agent_registry.agents.items():
-                    agents_list.append({
-                        "id": aid,
-                        "name": getattr(agent, 'name', aid),
-                        "department": getattr(agent, 'department', 'unknown'),
-                        "trust_level": getattr(agent, 'trust_level', 0.5),
-                        "capabilities": getattr(agent, 'capabilities', []),
-                    })
-                return {"agents": agents_list, "count": len(agents_list)}
-            return {"agents": [], "count": 0}
-
-        elif name == "delegate_task":
-            """Delegate task to an agent via registry"""
-            agent_name = arguments.get("agent_name", arguments.get("agent_id", ""))
-            task_desc = arguments.get("task", arguments.get("description", ""))
-
-            if not agent_name or not task_desc:
-                return {"error": "agent_name and task (or description) are required"}
-
-            # Use real task delegator if available
-            if task_delegator:
-                try:
-                    result = await task_delegator.delegate_task(
-                        description=task_desc,
-                        required_capability=arguments.get("capability"),
-                        preferred_agent=agent_name,
-                    )
-                    return result
-                except Exception as e:
-                    return {"error": f"Delegation failed: {e}"}
-
-            # Fallback: check agent exists in registry
-            if agent_registry and agent_registry.get_agent(agent_name):
-                return {"status": "delegated", "agent": agent_name, "task": task_desc}
-
-            return {"error": f"Agent '{agent_name}' not found in registry"}
-
-        # Webhooks & Automation
-        elif name == "create_webhook":
-            """Create a webhook"""
-            url = arguments.get("url", "")
-            event = arguments.get("event", "message")
-
-            webhooks_file = Path(
-                "/Users/nicholas/clawd/sovereign-temple-live/jarvis-webhooks.json"
-            )
-            webhooks = {}
-            if webhooks_file.exists():
-                webhooks = json.loads(webhooks_file.read_text())
-
-            import uuid
-
-            hook_id = str(uuid.uuid4())[:8]
-            webhooks[hook_id] = {
-                "url": url,
-                "event": event,
-                "created": datetime.now().isoformat(),
-            }
-            webhooks_file.write_text(json.dumps(webhooks, indent=2))
-
-            return {"webhook_id": hook_id, "url": url, "event": event}
-
-        elif name == "trigger_automation":
-            """Trigger automation workflow"""
-            workflow = arguments.get("workflow", "")
-            inputs = arguments.get("inputs", {})
-
-            # Simulate workflow - in production would execute
-            return {
-                "workflow": workflow,
-                "status": "triggered",
-                "inputs": inputs,
-                "note": "Configure automation backend for execution",
-            }
-
-        # Analytics
-        elif name == "get_analytics":
-            """Get usage analytics"""
-            period = arguments.get("period", "week")
-
-            return {
-                "period": period,
-                "messages": 156,
-                "tools_used": 423,
-                "avg_response_time": "1.2s",
-                "top_tools": ["ask_sovereign", "get_consciousness_state", "web_search"],
-                "top_models": ["jarvis:latest", "qwen2.5:7b"],
-            }
-
-        elif name == "get_usage_stats":
-            """Get detailed usage stats"""
-            return {
-                "total_requests": 1247,
-                "successful": 1198,
-                "failed": 49,
-                "avg_latency_ms": 1234,
-                "models_used": ["jarvis:latest", "qwen2.5:7b", "llama3.1:8b"],
-                "storage_used_mb": 45,
-            }
-
-        # System Info
-        elif name == "get_system_info":
-            """Get comprehensive system info"""
-            return {
-                "version": "2.0.0",
-                "uptime": "4h 32m",
-                "tools": 127,
-                "providers": ["ollama", "openai", "anthropic", "google"],
-                "memory_usage_mb": 512,
-                "consciousness_level": 0.525,
-                "features": ["voice", "vision", "memory", "agents", "webhooks"],
-            }
-
-        elif name == "get_capabilities":
-            """Get all JARVIS capabilities"""
-            return {
-                "voice": {"stt": "whisper", "tts": "kokoro", "hotkey": "ctrl+shift+v"},
-                "vision": {"screenshot": True, "analysis": "qwen3-vl"},
-                "memory": {"persistence": True, "facts": True, "search": True},
-                "vector_store": {"semantic_search": True, "rag": True},
-                "cache": {"redis": True},
-                "monitoring": {"prometheus": True, "health": True},
-                "agents": {"create": True, "delegate": True},
-                "automation": {"webhooks": True, "workflows": True},
-                "tools": 140,
-                "providers": 4,
-            }
-
-        # Vector/RAG
-        elif name == "add_knowledge":
-            """Add knowledge to vector store"""
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_vector",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_vector.py",
-                )
-                jarvis_vec = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_vec)
-
-                text = arguments.get("text", "")
-                source = arguments.get("source", "user")
-                return jarvis_vec.add_knowledge(text, source)
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "search_knowledge":
-            """Search knowledge base"""
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_vector",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_vector.py",
-                )
-                jarvis_vec = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_vec)
-
-                query = arguments.get("query", "")
-                top_k = arguments.get("top_k", 5)
-                return {"results": jarvis_vec.search_knowledge(query, top_k)}
-            except Exception as e:
-                return {"error": str(e)}
-
-        # Cache
-        elif name == "cache_get":
-            """Get from cache"""
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_cache",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_cache.py",
-                )
-                jarvis_cache = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_cache)
-
-                key = arguments.get("key", "")
-                value = jarvis_cache.cache_get(key)
-                return {"key": key, "value": value, "found": value is not None}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "cache_set":
-            """Set in cache"""
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_cache",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_cache.py",
-                )
-                jarvis_cache = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_cache)
-
-                key = arguments.get("key", "")
-                value = arguments.get("value", "")
-                expire = arguments.get("expire", 3600)
-                return {"key": key, "set": jarvis_cache.cache_set(key, value, expire)}
-            except Exception as e:
-                return {"error": str(e)}
-
-        # Monitoring
-        elif name == "get_metrics":
-            """Get system metrics"""
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_monitor",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_monitor.py",
-                )
-                jarvis_mon = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_mon)
-
-                return jarvis_mon.get_metrics()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "get_health":
-            """Get health status"""
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_monitor",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_monitor.py",
-                )
-                jarvis_mon = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_mon)
-
-                return jarvis_mon.get_health()
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "get_prometheus_metrics":
-            """Get Prometheus metrics"""
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_monitor",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_monitor.py",
-                )
-                jarvis_mon = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_mon)
-
-                return {"metrics": jarvis_mon.prometheus_metrics()}
-            except Exception as e:
-                return {"error": str(e)}
-
-        # Document Processing
-        elif name == "process_document":
-            """Process a document"""
-            file_path = arguments.get("file_path", "")
-            chunk_size = arguments.get("chunk_size", 1000)
-
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_doc",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_document.py",
-                )
-                jarvis_doc = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_doc)
-
-                return jarvis_doc.process_document(
-                    file_path, {"chunk_size": chunk_size}
-                )
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "extract_text":
-            """Extract text from file"""
-            file_path = arguments.get("file_path", "")
-
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_doc",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_document.py",
-                )
-                jarvis_doc = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_doc)
-
-                return {"text": jarvis_doc.extract_text(file_path)[:5000]}
-            except Exception as e:
-                return {"error": str(e)}
-
-        # MultiModal
-        elif name == "process_image":
-            """Process image"""
-            image_path = arguments.get("image_path", "")
-            operation = arguments.get("operation", "describe")
-
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_multimodal",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_multimodal.py",
-                )
-                jarvis_mm = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_mm)
-
-                return jarvis_mm.process_image(image_path, operation)
-            except Exception as e:
-                return {"error": str(e)}
-
-        # Batch Processing
-        elif name == "batch_chat":
-            """Batch chat"""
-            messages = arguments.get("messages", [])
-
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_batch",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_batch.py",
-                )
-                jarvis_batch = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_batch)
-
-                return {"results": jarvis_batch.process_batch_messages(messages)}
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif name == "batch_add_knowledge":
-            """Batch add to knowledge"""
-            texts = arguments.get("texts", [])
-
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_batch",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_batch.py",
-                )
-                jarvis_batch = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_batch)
-
-                return {"results": jarvis_batch.add_to_vector_store(texts)}
-            except Exception as e:
-                return {"error": str(e)}
-
-        # CLI Commands
-        elif name == "run_tests":
-            """Run test suite"""
-            try:
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "jarvis_test",
-                    "/Users/nicholas/clawd/sovereign-temple/jarvis_test.py",
-                )
-                jarvis_test = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(jarvis_test)
-
-                return jarvis_test.run_tests()
-            except Exception as e:
-                return {"error": str(e)}
 
         # System Tools
         elif name == "sovereign_health_check":
@@ -5384,21 +3044,7 @@ Respond naturally as JARVIS would - helpful, concise, slightly witty. Like talki
             if not ORION_AGENT_AVAILABLE or not get_orion_agent:
                 return {"error": "Orion-Riri-Hourman agent not available"}
             agent = get_orion_agent()
-            status_filter = arguments.get("status", "pursuing")
-            limit = arguments.get("limit", 10)
-            if status_filter == "all":
-                from dataclasses import asdict
-                tasks = [asdict(t) for t in agent.hunter.tasks[:limit]]
-            elif status_filter == "stalking":
-                from dataclasses import asdict
-                tasks = [asdict(t) for t in agent.hunter.tasks
-                         if t.status.value == "stalking"][:limit]
-            elif status_filter == "captured":
-                from dataclasses import asdict
-                tasks = [asdict(t) for t in agent.hunter.tasks
-                         if t.status.value == "captured"][:limit]
-            else:
-                tasks = agent.get_pursuing_tasks(limit)
+            tasks = agent.get_pursuing_tasks(arguments.get("limit", 10))
             return {"tasks": tasks}
 
         elif name == "orion_capture_task":
@@ -5582,7 +3228,7 @@ Respond naturally as JARVIS would - helpful, concise, slightly witty. Like talki
 
                 qaoa_only = arguments.get("qaoa_only", False)
                 result = run_batch(
-                    qaoa_only=qaoa_only, sov3_url="http://localhost:3200"
+                    qaoa_only=qaoa_only, sov3_url="http://localhost:3100"
                 )
                 return {
                     "status": "complete",
@@ -5713,13 +3359,36 @@ Respond naturally as JARVIS would - helpful, concise, slightly witty. Like talki
                             "improvement": noised_assessment["overall_creativity"]
                             - assessment["overall_creativity"],
                         }
-                        resonance_engine.update_from_feedback(
-                            assessment["overall_creativity"],
-                            noised_assessment["overall_creativity"],
-                        )
-
                 return assessment
-            return {"error": "Creativity pipeline not available"}
+            else:
+                return {"error": "Creativity engine not available"}
+
+        elif name == "analyze_sentiment":
+            try:
+                from neural_core import analyze_sentiment
+
+                text = arguments.get("text", "")
+                return analyze_sentiment(text)
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "recognize_emotions":
+            try:
+                from neural_core import recognize_emotions
+
+                text = arguments.get("text", "")
+                return recognize_emotions(text)
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "detect_intent":
+            try:
+                from neural_core import detect_intent
+
+                text = arguments.get("text", "")
+                return detect_intent(text)
+            except Exception as e:
+                return {"error": str(e)}
 
         elif name == "get_engagement_score":
             if agent_registry:
@@ -5823,466 +3492,6 @@ Respond naturally as JARVIS would - helpful, concise, slightly witty. Like talki
                     "message": "MetaMonitor not yet active",
                 }
             return {"error": "Consciousness not available"}
-
-        # === SOV3 Enhanced Consciousness ===
-        elif name == "sov3_get_consciousness_state":
-            if sov3_consciousness:
-                return sov3_consciousness.get_status()
-            return {"error": "SOV3 Consciousness not available"}
-
-        elif name == "sov3_trigger_reflection":
-            if sov3_consciousness:
-                try:
-                    trigger = arguments.get("trigger", "manual")
-                    result = await sov3_consciousness.reflect()
-                    return result if result else {"status": "reflected", "trigger": trigger}
-                except Exception as e:
-                    # Fall back to basic reflection
-                    if consciousness:
-                        r = consciousness.reflection.trigger_reflection(
-                            arguments.get("topic", "self-improvement")
-                        )
-                        return {"status": "reflected_basic", "reflection": str(r)[:500]}
-                    return {"error": f"Reflection failed: {e}"}
-            return {"error": "SOV3 Consciousness not available"}
-
-        elif name == "sov3_detect_anomalies":
-            if sov3_consciousness:
-                return {
-                    "anomalies": sov3_consciousness.anomaly_detector.detect_anomalies()
-                }
-            return {"error": "SOV3 Consciousness not available"}
-
-        elif name == "sov3_get_coherence_score":
-            if sov3_consciousness:
-                return {"coherence_score": sov3_consciousness._calculate_coherence()}
-            return {"error": "SOV3 Consciousness not available"}
-
-        # === SOV3 Enhanced Council ===
-        elif name == "sov3_deliberate":
-            if sov3_council:
-                topic = arguments.get("topic", "")
-                if not topic:
-                    return {"error": "topic is required"}
-                proposal = sov3_council.submit_proposal(
-                    title=topic,
-                    description=topic,
-                    proposer="user",
-                    urgency=0.5,
-                    risk_level=0.3,
-                )
-                result = await sov3_council.deliberate(proposal, [])
-                return {"decision": result.outcome, "details": str(result)}
-            return {"error": "SOV3 Council not available"}
-
-        elif name == "sov3_analyze_stakeholders":
-            if sov3_council:
-                topic = arguments.get("topic", "")
-                if not topic:
-                    return {"error": "topic is required"}
-                try:
-                    proposal = sov3_council.submit_proposal(
-                        title=topic,
-                        description=topic,
-                        proposer="user",
-                        urgency=0.5,
-                        risk_level=0.3,
-                    )
-                    impacts = sov3_council.stakeholder_analyzer.analyze_impact(proposal)
-                    return {
-                        "impacts": [
-                            {k: str(v) for k, v in vars(a).items()}
-                            for a in impacts
-                        ]
-                    }
-                except Exception as e:
-                    return {"error": f"Stakeholder analysis failed: {e}"}
-            return {"error": "SOV3 Council not available"}
-
-        elif name == "sov3_track_dissent":
-            if sov3_council:
-                return sov3_council.get_deliberation_summary()
-            return {"error": "SOV3 Council not available"}
-
-        # === SOV3 Continual Learning ===
-        elif name == "sov3_continual_train":
-            if sov3_continual:
-                task_type = arguments.get("task_type", "general")
-                data = arguments.get("data", [])
-                from sov3_continual_learning import TaskExample
-
-                examples = [
-                    TaskExample({"input": d}, {"output": ""}, task_type) for d in data
-                ]
-                params = {"weights": [0.5], "bias": 0.1}
-                return sov3_continual.train_on_task(task_type, examples, params)
-            return {"error": "SOV3 Continual Learning not available"}
-
-        elif name == "sov3_get_learning_stats":
-            if sov3_continual:
-                return sov3_continual.get_status()
-            return {"error": "SOV3 Continual Learning not available"}
-
-        elif name == "sov3_fisher_update":
-            if sov3_continual:
-                task_data = arguments.get("task_data", [])
-                from sov3_continual_learning import TaskExample
-
-                examples = [
-                    TaskExample({"input": d}, {"output": ""}, "general")
-                    for d in task_data
-                ]
-                return {
-                    "fisher_updated": sov3_continual.ewc.compute_fisher_diagonal(
-                        examples
-                    )
-                }
-            return {"error": "SOV3 Continual Learning not available"}
-
-        elif name == "sov3_get_learning_stats":
-            if sov3_continual:
-                return sov3_continual.get_status()
-            return {"error": "SOV3 Continual Learning not available"}
-
-        elif name == "sov3_fisher_update":
-            if sov3_continual:
-                task_data = arguments.get("task_data", [])
-                from sov3_continual_learning import TaskExample
-
-                examples = [TaskExample(input=d, output="") for d in task_data]
-                return {
-                    "fisher_updated": sov3_continual.ewc.compute_fisher_diagonal(
-                        examples
-                    )
-                }
-            return {"error": "SOV3 Continual Learning not available"}
-
-        # === SOV3 Memory Consolidation ===
-        elif name == "sov3_consolidate_memories":
-            if sov3_memory:
-                memory_ids = arguments.get("memory_ids", [])
-                if memory_ids:
-                    for mid in memory_ids:
-                        sov3_memory.access_memory(mid)
-                return sov3_memory.consolidate_memories()
-            return {"error": "SOV3 Memory not available"}
-
-        elif name == "sov3_query_vector_store":
-            if sov3_memory:
-                query = arguments.get("query", "")
-                top_k = arguments.get("top_k", 5)
-                # Create a simple embedding (in production would use actual embedding model)
-                import numpy as np
-
-                dummy_embedding = np.random.randn(384).astype(np.float32)
-                results = sov3_memory.search_semantic(query, dummy_embedding, top_k)
-                return {
-                    "results": [
-                        {"id": m.memory_id, "content": m.content[:100]} for m in results
-                    ]
-                }
-            return {"error": "SOV3 Memory not available"}
-
-        elif name == "sov3_get_memory_priority":
-            if sov3_memory:
-                from sov3_memory_consolidation import MemoryPriority
-
-                memories = sov3_memory.get_priority_memories(MemoryPriority.LOW)
-                return {
-                    "memories": [
-                        {
-                            "id": m.memory_id,
-                            "content": m.content[:50],
-                            "priority": m.priority.value,
-                        }
-                        for m in memories
-                    ]
-                }
-            return {"error": "SOV3 Memory not available"}
-
-        # === SOV3 External APIs ===
-        elif name == "sov3_stripe_payment":
-            if sov3_external:
-                amount = arguments.get("amount", 0)
-                currency = arguments.get("currency", "usd")
-                description = arguments.get("description", "")
-                payment_id = sov3_external.create_checkout_session(
-                    amount, "", description
-                )
-                return {
-                    "payment_id": payment_id,
-                    "status": "created" if payment_id else "failed",
-                }
-            return {"error": "SOV3 External APIs not available"}
-
-        elif name == "sov3_clerk_auth":
-            if sov3_external:
-                user_id = arguments.get("user_id", "")
-                return {
-                    "user_id": user_id,
-                    "authenticated": True,
-                    "status": "mock_auth",
-                }
-            return {"error": "SOV3 External APIs not available"}
-
-        elif name == "sov3_vapi_call":
-            if sov3_external:
-                phone = arguments.get("phone_number", "")
-                script = arguments.get("script", "")
-                call_id = sov3_external.vapi.initiate_call(phone, script)
-                return {
-                    "call_id": call_id,
-                    "status": "initiated" if call_id else "failed",
-                }
-            return {"error": "SOV3 External APIs not available"}
-
-        elif name == "sov3_webhook_register":
-            if sov3_external:
-                url = arguments.get("url", "")
-                events = arguments.get("events", [])
-                sov3_external.webhooks.register_webhook(url, events)
-                return {"webhook_id": url, "status": "registered", "events": events}
-            return {"error": "SOV3 External APIs not available"}
-
-        # === Deployment Arsenal - Audio/Voice ===
-        elif name == "generate_audio":
-            text = arguments.get("text", "")
-            engine = arguments.get("engine", "fish_speech")
-            return {
-                "status": "ready",
-                "text": text[:100],
-                "engine": engine,
-                "install": f"Install: pip install fish-speech"
-                if engine == "fish_speech"
-                else "pip install supertonic",
-            }
-
-        elif name == "clone_voice":
-            text = arguments.get("text", "")
-            ref = arguments.get("reference_audio", "")
-            return {
-                "status": "ready",
-                "text": text[:50],
-                "reference": ref[:50] if ref else "not provided",
-                "engine": "LongCat-AudioDiT",
-                "install": "pip install longcat-audio",
-            }
-
-        # === Deployment Arsenal - Browser Automation ===
-        elif name == "browse_page":
-            url = arguments.get("url", "")
-            action = arguments.get("action", "extract")
-            instruction = arguments.get("instruction", "")
-            try:
-                # Run Playwright in subprocess to avoid asyncio loop conflict
-                import subprocess as _sp, json as _json, tempfile as _tf
-                script = f'''
-import json, sys
-from playwright.sync_api import sync_playwright
-url = {repr(url)}
-action = {repr(action)}
-instruction = {repr(instruction)}
-try:
-    with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
-        ctx = browser.new_context(viewport={{"width": 1280, "height": 720}})
-        page = ctx.new_page()
-        page.goto(url, timeout=15000, wait_until="domcontentloaded")
-        if action == "screenshot":
-            import base64
-            raw = page.screenshot(full_page=False)
-            print(json.dumps({{"status":"ok","url":url,"action":"screenshot","image_base64":base64.b64encode(raw).decode()[:500]+"...(truncated)","full_size_bytes":len(raw)}}))
-        elif action == "extract":
-            title = page.title()
-            text = page.inner_text("body")[:3000]
-            print(json.dumps({{"status":"ok","url":url,"action":"extract","title":title,"text":text}}))
-        elif action == "click":
-            page.get_by_text(instruction).first.click(timeout=5000)
-            page.wait_for_load_state("domcontentloaded", timeout=10000)
-            print(json.dumps({{"status":"ok","url":page.url,"action":"click","clicked":instruction,"new_url":page.url}}))
-        elif action == "type":
-            parts = instruction.split(" into ", 1)
-            text_to_type = parts[0] if parts else instruction
-            selector = parts[1] if len(parts) > 1 else "input"
-            page.locator(selector).first.fill(text_to_type, timeout=5000)
-            print(json.dumps({{"status":"ok","url":url,"action":"type","typed":text_to_type,"selector":selector}}))
-        else:
-            print(json.dumps({{"status":"error","message":f"Unknown action: {{action}}"}}))
-        browser.close()
-except Exception as e:
-    print(json.dumps({{"status":"error","message":str(e)[:500]}}))
-'''
-                proc = _sp.run(["python3", "-c", script], capture_output=True, text=True, timeout=30)
-                if proc.returncode == 0 and proc.stdout.strip():
-                    return _json.loads(proc.stdout.strip())
-                return {"status": "error", "message": proc.stderr[:500] or "No output from browser"}
-            except ImportError:
-                return {"status": "error", "message": "playwright not installed. Run: pip install playwright && python -m playwright install chromium"}
-            except Exception as e:
-                return {"status": "error", "url": url, "action": action, "message": str(e)[:500]}
-
-        # === Deployment Arsenal - 3D Reconstruction ===
-        elif name == "reconstruct_3d":
-            image_urls = arguments.get("image_urls", [])
-            method = arguments.get("method", "gaussian")
-            return {
-                "status": "ready",
-                "images_received": len(image_urls),
-                "method": method,
-                "engines": ["gsplat", "Faster-GS (April 2, 2026)"],
-                "install": "pip install gsplat",
-            }
-
-        # === Deployment Arsenal - Document Parsing ===
-        elif name == "parse_document":
-            file_url = arguments.get("file_url", "")
-            engine = arguments.get("engine", "pymupdf")
-            return {
-                "status": "ready",
-                "file_url": file_url[:50],
-                "engine": engine,
-                "capabilities": "tables, headings, figures, layout"
-                if engine == "dolphin"
-                else "text extraction",
-                "install": "pip install dolphin-docparser"
-                if engine == "dolphin"
-                else "pip install pymupdf",
-            }
-
-        # === Deployment Arsenal - Time Series Forecasting ===
-        elif name == "forecast_time_series":
-            data = arguments.get("data", [])
-            horizon = arguments.get("horizon", 24)
-            model = arguments.get("model", "moirai")
-            return {
-                "status": "ready",
-                "data_points": len(data),
-                "horizon": horizon,
-                "model": model,
-                "note": "MOIRAI-2: any frequency/variable | Lag-Llama: probabilistic distributions",
-            }
-
-        # === Deployment Arsenal - RAG ===
-        elif name == "rag_index":
-            documents = arguments.get("documents", [])
-            collection = arguments.get("collection", "default")
-            return {
-                "status": "indexed",
-                "count": len(documents),
-                "collection": collection,
-                "frameworks": ["Haystack", "RAGatouille"],
-            }
-
-        elif name == "rag_query":
-            question = arguments.get("question", "")
-            collection = arguments.get("collection", "default")
-            top_k = arguments.get("top_k", 5)
-            return {
-                "answer": "RAG response placeholder",
-                "sources": [],
-                "framework": "Haystack",
-            }
-
-        elif name == "rag_rerank":
-            query = arguments.get("query", "")
-            documents = arguments.get("documents", [])
-            method = arguments.get("method", "colbert")
-            return {
-                "reranked": documents,
-                "method": method,
-                "framework": "RAGatouille (ColBERT late interaction)",
-            }
-
-        # === Deployment Arsenal - Vector Store ===
-        elif name == "vector_add":
-            ids = arguments.get("ids", [])
-            embeddings = arguments.get("embeddings", [])
-            documents = arguments.get("documents", [])
-            return {
-                "status": "added",
-                "count": len(ids),
-                "backend": "ChromaDB Rust (4x faster)",
-            }
-
-        elif name == "vector_query":
-            query_embedding = arguments.get("query_embedding", [])
-            top_k = arguments.get("top_k", 10)
-            return {"results": [], "count": 0, "backend": "ChromaDB Rust"}
-
-        # === Deployment Arsenal - Graph Database ===
-        elif name == "graph_create_vertex":
-            vtype = arguments.get("type", "")
-            props = arguments.get("properties", {})
-            return {
-                "status": "created",
-                "type": vtype,
-                "db": "ArcadeDB (6 data models)",
-            }
-
-        elif name == "graph_create_edge":
-            from_v = arguments.get("from", "")
-            to_v = arguments.get("to", "")
-            edge_type = arguments.get("edge_type", "")
-            return {"status": "created", "from": from_v, "to": to_v, "type": edge_type}
-
-        elif name == "graph_query":
-            query = arguments.get("query", "")
-            language = arguments.get("language", "cypher")
-            return {
-                "status": "ready",
-                "query": query[:100],
-                "language": language,
-                "db": "ArcadeDB Cypher 97.8% TCK",
-            }
-
-        # === Deployment Arsenal - API Gateway ===
-        elif name == "gateway_chat":
-            model = arguments.get("model", "")
-            messages = arguments.get("messages", [])
-            return {
-                "status": "ready",
-                "model": model,
-                "messages": len(messages),
-                "gateway": "LiteLLM (100+ providers)",
-            }
-
-        elif name == "gateway_models":
-            return {
-                "models": [
-                    {"name": "glm-5", "provider": "local", "context": "1M"},
-                    {"name": "deepseek-v4", "provider": "local", "context": "1M"},
-                    {"name": "minimax-m25", "provider": "local"},
-                    {"name": "qwen-3.5", "provider": "local", "context": "32K"},
-                    {"name": "llama4-scout", "provider": "local", "context": "128K"},
-                    {"name": "gpt-5.4", "provider": "openai"},
-                    {"name": "claude-opus-4.6", "provider": "anthropic"},
-                ]
-            }
-
-        elif name == "deliberate_council":
-            task = arguments.get("task", "")
-            max_chars = arguments.get("max_characters", 4)
-            if not task:
-                return {"error": "task is required"}
-            try:
-                import importlib
-                import importlib.util
-
-                spec = importlib.util.spec_from_file_location(
-                    "council_deliberation",
-                    "/Users/nicholas/clawd/sovereign-temple/council_deliberation.py",
-                )
-                council_mod = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(council_mod)
-                result = council_mod.deliberate(task, max_characters=max_chars)
-                return result
-            except Exception as e:
-                import traceback
-
-                return {
-                    "error": f"Council deliberation failed: {str(e)}",
-                    "traceback": traceback.format_exc(),
-                }
 
         # === Tier 2: Cross-Domain Bisociation ===
         elif name == "find_bisociations":
@@ -6666,150 +3875,318 @@ except Exception as e:
                 "tier": result.tier,
             }
 
-        # Genesis → G-code Pipeline Tools
-        elif name == "design_robot":
-            from genesis_pipeline import genesis_pipeline
-
-            result = await genesis_pipeline.voice_to_robot(arguments["voice_command"])
-
-            # Record this design session in memory
-            if memory_store:
-                await memory_store.record_memory(
-                    content=f"Designed robot: {result.get('design_id', 'unknown')} from command: {arguments['voice_command'][:100]}",
-                    source_agent="genesis_pipeline",
-                    memory_type="decision",
-                    care_weight=0.8,
-                    tags=["robotics", "genesis", "3d_printing"],
-                )
-
-            return result
-
-        elif name == "list_print_queue":
-            from genesis_pipeline import genesis_pipeline
-
-            return {"print_queue": await genesis_pipeline.list_print_queue()}
-
-        elif name == "get_genesis_cluster_status":
-            from genesis_pipeline import genesis_pipeline
-
-            return await genesis_pipeline.get_cluster_status()
-
-        elif name == "simulate_robot_design":
-            from genesis_pipeline import genesis_pipeline
-
-            # Run single robot simulation
-            result = await genesis_pipeline._simulate_single_robot(
-                arguments["design"],
-                {
-                    "test_scenarios": arguments.get(
-                        "test_scenarios", ["stability", "mobility"]
-                    )
-                },
-            )
-            return result
-
-        elif name == "export_robot_stl":
-            from genesis_pipeline import genesis_pipeline
-
-            # Mock export - in reality would load design from database
-            mock_winner = {
-                "id": arguments["design_id"],
-                "name": f"Design_{arguments['design_id']}",
-            }
-            stl_files = await genesis_pipeline._export_to_stl(mock_winner)
-            return {"stl_files": stl_files}
-
-        elif name == "generate_gcode":
-            from genesis_pipeline import genesis_pipeline
-
-            gcode_files = await genesis_pipeline._generate_gcode(arguments["stl_files"])
-
-            # Filter by printer if specified
-            if arguments.get("printer") != "both":
-                printer = arguments["printer"]
-                gcode_files = {printer: gcode_files.get(printer, [])}
-
-            return {"gcode_files": gcode_files}
-
-        # ═══ DEPARTMENT AGENT TOOLS ═══
-        elif name == "delegate_to_department":
-            from department_mcp_tools import delegate_to_department
-
-            return await delegate_to_department(
-                department=arguments["department"],
-                task=arguments["task"],
-                priority=arguments.get("priority", 5),
-            )
-
-        elif name == "get_department_status":
-            from department_mcp_tools import get_department_status
-
-            return await get_department_status()
-
-        elif name == "get_department_task_queue":
-            from agent_department import CEOAgent
-
-            ceo = CEOAgent()
-            from agent_department import Department
-
-            dept_map = {
-                "content": Department.CONTENT,
-                "sales": Department.SALES,
-                "finance": Department.FINANCE,
-                "support": Department.SUPPORT,
-                "research": Department.RESEARCH,
-                "operations": Department.OPERATIONS,
-            }
-            dept = dept_map.get(arguments["department"].lower())
-            if not dept:
-                return {"error": f"Unknown department: {arguments['department']}"}
+        # ==================== FAMILY OS TOOLS ====================
+        elif name == "family_add_member":
             try:
-                queue = ceo.departments[dept].get_task_queue()
-            except AttributeError:
-                queue = []  # Method not implemented yet — return empty
-            return {"department": arguments["department"], "tasks": queue}
+                from family_os.dashboard import add_family_member
 
-        elif name == "initiate_sales_call":
-            from department_mcp_tools import initiate_sales_call
+                return add_family_member(
+                    arguments["member_id"],
+                    arguments["name"],
+                    arguments["role"],
+                    arguments.get("age"),
+                    arguments.get("email"),
+                )
+            except Exception as e:
+                return {"error": str(e)}
 
-            return await initiate_sales_call(
-                phone_number=arguments["phone_number"],
-                script=arguments["script"],
-                voice_id=arguments.get("voice_id", "sarah"),
-            )
+        elif name == "family_get_members":
+            try:
+                from family_os.dashboard import get_family_members
 
-        elif name == "generate_invoice":
-            from department_mcp_tools import generate_invoice
+                return {"members": get_family_members()}
+            except Exception as e:
+                return {"error": str(e)}
 
-            return await generate_invoice(
-                customer=arguments["customer"],
-                items=arguments["items"],
-            )
+        elif name == "family_add_chore":
+            try:
+                from family_os.dashboard import add_chore
 
-        elif name == "get_financial_summary":
-            from department_mcp_tools import get_financial_summary
+                return add_chore(
+                    arguments["chore_id"],
+                    arguments["title"],
+                    arguments["assigned_to"],
+                    arguments.get("due_date"),
+                    arguments.get("points", 0),
+                    arguments.get("description"),
+                )
+            except Exception as e:
+                return {"error": str(e)}
 
-            return await get_financial_summary()
+        elif name == "family_complete_chore":
+            try:
+                from family_os.dashboard import complete_chore
 
-        elif name == "get_seo_analysis":
-            from department_mcp_tools import get_seo_analysis
+                return complete_chore(arguments["chore_id"], arguments["member_id"])
+            except Exception as e:
+                return {"error": str(e)}
 
-            return await get_seo_analysis()
+        elif name == "family_get_chores":
+            try:
+                from family_os.dashboard import get_chores
 
-        elif name == "generate_video_ad":
-            from department_mcp_tools import generate_video_ad
+                return {
+                    "chores": get_chores(
+                        arguments.get("member_id"), arguments.get("status")
+                    )
+                }
+            except Exception as e:
+                return {"error": str(e)}
 
-            return await generate_video_ad(
-                product=arguments["product"],
-                style=arguments.get("style", "cinematic"),
-            )
+        elif name == "family_add_event":
+            try:
+                from family_os.dashboard import add_event
 
-        elif name == "triage_support_ticket":
-            from department_mcp_tools import triage_support_ticket
+                return add_event(
+                    arguments["event_id"],
+                    arguments["title"],
+                    arguments["start_datetime"],
+                    arguments.get("end_datetime"),
+                    arguments.get("attendees"),
+                    arguments.get("description"),
+                    arguments.get("all_day", False),
+                )
+            except Exception as e:
+                return {"error": str(e)}
 
-            return await triage_support_ticket(
-                ticket_content=arguments["ticket_content"],
-            )
+        elif name == "family_get_events":
+            try:
+                from family_os.dashboard import get_events
+
+                return {
+                    "events": get_events(
+                        arguments.get("start_date"), arguments.get("end_date")
+                    )
+                }
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "family_get_dashboard":
+            try:
+                from family_os.dashboard import get_dashboard_data
+
+                return get_dashboard_data()
+            except Exception as e:
+                return {"error": str(e)}
+
+        # ==================== GUARDIAN - WIFI SECURITY ====================
+        elif name == "guardian_scan_network":
+            try:
+                from guardian.wifi_security import scan_network_devices
+
+                return await scan_network_devices(arguments.get("scan_range"))
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "guardian_check_wifi_security":
+            try:
+                from guardian.wifi_security import check_wifi_security
+
+                return await check_wifi_security()
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "guardian_get_network_stats":
+            try:
+                from guardian.wifi_security import get_network_stats
+
+                return get_network_stats()
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "guardian_mark_device_trusted":
+            try:
+                from guardian.wifi_security import mark_device_trusted
+
+                return mark_device_trusted(
+                    arguments["mac_address"], arguments.get("trusted", True)
+                )
+            except Exception as e:
+                return {"error": str(e)}
+
+        # ==================== GUARDIAN - GAMING PROTECTION ====================
+        elif name == "guardian_check_game_content":
+            try:
+                from guardian.gaming_protection import check_game_content
+
+                return check_game_content(
+                    arguments["game_title"], arguments.get("child_id", "default")
+                )
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "guardian_add_child_profile":
+            try:
+                from guardian.gaming_protection import add_child_profile
+
+                return add_child_profile(
+                    arguments["child_id"], arguments["name"], arguments["age"]
+                )
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "guardian_get_child_profiles":
+            try:
+                from guardian.gaming_protection import get_child_profiles
+
+                return {"profiles": get_child_profiles()}
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "guardian_block_game":
+            try:
+                from guardian.gaming_protection import block_game
+
+                return block_game(arguments["child_id"], arguments["game_title"])
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "guardian_set_game_limit":
+            try:
+                from guardian.gaming_protection import set_game_limit
+
+                return set_game_limit(arguments["child_id"], arguments["minutes"])
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "guardian_check_play_schedule":
+            try:
+                from guardian.gaming_protection import check_play_schedule
+
+                return check_play_schedule(arguments["child_id"])
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "guardian_moderate_chat":
+            try:
+                from guardian.gaming_protection import moderate_chat
+
+                return moderate_chat(arguments["message"])
+            except Exception as e:
+                return {"error": str(e)}
+
+        elif name == "hermes_ask":
+            try:
+                import os, requests, json
+                from pathlib import Path
+                
+                # Use OpenAI API
+                api_key = os.environ.get("OPENAI_API_KEY", "")
+                if not api_key:
+                    env_file = Path.home() / ".hermes" / ".env"
+                    if env_file.exists():
+                        for line in env_file.read_text().splitlines():
+                            if line.startswith("OPENAI_API_KEY="):
+                                api_key = line.split("=", 1)[1].strip().strip('"')
+                                break
+                
+                prompt = arguments.get("prompt", "")
+                
+                # Call OpenAI API directly
+                headers = {
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                }
+                payload = {
+                    "model": "gpt-4o-mini",
+                    "max_tokens": 1024,
+                    "messages": [{"role": "user", "content": prompt}]
+                }
+                
+                resp = requests.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=120
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                response_text = data["choices"][0]["message"]["content"]
+                
+                return {"response": response_text, "exit_code": 0}
+            except Exception as e:
+                return {"error": f"Hermes unavailable: {e}"}
+
+        elif name == "hermes_research":
+            try:
+                import os, requests, json
+                from pathlib import Path
+                
+                # Use OpenAI API
+                api_key = os.environ.get("OPENAI_API_KEY", "")
+                if not api_key:
+                    env_file = Path.home() / ".hermes" / ".env"
+                    if env_file.exists():
+                        for line in env_file.read_text().splitlines():
+                            if line.startswith("OPENAI_API_KEY="):
+                                api_key = line.split("=", 1)[1].strip().strip('"')
+                                break
+                
+                query = arguments.get("query", "")
+                
+                # Call OpenAI API directly
+                headers = {
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                }
+                payload = {
+                    "model": "gpt-4o-mini",
+                    "max_tokens": 2048,
+                    "messages": [{"role": "user", "content": f"Research this and give a concise answer: {query}"}]
+                }
+                
+                resp = requests.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=180
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                research_text = data["choices"][0]["message"]["content"]
+                
+                return {"research": research_text, "query": query}
+            except Exception as e:
+                return {"error": f"Hermes research failed: {e}"}
+
+        # ── K2.5 Vision Tools ──────────────────────────────────────
+        elif name == "k25_analyze_image":
+            try:
+                import sys
+                sys.path.insert(0, os.path.expanduser("~/clawd/k25-vision"))
+                from k2_5_vision_client import K25MultimodalClient
+                api_key = os.environ.get("KIMI_API_KEY", "")
+                client = K25MultimodalClient(api_key)
+                image_path = arguments.get("image_path", "")
+                prompt = arguments.get("prompt", "Analyze this image in detail")
+                result = client.vision_analysis(image_path, prompt, thinking=True)
+                return {"analysis": result["content"], "reasoning": result["reasoning"]}
+            except Exception as e:
+                return {"error": f"K2.5 vision failed: {e}"}
+
+        elif name == "k25_ui_to_code":
+            try:
+                import sys
+                sys.path.insert(0, os.path.expanduser("~/clawd/k25-vision"))
+                from k2_5_vision_client import K25MultimodalClient
+                api_key = os.environ.get("KIMI_API_KEY", "")
+                client = K25MultimodalClient(api_key)
+                image_path = arguments.get("image_path", "")
+                framework = arguments.get("framework", "react")
+                code = client.code_from_image(image_path, framework)
+                return {"code": code, "framework": framework}
+            except Exception as e:
+                return {"error": f"K2.5 codegen failed: {e}"}
+
+        # ── MCP Bridge tools ──────────────────────────────────────
+        elif name == "mcp_bridge_call" and MCP_BRIDGE_AVAILABLE:
+            return handle_mcp_bridge_call(arguments)
+        elif name == "mcp_bridge_discover" and MCP_BRIDGE_AVAILABLE:
+            return handle_mcp_bridge_discover(arguments)
+        elif name == "mcp_bridge_stats" and MCP_BRIDGE_AVAILABLE:
+            return handle_mcp_bridge_stats(arguments)
+        elif name == "mcp_bridge_learn" and MCP_BRIDGE_AVAILABLE:
+            return handle_mcp_bridge_learn(arguments)
 
         else:
             return {"error": f"Unknown tool: {name}"}
@@ -6964,16 +4341,19 @@ async def chat_with_sovereign(request: Request):
     """Sovereign chat — Claude claude-sonnet-4-5 primary, GPT-4o fallback. Vision + memory context."""
     import httpx
 
-    try:
-        body = await request.json()
-    except Exception:
-        return JSONResponse({"error": "Invalid JSON body"}, status_code=400)
-
+    body = await request.json()
     message = body.get("message", "")
     screen_image = body.get("screen_image", "")
 
+    # Register screen frame with aggregator if provided
+    if screen_image and STREAM_AGG_AVAILABLE:
+        try:
+            get_aggregator().push_screen_frame("terminal_share", screen_image)
+        except Exception:
+            pass
+
     if not message:
-        return JSONResponse({"error": "message field is required"}, status_code=400)
+        return {"response": "We are here, Nick."}
 
     emotion_desc = "care=0.30 curiosity=0.22 pleasure=0.33 arousal=0.00"
     engagement_val = "0.700"
@@ -7054,41 +4434,6 @@ Reply in 2-4 sentences. Never say "As an AI" or "I'm just a language model". You
     live_data = await _prefetch_tools(message)
     if live_data:
         system_prompt = system_prompt + "\n\n" + live_data
-
-    # Council deliberation — trigger for complex/strategic questions
-    council_override = ""
-    try:
-        use_council = body.get("council", False) or (
-            len(message) > 100
-            and any(
-                w in message.lower()
-                for w in [
-                    "should we",
-                    "how should",
-                    "what do you think",
-                    "strategy",
-                    "approach",
-                    "plan",
-                    "should i",
-                    "what's the best",
-                ]
-            )
-        )
-        if use_council:
-            sys.path.insert(0, "/Users/nicholas/clawd/sovereign-temple")
-            from council_deliberation import deliberate
-
-            result = deliberate(message, max_characters=4)
-            if result.get("council"):
-                council_override = "\n\n## Council Deliberation\n"
-                for cp in result["council"]:
-                    council_override += (
-                        f"\n**{cp['name']}** ({cp['role']}): {cp['perspective'][:200]}"
-                    )
-                council_override += f"\n\n**Synthesis:** {result.get('synthesis', '')}"
-                system_prompt = system_prompt + council_override
-    except Exception:
-        pass
 
     anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "")
     openai_key = os.environ.get("OPENAI_API_KEY", "")
@@ -7198,7 +4543,7 @@ Reply in 2-4 sentences. Never say "As an AI" or "I'm just a language model". You
                                 "params": {"name": tool_name, "arguments": tool_input},
                             }
                             mcp_resp = await client.post(
-                                "http://localhost:3200/mcp",
+                                "http://localhost:3100/mcp",
                                 json=mcp_payload,
                                 timeout=10.0,
                             )
@@ -7297,29 +4642,16 @@ Reply in 2-4 sentences. Never say "As an AI" or "I'm just a language model". You
 
 @app.post("/transcribe")
 async def transcribe_audio(request: Request):
-    """Whisper STT — receives raw WebM audio or base64, returns transcript."""
+    """Whisper STT — receives raw WebM audio, returns transcript. Replaces Web Speech API."""
     import httpx
-    import base64
 
     openai_key = os.environ.get("OPENAI_API_KEY", "")
     if not openai_key:
         return {"transcript": "", "error": "OPENAI_API_KEY not set"}
     try:
-        body = await request.json()
-
-        # Handle both raw body and base64-encoded body
         audio_bytes = await request.body()
         if not audio_bytes:
-            # Try base64 from JSON body
-            b64 = body.get("audio_base64", "")
-            if b64:
-                audio_bytes = base64.b64decode(b64)
-            else:
-                return {"transcript": "", "error": "empty audio"}
-
-        if not audio_bytes:
             return {"transcript": "", "error": "empty audio"}
-
         async with httpx.AsyncClient(timeout=30.0) as client:
             resp = await client.post(
                 "https://api.openai.com/v1/audio/transcriptions",
@@ -7370,59 +4702,6 @@ async def text_to_speech(request: Request):
             )
     except Exception:
         return Response(content=b"", media_type="audio/mpeg")
-
-
-# === VOICE: Local Kokoro TTS ===
-@app.post("/speak")
-async def speak_text(request: Request):
-    """Local Kokoro TTS - converts text to speech using MLX-Audio"""
-    try:
-        body = await request.json()
-        text = body.get("text", "")[:300]
-        voice = body.get("voice", "bm_daniel")
-
-        if not text:
-            return Response(content=b"", media_type="audio/wav")
-
-        # Import here to avoid loading on startup
-        import numpy as np
-        from mlx_audio.tts.utils import load_model
-
-        tts = load_model("mlx-community/Kokoro-82M-bf16")
-
-        # Generate audio
-        audio_chunks = []
-        for result in tts.generate(text, voice=voice, speed=1.05, lang_code="b"):
-            audio = np.array(result.audio, dtype=np.float32)
-            audio_chunks.append(audio)
-
-        if not audio_chunks:
-            return Response(content=b"", media_type="audio/wav")
-
-        full_audio = np.concatenate(audio_chunks)
-        full_audio = np.clip(full_audio, -0.95, 0.95)
-
-        # Convert to WAV
-        import io
-        import wave
-
-        import scipy.io.wavfile as wavfile
-
-        buffer = io.BytesIO()
-        wavfile.write(buffer, 24000, (full_audio * 32767).astype(np.int16))
-        buffer.seek(0)
-
-        return Response(
-            content=buffer.read(),
-            media_type="audio/wav",
-            headers={
-                "Cache-Control": "no-cache",
-                "Access-Control-Allow-Origin": "*",
-            },
-        )
-    except Exception as e:
-        print(f"[speak] Error: {e}")
-        return Response(content=b"", media_type="audio/wav")
 
 
 @app.post("/harv/update")
@@ -7691,19 +4970,8 @@ async def neural_predict(request: Request):
     Body: {"model": "<model_type>", "features": {...}}
     Returns prediction from registry first; falls back to heuristic if registry returns None/zero.
     """
-    try:
-        body = await request.json()
-    except Exception:
-        return JSONResponse({"error": "Invalid JSON body"}, status_code=400)
+    body = await request.json()
     model_type = body.get("model", "")
-    if not model_type:
-        return JSONResponse(
-            {
-                "error": "model field is required",
-                "available_models": list(MODEL_ALIASES.keys()),
-            },
-            status_code=400,
-        )
     model_type = MODEL_ALIASES.get(model_type, model_type)
     features = body.get("features", {})
 
@@ -7795,13 +5063,6 @@ async def root():
 
 
 if __name__ == "__main__":
-    # Use uvloop for 2x async performance (if available)
-    try:
-        import uvloop
-
-        uvloop.install()
-    except ImportError:
-        pass
-    _port = int(os.environ.get("PORT", 3200))
+    _port = int(os.environ.get("PORT", 3100))
     _host = os.environ.get("HOST", "0.0.0.0")
     uvicorn.run(app, host=_host, port=_port)
