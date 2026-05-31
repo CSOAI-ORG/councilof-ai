@@ -37,8 +37,8 @@ _BRAIN_BACKENDS = {
 
 # Default concrete model per brain (left = the bench-proven cleanest local config).
 _BRAIN_DEFAULT_MODEL = {
-    "left": "qwen3:0.6b",
-    "right": "gpt-4o",
+    "left": "meok-sov3",   # our own SOV3 care model on the VM (qwen2.5:3b + persona)
+    "right": "gemini",     # frontier right brain (Gemini, on Nick's key)
 }
 
 # Dismissive/unsafe markers the Sovereign refuses to pass through (defense in depth on
@@ -132,7 +132,9 @@ def think(character_id: str, message: str, brain: str = "left",
     # Right brain = cloud (frontier) when a key is set; if not, we run a SECOND local pass
     # so the council still genuinely debates on the free/local tier (no cloud required).
     cloud_avail = any(m["backend"] == "cloud" for m in list_models(tier))
-    cloud_ok = cloud_avail and bool(os.environ.get("OPENROUTER_API_KEY"))
+    # cloud right-brain is usable if EITHER a Gemini key (our default) OR OpenRouter is set
+    cloud_ok = cloud_avail and (os.environ.get("GOOGLE_API_KEY", "").startswith("AIza")
+                                or bool(os.environ.get("OPENROUTER_API_KEY")))
 
     # 1) Left brain drafts.
     draft = _run_brain("left", prompt, tier).get("reply") or ""
