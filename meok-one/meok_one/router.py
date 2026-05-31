@@ -88,10 +88,10 @@ def list_models(tier: str = "pro") -> list:
 
 def _ask_local(model_id: str, prompt: str) -> "str | None":
     body = json.dumps({"model": model_id, "prompt": prompt, "stream": False}).encode()
-    hdrs={"Content-Type":"application/json"}
-    if _VM_KEY and OLLAMA.startswith("https"): hdrs["X-MEOK-Key"]=_VM_KEY
-    req = urllib.request.Request(f"{OLLAMA}/api/generate", data=body, headers=hdrs
-                                 headers={"Content-Type": "application/json"})
+    hdrs = {"Content-Type": "application/json"}
+    if _VM_KEY and OLLAMA.startswith("https"):
+        hdrs["X-MEOK-Key"] = _VM_KEY   # GCP VM proxy requires the key header
+    req = urllib.request.Request(f"{OLLAMA}/api/generate", data=body, headers=hdrs)
     try:
         with urllib.request.urlopen(req, timeout=60) as r:
             return json.loads(r.read().decode()).get("response")
