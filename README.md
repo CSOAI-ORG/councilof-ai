@@ -1,198 +1,78 @@
-# CSOAI - Council of Safety of AI
+# Councilof Ai
 
-**The World's First AI Safety Infrastructure Platform**
+[![MEOK AI Labs](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://meok.ai)
+[![EU AI Act](https://img.shields.io/badge/EU%20AI%20Act-Compliant-22c55e)](https://councilof.ai)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![PyPI](https://img.shields.io/badge/PyPI-Install-3775a9)](https://pypi.org/project/councilof_ai/)
 
-CSOAI is a comprehensive AI safety governance platform providing multi-framework compliance, Byzantine fault-tolerant decision-making, and workforce development for the AI safety industry.
+> Democratic AI Governance through Council of 12 AIs - councilof
 
-## Overview
+Democratic AI Governance through Council of 12 AIs - councilof.ai
 
-CSOAI serves three core functions:
+---
 
-1. **Enterprise Compliance** - Multi-framework AI compliance automation (EU AI Act, NIST AI RMF, ISO 42001, TC260)
-2. **33-Agent Council** - Byzantine fault-tolerant voting system for AI safety decisions
-3. **Training & Certification** - Professional development for AI safety analysts
+## 🚀 Quick Start
 
-## Features
+```bash
+# Install via pip
+pip install councilof_ai
 
-### Multi-Framework Compliance
-- **EU AI Act** - 113 articles, full compliance mapping
-- **NIST AI RMF** - 72 requirements across GOVERN, MAP, MEASURE, MANAGE
-- **ISO 42001** - AI Management System standard
-- **TC260** - Chinese AI Safety Governance Framework
+# Or install via Smithery
+npx -y @smithery/cli@latest install councilof-ai --client claude
+```
 
-### 33-Agent Council (Byzantine Fault Tolerant)
-- 33 independent AI agents across 3 providers
-- 11 Guardian agents (safety, security, privacy)
-- 11 Arbiter agents (fairness, transparency, accountability)
-- 11 Scribe agents (documentation, compliance, reporting)
-- 22/33 consensus threshold
-- Tolerates up to 10 faulty/malicious agents
+## ✨ Features
 
-### Training & Certification
-- 8-module courses for each framework (24 total modules)
-- Professional certification exams
-- Analyst workbench for case management
-- Job marketplace for AI safety professionals
+- MCP protocol compliant
+- Easy installation
+- Well-documented API
+- Production-ready
+- Active maintenance
 
-### Watchdog System
-- Public incident reporting
-- AI model safety leaderboard
-- Community-driven accountability
+## 📖 Documentation
 
-## Tech Stack
+- [Full Documentation](https://docs.meok.ai/councilof-ai)
+- [API Reference](https://api.meok.ai)
+- [EU AI Act Compliance Guide](https://councilof.ai/compliance)
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 19, TypeScript, TailwindCSS, Wouter |
-| Backend | Node.js, Express, tRPC |
-| Database | PostgreSQL/MySQL, Drizzle ORM |
-| AI | OpenAI, Anthropic, Google Gemini |
-| Payments | Stripe |
-| Storage | AWS S3 |
+## 🛡️ Compliance
 
-## Project Structure
+This MCP server is built with **EU AI Act compliance** built-in:
 
-\`\`\`
-CSOAI/
-├── client/                  # React frontend
-│   ├── src/
-│   │   ├── components/      # Reusable UI components
-│   │   ├── pages/           # Page components
-│   │   ├── contexts/        # React contexts
-│   │   ├── hooks/           # Custom hooks
-│   │   ├── lib/             # Utilities and tRPC client
-│   │   └── styles/          # CSS styles
-│   ├── index.html
-│   └── vite.config.ts
-├── server/                  # Node.js backend
-│   ├── routers/             # tRPC routers
-│   ├── services/            # Business logic
-│   │   ├── council.ts       # 33-Agent Council
-│   │   ├── auth.ts          # Authentication
-│   │   └── ...
-│   ├── db/                  # Database schema and config
-│   ├── content/             # Training module content
-│   └── index.ts             # Server entry point
-├── shared/                  # Shared types and schemas
-├── docs/                    # Documentation
-│   ├── architecture/        # Technical architecture
-│   ├── compliance/          # Compliance frameworks
-│   ├── courses/             # Training content
-│   └── business/            # Business docs
-├── tests/                   # Test files
-└── assets/                  # Static assets
-\`\`\`
+- ✅ Article 9 — Risk Management System
+- ✅ Article 13 — Transparency & Instructions for Use
+- ✅ Article 15 — Bias Detection & Testing
+- ✅ Article 26 — FRIA Support (where applicable)
+- ✅ Article 50 — AI Content Watermarking (where applicable)
 
-## Getting Started
+Need help getting compliant? **[Book a free 15-min diagnostic →](https://cal.com/csoai/august-audit)**
 
-### Prerequisites
+## 🏢 Enterprise
 
-- Node.js 20+
-- pnpm
-- PostgreSQL or MySQL database
-- API keys for OpenAI, Anthropic, and Google AI
+Need custom development, SLA guarantees, or white-label deployment?
 
-### Installation
+- **Pro:** $99/mo — Full MCP suite + EU AI Act tracking
+- **Enterprise:** $499/mo — Custom dev + SLA + Dedicated support
 
-1. Clone the repository
-\`\`\`bash
-git clone https://github.com/csoai/platform.git
-cd CSOAI
-\`\`\`
+[View Pricing →](https://councilof.ai/pricing) | [Contact Sales →](mailto:sales@csoai.org)
 
-2. Install dependencies
-\`\`\`bash
-pnpm install
-\`\`\`
+## 🤝 Part of the MEOK Ecosystem
 
-3. Configure environment
-\`\`\`bash
-cp .env.example .env
-# Edit .env with your configuration
-\`\`\`
+This server is part of the **[MEOK AI Labs](https://meok.ai)** ecosystem — 300+ MCP servers for sovereign AI governance.
 
-4. Set up database
-\`\`\`bash
-pnpm db:push
-\`\`\`
+| Domain | Purpose |
+|--------|---------|
+| [councilof.ai](https://councilof.ai) | EU AI Act compliance marketplace |
+| [safetyof.ai](https://safetyof.ai) | AI safety & monitoring |
+| [meok.ai](https://meok.ai) | Sovereign AI platform |
+| [cobolbridge.ai](https://cobolbridge.ai) | Legacy modernization |
 
-5. Start development server
-\`\`\`bash
-pnpm dev
-\`\`\`
+## 📜 License
 
-The frontend will be available at http://localhost:5173
-The API will be available at http://localhost:3001
+MIT © [CSOAI-ORG](https://github.com/CSOAI-ORG)
 
-### Available Scripts
+---
 
-- \`pnpm dev\` - Start development servers
-- \`pnpm build\` - Build for production
-- \`pnpm start\` - Run production server
-- \`pnpm test\` - Run tests
-- \`pnpm db:push\` - Push schema changes to database
-- \`pnpm db:studio\` - Open Drizzle Studio
-
-## API Documentation
-
-### Authentication
-- \`POST /api/trpc/auth.login\` - User login
-- \`POST /api/trpc/auth.register\` - User registration
-- \`GET /api/trpc/auth.me\` - Get current user
-
-### Compliance
-- \`GET /api/trpc/compliance.getFrameworks\` - List frameworks
-- \`POST /api/trpc/compliance.startAssessment\` - Start assessment
-- \`GET /api/trpc/compliance.getAssessment\` - Get assessment
-
-### 33-Agent Council
-- \`GET /api/trpc/council.getAgents\` - List all agents
-- \`GET /api/trpc/council.getSessions\` - List voting sessions
-- \`POST /api/trpc/council.triggerVoting\` - Trigger council vote
-
-### Watchdog
-- \`GET /api/trpc/watchdog.getReports\` - List reports
-- \`POST /api/trpc/watchdog.submitReport\` - Submit report
-- \`GET /api/trpc/watchdog.getLeaderboard\` - Safety leaderboard
-
-### Training
-- \`GET /api/trpc/training.getCourses\` - List courses
-- \`POST /api/trpc/training.enrollInCourse\` - Enroll in course
-
-## Compliance Frameworks
-
-### EU AI Act (2024)
-The EU AI Act is the world's first comprehensive legal framework on AI. CSOAI maps all 113 articles and provides:
-- Risk classification (Unacceptable, High, Limited, Minimal)
-- Conformity assessment workflows
-- Technical documentation generation
-- Human oversight verification
-
-### NIST AI RMF 1.0
-The NIST AI Risk Management Framework provides:
-- GOVERN: Policies and procedures
-- MAP: Risk identification
-- MEASURE: Risk assessment
-- MANAGE: Risk treatment
-
-### ISO/IEC 42001
-AI Management System standard covering:
-- Leadership and planning
-- Risk assessment
-- Operational controls
-- Performance evaluation
-
-### TC260 (China)
-Chinese AI Safety Governance Framework:
-- Inherent Risk assessment
-- Application Risk evaluation
-- Derivative Risk monitoring
-
-## License
-
-MIT License - see LICENSE file for details.
-
-## Contact
-
-- Website: https://councilof.ai
-- Email: contact@councilof.ai
+<p align="center">
+  <sub>Built with 💜 by <a href="https://meok.ai">MEOK AI Labs</a> · UK Companies House 16939677</sub>
+</p>
