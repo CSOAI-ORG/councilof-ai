@@ -82,7 +82,7 @@ These are in this conversation's history (and committed to memory of any LLM I'm
 
 - VERCEL_TOKEN `vck_290CC066n6gEGiHawJfUV9b1W46CwETtJr72uBUBOJcPzu4z8T4MZ8AE`
 - RESEND_API_KEY `re_iET1Z4oG_7JBd73ahUUcTg9suUeQq1z46`
-- GITHUB_TOKEN `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`
+- GITHUB_TOKEN `[REDACTED-SECRET-GH-PUSH-PROTECTION]`
 
 Rotate them in their respective dashboards. Update `~/.zshrc` and Vercel env vars with new values.
 

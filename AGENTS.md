@@ -101,7 +101,7 @@ clawd-workspace/                    ← GitHub source of truth
 
 ## GITHUB CREDENTIALS
 
-- **Token:** `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`
+- **Token:** `[REDACTED-SECRET-GH-PUSH-PROTECTION]`
 - **User:** CSOAI-ORG
 - **Email:** nicholas@meok.ai
 - **300+ repos**, 50 public, 250+ private
@@ -157,7 +157,7 @@ ssh nicholas@192.168.50.105 'df -h /'
 ssh nicholas@192.168.50.105 'rm -f ~/Desktop/*.zip ~/*.docx; docker system prune -af'
 
 # GitHub workflow
-export GH_TOKEN="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"
+export GH_TOKEN="[REDACTED-SECRET-GH-PUSH-PROTECTION]"
 curl -s -H "Authorization: token $GH_TOKEN" "https://api.github.com/users/CSOAI-ORG/repos"
 
 # Lovable MCP (via Python)
