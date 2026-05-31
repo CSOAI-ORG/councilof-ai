@@ -1,12 +1,26 @@
 {
   "model_name": "relationship_evolution_nn",
   "metrics": {
-    "mse": 0.0014252989061744506,
-    "mae": 0.02080206340826268,
-    "training_samples": 203,
-    "input_features": 64,
-    "output_dimensions": 3
+    "mse": 0.011807486390231986,
+    "mae": 0.07685195926402986,
+    "training_samples": 540,
+    "input_features": 10,
+    "output_dimensions": 3,
+    "per_output": {
+      "future_trust": {
+        "mse": 0.004078693350374623,
+        "mae": 0.05083947858772992
+      },
+      "trajectory": {
+        "mse": 0.027759843856803863,
+        "mae": 0.13168478742103842
+      },
+      "engagement": {
+        "mse": 0.0035839219635174693,
+        "mae": 0.04803161178332127
+      }
+    }
   },
   "is_trained": true,
-  "saved_at": "2026-05-27T17:18:44.032971"
+  "saved_at": "2026-05-29T22:09:36.069659"
 }

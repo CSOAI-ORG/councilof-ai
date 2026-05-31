@@ -1,178 +1,160 @@
-"use client";
-
-import { useParams } from "next/navigation";
-import { Star, Shield, Zap, ChevronRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { notFound } from "next/navigation";
+import { Star, Shield, Sparkles, Egg, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CharacterViewer } from "@/components/CharacterViewer";
-import { SbtBadge } from "@/components/SbtBadge";
-import { getCharacterById, ARCHETYPES } from "@/lib/mockData";
+import { Badge } from "@/components/ui/badge";
+import { CHARACTER_PRODUCTS, ARCHETYPES, STAGE_PRICING } from "@/lib/mockData";
+import { CharacterBlueprint } from "@/components/CharacterBlueprint";
 
-export default function CharacterDetailPage() {
-  const params = useParams();
-  const id = params.id as string;
-  const character = getCharacterById(id);
+export default function CharacterDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const character = CHARACTER_PRODUCTS.find((c) => c.id === params.id);
+  if (!character) return notFound();
 
-  if (!character) {
-    return (
-      <div className="container py-24 text-center">
-        <h1 className="text-2xl font-bold">Character not found</h1>
-        <p className="text-muted-foreground">
-          The character you are looking for does not exist.
-        </p>
-        <Button className="mt-4" asChild>
-          <a href="/browse">Back to Browse</a>
-        </Button>
-      </div>
-    );
-  }
-
-  const archetypeInfo = ARCHETYPES[character.archetype];
-  const evolutionStages = Array.from(
-    { length: Math.max(4, character.evolutionStage) },
-    (_, i) => i + 1
-  );
+  const archetype = ARCHETYPES[character.archetype];
+  const stage = character.stage || "mature";
+  const isDragon = character.isDragon || false;
+  const price = character.price;
 
   return (
-    <div className="container py-8">
-      <div className="mb-6">
-        <a
-          href="/browse"
-          className="text-sm text-muted-foreground hover:text-foreground"
-        >
-          &larr; Back to Browse
+    <div className="container py-16">
+      {/* Back */}
+      <Button variant="ghost" asChild className="mb-8">
+        <a href="/characters">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          All Characters
         </a>
-      </div>
+      </Button>
 
-      <div className="grid gap-8 lg:grid-cols-2">
-        {/* 3D Viewer */}
-        <CharacterViewer
-          archetype={character.archetype}
-          className="aspect-square"
-        />
+      <div className="grid lg:grid-cols-2 gap-12">
+        {/* Visual */}
+        <div className="space-y-8">
+          <div
+            className="relative h-[500px] rounded-2xl flex items-center justify-center overflow-hidden border border-emerald-500/10 shadow-[0_0_50px_rgba(16,185,129,0.05)]"
+            style={{
+              background: `radial-gradient(circle at center, ${archetype.color}15, transparent)`,
+            }}
+          >
+            <div
+              className="absolute inset-0 opacity-20"
+              style={{
+                background: `radial-gradient(circle at 30% 30%, ${archetype.color}20, transparent 50%)`,
+              }}
+            />
 
-        {/* Details */}
-        <div className="space-y-6">
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <Badge variant="secondary">{character.type}</Badge>
-              {character.poaiVerified && (
-                <Badge
-                  variant="outline"
-                  className="flex items-center gap-1 border-emerald-500/50 text-emerald-600"
-                >
-                  <Shield className="h-3 w-3" />
-                  POAI Verified
-                </Badge>
-              )}
+            {/* Character placeholder */}
+            <div className="relative z-10 w-64 h-64 rounded-full flex items-center justify-center animate-float"
+              style={{
+                background: `radial-gradient(circle, ${archetype.color}30, ${archetype.color}10)`,
+                boxShadow: `0 0 100px ${archetype.color}40, inset 0 0 50px ${archetype.color}20`,
+              }}
+            >
+              <span className="text-8xl drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">{archetype.symbol}</span>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              {character.name}
-            </h1>
-            <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                {character.rating} ({character.reviewCount} reviews)
-              </span>
-              <span>{character.author}</span>
+
+            {/* Stage indicator */}
+            <div className="absolute top-6 left-6">
+              <Badge
+                className="text-lg px-4 py-2 font-black tracking-tighter"
+                style={{ backgroundColor: archetype.color, color: "#fff" }}
+              >
+                {isDragon ? "🐉 " : ""}
+                {stage.toUpperCase()}
+              </Badge>
+            </div>
+
+            {/* POAI badge */}
+            <div className="absolute top-6 right-6">
+              <Badge
+                variant="outline"
+                className="flex items-center gap-1 border-emerald-500/50 text-emerald-500 bg-black/40 backdrop-blur-md"
+              >
+                <Shield className="h-4 w-4" />
+                POAI_VERIFIED
+              </Badge>
             </div>
           </div>
 
-          <p className="text-muted-foreground">{character.description}</p>
+          {/* Emergence Blueprint Section */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-black uppercase tracking-widest text-emerald-400">Sovereign_Emergence_Matrix</h2>
+            <CharacterBlueprint 
+              archetype={character.archetype} 
+              stage={stage} 
+              dna={character.charterRef + "-MEOK-DNA-v2.0-" + character.id.toUpperCase()} 
+            />
+          </div>
+        </div>
 
-          <SbtBadge
-            sbtType={character.sbtType}
-            charterRef={character.charterRef}
-            riskTier={character.riskTier}
-            archetype={character.archetype}
-            evolutionStage={character.evolutionStage}
-          />
+        {/* Info */}
+        <div className="space-y-8">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <Badge
+                style={{ backgroundColor: archetype.color + "20", color: archetype.color }}
+                className="font-black uppercase tracking-widest px-3 py-1"
+              >
+                {character.archetype}
+              </Badge>
+              {isDragon && <Badge className="bg-red-500 text-white font-black px-3 py-1">DRAGON_VARIANT</Badge>}
+            </div>
+            <h1 className="text-5xl font-black tracking-tighter mb-4">{character.name}</h1>
+            <p className="text-xl text-muted-foreground leading-relaxed">{character.description}</p>
+          </div>
 
-          {/* Archetype Info */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm">Archetype</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-3">
-                <span
-                  className="inline-block h-8 w-8 rounded-lg border shadow-sm"
-                  style={{ backgroundColor: archetypeInfo.color }}
-                />
-                <div>
-                  <p className="font-semibold">{character.archetype}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {archetypeInfo.material}
-                  </p>
-                </div>
+          {/* Material & Color */}
+          <div className="rounded-2xl border border-white/5 bg-white/5 p-6 space-y-4">
+            <div className="flex items-center gap-4">
+              <div
+                className="w-12 h-12 rounded-xl animate-color-shift shadow-lg"
+                style={{
+                  background: `linear-gradient(45deg, ${archetype.color}, #ffffff, ${archetype.color})`,
+                  backgroundSize: "200% 100%",
+                }}
+              />
+              <div>
+                <div className="text-lg font-bold">{archetype.material}</div>
+                <div className="text-sm text-muted-foreground font-mono">SOVEREIGN_MATERIAL_SPEC_v4.2</div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Evolution Stages */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm">Evolution</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                {evolutionStages.map((stage, idx) => {
-                  const active = stage <= character.evolutionStage;
-                  return (
-                    <div key={stage} className="flex items-center gap-2">
-                      <div
-                        className={`flex h-8 w-8 items-center justify-center rounded-full border text-xs font-bold ${
-                          active
-                            ? "border-transparent text-white"
-                            : "border-muted bg-muted text-muted-foreground"
-                        }`}
-                        style={
-                          active
-                            ? { backgroundColor: archetypeInfo.color }
-                            : undefined
-                        }
-                      >
-                        {stage}
-                      </div>
-                      {idx < evolutionStages.length - 1 && (
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+          {/* SBT Certificate */}
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-4">
+            <div className="flex items-center gap-3 text-sm font-black uppercase tracking-widest text-emerald-400">
+              <Sparkles className="h-5 w-5" />
+              CharacterGenesis_SBT
+            </div>
+            <div className="grid grid-cols-2 gap-y-3 gap-x-8 text-sm font-mono">
+              <div className="text-emerald-900 uppercase">SBT_TYPE:</div>
+              <div className="text-emerald-200">{character.sbtType.toUpperCase()}</div>
+              <div className="text-emerald-900 uppercase">CHARTER_REF:</div>
+              <div className="text-emerald-200">{character.charterRef}</div>
+              <div className="text-emerald-900 uppercase">RISK_TIER:</div>
+              <div className="text-emerald-200">{character.riskTier.toUpperCase()}</div>
+              <div className="text-emerald-900 uppercase">EVO_LEVEL:</div>
+              <div className="text-emerald-200">{character.evolutionStage} / 5</div>
+            </div>
+          </div>
 
-          {character.poaiScore && (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm">POAI Audit Score</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-3">
-                  <div className="text-3xl font-bold text-emerald-600">
-                    {character.poaiScore}
-                  </div>
-                  <div className="text-sm text-muted-foreground">/ 100</div>
-                </div>
-                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
-                  <div
-                    className="h-full rounded-full bg-emerald-500"
-                    style={{ width: `${character.poaiScore}%` }}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <div className="flex items-center gap-4 pt-4">
-            <span className="text-3xl font-bold">${character.price}</span>
-            <Button size="lg">
-              <Zap className="mr-2 h-4 w-4" />
-              Acquire Character
+          {/* Pricing & Acquisition */}
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8">
+            <div className="flex items-baseline gap-3 mb-6">
+              <span className="text-5xl font-black">£{price}</span>
+              <span className="text-muted-foreground font-mono uppercase text-xs tracking-widest">Single_Unit_Genesis</span>
+            </div>
+            <Button
+              size="lg"
+              className="w-full h-16 text-lg font-black uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(16,185,129,0.3)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              style={{ backgroundColor: archetype.color, color: "#fff" }}
+            >
+              Acquire_{character.name.replace(' ', '_').toUpperCase()}
             </Button>
+            <p className="text-[10px] text-muted-foreground mt-4 text-center font-mono uppercase tracking-widest opacity-60">
+              Secure_Handshake_Initiated :: SBT_MINT_ON_SOLANA_DEVNET
+            </p>
           </div>
         </div>
       </div>

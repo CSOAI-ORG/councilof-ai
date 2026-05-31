@@ -11,13 +11,18 @@
 <link rel="canonical" href="https://safetyof.ai">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#0F172A;line-height:1.55;background:linear-gradient(135deg,#0F172A 0%,#5B21B6 100%);min-height:100vh;padding:2rem 1rem}
-.container{max-width:780px;margin:0 auto;background:#fff;border-radius:18px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#0F172A;line-height:1.55;background:linear-gradient(135deg,#0F172A 0%,#5B21B6 100%);min-height:100vh;padding:2rem 1rem;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(circle,rgba(124,58,237,0.08) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.container{max-width:780px;margin:0 auto;background:#fff;border-radius:18px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.4);position:relative;z-index:1}
+.hero-visual{text-align:center;margin-bottom:1.5rem}
+.hero-visual svg{width:120px;height:120px}
 .badge{display:inline-block;padding:.3rem .9rem;background:#7C3AED;color:#fff;border-radius:999px;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1.2rem}
 h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.7rem}
 .lead{font-size:1.05rem;color:#475569;margin-bottom:1.5rem;line-height:1.6}
 .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin:1.5rem 0 2rem}
-.pillar{padding:.7rem;background:#F1F5F9;border-radius:10px;font-size:.85rem;text-align:center;border:1px solid #E2E8F0}
+.pillar{padding:1rem;background:#F1F5F9;border-radius:12px;font-size:.85rem;text-align:center;border:1px solid #E2E8F0;transition:all .2s}
+.pillar:hover{background:#fff;border-color:#7C3AED;transform:translateY(-2px);box-shadow:0 4px 16px rgba(124,58,237,0.1)}
+.pillar-icon{font-size:1.8rem;margin-bottom:.4rem;display:block}
 .pillar strong{display:block;color:#5B21B6;font-size:.9rem}
 form{display:grid;gap:1.25rem;margin:2rem 0}
 .field{display:grid;gap:.4rem}
@@ -45,18 +50,45 @@ button:hover{background:#6D28D9}
 </style>
 </head>
 <body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,0.1);background:rgba(26,26,46,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#fff;">SafetyOf</span>
+        <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
 <div class="container">
   <span class="badge">🛡️ Free · 5 minutes · No card</span>
   <h1>AI Safety Posture Score</h1>
   <p style="text-align:center;font-size:.85rem;color:#64748B;letter-spacing:.02em;margin-bottom:.2rem">Open MCP ecosystem · Multi-framework compliance · Cryptographic attestation</p>
   <p class="lead">For teams shipping AI products to real users. Score your safety posture across 5 pillars — get a readiness band + concrete next-action list emailed instantly. Built on the open-source MEOK A2A + governance MCPs.</p>
 
+  <div class="hero-visual">
+    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="55" stroke="#7C3AED" stroke-width="1.5" opacity="0.2"/>
+      <circle cx="60" cy="60" r="40" stroke="#7C3AED" stroke-width="1.5" opacity="0.3"/>
+      <path d="M60 20 L60 35 M60 85 L60 100 M20 60 L35 60 M85 60 L100 60" stroke="#7C3AED" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+      <path d="M60 30 L85 42 L85 65 Q85 85 60 95 Q35 85 35 65 L35 42 Z" fill="#7C3AED" opacity="0.1" stroke="#7C3AED" stroke-width="2"/>
+      <path d="M60 42 L75 50 L75 65 Q75 78 60 85 Q45 78 45 65 L45 50 Z" fill="#7C3AED" opacity="0.8"/>
+      <path d="M55 62 L58 67 L65 58" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
   <div class="pillars">
-    <div class="pillar"><strong>🛡️ Defence</strong>Prompt-injection<br/>+ red-team</div>
-    <div class="pillar"><strong>⚖️ Fairness</strong>Bias monitoring<br/>+ Article 10</div>
-    <div class="pillar"><strong>📋 Audit</strong>Signed logs<br/>+ provenance</div>
-    <div class="pillar"><strong>🚨 Incident</strong>15-day reporting<br/>+ playbook</div>
-    <div class="pillar"><strong>🔍 Transparency</strong>Watermarking<br/>+ AI-BOM</div>
+    <div class="pillar"><span class="pillar-icon">🛡️</span><strong>Defence</strong>Prompt-injection<br/>+ red-team</div>
+    <div class="pillar"><span class="pillar-icon">⚖️</span><strong>Fairness</strong>Bias monitoring<br/>+ Article 10</div>
+    <div class="pillar"><span class="pillar-icon">📋</span><strong>Audit</strong>Signed logs<br/>+ provenance</div>
+    <div class="pillar"><span class="pillar-icon">🚨</span><strong>Incident</strong>15-day reporting<br/>+ playbook</div>
+    <div class="pillar"><span class="pillar-icon">🔍</span><strong>Transparency</strong>Watermarking<br/>+ AI-BOM</div>
   </div>
 
   <form id="safety-form">
@@ -233,5 +265,22 @@ document.getElementById('safety-form').addEventListener('submit', async function
   result.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 </script>
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid rgba(255,255,255,0.1);background:transparent;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#fff;">SafetyOf by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:rgba(255,255,255,0.7);opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
 </body>
 </html>

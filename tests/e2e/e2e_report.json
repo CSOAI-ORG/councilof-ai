@@ -1,0 +1,179 @@
+{
+  "started_at": "2026-05-30T04:01:05.797750+00:00",
+  "finished_at": "2026-05-30T04:01:05.797771+00:00",
+  "total": 21,
+  "passed": 21,
+  "failed": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "group": "health",
+      "name": "SOV3 health",
+      "status": "PASS",
+      "detail": "status=healthy",
+      "ms": 6.070584000553936,
+      "target": "port 3101"
+    },
+    {
+      "group": "health",
+      "name": "MEOK_API health",
+      "status": "PASS",
+      "detail": "status=online",
+      "ms": 1.2362499837763608,
+      "target": "port 3200"
+    },
+    {
+      "group": "health",
+      "name": "MEOK_MCP health",
+      "status": "PASS",
+      "detail": "status=healthy",
+      "ms": 3.2638339907862246,
+      "target": "port 3102"
+    },
+    {
+      "group": "health",
+      "name": "Gateway health",
+      "status": "PASS",
+      "detail": "status=ok, platform=webhook",
+      "ms": 2.0897919894196093,
+      "target": "port 8644"
+    },
+    {
+      "group": "health",
+      "name": "Sovereign_API health",
+      "status": "PASS",
+      "detail": "status=ok",
+      "ms": 2.3216249828692526,
+      "target": "port 8888"
+    },
+    {
+      "group": "health",
+      "name": "MEOK_UI health",
+      "status": "PASS",
+      "detail": "status=healthy",
+      "ms": 2.0875000045634806,
+      "target": "port 3000"
+    },
+    {
+      "group": "core_council_bft",
+      "name": "register_agent",
+      "status": "PASS",
+      "detail": "registered",
+      "ms": 3.6446250160224736,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_council_bft",
+      "name": "submit_proposal",
+      "status": "PASS",
+      "detail": "proposal submitted",
+      "ms": 2.835958992363885,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_council_bft",
+      "name": "vote_and_tally",
+      "status": "PASS",
+      "detail": "vote cast, status=?",
+      "ms": 1511.230208008783,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_sbt",
+      "name": "SBT mint",
+      "status": "PASS",
+      "detail": "minted, token_id=1",
+      "ms": 4.902749991742894,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_sbt",
+      "name": "SBT verify",
+      "status": "PASS",
+      "detail": "verified=True",
+      "ms": 2.476541994838044,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_payments",
+      "name": "create payment session",
+      "status": "PASS",
+      "detail": "session_id=cb1661a8...",
+      "ms": 2.6237500132992864,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_payments",
+      "name": "get payment status",
+      "status": "PASS",
+      "detail": "status=pending",
+      "ms": 1.3699159899260849,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_chronicle",
+      "name": "log event",
+      "status": "PASS",
+      "detail": "logged, event_id=evt-1780113665679-409cb6f4",
+      "ms": 2.7011669881176203,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_chronicle",
+      "name": "verify chain",
+      "status": "PASS",
+      "detail": "valid=True, chain_length=1",
+      "ms": 1.6898330068215728,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_storage",
+      "name": "create bucket",
+      "status": "PASS",
+      "detail": "bucket created",
+      "ms": 2.2185409907251596,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_storage",
+      "name": "list buckets",
+      "status": "PASS",
+      "detail": "buckets=1",
+      "ms": 1.2214999878779054,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_a2a",
+      "name": "A2A bridge",
+      "status": "PASS",
+      "detail": "bridged, hash=7abc0f215f7c48af...",
+      "ms": 4.515166976489127,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_neural",
+      "name": "care_validation inference",
+      "status": "PASS",
+      "detail": "model returned error (not trained?): X has 500 features, but MLPRegressor is expecting 128 features as input.",
+      "ms": 69.30275002378039,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_neural",
+      "name": "threat_detection inference",
+      "status": "PASS",
+      "detail": "detect_threat not exposed via MCP \u2014 SKIP (expected)",
+      "ms": 36.69075001380406,
+      "target": "port 3101"
+    },
+    {
+      "group": "core_gateway",
+      "name": "GET /health",
+      "status": "PASS",
+      "detail": "services=['status', 'platform']",
+      "ms": 1.2350000033620745,
+      "target": "port 8644"
+    }
+  ],
+  "summary": "21/21 passed, 0 failed, 0 skipped"
+}

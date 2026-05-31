@@ -1,0 +1,249 @@
+pageType: content
+background:
+  type: solid
+  color: "$primary"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [80, 30, 300, 24]
+    content:
+      style: "$label"
+      fontSize: 12
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>FINANCIALS</p>
+
+  - elementId: page-title
+    elementType: text
+    bounds: [80, 60, 900, 50]
+    content:
+      style: "$title"
+      fontSize: 32
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>40% Revenue by 2028</strong></p>
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [80, 115, 60, 3]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: rev-chart
+    elementType: chart
+    bounds: [80, 150, 700, 380]
+    type: bar
+    options:
+      fontFamily: "QuattrocentoSans"
+    data:
+      - {year: "Year 1", revenue: 0.38}
+      - {year: "Year 2", revenue: 2.1}
+      - {year: "Year 3", revenue: 6.8}
+    x: year
+    y: [revenue]
+    names: ["Revenue (GBP M)"]
+    colors: ["$accent"]
+    legend: false
+    dataLabels:
+      show: true
+      content: value
+      color: "$textLight"
+      numberFormat: "£0.0M"
+    yAxis:
+      show: false
+      gridLine: false
+    xAxis:
+      label:
+        color: "$muted"
+        fontSize: 14
+      axisLine:
+        color: "#00788860"
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788840"
+
+  - elementId: metrics-panel
+    elementType: shape
+    bounds: [820, 150, 380, 400]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788840"
+
+  - elementId: metric-y1-title
+    elementType: text
+    bounds: [850, 175, 320, 24]
+    content:
+      fontSize: 14
+      fontFamily: "Liter"
+      color: "$accent"
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>YEAR 1</p>
+
+  - elementId: metric-y1-val
+    elementType: text
+    bounds: [850, 205, 320, 40]
+    content:
+      fontSize: 32
+      fontFamily: "Liter"
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>GBP 380K</strong></p>
+
+  - elementId: metric-y1-detail
+    elementType: text
+    bounds: [850, 250, 320, 60]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>200 Pro | 5 Enterprise | 3 B2B Licenses</p>
+
+  - elementId: divider1
+    elementType: shape
+    bounds: [850, 310, 320, 1]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788840"
+
+  - elementId: metric-y2-title
+    elementType: text
+    bounds: [850, 325, 320, 24]
+    content:
+      fontSize: 14
+      fontFamily: "Liter"
+      color: "$accent"
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>YEAR 2</p>
+
+  - elementId: metric-y2-val
+    elementType: text
+    bounds: [850, 355, 320, 40]
+    content:
+      fontSize: 32
+      fontFamily: "Liter"
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>GBP 2.1M</strong></p>
+
+  - elementId: metric-y2-detail
+    elementType: text
+    bounds: [850, 400, 320, 60]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>800 Pro | 25 Enterprise | 15 B2B Licenses</p>
+
+  - elementId: divider2
+    elementType: shape
+    bounds: [850, 460, 320, 1]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788840"
+
+  - elementId: metric-y3-title
+    elementType: text
+    bounds: [850, 470, 320, 24]
+    content:
+      fontSize: 14
+      fontFamily: "Liter"
+      color: "$accent"
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>YEAR 3</p>
+
+  - elementId: metric-y3-val
+    elementType: text
+    bounds: [850, 498, 320, 40]
+    content:
+      fontSize: 32
+      fontFamily: "Liter"
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>GBP 6.8M</strong></p>
+
+  - elementId: bottom-bar
+    elementType: shape
+    bounds: [80, 560, 1120, 100]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788840"
+
+  - elementId: be-label
+    elementType: text
+    bounds: [110, 575, 300, 24]
+    content:
+      fontSize: 14
+      fontFamily: "Liter"
+      color: "$accent"
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>BREAK-EVEN</p>
+
+  - elementId: be-val
+    elementType: text
+    bounds: [110, 605, 300, 40]
+    content:
+      fontSize: 28
+      fontFamily: "Liter"
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Q4 2027</strong></p>
+
+  - elementId: assumptions
+    elementType: text
+    bounds: [500, 575, 670, 70]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      lineHeight: 1.6
+      align: [left, top]
+      text: |
+        <p>Assumptions: 2% Free-to-Pro conversion, 0.5% Pro-to-Enterprise, 15 B2B licenses by Year 2. Conservative estimates based on current ecosystem usage.</p>

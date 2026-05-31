@@ -6,7 +6,7 @@
 <title>If you are in crisis right now — international helplines</title>
 <meta name="description" content="This domain (suicidestop.ai) is held by MEOK AI Labs in care, pending donation to a registered crisis-prevention partner. If you are in crisis, please contact one of the helplines below.">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#1a1a2e">
+<meta name="theme-color" content="#0F172A" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -66,6 +66,28 @@
     grid-template-columns: 1fr auto;
     gap: 1rem;
     align-items: baseline;
+    transition: all .25s;
+    position: relative;
+    z-index: 1;
+  }
+  ul.helplines li:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    border-bottom-color: transparent;
+  }
+  ul.helplines li:hover::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: -1;
+    opacity: 0.35;
+    filter: blur(6px);
+    pointer-events: none;
   }
   ul.helplines .country { font-weight: 700; }
   ul.helplines .name { color: rgba(26, 26, 46, 0.7); font-size: 0.92rem; display: block; }
@@ -88,7 +110,35 @@
 </style>
 </head>
 <body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">Suicidestop Care</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
 <main>
+  <!-- Hero SVG -->
+  <div style="text-align:center;margin-bottom:2rem">
+    <svg width="140" height="140" viewBox="0 0 140 140" fill="none" style="opacity:0.9;color:#c9a84c">
+      <circle cx="70" cy="70" r="60" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+      <circle cx="70" cy="70" r="40" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+      <path d="M70 100c-28-20-38-32-38-48a22 22 0 0 1 38-16 22 22 0 0 1 38 16c0 16-10 28-38 48z" stroke="currentColor" stroke-width="2" fill="none"/>
+      <path d="M45 65c6-6 14-8 25-8s19 2 25 8" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
+      <path d="M50 75c8-5 12-7 20-7s12 2 20 7" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
+    </svg>
+  </div>
+
   <h1>If you are in crisis right now</h1>
   <p class="lead">Please contact one of the helplines below. They are free, confidential, and answered by trained volunteers or clinicians.</p>
 
@@ -96,54 +146,54 @@
     <strong>If you are in immediate danger</strong>, call your local emergency number (999 UK, 112 EU, 911 US/Canada).
   </div>
 
-  <h2>UK</h2>
+  <h2>🇬🇧 UK</h2>
   <ul class="helplines">
     <li>
-      <span><span class="country">Samaritans</span><span class="name">24/7, free, confidential — anyone in distress</span></span>
+      <span><span class="country">📞 Samaritans</span><span class="name">24/7, free, confidential — anyone in distress</span></span>
       <span class="number"><a href="tel:116123">116 123</a></span>
     </li>
     <li>
-      <span><span class="country">Shout</span><span class="name">Text-based support, 24/7</span></span>
+      <span><span class="country">💬 Shout</span><span class="name">Text-based support, 24/7</span></span>
       <span class="number">Text <strong>SHOUT</strong> to <strong>85258</strong></span>
     </li>
     <li>
-      <span><span class="country">CALM</span><span class="name">Campaign Against Living Miserably — for men, 5pm-midnight</span></span>
+      <span><span class="country">👤 CALM</span><span class="name">Campaign Against Living Miserably — for men, 5pm-midnight</span></span>
       <span class="number"><a href="tel:0800585858">0800 58 58 58</a></span>
     </li>
     <li>
-      <span><span class="country">Papyrus HOPELINE247</span><span class="name">Under-35s, suicide prevention, 24/7</span></span>
+      <span><span class="country">🌱 Papyrus HOPELINE247</span><span class="name">Under-35s, suicide prevention, 24/7</span></span>
       <span class="number"><a href="tel:08000684141">0800 068 41 41</a></span>
     </li>
   </ul>
 
-  <h2>USA + Canada</h2>
+  <h2>🇺🇸🇨🇦 USA + Canada</h2>
   <ul class="helplines">
     <li>
-      <span><span class="country">988 Suicide & Crisis Lifeline</span><span class="name">USA, 24/7, free, English + Spanish</span></span>
+      <span><span class="country">📞 988 Suicide & Crisis Lifeline</span><span class="name">USA, 24/7, free, English + Spanish</span></span>
       <span class="number"><a href="tel:988">988</a></span>
     </li>
     <li>
-      <span><span class="country">Crisis Text Line (USA)</span><span class="name">Text-based, 24/7</span></span>
+      <span><span class="country">💬 Crisis Text Line (USA)</span><span class="name">Text-based, 24/7</span></span>
       <span class="number">Text <strong>HOME</strong> to <strong>741741</strong></span>
     </li>
     <li>
-      <span><span class="country">Talk Suicide Canada</span><span class="name">24/7</span></span>
+      <span><span class="country">📞 Talk Suicide Canada</span><span class="name">24/7</span></span>
       <span class="number"><a href="tel:18334564566">1-833-456-4566</a></span>
     </li>
   </ul>
 
-  <h2>Europe + International</h2>
+  <h2>🌍 Europe + International</h2>
   <ul class="helplines">
     <li>
-      <span><span class="country">Find A Helpline</span><span class="name">Verified directory, 130+ countries</span></span>
+      <span><span class="country">🔍 Find A Helpline</span><span class="name">Verified directory, 130+ countries</span></span>
       <span class="number"><a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a></span>
     </li>
     <li>
-      <span><span class="country">International Bipolar Foundation</span><span class="name">Full international list</span></span>
+      <span><span class="country">🌍 International Bipolar Foundation</span><span class="name">Full international list</span></span>
       <span class="number"><a href="https://ibpf.org/resource/list-of-international-suicide-hotlines/" target="_blank" rel="noopener">ibpf.org</a></span>
     </li>
     <li>
-      <span><span class="country">Befrienders Worldwide</span><span class="name">350+ centres in 32 countries</span></span>
+      <span><span class="country">🤝 Befrienders Worldwide</span><span class="name">350+ centres in 32 countries</span></span>
       <span class="number"><a href="https://www.befrienders.org" target="_blank" rel="noopener">befrienders.org</a></span>
     </li>
   </ul>
@@ -154,5 +204,22 @@
     Registered organisations may contact <a href="mailto:nicholas@csoai.org?subject=suicidestop.ai%20donation%20enquiry">nicholas@csoai.org</a>.
   </p>
 </main>
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">Suicidestop Care by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
 </body>
 </html>

@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 """
+⚠️  DEPRECATED — This audit references ports 3103 (councilof), 3104 (moe), and
+    3201 (ralph). None of these services exist in the current architecture.
+    The unified stack runs on: SOV3=3101, MEOK_API=3200, MEOK_MCP=3102,
+    Gateway=3400, Sovereign=8888.
+    Use the unified suite instead:
+      python ~/clawd/tests/e2e/unified_e2e_suite.py
+    Last verified broken: 2026-05-29
+
 SOV3 E2E COMPREHENSIVE AUDIT
 ============================
 Full system verification — all components, all integrations

@@ -1,4 +1,11 @@
 #!/bin/bash
+# ⚠️  DEPRECATED — This test file references stale ports (8000/8001).
+#    The current architecture uses: SOV3=3101, MEOK_API=3200, MEOK_MCP=3102,
+#    Gateway=3400, Sovereign=8888, UI=3000.
+#    Use the unified suite instead:
+#      python ~/clawd/tests/e2e/unified_e2e_suite.py
+#    Last verified broken: 2026-05-29
+#
 # MEOK E2E Integration Test Suite
 # Tests all services: marketing, sovereign-api, temple-api, mcp-gateway
 

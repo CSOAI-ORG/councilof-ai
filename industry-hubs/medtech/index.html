@@ -22,35 +22,61 @@
 </script>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0D0B21;color:#E8E4F0;line-height:1.6;min-height:100vh}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;min-height:100vh}
   .container{max-width:1100px;margin:0 auto;padding:3rem 1.5rem}
   header{padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.08);text-align:center;animation:fade .8s ease}
   @keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
   h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.02em;color:#fff;margin-bottom:.75rem}
-  .tagline{font-size:clamp(1.1rem,2.5vw,1.4rem);color:#D4A843;margin-bottom:1rem;font-weight:600}
-  .sub{font-size:1.05rem;color:rgba(232,228,240,.7);max-width:720px;margin:0 auto;line-height:1.6}
+  .tagline{font-size:clamp(1.1rem,2.5vw,1.4rem);color:#14b8a6;margin-bottom:1rem;font-weight:600}
+  .sub{font-size:1.05rem;color:rgba(226,232,240,.85);max-width:720px;margin:0 auto;line-height:1.6}
   h2{font-size:1.5rem;margin:2.5rem 0 1rem;color:#fff;font-weight:700}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:2rem 0}
-  .mcp{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.5rem;transition:all .2s;backdrop-filter:blur(12px)}
-  .mcp:hover{border-color:rgba(212,168,67,.4);transform:translateY(-3px);box-shadow:0 8px 24px rgba(212,168,67,.1)}
-  .mcp h3{color:#fff;font-size:1.1rem;margin-bottom:.4rem;font-weight:700}
-  .mcp p{color:rgba(232,228,240,.65);font-size:.92rem;margin-bottom:.75rem;line-height:1.5}
-  .mcp a{color:#D4A843;text-decoration:none;font-size:.88rem;font-weight:600}
+  .mcp{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.5rem;transition:all .25s;backdrop-filter:blur(12px)}
+  .mcp:hover{border-color:#14b8a6;transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.25)}
+  .mcp h3{color:#fff;font-size:1.1rem;margin-bottom:.4rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
+  .mcp p{color:rgba(226,232,240,.75);font-size:.92rem;margin-bottom:.75rem;line-height:1.5}
+  .mcp a{color:#14b8a6;text-decoration:none;font-size:.88rem;font-weight:600}
   .mcp a:hover{text-decoration:underline}
-  .pain{background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.2);border-radius:14px;padding:1.75rem;margin:2rem 0;color:#E8E4F0;line-height:1.7}
-  .install{background:#1A1145;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.5rem;font-family:'SF Mono',Menlo,monospace;font-size:.95rem;color:#D4A843;overflow-x:auto;margin:1.5rem 0}
+  .pain{background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.2);border-radius:14px;padding:1.75rem;margin:2rem 0;color:#e2e8f0;line-height:1.7;transition:all .25s}
+  .pain:hover{border-color:#14b8a6;transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.25)}
+  .install{background:#1e293b;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.5rem;font-family:'SF Mono',Menlo,monospace;font-size:.95rem;color:#14b8a6;overflow-x:auto;margin:1.5rem 0}
   .cta-row{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem}
-  .cta{display:inline-block;padding:.9rem 1.75rem;background:linear-gradient(135deg,#D4A843,#E8B76D);color:#0D0B21;border-radius:10px;text-decoration:none;font-weight:700;font-size:.95rem;transition:transform .15s}
+  .cta{display:inline-block;padding:.9rem 1.75rem;background:linear-gradient(135deg,#14b8a6,#2dd4bf);color:#0f172a;border-radius:10px;text-decoration:none;font-weight:700;font-size:.95rem;transition:transform .15s}
   .cta:hover{transform:scale(1.03)}
-  .cta-secondary{background:transparent;border:1px solid rgba(212,168,67,.5);color:#D4A843}
-  footer{margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.08);text-align:center;color:rgba(232,228,240,.5);font-size:.88rem}
-  footer a{color:#D4A843;text-decoration:none}
+  .cta-secondary{background:transparent;border:1px solid rgba(20,184,166,.5);color:#14b8a6}
+  footer{margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.08);text-align:center;color:rgba(226,232,240,.5);font-size:.88rem}
+  footer a{color:#14b8a6;text-decoration:none}
+  .hero-icon{color:#14b8a6}
 </style>
 </head>
 <body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">Medtech</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+      </div>
+    </div>
+  </nav>
 <div class="container">
 
 <header>
+  <div style="text-align:center;margin-bottom:2rem">
+    <svg class="hero-icon" width="140" height="140" viewBox="0 0 140 140" fill="none" style="opacity:0.9">
+      <circle cx="70" cy="70" r="60" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+      <circle cx="70" cy="70" r="40" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+      <path d="M70 42v56M42 70h56" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <path d="M38 85c8-4 16-2 22 4s10 8 18 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <circle cx="70" cy="70" r="28" stroke="currentColor" stroke-width="1" opacity="0.25" stroke-dasharray="4 4"/>
+    </svg>
+  </div>
   <h1>MedTech AI Governance</h1>
   <p class="tagline">MDR · IVDR · FDA AI/ML SaMD · MHRA SaMD — one platform</p>
   <p class="sub">6 MCP servers in one pack. For MedTech CTOs, Reg Affairs leads, Notified Body submissions teams.</p>
@@ -65,20 +91,20 @@
 
 <h2>One install for the whole pack</h2>
 <div class="install">npx meok-setup --pack medtech</div>
-<p style="text-align:center;color:rgba(232,228,240,.6);font-size:.95rem">Writes Claude Desktop / Cursor / Windsurf configs in one command. Free tier: 10 calls/day per MCP. No API key required.</p>
+<p style="text-align:center;color:rgba(226,232,240,.75);font-size:.95rem">Writes Claude Desktop / Cursor / Windsurf configs in one command. Free tier: 10 calls/day per MCP. No API key required.</p>
 
 <h2>MCPs in this pack</h2>
 <div class="grid">
-  <div class="mcp"><h3>EU MDR + IVDR</h3><p>Reg (EU) 2017/745 + 2017/746 + AI/ML SaMD classification</p><a href="https://pypi.org/project/mdr-medical-device-mcp/">pip install mdr-medical-device-mcp →</a></div>
-  <div class="mcp"><h3>FDA AI/ML SaMD</h3><p>510(k) / De Novo / PMA + PCCP + GMLP</p><a href="https://pypi.org/project/fda-samd-mcp/">pip install fda-samd-mcp →</a></div>
-  <div class="mcp"><h3>Healthcare AI Governance</h3><p>Cross-cutting governance for healthcare AI</p><a href="https://pypi.org/project/healthcare-ai-governance-mcp/">pip install healthcare-ai-governance-mcp →</a></div>
-  <div class="mcp"><h3>HIPAA Compliance</h3><p>US healthcare data protection</p><a href="https://pypi.org/project/hipaa-compliance-mcp/">pip install hipaa-compliance-mcp →</a></div>
-  <div class="mcp"><h3>Clinical Trials AI</h3><p>ICH-GCP + EU CTR compliance</p><a href="https://pypi.org/project/clinical-trials-ai-mcp/">pip install clinical-trials-ai-mcp →</a></div>
-  <div class="mcp"><h3>AI Bias Detection</h3><p>Required by EU AI Act Art 10 + MDR risk management</p><a href="https://pypi.org/project/bias-detection-mcp/">pip install bias-detection-mcp →</a></div>
+  <div class="mcp"><h3>🏥 EU MDR + IVDR</h3><p>Reg (EU) 2017/745 + 2017/746 + AI/ML SaMD classification</p><a href="https://pypi.org/project/mdr-medical-device-mcp/">pip install mdr-medical-device-mcp →</a></div>
+  <div class="mcp"><h3>💊 FDA AI/ML SaMD</h3><p>510(k) / De Novo / PMA + PCCP + GMLP</p><a href="https://pypi.org/project/fda-samd-mcp/">pip install fda-samd-mcp →</a></div>
+  <div class="mcp"><h3>🩺 Healthcare AI Governance</h3><p>Cross-cutting governance for healthcare AI</p><a href="https://pypi.org/project/healthcare-ai-governance-mcp/">pip install healthcare-ai-governance-mcp →</a></div>
+  <div class="mcp"><h3>🔒 HIPAA Compliance</h3><p>US healthcare data protection</p><a href="https://pypi.org/project/hipaa-compliance-mcp/">pip install hipaa-compliance-mcp →</a></div>
+  <div class="mcp"><h3>🧪 Clinical Trials AI</h3><p>ICH-GCP + EU CTR compliance</p><a href="https://pypi.org/project/clinical-trials-ai-mcp/">pip install clinical-trials-ai-mcp →</a></div>
+  <div class="mcp"><h3>⚖️ AI Bias Detection</h3><p>Required by EU AI Act Art 10 + MDR risk management</p><a href="https://pypi.org/project/bias-detection-mcp/">pip install bias-detection-mcp →</a></div>
 </div>
 
 <h2>Why MEOK?</h2>
-<div class="pain">Every Pro tier audit emits a HMAC-SHA256 signed certificate. Your auditor can verify it at <a href="https://meok-attestation-api.vercel.app/verify" style="color:#D4A843">meok-attestation-api.vercel.app/verify</a> without contacting MEOK. Trust through math, not through "trust us."</div>
+<div class="pain">Every Pro tier audit emits a HMAC-SHA256 signed certificate. Your auditor can verify it at <a href="https://meok-attestation-api.vercel.app/verify" style="color:#14b8a6">meok-attestation-api.vercel.app/verify</a> without contacting MEOK. Trust through math, not through "trust us."</div>
 
 <div class="cta-row">
   <a class="cta" href="https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836">Subscribe to Pro</a>
@@ -86,9 +112,23 @@
   <a class="cta cta-secondary" href="mailto:hello@meok.ai">Email Nick</a>
 </div>
 
-<footer>
-  © 2026 <a href="https://meok.ai">MEOK AI Labs</a> · <a href="https://councilof.ai">Council of AI</a> · MIT licensed · hello@meok.ai
-</footer>
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">Medtech by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
 
 </div>
 </body>

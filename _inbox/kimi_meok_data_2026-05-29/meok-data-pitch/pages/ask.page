@@ -1,0 +1,233 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [80, 30, 200, 24]
+    content:
+      style: "$label"
+      fontSize: 12
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>THE ASK</p>
+
+  - elementId: page-title
+    elementType: text
+    bounds: [80, 60, 900, 50]
+    content:
+      style: "$title"
+      fontSize: 32
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Strategic Partnership & Investment</strong></p>
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [80, 115, 60, 3]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: left-card-bg
+    elementType: shape
+    bounds: [80, 160, 540, 260]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$cardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#e2e8f0"
+
+  - elementId: left-icon
+    elementType: icon
+    bounds: [110, 185, 40, 40]
+    iconName: "fas:handshake"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: left-title
+    elementType: text
+    bounds: [110, 240, 480, 30]
+    content:
+      fontSize: 22
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Strategic Partners</strong></p>
+
+  - elementId: left-body
+    elementType: text
+    bounds: [110, 280, 480, 110]
+    content:
+      fontSize: 18
+      fontFamily: "QuattrocentoSans"
+      color: "$text"
+      lineHeight: 1.6
+      align: [left, top]
+      text: |
+        <p>Data distribution partnerships with enterprise software vendors and cloud marketplaces. Introductions to top 50 regtech companies and Big 4 advisory practices.</p>
+
+  - elementId: right-card-bg
+    elementType: shape
+    bounds: [660, 160, 540, 260]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$cardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#e2e8f0"
+
+  - elementId: right-icon
+    elementType: icon
+    bounds: [690, 185, 40, 40]
+    iconName: "fas:rocket"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: right-title
+    elementType: text
+    bounds: [690, 240, 480, 30]
+    content:
+      fontSize: 22
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Investment</strong></p>
+
+  - elementId: right-body
+    elementType: text
+    bounds: [690, 280, 480, 110]
+    content:
+      fontSize: 18
+      fontFamily: "QuattrocentoSans"
+      color: "$text"
+      lineHeight: 1.6
+      align: [left, top]
+      text: |
+        <p>Capital to accelerate data pipeline infrastructure, hire enterprise sales lead, and build self-service licensing marketplace.</p>
+
+  - elementId: target-bg
+    elementType: shape
+    bounds: [80, 460, 1120, 180]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: target-label
+    elementType: text
+    bounds: [110, 480, 300, 24]
+    content:
+      fontSize: 14
+      fontFamily: "Liter"
+      color: "$accent"
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>18-MONTH TARGET</p>
+
+  - elementId: target1-num
+    elementType: text
+    bounds: [110, 520, 250, 50]
+    content:
+      fontSize: 40
+      fontFamily: "Liter"
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>10</strong></p>
+
+  - elementId: target1-label
+    elementType: text
+    bounds: [110, 575, 250, 40]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p>Enterprise clients closed</p>
+
+  - elementId: target2-num
+    elementType: text
+    bounds: [420, 520, 250, 50]
+    content:
+      fontSize: 40
+      fontFamily: "Liter"
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>5</strong></p>
+
+  - elementId: target2-label
+    elementType: text
+    bounds: [420, 575, 250, 40]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p>B2B data licenses signed</p>
+
+  - elementId: target3-num
+    elementType: text
+    bounds: [730, 520, 250, 50]
+    content:
+      fontSize: 40
+      fontFamily: "Liter"
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>500</strong></p>
+
+  - elementId: target3-label
+    elementType: text
+    bounds: [730, 575, 250, 40]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p>Pro subscribers active</p>
+
+  - elementId: divider1
+    elementType: shape
+    bounds: [380, 520, 1, 80]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788860"
+
+  - elementId: divider2
+    elementType: shape
+    bounds: [690, 520, 1, 80]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788860"

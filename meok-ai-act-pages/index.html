@@ -16,9 +16,29 @@
         .card a:hover { text-decoration: underline; }
         .tag { display: inline-block; background: #f0f0f0; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 4px; }
         .search { width: 100%; padding: 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1rem; }
-    </style>
+    
+.card,.feature,.pack,.service{transition:all .25s}
+.card:hover,.feature:hover,.pack:hover,.service:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.25)}
+</style>
 </head>
 <body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">Meok Ai Act Pages</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
     <h1>EU AI Act Compliance Guides by Industry</h1>
     <p>500+ detailed compliance guides covering risk assessment, penalties, documentation requirements, and human oversight obligations for every industry sector.</p>
     <p><a href="https://meok.ai">← Back to MEOK AI Labs</a> | <a href="https://meok-quiz.vercel.app">Take the EU AI Act Readiness Quiz →</a></p>
@@ -78,5 +98,22 @@
         document.getElementById('search').addEventListener('input', e => render(e.target.value));
         render();
     </script>
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">Meok Ai Act Pages by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
 </body>
 </html>

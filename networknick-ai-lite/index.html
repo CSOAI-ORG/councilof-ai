@@ -67,9 +67,29 @@
             .price { font-size: 2.5rem; }
             .btn-secondary { margin-left: 0; margin-top: 12px; }
         }
-    </style>
+    
+.card,.feature,.pack,.service{transition:all .25s}
+.card:hover,.feature:hover,.pack:hover,.service:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.25)}
+</style>
 </head>
 <body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">NetworkNick AI</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
 
 <header>
     <div class="container">
@@ -167,12 +187,23 @@
     </div>
 </section>
 
-<footer>
-    <div class="container">
-        <p>AI Compliance Lite by <a href="https://networknick.co.uk">Network Nick</a> — powered by <a href="https://meok.ai">MEOK AI Labs</a></p>
-        <p style="margin-top: 8px;">© 2026 Network Nick. All rights reserved.</p>
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">NetworkNick AI by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
     </div>
-</footer>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
 
 <!-- Wire form to n8n -->
 <script src="/form-to-n8n.js"></script>

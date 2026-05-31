@@ -1,0 +1,216 @@
+pageType: content
+background:
+  type: solid
+  color: "$primary"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [80, 30, 300, 24]
+    content:
+      style: "$label"
+      fontSize: 12
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>COMPETITIVE MOAT</p>
+
+  - elementId: page-title
+    elementType: text
+    bounds: [80, 60, 900, 50]
+    content:
+      style: "$title"
+      fontSize: 32
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>4 Structural Advantages</strong></p>
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [80, 115, 60, 3]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: col1-bg
+    elementType: shape
+    bounds: [80, 155, 255, 480]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788840"
+
+  - elementId: col1-icon
+    elementType: icon
+    bounds: [110, 185, 44, 44]
+    iconName: "fas:lock"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: col1-title
+    elementType: text
+    bounds: [100, 250, 215, 60]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$textLight"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>Ecosystem Lock-In</strong></p>
+
+  - elementId: col1-body
+    elementType: text
+    bounds: [100, 320, 215, 140]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "#a0b0c0"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>255 MCP servers across 13 frameworks.</p>
+        <p style="margin-top:8px"><strong style="color:#00bca8;">Replication cost: GBP 2.5M+</strong></p>
+
+  - elementId: col2-bg
+    elementType: shape
+    bounds: [365, 155, 255, 480]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788840"
+
+  - elementId: col2-icon
+    elementType: icon
+    bounds: [395, 185, 44, 44]
+    iconName: "fas:signature"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: col2-title
+    elementType: text
+    bounds: [385, 250, 215, 60]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$textLight"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>Cryptographic Trust</strong></p>
+
+  - elementId: col2-body
+    elementType: text
+    bounds: [385, 320, 215, 140]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "#a0b0c0"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>HMAC-SHA256 signed attestations at scale.</p>
+        <p style="margin-top:8px"><strong style="color:#00bca8;">Verifiable provenance</strong></p>
+
+  - elementId: col3-bg
+    elementType: shape
+    bounds: [650, 155, 255, 480]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788840"
+
+  - elementId: col3-icon
+    elementType: icon
+    bounds: [680, 185, 44, 44]
+    iconName: "fas:diagram-project"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: col3-title
+    elementType: text
+    bounds: [670, 250, 215, 60]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$textLight"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>Cross-Domain Unique</strong></p>
+
+  - elementId: col3-body
+    elementType: text
+    bounds: [670, 320, 215, 140]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "#a0b0c0"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>Healthcare + Finance + Governance correlation exists nowhere else.</p>
+        <p style="margin-top:8px"><strong style="color:#00bca8;">Novel use cases</strong></p>
+
+  - elementId: col4-bg
+    elementType: shape
+    bounds: [935, 155, 255, 480]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788840"
+
+  - elementId: col4-icon
+    elementType: icon
+    bounds: [965, 185, 44, 44]
+    iconName: "fas:bolt"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: col4-title
+    elementType: text
+    bounds: [955, 250, 215, 60]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$textLight"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>Regulatory Velocity</strong></p>
+
+  - elementId: col4-body
+    elementType: text
+    bounds: [955, 320, 215, 140]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "#a0b0c0"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>Real-time change detection across 13 frameworks.</p>
+        <p style="margin-top:8px"><strong style="color:#00bca8;">Dataset freshness</strong></p>

@@ -1,0 +1,301 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [80, 30, 300, 24]
+    content:
+      style: "$label"
+      fontSize: 12
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>GO-TO-MARKET</p>
+
+  - elementId: page-title
+    elementType: text
+    bounds: [80, 60, 900, 50]
+    content:
+      style: "$title"
+      fontSize: 32
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>4-Phase Launch Through 2027</strong></p>
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [80, 115, 60, 3]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: timeline-line
+    elementType: shape
+    bounds: [140, 260, 1000, 2]
+    shapeName: rect
+    fill:
+      type: gradient
+      gradientType: linear
+      angle: 0
+      stops:
+        - {position: 0, color: "$accent"}
+        - {position: 1, color: "$secondary"}
+
+  - elementId: dot1
+    elementType: shape
+    bounds: [132, 252, 18, 18]
+    shapeName: ellipse
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: dot2
+    elementType: shape
+    bounds: [432, 252, 18, 18]
+    shapeName: ellipse
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: dot3
+    elementType: shape
+    bounds: [732, 252, 18, 18]
+    shapeName: ellipse
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: dot4
+    elementType: shape
+    bounds: [1032, 252, 18, 18]
+    shapeName: ellipse
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: phase1-date
+    elementType: text
+    bounds: [80, 200, 220, 30]
+    content:
+      fontSize: 16
+      fontFamily: "Liter"
+      color: "$accent"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>Q3 2026</strong></p>
+
+  - elementId: phase1-title
+    elementType: text
+    bounds: [80, 290, 220, 30]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>Free Launch</strong></p>
+
+  - elementId: phase1-body
+    elementType: text
+    bounds: [80, 330, 220, 100]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$text"
+      lineHeight: 1.5
+      align: [center, top]
+      text: |
+        <p>Launch Free tier integrated into MCP product pages. Convert 10K+ existing users.</p>
+
+  - elementId: phase2-date
+    elementType: text
+    bounds: [380, 200, 220, 30]
+    content:
+      fontSize: 16
+      fontFamily: "Liter"
+      color: "$accent"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>Q4 2026</strong></p>
+
+  - elementId: phase2-title
+    elementType: text
+    bounds: [380, 290, 220, 30]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>Pro Tier</strong></p>
+
+  - elementId: phase2-body
+    elementType: text
+    bounds: [380, 330, 220, 120]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$text"
+      lineHeight: 1.5
+      align: [center, top]
+      text: |
+        <p>Release developer portal, SDKs, and bundled Pro pricing for governance subscribers.</p>
+
+  - elementId: phase3-date
+    elementType: text
+    bounds: [680, 200, 220, 30]
+    content:
+      fontSize: 16
+      fontFamily: "Liter"
+      color: "$accent"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>Q1 2027</strong></p>
+
+  - elementId: phase3-title
+    elementType: text
+    bounds: [680, 290, 220, 30]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>Enterprise</strong></p>
+
+  - elementId: phase3-body
+    elementType: text
+    bounds: [680, 330, 220, 100]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$text"
+      lineHeight: 1.5
+      align: [center, top]
+      text: |
+        <p>Direct sales to top 50 regtech companies and Big 4 consultancies.</p>
+
+  - elementId: phase4-date
+    elementType: text
+    bounds: [980, 200, 220, 30]
+    content:
+      fontSize: 16
+      fontFamily: "Liter"
+      color: "$accent"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>Q2 2027</strong></p>
+
+  - elementId: phase4-title
+    elementType: text
+    bounds: [980, 290, 220, 30]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>Licensing</strong></p>
+
+  - elementId: phase4-body
+    elementType: text
+    bounds: [980, 330, 220, 100]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$text"
+      lineHeight: 1.5
+      align: [center, top]
+      text: |
+        <p>Self-service licensing marketplace with automated agreements.</p>
+
+  - elementId: metric-bar
+    elementType: shape
+    bounds: [80, 480, 1120, 160]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: metric1-num
+    elementType: text
+    bounds: [120, 500, 300, 60]
+    content:
+      style: "$bigNumber"
+      fontSize: 44
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>10K+</strong></p>
+
+  - elementId: metric1-label
+    elementType: text
+    bounds: [120, 565, 300, 60]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      lineHeight: 1.4
+      align: [center, top]
+      text: |
+        <p>Existing daily free-tier users ready to convert</p>
+
+  - elementId: metric2-num
+    elementType: text
+    bounds: [490, 500, 300, 60]
+    content:
+      style: "$bigNumber"
+      fontSize: 44
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>50</strong></p>
+
+  - elementId: metric2-label
+    elementType: text
+    bounds: [490, 565, 300, 60]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      lineHeight: 1.4
+      align: [center, top]
+      text: |
+        <p>Target regtech companies for enterprise outreach</p>
+
+  - elementId: metric3-num
+    elementType: text
+    bounds: [860, 500, 300, 60]
+    content:
+      style: "$bigNumber"
+      fontSize: 44
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>5</strong></p>
+
+  - elementId: metric3-label
+    elementType: text
+    bounds: [860, 565, 300, 60]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      lineHeight: 1.4
+      align: [center, top]
+      text: |
+        <p>University partnerships in academic licensing program</p>

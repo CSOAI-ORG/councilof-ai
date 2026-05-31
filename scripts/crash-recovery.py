@@ -30,8 +30,8 @@ SERVICE_CONFIGS = {
     },
     "sov3-mcp": {
         "port": 3101,
-        "start_cmd": "cd /Users/nicholas/clawd/meok/sovereign-temple && python3 sovereign-mcp-server.py --port 3101",
-        "depends_on": ["postgres", "redis", "weaviate"],
+        "start_cmd": "cd /Users/nicholas/clawd/sovereign-temple && python3 sovereign-mcp-server.py --port 3101",
+        "depends_on": ["postgres", "redis"],
         "health_endpoint": "http://localhost:3101/health",
     },
     "meok-ui": {
@@ -83,7 +83,11 @@ def auto_heal_service(service_name: str) -> bool:
 
     # Check dependencies first
     for dep in config.get("depends_on", []):
-        dep_status = get_service_status(SERVICE_CONFIGS[dep]["port"])
+        dep_config = SERVICE_CONFIGS.get(dep)
+        if not dep_config:
+            log_alert(f"Dependency {dep} has no config, skipping...", "WARN")
+            continue
+        dep_status = get_service_status(dep_config["port"])
         if dep_status["status"] != "running":
             log_alert(f"Dependency {dep} not running, starting first...", "WARN")
             auto_heal_service(dep)

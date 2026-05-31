@@ -1,0 +1,310 @@
+pageType: content
+background:
+  type: solid
+  color: "$primary"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [80, 30, 200, 24]
+    content:
+      style: "$label"
+      fontSize: 12
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>THE SOLUTION</p>
+
+  - elementId: page-title
+    elementType: text
+    bounds: [80, 60, 900, 50]
+    content:
+      style: "$title"
+      fontSize: 32
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Turn Ecosystem Usage into a Data Moat</strong></p>
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [80, 115, 60, 3]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: left-stat
+    elementType: text
+    bounds: [80, 160, 400, 100]
+    content:
+      style: "$bigNumber"
+      fontSize: 72
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>255+</strong></p>
+
+  - elementId: left-stat-label
+    elementType: text
+    bounds: [80, 260, 400, 30]
+    content:
+      fontSize: 20
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>MCP Servers generating data</p>
+
+  - elementId: left-desc
+    elementType: text
+    bounds: [80, 310, 480, 140]
+    content:
+      style: "$bodyDark"
+      fontSize: 18
+      lineHeight: 1.6
+      align: [left, top]
+      text: |
+        <p>MEOK DATA transforms MCP servers from <strong style="color:#00bca8;">cost centers into data assets</strong>. Every API call enriches proprietary datasets across 13 governance frameworks.</p>
+
+  - elementId: flywheel-title
+    elementType: text
+    bounds: [80, 470, 480, 30]
+    content:
+      fontSize: 16
+      fontFamily: "Liter"
+      color: "$accent"
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>THE FLYWHEEL</p>
+
+  - elementId: flywheel1
+    elementType: shape
+    bounds: [80, 520, 200, 50]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788860"
+
+  - elementId: flywheel1-text
+    elementType: text
+    bounds: [80, 520, 200, 50]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>More Users</p>
+
+  - elementId: arrow1
+    elementType: shape
+    bounds: [290, 542, 30, 0]
+    shapeName: straightConnector1
+    arrow: [null, "arrow"]
+    border:
+      style: solid
+      width: 2
+      color: "$accent"
+
+  - elementId: flywheel2
+    elementType: shape
+    bounds: [330, 520, 200, 50]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788860"
+
+  - elementId: flywheel2-text
+    elementType: text
+    bounds: [330, 520, 200, 50]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>More Data</p>
+
+  - elementId: arrow2
+    elementType: shape
+    bounds: [540, 542, 30, 0]
+    shapeName: straightConnector1
+    arrow: [null, "arrow"]
+    border:
+      style: solid
+      width: 2
+      color: "$accent"
+
+  - elementId: flywheel3
+    elementType: shape
+    bounds: [80, 590, 200, 50]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788860"
+
+  - elementId: flywheel3-text
+    elementType: text
+    bounds: [80, 590, 200, 50]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>Better Product</p>
+
+  - elementId: arrow3
+    elementType: shape
+    bounds: [290, 612, 30, 0]
+    shapeName: straightConnector1
+    arrow: [null, "arrow"]
+    border:
+      style: solid
+      width: 2
+      color: "$accent"
+
+  - elementId: flywheel4
+    elementType: shape
+    bounds: [330, 590, 200, 50]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788860"
+
+  - elementId: flywheel4-text
+    elementType: text
+    bounds: [330, 590, 200, 50]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>More Revenue</p>
+
+  - elementId: right-panel
+    elementType: shape
+    bounds: [660, 160, 540, 490]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$darkCardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#00788840"
+
+  - elementId: right-title
+    elementType: text
+    bounds: [690, 180, 480, 30]
+    content:
+      fontSize: 16
+      fontFamily: "Liter"
+      color: "$accent"
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>REVENUE MODEL</p>
+
+  - elementId: tier-free
+    elementType: text
+    bounds: [690, 230, 480, 70]
+    content:
+      fontSize: 18
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><strong style="color:#00bca8;">Free</strong> — 100 req/day</p>
+        <p><span style="font-size:14px; color:#718096;">Open datasets, developer adoption</span></p>
+
+  - elementId: tier-pro
+    elementType: text
+    bounds: [690, 320, 480, 70]
+    content:
+      fontSize: 18
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><strong style="color:#00bca8;">Pro £79/mo</strong> — 10K req/day</p>
+        <p><span style="font-size:14px; color:#718096;">Real-time feeds, signed exports</span></p>
+
+  - elementId: tier-enterprise
+    elementType: text
+    bounds: [690, 410, 480, 70]
+    content:
+      fontSize: 18
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><strong style="color:#00bca8;">Enterprise £1,499+/mo</strong></p>
+        <p><span style="font-size:14px; color:#718096;">Unlimited, custom pipelines, SLA</span></p>
+
+  - elementId: tier-licensing
+    elementType: text
+    bounds: [690, 500, 480, 70]
+    content:
+      fontSize: 18
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><strong style="color:#00bca8;">B2B Licensing</strong></p>
+        <p><span style="font-size:14px; color:#718096;">Revenue share with regtech & consultancies</span></p>
+
+  - elementId: divider1
+    elementType: shape
+    bounds: [690, 305, 480, 1]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788840"
+
+  - elementId: divider2
+    elementType: shape
+    bounds: [690, 395, 480, 1]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788840"
+
+  - elementId: divider3
+    elementType: shape
+    bounds: [690, 485, 480, 1]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788840"

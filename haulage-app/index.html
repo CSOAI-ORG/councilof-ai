@@ -30,8 +30,9 @@
   .lead{font-size:1.2rem;color:#4b5563;max-width:680px;margin:0 auto}
   h2{font-size:1.5rem;margin:2.5rem 0 1rem;font-weight:700}
   .verticals{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:1.5rem 0}
-  .vertical{background:#fff;border:1px solid #e5e7eb;border-radius:.75rem;padding:1.25rem;transition:transform .15s,box-shadow .15s}
-  .vertical:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+  .vertical{background:#fff;border:1px solid #e5e7eb;border-radius:.75rem;padding:1.25rem;transition:all .25s;position:relative;z-index:1}
+  .vertical:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.25)}
+  .vertical:hover::after{content:"";position:absolute;inset:-3px;border-radius:calc(.75rem + 3px);background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);z-index:-1;opacity:.45;filter:blur(6px);pointer-events:none}
   .vertical h3{font-size:1.05rem;margin-bottom:.4rem}
   .vertical p{font-size:.92rem;color:#6b7280;margin-bottom:.6rem}
   .vertical a{color:#0057FF;font-weight:600;text-decoration:none;font-size:.9rem}
@@ -49,7 +50,40 @@
 </style>
 </head>
 <body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">Haulage App</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
 <div class="container">
+
+<!-- Hero SVG -->
+<div style="text-align:center;margin-bottom:2rem;padding-top:1rem">
+  <svg width="140" height="140" viewBox="0 0 140 140" fill="none" style="opacity:0.9;color:#0F172A">
+    <circle cx="70" cy="70" r="60" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+    <circle cx="70" cy="70" r="40" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+    <rect x="25" y="58" width="55" height="28" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
+    <path d="M80 58h15l10 10v18H80z" stroke="currentColor" stroke-width="2" fill="none"/>
+    <circle cx="40" cy="93" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+    <circle cx="68" cy="93" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+    <circle cx="95" cy="93" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+    <path d="M25 35c15-5 30 10 45 5s25-10 35 0" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 2" fill="none"/>
+    <circle cx="105" cy="40" r="3" fill="currentColor"/>
+    <circle cx="30" cy="32" r="3" fill="currentColor"/>
+  </svg>
+</div>
 
 <header>
 <h1>Haulage.app</h1>
@@ -60,49 +94,49 @@
 <div class="verticals">
 
 <div class="vertical">
-<h3>Plant Hire <span class="badge">LIVE</span></h3>
+<h3>🏗️ Plant Hire <span class="badge">LIVE</span></h3>
 <p>Track plant hire fleet, RAMS, CPCS cards, LOLER reports. CHAS Elite ready.</p>
 <a href="https://planthire.ai">planthire.ai →</a>
 </div>
 
 <div class="vertical">
-<h3>Muckaway <span class="badge">LIVE</span></h3>
+<h3>🗑️ Muckaway <span class="badge">LIVE</span></h3>
 <p>Waste carrier registration, EWC codes, consignment notes for muckaway operators.</p>
 <a href="https://muckaway.ai">muckaway.ai →</a>
 </div>
 
 <div class="vertical">
-<h3>Grab Hire <span class="badge">LIVE</span></h3>
+<h3>🚧 Grab Hire <span class="badge">LIVE</span></h3>
 <p>Tipper grab booking, waste transfer notes, NRSWA compliance for grab work.</p>
 <a href="https://grabhire.ai">grabhire.ai →</a>
 </div>
 
 <div class="vertical">
-<h3>Skip Hire</h3>
+<h3>♻️ Skip Hire</h3>
 <p>EA waste carrier reg, EWC codes, hazardous waste consignment notes.</p>
 <a href="https://pypi.org/project/skip-hire-ai-mcp/">skip-hire-ai-mcp →</a>
 </div>
 
 <div class="vertical">
-<h3>Crane Hire</h3>
+<h3>🏗️ Crane Hire</h3>
 <p>CPCS / CISRS / NPORS, BS 7121 lift plans, LOLER thorough examination.</p>
 <a href="https://pypi.org/project/crane-hire-cpcs-mcp/">crane-hire-cpcs-mcp →</a>
 </div>
 
 <div class="vertical">
-<h3>Concrete Pumping</h3>
+<h3>🏗️ Concrete Pumping</h3>
 <p>CPA standards, BS EN 12001 ground bearing, exclusion zones, operator certs.</p>
 <a href="https://pypi.org/project/concrete-pump-cpa-mcp/">concrete-pump-cpa-mcp →</a>
 </div>
 
 <div class="vertical">
-<h3>Haulage (HGV)</h3>
+<h3>🚛 Haulage (HGV)</h3>
 <p>Operator Licence, tachograph, drivers' hours, DVSA roadside, DVS, CAZ.</p>
 <a href="https://pypi.org/project/haulage-uk-compliance-mcp/">haulage-uk-compliance-mcp →</a>
 </div>
 
 <div class="vertical">
-<h3>Street Works</h3>
+<h3>🛣️ Street Works</h3>
 <p>NRSWA Section 50/58/74, utility works classification, S74 overrun penalty.</p>
 <a href="https://pypi.org/project/nrswa-ai-mcp/">nrswa-ai-mcp →</a>
 </div>
@@ -131,9 +165,23 @@
 
 <a href="https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836" class="cta">Get Pro — £79/mo</a>
 
-<footer>
-© 2026 <a href="https://meok.ai">MEOK AI Labs</a> · <a href="https://councilof.ai">Council of AI</a> · <a href="mailto:hello@meok.ai">hello@meok.ai</a>
-</footer>
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">Haulage App by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
 
 </div>
 </body>

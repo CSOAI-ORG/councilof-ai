@@ -1,0 +1,305 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [80, 30, 200, 24]
+    content:
+      style: "$label"
+      fontSize: 12
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>THE ECOSYSTEM</p>
+
+  - elementId: page-title
+    elementType: text
+    bounds: [80, 60, 900, 50]
+    content:
+      style: "$title"
+      fontSize: 32
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>255+ MCPs Generating Proprietary Data</strong></p>
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [80, 115, 60, 3]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: card1-bg
+    elementType: shape
+    bounds: [80, 150, 350, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$cardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#e2e8f0"
+
+  - elementId: card1-icon
+    elementType: icon
+    bounds: [110, 175, 40, 40]
+    iconName: "fas:shield-halved"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: card1-title
+    elementType: text
+    bounds: [110, 230, 290, 30]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Governance Engine</strong></p>
+
+  - elementId: card1-body
+    elementType: text
+    bounds: [110, 270, 290, 100]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>62 tools across EU AI Act, GDPR, HIPAA, NIS2, DORA, CRA</p>
+
+  - elementId: card2-bg
+    elementType: shape
+    bounds: [465, 150, 350, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$cardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#e2e8f0"
+
+  - elementId: card2-icon
+    elementType: icon
+    bounds: [495, 175, 40, 40]
+    iconName: "fas:heart-pulse"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: card2-title
+    elementType: text
+    bounds: [495, 230, 290, 30]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Healthcare FHIR</strong></p>
+
+  - elementId: card2-body
+    elementType: text
+    bounds: [495, 270, 290, 100]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>De-identified clinical data from Epic, Cerner, NHS Spine</p>
+
+  - elementId: card3-bg
+    elementType: shape
+    bounds: [850, 150, 350, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$cardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#e2e8f0"
+
+  - elementId: card3-icon
+    elementType: icon
+    bounds: [880, 175, 40, 40]
+    iconName: "fas:chart-line"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: card3-title
+    elementType: text
+    bounds: [880, 230, 290, 30]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Financial Services</strong></p>
+
+  - elementId: card3-body
+    elementType: text
+    bounds: [880, 270, 290, 100]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>MiFID II, MiCA, Basel regulatory signals and compliance data</p>
+
+  - elementId: stat-bar-bg
+    elementType: shape
+    bounds: [80, 430, 1120, 200]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: stat1-number
+    elementType: text
+    bounds: [120, 450, 300, 70]
+    content:
+      style: "$bigNumber"
+      fontSize: 56
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>2.3M+</strong></p>
+
+  - elementId: stat1-label
+    elementType: text
+    bounds: [120, 520, 300, 30]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>Monthly queries processed</p>
+
+  - elementId: stat1-desc
+    elementType: text
+    bounds: [120, 560, 300, 50]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "#8899aa"
+      lineHeight: 1.4
+      align: [center, top]
+      text: |
+        <p>Each enriches proprietary datasets with structured annotations</p>
+
+  - elementId: stat-divider1
+    elementType: shape
+    bounds: [450, 470, 1, 120]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788860"
+
+  - elementId: stat2-number
+    elementType: text
+    bounds: [490, 450, 300, 70]
+    content:
+      style: "$bigNumber"
+      fontSize: 56
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>13</strong></p>
+
+  - elementId: stat2-label
+    elementType: text
+    bounds: [490, 520, 300, 30]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>Governance frameworks</p>
+
+  - elementId: stat2-desc
+    elementType: text
+    bounds: [490, 560, 300, 50]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "#8899aa"
+      lineHeight: 1.4
+      align: [center, top]
+      text: |
+        <p>Cross-framework correlation and mapping data</p>
+
+  - elementId: stat-divider2
+    elementType: shape
+    bounds: [820, 470, 1, 120]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788860"
+
+  - elementId: stat3-number
+    elementType: text
+    bounds: [860, 450, 300, 70]
+    content:
+      style: "$bigNumber"
+      fontSize: 56
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>50+</strong></p>
+
+  - elementId: stat3-label
+    elementType: text
+    bounds: [860, 520, 300, 30]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>FHIR resource types</p>
+
+  - elementId: stat3-desc
+    elementType: text
+    bounds: [860, 560, 300, 50]
+    content:
+      fontSize: 14
+      fontFamily: "QuattrocentoSans"
+      color: "#8899aa"
+      lineHeight: 1.4
+      align: [center, top]
+      text: |
+        <p>ICD-10 to SNOMED crosswalks and clinical patterns</p>
+
+  - elementId: bottom-line
+    elementType: shape
+    bounds: [80, 670, 1120, 1]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#e2e8f0"

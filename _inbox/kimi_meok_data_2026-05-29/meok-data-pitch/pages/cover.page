@@ -1,0 +1,89 @@
+pageType: cover
+background:
+  type: solid
+  color: "$primary"
+elements:
+  - elementId: grid-pattern
+    elementType: shape
+    bounds: [0, 0, 1280, 720]
+    shapeName: custom
+    path: "1280,720;M0 0 L1280 0 L1280 720 L0 720 Z"
+    fill:
+      type: image
+      src: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1280&h=720&fit=crop"
+      fit: {mode: cover}
+      mask:
+        type: gradient
+        gradientType: linear
+        angle: 0
+        stops:
+          - {position: 0, color: "#0f1923f0"}
+          - {position: 0.6, color: "#0f1923e0"}
+          - {position: 1, color: "#0f192360"}
+
+  - elementId: accent-bar
+    elementType: shape
+    bounds: [80, 220, 6, 160]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: title
+    elementType: text
+    bounds: [110, 220, 600, 80]
+    content:
+      style: "$title"
+      fontSize: 64
+      color: "$textLight"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>MEOK DATA</strong></p>
+
+  - elementId: subtitle
+    elementType: text
+    bounds: [110, 310, 650, 80]
+    content:
+      style: "$subtitle"
+      fontSize: 26
+      color: "#a0b0c0"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p>The Proprietary Data Moat Powering Sovereign AI Infrastructure</p>
+
+  - elementId: tagline
+    elementType: text
+    bounds: [110, 420, 500, 30]
+    content:
+      style: "$label"
+      fontSize: 14
+      letterSpacing: 3
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>MEOK AI LABS  |  JUNE 2026</p>
+
+  - elementId: hex-decoration
+    elementType: shape
+    bounds: [1000, 480, 180, 180]
+    opacity: 0.08
+    shapeName: custom
+    path: "100,100;M50 5 L95 27.5 L95 72.5 L50 95 L5 72.5 L5 27.5 Z"
+    fill:
+      type: solid
+      color: "$accent"
+    border:
+      style: solid
+      width: 2
+      color: "$accent"
+
+  - elementId: bottom-line
+    elementType: shape
+    bounds: [80, 600, 400, 1]
+    shapeName: straightConnector1
+    border:
+      style: solid
+      width: 1
+      color: "#00bca840"

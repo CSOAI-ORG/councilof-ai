@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Sparkles, Shield, Users } from "lucide-react";
+import { ArrowRight, Sparkles, Shield, Users, Egg, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/SearchBar";
 import { ProductCard } from "@/components/ProductCard";
-import { PRODUCTS } from "@/lib/mockData";
+import { CharacterCard } from "@/components/CharacterCard";
+import { PRODUCTS, CHARACTER_PRODUCTS } from "@/lib/mockData";
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const featured = PRODUCTS.slice(0, 4);
+  const characters = CHARACTER_PRODUCTS.slice(0, 8);
 
   return (
     <div className="flex flex-col">
@@ -59,9 +61,9 @@ export default function HomePage() {
           </div>
           <div className="flex flex-col items-center gap-2 text-center">
             <Users className="h-8 w-8 text-scout" />
-            <div className="text-3xl font-bold">20+</div>
+            <div className="text-3xl font-bold">49+</div>
             <div className="text-sm text-muted-foreground">
-              Agent & Character Listings
+              Character Variants
             </div>
           </div>
           <div className="flex flex-col items-center gap-2 text-center">
@@ -74,8 +76,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured */}
+      {/* Characters Section */}
       <section className="container py-16">
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Egg className="h-6 w-6 text-sovereign" />
+            <h2 className="text-2xl font-bold tracking-tight">MEOK Characters</h2>
+            <span className="text-sm text-muted-foreground">6 stages × 7 archetypes + dragons</span>
+          </div>
+          <Button variant="ghost" asChild>
+            <a href="/characters">View all 49</a>
+          </Button>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {characters.map((char) => (
+            <CharacterCard key={char.id} character={char} />
+          ))}
+        </div>
+      </section>
+
+      {/* Featured */}
+      <section className="container py-16 border-t">
         <div className="mb-8 flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-tight">Featured</h2>
           <Button variant="ghost" asChild>

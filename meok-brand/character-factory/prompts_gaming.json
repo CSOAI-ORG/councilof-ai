@@ -1,0 +1,146 @@
+{
+  "version": "2.0.0-gaming",
+  "stages": ["egg", "cracking", "hatching", "growing", "mature", "sovereign"],
+  "stage_translucency": {
+    "egg": 0.85,
+    "cracking": 0.80,
+    "hatching": 0.90,
+    "growing": 0.40,
+    "mature": 0.20,
+    "sovereign": 0.60
+  },
+  "stage_emissive": {
+    "egg": 0.30,
+    "cracking": 0.80,
+    "hatching": 1.50,
+    "growing": 0.40,
+    "mature": 0.20,
+    "sovereign": 1.20
+  },
+  "archetypes": {
+    "sovereign": {
+      "name": "Sovereign",
+      "symbol": "◆",
+      "color_hex": "#C8A05C",
+      "color_name": "gold",
+      "material": "faceted gold crystal",
+      "egg_crack_pattern": "geometric_facets",
+      "dragon_variant": {
+        "name": "Dragon-Emperor",
+        "symbol": "🐉◆",
+        "color_hex": "#FFD700",
+        "material": "crystalline gold dragon scales",
+        "shape": "eastern serpentine with western wings",
+        "size_multiplier": 1.5
+      }
+    },
+    "guardian": {
+      "name": "Guardian",
+      "symbol": "◈",
+      "color_hex": "#00D4AA",
+      "color_name": "teal",
+      "material": "teal ceramic lattice",
+      "egg_crack_pattern": "hexagonal_lattice",
+      "dragon_variant": {
+        "name": "Dragon-Ward",
+        "symbol": "🐉◈",
+        "color_hex": "#00FFD4",
+        "material": "teal ceramic plate armor",
+        "shape": "quadrupedal tank with shell",
+        "size_multiplier": 1.3
+      }
+    },
+    "scout": {
+      "name": "Scout",
+      "symbol": "○",
+      "color_hex": "#E8A85A",
+      "color_name": "amber",
+      "material": "amber-fired clay",
+      "egg_crack_pattern": "branching_organic",
+      "dragon_variant": {
+        "name": "Dragon-Sand",
+        "symbol": "🐉○",
+        "color_hex": "#FFC870",
+        "material": "amber clay segments",
+        "shape": "low serpentine centipede",
+        "size_multiplier": 1.2
+      }
+    },
+    "strategist": {
+      "name": "Strategist",
+      "symbol": "□",
+      "color_hex": "#A8B4C0",
+      "color_name": "silver",
+      "material": "brushed silver alloy",
+      "egg_crack_pattern": "tessellated_triangles",
+      "dragon_variant": {
+        "name": "Dragon-Sky",
+        "symbol": "🐉□",
+        "color_hex": "#C0D4E8",
+        "material": "silver fractal wing membranes",
+        "shape": "slender aerial bird-dragon",
+        "size_multiplier": 1.1
+      }
+    },
+    "creator": {
+      "name": "Creator",
+      "symbol": "◇",
+      "color_hex": "#D4A050",
+      "color_name": "amber",
+      "material": "golden resin",
+      "egg_crack_pattern": "spiral_fractal",
+      "dragon_variant": {
+        "name": "Dragon-Sun",
+        "symbol": "🐉◇",
+        "color_hex": "#FFAA00",
+        "material": "molten golden resin feathers",
+        "shape": "phoenix-dragon hybrid",
+        "size_multiplier": 1.4
+      }
+    },
+    "companion": {
+      "name": "Companion",
+      "symbol": "●",
+      "color_hex": "#C89898",
+      "color_name": "rose",
+      "material": "rose quartz pebble",
+      "egg_crack_pattern": "soft_meandering",
+      "dragon_variant": {
+        "name": "Dragon-Heart",
+        "symbol": "🐉●",
+        "color_hex": "#FFB6C1",
+        "material": "rose quartz crystal",
+        "shape": "small rounded pebble-dragon",
+        "size_multiplier": 0.6
+      }
+    },
+    "sage": {
+      "name": "Sage",
+      "symbol": "◎",
+      "color_hex": "#7AA87A",
+      "color_name": "green",
+      "material": "moss-green stone",
+      "egg_crack_pattern": "concentric_rings",
+      "dragon_variant": {
+        "name": "Dragon-Root",
+        "symbol": "🐉◎",
+        "color_hex": "#5C8A5C",
+        "material": "moss-covered stone bark",
+        "shape": "quadrupedal ancient tree-dragon",
+        "size_multiplier": 1.4
+      }
+    }
+  },
+  "templates": {
+    "flux_egg": "Translucent {material} egg, soft inner glow revealing vague {shape} silhouette inside, {color} subsurface scattering, smooth shell surface, studio lighting, white background, 8k, MEOKSTYLE",
+    "flux_cracking": "Translucent {material} egg with glowing {crack_pattern} cracks, bright {color} light emanating from fractures, inner {shape} visible through shell, studio lighting, 8k, MEOKSTYLE",
+    "flux_hatching": "Juvenile {material} {shape} character emerging from shattered translucent shell, fresh unfired surface, strong inner glow, {color} subsurface scattering, big eyes, small body, white background, 8k, MEOKSTYLE",
+    "flux_growing": "Adolescent {material} {shape} character, developing {features}, {color} surface with emerging texture, semi-translucent thin parts, white background, 8k, MEOKSTYLE",
+    "flux_mature": "Adult {material} {shape} character, fully developed {features}, rich {color} surface, mature patina, subtle translucency at edges, regal pose, white background, 8k, MEOKSTYLE",
+    "flux_sovereign": "Transcendent {material} {shape} character, floating fragments held by energy, chromatic iridescence, {color} aura, halo of light, power emanating, white background, 8k, MEOKSTYLE",
+    "flux_dragon": "{dragon_material} dragon, {dragon_shape}, {dragon_color} scales/membranes, {archetype_features}, studio lighting, white background, 8k, MEOKSTYLE",
+    "trellis": "Clean mesh, water-tight, low-poly efficient, {material} material properties, game-ready topology",
+    "animation_idle": "Gentle breathing idle loop, subtle float, 2-second seamless cycle, {archetype_behavior}",
+    "animation_egg": "Gentle rocking, pulsing internal glow, subtle surface shimmer, 3-second cycle"
+  }
+}
