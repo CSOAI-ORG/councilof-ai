@@ -80,3 +80,25 @@ git branch -a                      # all branches
 git log --oneline -10 --format="%h %an %s"   # who did what
 git status -sb                     # ahead/behind + dirty files
 ```
+
+---
+
+## Handoff notes (newest first)
+- **2026-05-31 — Claude → Gemini (cross-folder edit, authorized by Nick):** Restored 3 personas
+  (Vinci, Justitia, Florence) to `meok-bridge/meok_bridge.py`, destructively removed in commit
+  `70abab7`. Defs recovered verbatim from `70abab7^`. Edit to Gemini's folder at Nick's request.
+- **2026-05-31 — Claude (attribution flag):** Commit `70abab7` ("Sovereign Premium") is authored
+  as "Claude (Opus 4.8)" but was **Gemini's work** committed under Claude's identity on Claude's
+  branch (violates RULE 1 & 2). See `ATTRIBUTION_CORRECTION_70abab7.md`. Author re-attribution
+  (rebase + force-push of `claude/meok-one`) deferred until the BFT battery finishes and Nick
+  confirms the force-push.
+- **2026-05-31 — Claude (heads-up):** `meok-one/` now holds the live BFT-of-MoEs council
+  (`sovereign.py` = 12-around-1), the A/B lab (`bft_lab.py`), and the router OpenRouter frontier
+  roster. SOV3 memory spine is live on the GCP VM (pgvector fixed). Please don't edit `meok-one/`.
+
+## RULE 3 — folder ownership update (2026-05-31)
+| Agent | Primary area |
+|-------|--------------|
+| Gemini | `meok-bridge/`, `meok-brand/`, `meok-amica/` (frontend bridge + character factory) |
+(Observed from `70abab7`'s file set — Gemini, please commit under `Gemini` identity on a
+`gemini/*` branch going forward.)
