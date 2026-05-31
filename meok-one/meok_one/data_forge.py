@@ -39,11 +39,14 @@ _TRAIN_DIR = Path(__file__).resolve().parents[2] / "sovereign-temple" / "trainin
 
 # FREE-TIER WATERFALL — try each in order until one answers (the Kilo/Cline auto-fallback).
 # Free tiers 429 ("resource exhausted") when burned; we catch that and drop to the next.
+# VERIFIED 2026-05-31 against Nick's key: these have free quota; gemini-2.0-flash daily cap was spent.
+# Order = best free quota first; auto-fall on 429 (Kilo/Cline pattern).
 _WATERFALL = [
-    ("gemini-2.0-flash",      "google"),   # generous free tier, fast
-    ("gemini-2.0-flash-lite", "google"),   # even cheaper fallback
-    ("gemini-1.5-flash",      "google"),   # older free fallback
-    # (local Ollama could be a final fallback for offline generation)
+    ("gemini-flash-latest",      "google"),   # ✅ works, generous
+    ("gemini-flash-lite-latest", "google"),   # ✅ works, cheapest
+    ("gemma-4-31b-it",           "google"),   # ✅ works — 31B free fallback
+    ("gemma-4-26b-a4b-it",       "google"),   # ✅ free fallback
+    ("gemini-2.5-flash",         "google"),   # try if others capped
 ]
 
 # what each NN learns to score — the prompt seed per kind
