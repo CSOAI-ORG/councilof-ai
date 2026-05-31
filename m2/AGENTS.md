@@ -95,7 +95,7 @@ Plan: Pro, 36 projects
 ## GITHUB ACCESS
 
 - Org: CSOAI-ORG
-- Token: `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`
+- Token: `[REDACTED-SECRET-GH-PUSH-PROTECTION]`
 - 50 repos including: clawd-workspace, lib2b, csoai-dashboard, csoai-org, awesome-meok
 - Key repo: clawd-workspace — all strategy docs, MCP marketplace, domain sites
 

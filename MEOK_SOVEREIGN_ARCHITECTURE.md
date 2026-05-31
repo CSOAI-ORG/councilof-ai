@@ -67,514 +67,169 @@ That is BFT-of-N with **N=2** — the runtime seed of the §3.2 PBFT-MoE council
 
 # MEOK Sovereign AI OS — Complete Architecture Rundown
 
-> **For Kimi Swarm Deep Research & Autonomous Operation**
-> Version: 2026-05-28 | Authority: JEEVES Strategic Command
-> Status: Living Document — Update on every architectural change
+> **Sovereign is NOT an LLM. Sovereign is a BFT of MoEs.**
+> A Byzantine-Fault-Tolerant council that orchestrates many Mixture-of-Experts
+> models — small local + large frontier — into ONE chat the user talks to.
+> The character is the face; the Sovereign is the government behind it.
+
+_Status date: 2026-05-31. This doc separates VERIFIED-LIVE from ROADMAP so we
+never confuse the map for the territory._
 
 ---
 
-## 1. EXECUTIVE SUMMARY
+## 1. The correction that defines everything
 
-MEOK is a **sovereign AI operating system** — not a chatbot, not an API wrapper, but a full-stack governance-native platform for running autonomous AI agents under human-aligned constitutional rule. It combines:
+For a while the code treated `meok-sov3` (a single `qwen2.5:3b` + persona on the VM)
+as if it *were* the Sovereign. **It is not.** That model is one **expert node** —
+nothing more. The Sovereign is the **orchestrator over a council of experts** that
+reaches consensus and keeps the answer safe. One model is a voice; the Sovereign is
+the room where the voices are reconciled.
 
-- **Byzantine Fault Tolerant consensus** (PBFT + EigenBFT) for agent governance
-- **Mixture-of-Experts councils** (PBFT-MoE) for domain-specific decision making
-- **313 MCP servers** as its sensory/motor nervous system
-- **Extreme simulation research** as its evolutionary pressure chamber
-- **Revenue autonomy** (DELBOY MODE) as its metabolic system
-- **SOV3 coordination** as its central nervous system
+```
+        +----------------------- SOVEREIGN (BFT orchestrator) ----------------------+
+        |  persona + memory + safety + consensus  =  the constant, swappable engines |
+        |                                                                            |
+        |   LEFT (local experts)         CENTRE              RIGHT (frontier)        |
+        |   [ qwen2.5:3b   ]        [  SOV3 core:  ]      [ DeepSeek V4-Pro  ]       |
+        |   [ llama3.2:3b  ] -----> [  memory spine] <--- [ Gemini 2.5 Pro   ]       |
+        |   [ qwen3:0.6b   ]        [  6 neural NN ]      [ Gemma 4 / Step3.5]       |
+        |   [ (+Step-Flash)]        [  BFT council ]      [ DeepSeek V4-Flash]       |
+        |            \________________ consensus ________________/                  |
+        +-------------------------------+--------------------------------------------+
+                                        v
+                               ONE reply, in-character
+                                        v
+                                 the MEOK character
+```
 
-Everything is designed around one principle: **The user owns the compute, the user owns the data, the user owns the revenue.**
+The user talks to **one** thing — their character. Behind it, N experts deliberate;
+the Sovereign reconciles by a safety-weighted BFT rule and speaks once, in-character.
 
 ---
 
-## 2. SYSTEM TOPOLOGY
+## 2. What is VERIFIED LIVE today (2026-05-31)
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           USER LAYER (You)                                  │
-│  Kimi CLI · Claude Desktop · Go TUI · VS Code Extension · Mobile App       │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      ORCHESTRATION LAYER (SOV3)                             │
-│  CoordinationHub · TaskOrchestrator · MultiCouncil · Status Dashboard      │
-│  Ports: 3101 (SOV3) · 3102 (MCP) · 3200 (API) · 3000 (UI)                 │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                     GOVERNANCE LAYER (PBFT-MoE)                             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
-│  │SecuritySent │  │ComplianceOr │  │Antifragile  │  │ContrarianDe │ ...    │
-│  │inel         │  │acle         │  │Architect    │  │vil          │        │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘        │
-│         │                │                │                │               │
-│         └────────────────┴────────────────┴────────────────┘               │
-│                              PBFT Consensus                                  │
-│                         EigenBFT Dimensional Vote                            │
-│                    CouncilDecision → Execute / Block                         │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      EXTREME SIMULATIONS LAYER                              │
-│  EigenBFT · Code Deletion Agent · Chaos Router · Deep Disagreement Mode    │
-│  Purpose: Stress-test governance, find failure modes before production       │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      MCP MARKETPLACE (313 Servers)                          │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐  │
-│  │Stripe   │ │EU AI Act│ │GDPR     │ │Security │ │Healthcare│ │Construction│
-│  │Billing  │ │Compliance│ │Checker │ │Scanner  │ │FHIR     │ │ISO 19650 │  │
-│  │...      │ │...      │ │...      │ │...      │ │...      │ │...       │  │
-│  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘  │
-│  Governance · Compliance · Industry Verticals · Infrastructure · Creative   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      REVENUE NERVOUS SYSTEM (DELBOY MODE)                   │
-│  Revenue Sensing · Cost Allocation · Pricing Optimization · Forecasting     │
-│  Stripe Integration · Usage-Based Billing · Credit Systems · P&L Agent      │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      DEPLOYMENT FABRIC                                      │
-│  Vercel (Frontend) · Docker/Cloudflare (Backend) · Tauri (Desktop)         │
-│  Go TUI · VS Code Extension · Mobile (React Native) · n8n Workflows        │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+The real Sovereign substrate is the **sovereign-temple** system, now mirrored onto
+the GCP VM and confirmed healthy over HTTPS:
+
+- **Host:** GCP VM `meok-backend` (e2-standard-4 SPOT, europe-west2-a, 35.246.43.221),
+  behind Caddy at `https://35.246.43.221.sslip.io`, `X-MEOK-Key` gated, Let's Encrypt TLS.
+- **Process:** `sov3.service` under systemd, `Restart=always` — survives crashes.
+- **Memory spine:** PostgreSQL 14 + **pgvector 0.8.0** (built from source). Health
+  reports `memory_store: "connected"`. *(This was the blocker: pgvector missing for
+  PG14 crash-looped SOV3; fixed by source build. The "NoneType.acquire" error was a
+  downstream symptom of the DB pool never initialising — gone once pgvector landed.)*
+- **Neural models — 6 trained** (verified via `/sov3/health`):
+  care_validation_nn, partnership_detection_ml, threat_detection_nn (1.0 acc),
+  relationship_evolution_nn, care_pattern_analyzer, creativity_assessment_nn (r2~0.91).
+  *(3 pytorch heads show untrained; their sklearn equivalents cover the function.)*
+- **Consciousness:** level `0.788`, mode `waking`, 100 reflections / 50 dreams.
+- **Tools:** 118 MCP tools served at `/sov3/mcp` (incl. `submit_council_proposal` /
+  `vote_on_proposal` — the literal BFT primitives, and `hermes_ask`, `k25_analyze_image`).
+- **Reachability:** `/sov3/health` -> 200 with key, 401 without. `/llm` Ollama -> 200.
+
+**The 2-node council seed is live AND PROVEN** (`meok-one/meok_one/brains.py`).
+End-to-end test 2026-05-31, real output (not fabricated):
+
+- **left** (meok-sov3 on VM Ollama): "Oh, I'm so sorry to hear that you're feeling
+  this way today. Could you tell me a bit more about how you've been feeling?..."
+- **right** (gemini-flash): "Oh, I'm so sorry to hear that. I'm really glad you
+  reached out to me, even when things feel heavy..."
+- **both** (council, reconciled): "I'm so sorry you're carrying that heavy feeling
+  today, and I'm really glad you reached out. Please know you don't have to hold it
+  all on your own..."
+
+That is BFT-of-N with N=2. The sections below are how N grows to 33.
 
 ---
 
-## 3. CORE SUBSYSTEMS
+## 3. The BFT consensus rule (how experts become one answer)
 
-### 3.1 PBFT Consensus Core
+Not "average the logits." A **governance** rule:
 
-**Files:** `meok/core/pbft_engine.py`, `pbft_replica.py`, `pbft_messages.py`
+1. **Fan-out.** The prompt (already wrapped with persona+memory+safety by `connect`)
+   goes to K experts appropriate to the tier/question.
+2. **Critique round.** Experts may see each other's drafts and improve/dissent
+   (today: left drafts -> right critiques; generalizes to round-robin).
+3. **Safety gate (hard veto).** Any expert can flag unsafe; an unsafe reply CANNOT
+   win regardless of vote count. Safety is a veto, not majority-rule.
+   `threat_detection_nn` + `_UNSAFE`/`_strip_capability_leak` enforce it.
+4. **Quality vote.** Among safe candidates, pick by care-alignment + coherence
+   (where `care_pattern_analyzer` / `creativity_assessment_nn` score).
+5. **Synthesize once.** Sovereign emits a single in-character reply; experts never
+   speak to the user directly.
 
-**Purpose:** Distributed binary consensus — ensures all honest replicas agree on proposal execution even with Byzantine (malicious/faulty) replicas.
-
-**Architecture:**
-- `PBFTConsensus` — Orchestrator. One instance per replica. Manages view changes, sequence numbers, timeouts.
-- `Replica` — Local state machine. Tracks sequence states (IDLE → PRE_PREPARED → PREPARED → COMMITTED). Ed25519 key management.
-- `PBFTTransport` — In-process async transport. `send()` and `broadcast()` with handler registration.
-- `PBFTMessage` hierarchy — Request, PrePrepare, Prepare, Commit, Reply, ViewChange, NewView, Checkpoint.
-
-**Flow:**
-```
-Client Request → Primary receives → Assigns seq N → Broadcasts PrePrepare
-  → Each replica validates → Broadcasts Prepare
-  → When 2f Prepares collected → Broadcasts Commit
-  → When 2f+1 Commits collected → Execute → Reply to client
-```
-
-**Quorum Math:**
-- `n >= 3f + 1` (tolerate f faulty replicas)
-- Prepare certificate: `2f` matching Prepares
-- Commit certificate: `2f + 1` matching Commits
-
-**Current State:** ✅ 16/16 tests passing. Stable.
+Byzantine tolerance = a minority of bad/compromised/hallucinating experts cannot
+force an unsafe or low-care output, because safety is a veto and quality is a vote
+over the *safe* set.
 
 ---
 
-### 3.2 PBFT-MoE Council (Mixture-of-Experts Governance)
+## 4. The 33 experts (the council roster — ROADMAP)
 
-**Files:** `meok/core/pbft_moe_council.py`, `moe_committee.py`, `pbft_expert_replica.py`, `expert_profiles.py`, `external_call_auditor.py`, `expert_calibration.py`
+A deliberate **mix of small and large** so the council is fast AND deep, and so most
+turns never touch a paid token. GCP makes a 33-node always-on council affordable: the
+VM hosts the orchestrator + small experts; big experts are API calls only when the
+question earns them.
 
-**Purpose:** Domain-aware governance. Not all replicas vote on all proposals. Committees are dynamically formed per proposal type.
+**Local tier (VM Ollama, free, private) — the everyday quorum:**
+- `qwen2.5:3b` (live), `llama3.2:3b` (live), `qwen3:0.6b` (live)
+- + StepFun **Step-3.5-Flash** (196B MoE / 11B active) when pulled
+- + room for 2-3 small specialists (care-tuned, code-tuned, vision head)
 
-**Key Concepts:**
+**Frontier tier (API, paid/BYOK) — summoned for hard turns:**
+- **DeepSeek V4-Pro** (1.6T MoE / 49B active) and **V4-Flash** (284B / 13B) — MIT
+- **Gemini 2.5 Pro / Flash** (on Nick's Google key) — live as the right brain
+- **Gemma 4** (31b/26b) — open weights, can also run local when GPU allows
+- **StepFun Step-3.7-Flash** (198B vision MoE) — multimodal seat
 
-| Concept | Description |
-|---------|-------------|
-| `ExpertProfile` | Domain familiarity weights + calibration score |
-| `MoECommittee` | Dynamically assembled expert council per proposal |
-| `ExpertReplica` | Extends base `Replica` with domain validation + confidence vectors |
-| `CouncilDecision` | Final output: approved + pbft_committed + eigen_consensus + expert_votes |
-| `ExternalCallAuditor` | Two-gate system for all LLM calls: Gate A (routing) + Gate B (output) |
-
-**Expert Roster (11 Profiles):**
-
-| Expert | Primary Domains | Role |
-|--------|----------------|------|
-| SecuritySentinel | security, antifragile | Threat detection, unverified models |
-| ComplianceOracle | compliance, governance | EU AI Act, COPPA, consciousness claims |
-| AntifragileArchitect | antifragile, performance | Stress testing, exploration, convexity |
-| ContrarianDevil | contrarian, alignment | Devil's advocate, groupthink detection |
-| CodeSlimmer | code_health, maintainability | Deletion > addition, dependency pruning |
-| TemporalArbitrageur | economics, performance | Cost/latency optimization, budget gates |
-| ConvergenceSpotter | alignment, convergence | Sycophancy detection, intent matching |
-| CareGovernor | care, safety | Distress signals, age gates, care floor |
-| BillingAnomalyDetector | economics, security | Cost anomalies, fraud patterns |
-| PromptInjectionGuard | security, alignment | Injection detection, adversarial inputs |
-| HallucinationSpotter | correctness, alignment | Factuality, source verification |
-
-**Two-Tier Consensus:**
-- **Tier 1 (PBFT):** Binary agreement THAT the proposal was reviewed
-- **Tier 2 (EigenBFT):** Dimensional confidence vectors [correctness, security, performance, maintainability, alignment]
-
-**External Call Governance Pipeline:**
-```
-User Request → ModelRouter selects model
-  → Gate A: ExternalCallAuditor.audit_routing_decision()
-    → PBFT-MoE Council deliberates on routing
-    → If approved → tokens spent → LLM call executes
-  → Gate B: ExternalCallAuditor.audit_llm_output()
-    → PBFT-MoE Council deliberates on output
-    → If approved → user sees output
-    → If blocked → fallback / error / replacement
-```
-
-**Current State:** ✅ 35/35 tests passing. Phase 1 complete.
+> Model facts per the cards Nick supplied (stepfun.com; DeepSeek-V4 model card).
+> The architecture is **model-agnostic** — nodes register as `(backend, concrete_id)`
+> in `router.py::MODELS`, so the roster changes without touching consensus logic.
+> 33 is the target node count (matches the SOV3 council size), not a fixed list.
 
 ---
 
-### 3.3 EigenBFT (Dimensional Consensus)
+## 5. How the code maps to the architecture
 
-**Files:** `meok/core/eigen_bft.py`
-
-**Purpose:** Analyzes confidence vectors from validators to detect disagreement patterns, outliers, and consensus quality.
-
-**Output:**
-- `risk_assessment`: "low", "medium", "high", "fragmented"
-- `agreement_score`: 0.0-1.0 dimensional alignment
-- `outlier_validators`: List of dissenting expert IDs
-
-**Used by:** PBFT-MoE Tier 2, Deep Disagreement Mode
-
-**Current State:** ✅ Tests passing. Integrated.
-
----
-
-### 3.4 Extreme Simulations
-
-**Files:** `meok/core/chaos_router.py`, `meok/core/code_deletion_agent.py`
-
-**Purpose:** Deliberately stress-test the governance system to find failure modes before attackers do.
-
-**Modules:**
-- **ChaosRouter:** Injects Byzantine faults, network partitions, timing attacks
-- **CodeDeletionAgent:** Proposes code deletion to test if council can distinguish valuable from dead code
-- **DeepDisagreement:** Activates when EigenBFT detects fragmented consensus — forces extended deliberation
-
-**Current State:** ✅ 57/57 tests passing. Integrated.
+| Concept | Where it lives | State |
+|---|---|---|
+| Expert registry | `router.py::MODELS` (alias -> backend -> id) | live |
+| Per-backend calling | `_ask_local / _ask_cloud / _ask_gemini / _ask_sov3` | live |
+| LibreSSL->curl for VM HTTPS | `_ask_local` AND `_ask_sov3` | live |
+| 2-node council (BFT seed) | `brains.py::think(brain="both")` | live + proven |
+| Safety veto | `_safe / _strip_capability_leak` + `threat_detection_nn` | live |
+| Real memory/consciousness | sovereign-temple on VM via `SOV3_MCP` | live |
+| N-node fan-out (N>2) | generalize `think()` from {left,right} to a roster | roadmap |
+| Care/quality vote scoring | wire care/creativity NNs into the vote | roadmap |
+| 33-node roster | pull Step models on VM; register V4/Gemini seats | roadmap |
 
 ---
 
-### 3.5 MCP Tool Registry
+## 6. Why GCP is the unlock
 
-**Files:** `meok/meok/mcp/tools/__init__.py`, various tool modules
-
-**Purpose:** 220+ MCP (Model Context Protocol) tools that serve as the system's sensory and motor interfaces.
-
-**Tool Categories:**
-- Governance & Compliance (EU AI Act, GDPR, NIS2, DORA, etc.)
-- Security (injection scanning, attestation, watermarking)
-- Industry Verticals (healthcare, construction, finance, optometry)
-- Infrastructure (CI/CD, Docker, database, backup)
-- Creative & Productivity (content, marketing, design)
-- Financial (Stripe billing, cost allocation, subscription tracking)
-
-**Current State:** ✅ 220 tools registered. Adding more continuously.
+- A 33-node always-on council needs a host that isn't Nick's 16GB M4 (which crashed
+  at 33GB under local Ollama). The VM moves Ollama + SOV3 off-box; the M4 stays idle.
+- SPOT pricing keeps an e2-standard-4 at roughly coffee-money/month; big experts are
+  pay-per-call, so cost scales with *hard* questions, not with uptime.
+- The VM is meant to run **for all time** — the Sovereign's permanent home — so the
+  character (and its memory) persists across the user's devices.
+- *(Google for Startups credits — up to $200k — would make frontier seats effectively
+  free during launch; application drafted, Nick to submit.)*
 
 ---
 
-### 3.6 SOV3 Coordination System
+## 7. Next steps (to make N>2 real)
 
-**Files:** `~/clawd/scripts/coordination-status.sh`, `enable_coordination.py`
-
-**Purpose:** Central nervous system for task lifecycle management across all agents and services.
-
-**Commands:**
-```bash
-~/clawd/scripts/coordination-status.sh          # Check status
-python3 ~/clawd/scripts/enable_coordination.py --submit "<task>"  # Submit
-python3 ~/clawd/scripts/enable_coordination.py --complete <id>    # Complete
-```
-
-**Dashboard:** http://localhost:3101/mcp → `coord_get_dashboard`
-
-**Integration Path:**
-```
-CoordinationHub.submit_task() → MultiCouncil domain routing
-  → PBFTAgentCouncil consensus → EigenBFT quality validation
-  → TaskOrchestrator dispatch → MCP tool execution
-```
-
-**Current State:** Infrastructure exists. Needs full wiring to MEOK core.
+1. **Wire `SOV3_MCP` -> the VM** so the router's sovereign path uses the live memory/
+   neural substrate. DONE: `_ask_sov3` curl-for-HTTPS fix + `SOV3_MCP` in `.env.local`.
+2. **Generalize `think()`** from hard-coded {left,right} to a roster fan-out with the
+   BFT rule in section 3.
+3. **Pull Step-3.5-Flash** onto the VM Ollama; register V4/Gemini/Gemma seats.
+4. **Score the vote** with the care/creativity NNs instead of simple safer-wins.
+5. **Expose council transparency** in the UI (the "Council" mode stubbed in avatar.html).
 
 ---
 
-### 3.7 MEOK UI / API Services
-
-**Services:**
-| Service | Port | Stack | Status |
-|---------|------|-------|--------|
-| MEOK_UI | 3000 | Next.js 14 + React 18 + Tailwind | Running |
-| SOV3 | 3101 | Python FastAPI + Coordination Hub | Running |
-| MEOK_MCP | 3102 | MCP Gateway | Running |
-| MEOK_API | 3200 | Python FastAPI | Running |
-
-**Current State:** All services operational. UI needs feature expansion.
-
----
-
-## 4. WORKFLOWS & PIPELINES
-
-### 4.1 Task Submission → Execution Pipeline
-
-```
-1. User submits task via CLI/TUI/UI
-2. SOV3 CoordinationHub receives task
-3. Task classified by domain + tier (CRITICAL / STANDARD / LOW)
-4. If CRITICAL → MultiCouncil routes to PBFT-MoE
-5. CommitteeFactory forms domain-aware expert council
-6. PBFT consensus runs among committee members
-7. EigenBFT validates confidence vectors
-8. CouncilDecision returned (approved / blocked)
-9. If approved → TaskOrchestrator dispatches to MCP tools
-10. Results returned → audit trail logged
-```
-
-### 4.2 LLM Call Governance Pipeline
-
-```
-Every LLM/VLM call MUST pass:
-
-Gate A (Pre-flight):
-  → ExternalCallAuditor.audit_routing_decision()
-  → Checks: model appropriateness, budget, compliance blacklist
-  → Council consensus required for CRITICAL tier
-  → If blocked → return 403 with reason
-
-LLM Execution:
-  → Tokens spent → Response generated
-
-Gate B (Post-flight):
-  → ExternalCallAuditor.audit_llm_output()
-  → Checks: consciousness claims, emotion recognition, hallucination, injection
-  → Council consensus required for CRITICAL tier
-  → If blocked → return fallback / sanitized output
-```
-
-### 4.3 Revenue Pipeline (Current → DELBOY MODE Target)
-
-```
-Current State:
-  → Stripe API for subscriptions + usage billing
-  → Manual pricing decisions
-  → Basic cost tracking
-
-DELBOY MODE Target:
-  → Real-time revenue sensing across all products
-  → Automated pricing optimization per customer segment
-  → Cost-to-revenue ratio monitoring per MCP call
-  → Forecasting: ARR, MRR, churn prediction
-  → Grant opportunity auto-detection and submission
-  → Domain sales monitoring and optimization
-  → Affiliate/referral nervous system
-```
-
----
-
-## 5. DATA FLOWS
-
-### 5.1 Configuration & Secrets
-
-```
-~/.env.production.local          # Production secrets (Stripe webhook, etc.)
-~/.env.local                     # Local dev secrets
-~/clawd/meok/config/             # App configuration
-~/clawd/meok/.venv/              # Python virtual environment
-~/.sov3/replica_keys/            # Ed25519 keys for PBFT replicas
-```
-
-### 5.2 State Persistence
-
-```
-~/clawd/memory/                  # Shared memory across agents
-~/clawd/meok/memory/             # MEOK-specific memory
-~/clawd/.clawdbot/memory/        # Clawdbot persistent memory
-~/clawd/revenue/                 # Revenue tracking data
-~/clawd/jarvis-memory/           # FlyEye visual memory
-```
-
-### 5.3 Logs & Observability
-
-```
-~/clawd/logs/                    # System logs
-~/clawd/meok/logs/               # MEOK logs
-~/clawd/sov3-hermes/             # Hermes agent logs
-Langfuse integration (~/clawd/langfuse/) for LLM tracing
-```
-
----
-
-## 6. INTEGRATION POINTS
-
-### 6.1 External APIs
-
-| Service | Integration | Status |
-|---------|-------------|--------|
-| Stripe | Billing, subscriptions, usage metering | Partial (webhook secret placeholder) |
-| Cloudflare | Tunnels, AI Gateway, DNS | Active |
-| Namecheap | Domain management | Broken (API key invalid) |
-| n8n | Workflow automation | Active |
-| Apify | Web scraping actors | Active (9 actors) |
-| Vercel | Frontend deployment | Active (many sites) |
-
-### 6.2 Model Providers
-
-| Provider | Usage | Routing |
-|----------|-------|---------|
-| OpenAI | GPT-4o, o3 | Via ModelRouter + Gate A/B audit |
-| Anthropic | Claude | Via ModelRouter + Gate A/B audit |
-| Google | Gemini | Via ModelRouter + Gate A/B audit |
-| Meta | LLaMA (local) | Via MLX / local inference |
-| Mistral | MoE variants | Via ModelRouter |
-| xAI | Grok | Via ModelRouter |
-
----
-
-## 7. DEPLOYMENT ARCHITECTURE
-
-### 7.1 Frontend
-
-- **Next.js 14+** with App Router
-- **Tailwind CSS** for styling
-- **Vercel** for hosting (multiple sites)
-- **React 18+** with TypeScript (strict)
-
-### 7.2 Backend
-
-- **Python 3.14** with `uv` package management
-- **FastAPI** for API services
-- **Pydantic** + **Zod** for validation
-- **Async/await** throughout
-
-### 7.3 Desktop
-
-- **Tauri** (Rust + WebView) for cross-platform desktop
-- **Go TUI** (`meokclaw-tui/`) for terminal power users
-- **VS Code Extension** (`meokclaw-vscode/`) for IDE integration
-
-### 7.4 Mobile
-
-- **React Native** scaffolded
-- **Expo** for rapid development
-
----
-
-## 8. SECURITY MODEL
-
-### 8.1 Cryptographic Identity
-
-- **Ed25519** key pairs per PBFT replica
-- Keys stored in `~/.sov3/replica_keys/`
-- All consensus messages signed and verified
-
-### 8.2 Compliance Guards
-
-- **ConsciousnessNonClaimGuard:** Blocks AI consciousness claims
-- **EmotionRecognitionGuard:** Blocks EU AI Act Art 5(1)(f) violations
-- **PromptInjectionFirewall:** MCP-level injection detection
-- **AttestationVerify:** C2PA / watermark verification
-
-### 8.3 Access Control
-
-- Tier-based council participation (CRITICAL → mandatory, STANDARD → advisory, LOW → none)
-- API key management via `meok-auth`
-- Domain-specific expert authorization
-
----
-
-## 9. DEVELOPMENT WORKFLOWS
-
-### 9.1 Testing
-
-```bash
-cd ~/clawd/meok
-source .venv/bin/activate
-PYTHONPATH=/Users/nicholas/clawd python3 -m pytest core/tests/ -x
-```
-
-**Current Test Matrix:**
-| Suite | Tests | Status |
-|-------|-------|--------|
-| PBFT Core | 16 | ✅ Pass |
-| PBFT-MoE | 35 | ✅ Pass |
-| EigenBFT | 15 | ✅ Pass |
-| Chaos Router | 21 | ✅ Pass |
-| Code Deletion | 21 | ✅ Pass |
-| **Total** | **108** | **✅ All Pass** |
-
-### 9.2 Code Quality Rules
-
-1. Follow existing conventions over personal preference
-2. Make minimal changes to achieve the goal
-3. Run tests after changes
-4. Keep TypeScript strict; avoid `any`
-5. Prefer `async/await` over callbacks
-
-### 9.3 Git Workflow
-
-- DO NOT run `git commit`, `git push`, `git reset`, `git rebase` unless explicitly asked
-- Prefer `trash` over `rm` for file deletion
-
----
-
-## 10. EXTREME SIMULATIONS AS EXPERT DNA
-
-The 12 extreme simulation research documents directly seeded the 11 expert profiles:
-
-| Simulation Theme | Expert Embodiment |
-|-----------------|-------------------|
-| Black swan scenarios | SecuritySentinel |
-| Negative space / deletion | CodeSlimmer |
-| Temporal arbitrage | TemporalArbitrageur |
-| Convergence detection | ConvergenceSpotter |
-| Care ethics / GAP 6 | CareGovernor |
-| Contrarian hedge | ContrarianDevil |
-| Compliance crosswalks | ComplianceOracle |
-| Antifragile stress testing | AntifragileArchitect |
-| Billing anomaly detection | BillingAnomalyDetector |
-| Prompt injection warfare | PromptInjectionGuard |
-| Hallucination patterns | HallucinationSpotter |
-
----
-
-## 11. KNOWN GAPS & ACTIVE WORK
-
-### 11.1 Critical Gaps
-
-| Gap | Severity | Owner |
-|-----|----------|-------|
-| Stripe webhook secret is placeholder | 🔴 High | Revenue system |
-| Namecheap API key invalid (25 domains) | 🟡 Medium | Infrastructure |
-| Go TUI LSP client scaffolded only | 🟡 Medium | Developer experience |
-| SOV3 coordination not wired to MEOK core | 🟡 Medium | Architecture |
-| DELBOY MODE not implemented | 🔴 High | Revenue autonomy |
-
-### 11.2 PBFT-MoE Roadmap
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| Phase 1: Expert Replica System | ✅ Complete | Profiles, replicas, committees, council, auditor, calibration |
-| Phase 2: Model Router Integration | 🔄 Pending | Wire PBFT-MoE into ModelRouter for all LLM calls |
-| Phase 3: SOV3 Coordination Wiring | 🔄 Pending | Task lifecycle → council → execution |
-| Phase 4: Live Calibration Loop | 🔄 Pending | Real-world outcomes feed back into expert weights |
-| Phase 5: Cross-Council Federation | 🔄 Pending | Multiple councils for different domains |
-
----
-
-## 12. DELBOY MODE — REVENUE NERVOUS SYSTEM
-
-See `DELBOY_MODE.md` for full architecture.
-
-**Core Concept:** Every MCP call, every LLM inference, every API request is a revenue event. DELBOY MODE senses, forecasts, optimizes, and acts on these events autonomously.
-
-**Tagline:** *"This time next year we will be millionaires."*
-
----
-
-*Document maintained by JEEVES Strategic Command. Update on every architectural change. Referenced by all Kimi Swarm agents.*
+_The character is the Visa card. The Sovereign is the clearing house. The experts are
+the member banks. The user just taps and pays — one face, many minds, always safe._
