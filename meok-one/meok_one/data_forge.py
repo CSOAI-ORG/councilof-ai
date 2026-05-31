@@ -153,10 +153,17 @@ def forge(kind: str, n: int = 200, batch: int = 25) -> dict:
         if len(generated) >= n:
             break
     if generated:
+        merged = existing + generated
         _TRAIN_DIR.mkdir(parents=True, exist_ok=True)
-        target.write_text(json.dumps(existing + generated, indent=2))
+        target.write_text(json.dumps(merged, indent=2))
+        # ALSO mirror to a git-TRACKED corpus so the asset is backed up to GitHub
+        # (sovereign-temple/ is gitignored — without this the forged data isn't safe).
+        backup_dir = Path(__file__).resolve().parent.parent / "training_corpus"
+        backup_dir.mkdir(parents=True, exist_ok=True)
+        (backup_dir / f"{kind}_episodes.json").write_text(json.dumps(merged, indent=2))
     return {"kind": kind, "before": start, "added": len(generated),
-            "total": start + len(generated), "file": str(target)}
+            "total": start + len(generated), "file": str(target),
+            "backup": "meok-one/training_corpus/"}
 
 
 if __name__ == "__main__":
