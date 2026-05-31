@@ -55,3 +55,6 @@ Either way the 6.6GB model weights go separately (they're big) — or SOV3 re-tr
 1. **Project ID** (from Part A step 4).
 2. Confirm **"gcloud ready"** after Part B.
 Then I run the bootstrap and we never crash on local RAM again.
+
+## PROJECT ID (Nick, 2026-05-31)
+`meok-498012` — £742 Vertex/GenAI credit lives here. Bootstrap: `bash meok_gcp_bootstrap.sh meok-498012` (after gcloud installed+authed).
