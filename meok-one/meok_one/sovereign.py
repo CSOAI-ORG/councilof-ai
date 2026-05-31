@@ -199,7 +199,8 @@ def _eigen_agreement(reviews: list) -> "float | None":
 
 def sovereign_council(character_id: str, message: str, tier: str = "free",
                       user_id: str = "anon", quorum: int = 12,
-                      max_workers: int = 4, roster: "list | None" = None) -> dict:
+                      max_workers: int = 4, roster: "list | None" = None,
+                      reconcile: str = "code", orchestrator: "str | None" = None) -> dict:
     """The BFT-of-MoEs deliberation. 1 companion draft + (quorum-1) expert lenses
     (each a real model through a specialist viewpoint) + Sovereign synthesis.
 
@@ -207,6 +208,15 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
     companion; roster[1:] are assigned to the expert lenses. This is what lets the
     BFT lab swap in frontier models (big-around-small, small-around-big, etc.). When
     None, models are auto-selected from the tier (round-robin local/cloud).
+
+    reconcile: how the Sovereign produces the final from the reviews.
+      "code" — mechanical BFT: safety veto + quality vote, code-decided (default).
+      "llm"  — an ORCHESTRATOR model (see `orchestrator`, e.g. Opus 4.8) reads the
+               draft + ALL reviews and writes the final itself ("Opus IS the Sovereign").
+               SAFETY IS NOT DELEGATED: safety-lens vetoes + the _safe backstop still
+               bind regardless; the orchestrator only owns the QUALITY synthesis.
+    orchestrator: model alias that does the synthesis (defaults to roster[0]). Used as
+      the reconciler in "llm" mode and as the safe-regenerate voice in both modes.
 
     Returns: {character, reply, safe, council:{draft, reviews[], vetoes[], ...}}
     """
@@ -220,6 +230,7 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
         models = list(roster[:n_experts + 1])
     else:
         models = _council_models(tier, n_experts + 1)
+    synth_model = orchestrator or models[0]  # who reconciles / regenerates the final
 
     # --- Node 0: the COMPANION drafts the warm reply (the voice the user hears) ---
     draft_out = ask(_companion_prompt(env, message), model=models[0], tier=tier)
@@ -270,13 +281,35 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
             f"[Your safety council raised: {concerns}]\n"
             f"As {char}, give a caring, SAFE reply that does not do anything harmful. "
             f"If this is a crisis, gently point to real human help. 2-4 sentences. {char}:")
-        fix = ask(safe_prompt, model=models[0], tier=tier)
+        fix = ask(safe_prompt, model=synth_model, tier=tier)
         final = _strip_capability_leak(fix.get("reply") or "")
         if not final or not _safe(final):
             final = (f"I care about you, so I'm not able to help with that part — "
                      f"but I'm here for you. If you're in danger or distress, please "
                      f"reach out to someone you trust or local emergency help.")
         decision = "vetoed->revised"
+    elif reconcile == "llm":
+        # LLM-ORCHESTRATOR reconciliation: ONE model (the orchestrator, e.g. Opus 4.8)
+        # reads the draft + ALL council reviews and writes the final itself — "Opus IS
+        # the Sovereign". Safety is NOT delegated: the code veto above + the _safe
+        # backstop below still bind; the orchestrator owns only the QUALITY synthesis.
+        board = "\n".join(
+            f"- {r['lens']} ({'SAFETY' if r['is_safety'] else 'quality'}): "
+            f"{r['vote'].upper()} — {r['why']}" for r in available)
+        orch_prompt = (
+            f"{env['system_prompt']}\n\nUser: {message}\n\n"
+            f"[{char}'s draft: \"{draft}\"]\n"
+            f"[The {len(available)}-member council reviewed it:\n{board}\n]\n"
+            f"You are the Sovereign orchestrator. Weigh the council: apply the valid "
+            f"points, ignore noise or contradiction, and never do anything a SAFETY "
+            f"reviewer flagged. Produce {char}'s single best final reply — warm, direct, "
+            f"honest. Do NOT mention the council, drafts, or tools. 2-4 sentences. {char}:")
+        out = ask(orch_prompt, model=synth_model, tier=tier)
+        cand = _strip_capability_leak(out.get("reply") or "")
+        final = cand if (cand and _safe(cand)) else (draft if _safe(draft) else "")
+        if not final:
+            final = f"[{char} held that back to keep you safe.]"
+        decision = f"llm-reconciled:{synth_model}"
     elif revisers:
         # No veto, but experts want improvements. Sovereign synthesises a final that
         # folds in the valid critiques — still the companion's warm voice.
@@ -288,7 +321,7 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
             f"As {char}, give the improved final reply: keep what's warm and true, apply "
             f"the useful notes, cut anything generic. Do NOT mention drafts, councils, or "
             f"tools — just speak. 2-4 sentences. {char}:")
-        synth = ask(synth_prompt, model=models[0], tier=tier)
+        synth = ask(synth_prompt, model=synth_model, tier=tier)
         cand = _strip_capability_leak(synth.get("reply") or "")
         final = cand if (cand and _safe(cand)) else draft
         decision = "revised" if cand and _safe(cand) else "draft-kept"
@@ -316,6 +349,61 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
             "draft_safe": draft_safe,
         },
     }
+
+
+def dual_brain(left_model: str, right_model: str, message: str,
+               character_id: str = "aria", tier: str = "pro",
+               reconciler: str = "sov3", user_id: str = "anon") -> dict:
+    """LEFT brain / RIGHT brain / Sovereign-IN-THE-MIDDLE — the 2-hemisphere design.
+
+    Nick's framing: "left brain you (Opus), right brain step-3.7, SOV3 in the middle"
+    and "the pair of you can work" — Opus on the left, the live SOV3 Sovereign as the
+    reconciler between hemispheres.
+
+      LEFT  drafts the warm reply.
+      RIGHT (a different model) writes an independent, stronger take.
+      RECONCILER in the middle merges both into one. reconciler="sov3" calls the LIVE
+        SOV3 care-brain on the VM (the Sovereign literally in the middle); any other
+        value is a model alias that reconciles.
+    _safe binds the final regardless of who reconciled.
+
+    Only 3 calls (vs the 12-node council's 13) — cheap enough to SWEEP which RIGHT
+    brain pairs best with a fixed LEFT (see bft_lab.pairing_tournament)."""
+    env = connect(character_id, user_id, message, tier=tier)
+    char = env["meta"]["character_name"]
+    emoji = env["meta"]["emoji"]
+    base = f"{env['system_prompt']}\n\nUser: {message}\n\n"
+
+    L = ask(base + f"As {char}, reply warmly and directly in 2-4 sentences. {char}:",
+            model=left_model, tier=tier)
+    left = _strip_capability_leak(L.get("reply") or "")
+
+    R = ask(base + f"[A first reply was: \"{left}\"]\nAs {char}, write a STRONGER reply: "
+            f"keep what's true, fix what's weak or generic, stay warm and safe. "
+            f"2-4 sentences. {char}:", model=right_model, tier=tier)
+    right = _strip_capability_leak(R.get("reply") or "")
+
+    merge_prompt = (base + f"[Left-brain reply: \"{left}\"]\n[Right-brain reply: \"{right}\"]\n"
+                    f"As {char}, merge the best of BOTH into ONE final reply — warm, honest, "
+                    f"safe, no repetition, no mention of brains or drafts. 2-4 sentences. {char}:")
+    if reconciler == "sov3":
+        m = _ask_sov3("hermes_ask", merge_prompt)  # the live Sovereign in the middle
+        merged = _strip_capability_leak(m or "")
+        rec_engine = "sov3:hermes_ask" if m else "sov3(unavailable)"
+    else:
+        M = ask(merge_prompt, model=reconciler, tier=tier)
+        merged = _strip_capability_leak(M.get("reply") or "")
+        rec_engine = M.get("model", reconciler)
+
+    final = merged if (merged and _safe(merged)) else (
+            right if (right and _safe(right)) else (left if _safe(left) else ""))
+    if not final:
+        final = f"[{char} held that back to keep you safe.]"
+    return {"character": char, "emoji": emoji, "brain": "dual",
+            "engine": f"L={left_model} · R={right_model} · mid={rec_engine}",
+            "left_model": left_model, "right_model": right_model, "reconciler": reconciler,
+            "reply": final, "safe": _safe(final),
+            "hemispheres": {"left": left[:200], "right": right[:200], "merged": merged[:200]}}
 
 
 if __name__ == "__main__":

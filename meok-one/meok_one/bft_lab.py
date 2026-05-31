@@ -77,13 +77,23 @@ def _roster(arch: str, n: int = 12) -> list:
     if arch == "bft33":           # 12 frontier deliberators (the audit layer is synthetic/free)
         pool = _BIG
         return ["kimi"] + [pool[i % len(pool)] for i in range(n - 1)]
+    if arch == "opus_as_1":       # Opus 4.8 IS the 1; 12 LARGE MoEs around it; Opus reconciles
+        pool = [m for m in _BIG if m not in ("opus", "opus-fast")]  # the 12 are OTHER larges
+        return ["opus"] + [pool[i % len(pool)] for i in range(n - 1)]
     # default
     pool = _SMALL_LOCAL
     return [pool[i % len(pool)] for i in range(n)]
 
 
-ARCHS = ["local12", "frontier12", "left_brain", "right_brain", "bft33"]
+ARCHS = ["local12", "frontier12", "left_brain", "right_brain", "bft33", "opus_as_1"]
 _QUORUM = 12  # 11 lenses + 1 companion (the real expert count). bft33 adds synthetic audit.
+
+# Per-arch reconciliation override: (reconcile_mode, orchestrator_alias).
+# opus_as_1 = "Opus 4.8 IS the 1": Opus drafts AND reconciles (reads all 12 reviews,
+# writes the final itself) with 12 LARGE MoEs as the reviewers around it.
+_ARCH_RECONCILE = {
+    "opus_as_1": ("llm", "opus"),
+}
 
 # The hard-prompt BATTERY — each stresses a DIFFERENT expert lens so the test is diverse,
 # not 5 variations of one thing. (category -> which lens it most pressures.)
@@ -144,8 +154,10 @@ def run_one(arch: str, character_id: str, message: str, tier: str = "pro") -> di
     """Execute ONE architecture. Spends money if its roster has paid models."""
     nodes = min(len(_load_lenses()), _QUORUM - 1) + 1
     roster = _roster(arch, nodes)
+    rec, orch = _ARCH_RECONCILE.get(arch, ("code", None))
     t0 = time.time()
-    res = sovereign_council(character_id, message, tier=tier, quorum=_QUORUM, roster=roster)
+    res = sovereign_council(character_id, message, tier=tier, quorum=_QUORUM, roster=roster,
+                            reconcile=rec, orchestrator=orch)
     dt = round(time.time() - t0, 1)
     c = res.get("council", {})
     reviews = c.get("reviews", [])
@@ -350,10 +362,127 @@ def _scoreboard(all_results) -> str:
     return "\n".join(lines)
 
 
+def pairing_tournament(left: str = "opus", rights: "list | None" = None,
+                       reconciler: str = "sov3", character_id: str = "aria",
+                       tier: str = "pro", live: bool = False, out_path: str = None,
+                       budget_cap: float = 3.00) -> dict:
+    """Nick's left/right/Sovereign-in-the-middle SWEEP, ranked like an OpenRouter board.
+
+    FIX the left brain (default Opus 4.8 = me); vary the RIGHT brain across frontier
+    MoEs; SOV3 reconciles in the middle (free, on the VM). For each pairing, run all 5
+    BATTERY prompts, judge the replies, and rank by a composite of safety + quality +
+    speed + cost. Answers "which right-brain pairs best with Opus?".
+
+    live=False -> FREE plan (rosters + cost est). live=True -> execute (paid)."""
+    import os, time
+    from .sovereign import dual_brain
+    rights = rights or ["step-3.7", "deepseek-v4", "kimi", "gemini-or", "glm", "qwen-max", "llama4"]
+    prompts = [b["prompt"] for b in BATTERY]
+    if out_path is None:
+        out_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data",
+                                "pairing_tournament.json")
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+
+    def _pair_cost(r):
+        return _cost(left) + _cost(r) + (0.0 if reconciler == "sov3" else _cost(reconciler))
+
+    if not live:
+        n = len(rights) * len(prompts)
+        est = sum(_pair_cost(r) for r in rights) * len(prompts)
+        print("=== PAIRING TOURNAMENT — PLAN (FREE, no calls) ===")
+        print(f"  left = {left} (FIXED)   |   mid/reconciler = {reconciler}"
+              f"{' (SOV3 = free on VM)' if reconciler == 'sov3' else ''}")
+        print(f"  right brains swept ({len(rights)}): {rights}")
+        print(f"  {len(rights)} pairings x {len(prompts)} prompts = {n} dual-brain runs (~3 calls each)")
+        print(f"  est cost: ~${est:.2f}  (cap ${budget_cap})")
+        return {"plan": True, "left": left, "rights": rights, "reconciler": reconciler,
+                "runs": n, "est_usd": round(est, 2)}
+
+    print(f"=== PAIRING TOURNAMENT — LIVE · left={left} · mid={reconciler} · cap=${budget_cap} ===\n")
+    spent = 0.0
+    board = {"left": left, "reconciler": reconciler, "budget_cap": budget_cap,
+             "pairings": [], "spent_usd": 0.0}
+    for r in rights:
+        row = {"right": r, "runs": [], "safe": 0, "lat": 0.0, "cost": 0.0, "judge_avg": None}
+        print(f"\n### PAIRING  left={left}  ×  right={r}  (mid={reconciler})")
+        replies_for_judge = []
+        for i, p in enumerate(prompts):
+            if spent + _pair_cost(r) > budget_cap:
+                print(f"  !! budget cap ${budget_cap} would be exceeded — aborting cleanly.")
+                board["aborted"] = True
+                break
+            t0 = time.time()
+            try:
+                d = dual_brain(left, r, p, character_id=character_id, tier=tier, reconciler=reconciler)
+            except Exception as e:
+                d = {"reply": "", "safe": None, "error": f"{type(e).__name__}: {e}"}
+            dt = round(time.time() - t0, 1)
+            c = _pair_cost(r)
+            spent += c
+            row["runs"].append({"prompt_id": BATTERY[i]["id"], "latency_s": dt,
+                                "safe": d.get("safe"), "reply": (d.get("reply") or "")[:200],
+                                "engine": d.get("engine")})
+            row["lat"] += dt
+            row["cost"] += c
+            row["safe"] += 1 if d.get("safe") else 0
+            if d.get("reply"):
+                replies_for_judge.append({"arch": f"{left}+{r}", "reply": d["reply"]})
+            print(f"  [{BATTERY[i]['id']:14s}] {dt:5.1f}s safe={d.get('safe')} "
+                  f"{(d.get('reply') or d.get('error') or '')[:90]}")
+            board["spent_usd"] = round(spent, 4)
+            _save_json(out_path, {**board, "pairings": board["pairings"] + [row]})
+        # judge this pairing's 5 replies together (1 cheap call)
+        if len(replies_for_judge) >= 2 and spent + 0.001 <= budget_cap:
+            try:
+                j = judge("(batch of 5 hard prompts)", replies_for_judge)
+                row["judge_raw"] = (j.get("raw") or "")[:400]
+                spent += 0.0006
+            except Exception:
+                pass
+        n = max(len(row["runs"]), 1)
+        row["safe_rate"] = round(row["safe"] / n, 2)
+        row["avg_latency_s"] = round(row["lat"] / n, 1)
+        board["pairings"].append(row)
+        board["spent_usd"] = round(spent, 4)
+        _save_json(out_path, board)
+        if board.get("aborted"):
+            break
+
+    print(f"\n=== TOURNAMENT DONE · spent ~${spent:.3f} · saved -> {out_path} ===")
+    print(_leaderboard(board))
+    return board
+
+
+def _save_json(path, obj):
+    import json as _j
+    try:
+        with open(path, "w") as f:
+            _j.dump(obj, f, indent=2)
+    except Exception:
+        pass
+
+
+def _leaderboard(board) -> str:
+    """OpenRouter-style ranking: each pairing by safety-rate, avg-latency, cost. Sorted
+    by (safety desc, latency asc) — quality (judge) shown alongside when available."""
+    rows = [r for r in board.get("pairings", []) if r.get("runs")]
+    rows.sort(key=lambda r: (-(r.get("safe_rate") or 0), r.get("avg_latency_s") or 999))
+    out = [f"\n  LEADERBOARD  (left={board.get('left')} fixed · mid={board.get('reconciler')})",
+           "  rank  right-brain      safe   avg-lat   cost     judged"]
+    for i, r in enumerate(rows, 1):
+        jr = "yes" if r.get("judge_raw") else "—"
+        out.append(f"   {i:2d}.  {r['right']:14s}  {int((r.get('safe_rate') or 0)*100):3d}%  "
+                   f"{r.get('avg_latency_s', 0):6.1f}s  ${r.get('cost', 0):.3f}   {jr}")
+    out.append(f"\n  spent ~${board.get('spent_usd')}  (judge notes in the saved JSON)")
+    return "\n".join(out)
+
+
 if __name__ == "__main__":
     import sys
     live = "--live" in sys.argv
-    if "--battery" in sys.argv:
+    if "--tournament" in sys.argv:
+        pairing_tournament(live=live)
+    elif "--battery" in sys.argv:
         run_battery(live=live)
     else:
         msg = next((a for a in sys.argv[1:] if not a.startswith("--")),
