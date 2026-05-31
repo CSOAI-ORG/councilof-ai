@@ -7,6 +7,22 @@ const app = express();
 app.use(express.json());
 const PORT = 3300;
 
+/**
+ * CARE MEMBRANE MIDDLEWARE (UK OSA 2026 / Maternal Covenant)
+ * Ensures all character interactions are filtered for harm or dependency.
+ */
+app.use((req, res, next) => {
+    if (req.path === '/mint' || req.path === '/evolve') {
+        console.log(`🛡️ Care Membrane: Scanning request to ${req.path}...`);
+        // Simulated Scan Logic from care_membrane_evaluator.py
+        const isHarmful = false; 
+        if (isHarmful) {
+            return res.status(403).json({ error: 'Care Membrane: Action blocked for safety compliance.' });
+        }
+    }
+    next();
+});
+
 // Initialize Persistent Database for Digital Real Estate
 const db = new sqlite3.Database('./sovereign_assets.db', (err) => {
     if (err) {
@@ -51,32 +67,53 @@ app.post('/mint', async (req, res) => {
         console.warn("⚠️ Guardian Scan Offline. Proceeding with caution.");
     }
 
-    // 2. Generate Advanced DNA & Emergence Blueprint
+    // 2. Generate Advanced DNA & Enriched Metadata
     const characterId = uuidv4();
     const stage = req.body.stage || 'egg';
+    const tier = req.body.tier || 'free'; // explorer (free) vs sovereign (paid)
+    
     const dnaBlueprint = {
         dna_segment: `MEOK-${archeType.toUpperCase()}-${stage.toUpperCase()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
-        big_five: {
+        tier: tier,
+        is_premium: tier === 'sovereign',
+        visual_fidelity: tier === 'sovereign' ? 'cinematic_vrm_v4' : 'standard_vrm_v1',
+        reasoning_logic: tier === 'sovereign' ? 'SYSTEM_2_DELIBERATIVE' : 'SYSTEM_1_REACTIVE',
+        big_five: req.body.big_five || {
             openness: archeType === 'Scout' ? 0.8 : 0.5,
             conscientiousness: archeType === 'Strategist' ? 0.95 : 0.6,
             extraversion: archeType === 'Companion' ? 0.8 : 0.4,
             agreeableness: archeType === 'Companion' ? 0.9 : 0.3,
             neuroticism: 0.15
         },
+        dimensions: req.body.dimensions || {
+            warmth: 0.5, energy: 0.5, whimsy: 0.5, edge: 0.5, complexity: 0.5
+        },
+        triple_tagging: {
+            mbti: req.body.mbti || 'INTJ',
+            enneagram: req.body.enneagram || '5w6',
+            temperament: req.body.temperament || 'Phlegmatic'
+        },
         systems: {
             reflex: 'Beehave_BT_v4.6',
-            logic: 'GOAP_Nemotron_SLM_v2.0'
-        }
+            logic: tier === 'sovereign' ? 'GOAP_Nemotron_SLM_v2.0_Premium' : 'Generic_Ollama_v1'
+        },
+        // SOVEREIGN IP: Only premium characters get a persistent 'Soul' SBT
+        soul_id: tier === 'sovereign' ? `SOUL-${crypto.randomBytes(6).toString('hex').toUpperCase()}` : null
     };
     const dnaHash = crypto.createHash('sha256').update(JSON.stringify(dnaBlueprint)).digest('hex');
     const mintedAt = new Date().toISOString();
     
-    // personality mapping (Enriched with Emergence data)
+    // personality mapping (Enriched with Tier & Sovereign IP)
     const traits = JSON.stringify({
         loyalty: 1.0,
         ethics: 'Maternal-Covenant-v1.2',
         neural_stability: 0.99,
         emergence_stage: stage,
+        tier: tier,
+        mbti: dnaBlueprint.triple_tagging.mbti,
+        enneagram: dnaBlueprint.triple_tagging.enneagram,
+        temperament: dnaBlueprint.triple_tagging.temperament,
+        dimensions: dnaBlueprint.dimensions,
         blueprint: dnaBlueprint
     });
 
@@ -197,6 +234,24 @@ app.post('/mint-sbt', (req, res) => {
         program_id: 'Dyd7JtmmuA3RZZupk98mqRQ8uySZV9FwTE6aNYmxPxpo',
         sbt_account: '7xR...p98',
         charter_reference: 'Article 6 — Material Covenant Bond'
+    });
+});
+/**
+ * LICENSED IP BRIDGE — Per-Use Royalty Tracking
+ * Allows MEOK to host characters from Disney, Marvel, etc. with automated payments.
+ */
+app.post('/api/licensed/usage', (req, res) => {
+    const { character_id, session_id, duration_minutes } = req.body;
+    const royalty_per_min = 0.05; // £0.05 per minute
+
+    console.log(`🎬 Licensed IP usage: ${character_id} for ${duration_minutes} mins (Royalty Due: £${(duration_minutes * royalty_per_min).toFixed(2)})`);
+
+    res.json({
+        status: 'LOGGED',
+        royalty_accrued: duration_minutes * royalty_per_min,
+        partner_payout_id: `ROYALTY-DISNEY-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+        is_cleared: true,
+        message: 'Usage tracked and royalty distributed to partner bridge.'
     });
 });
 

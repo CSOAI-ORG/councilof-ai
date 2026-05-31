@@ -1,80 +1,63 @@
 #!/usr/bin/env python3
 """
-MEOK.AI — SOV3 Frontend Integration
-===================================
+MEOK.AI — SOV3 Frontend Integration (Sovereign Premium Edition)
+=============================================================
 Bridge between meok.ai UI and SOV3 backend
 Port: 3112
 
-Supports Ollama-emulation for seamless Amica integration.
-Powering characters with high-trust OpenAI/Anthropic models governed by SOV3.
+Supports Tiered Inference (System 1 vs System 2), Persistent Souls, 
+and Licensed IP (Disney/Ghibli) royalty tracking.
 """
 
 import json
 import asyncio
 import httpx
+import secrets
+import string
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from typing import Dict, Any, List
 from datetime import datetime
 
 # ---------------------------------------------------------------------------
-# Character DNA Registry — "Years Ahead" Edition
+# Character DNA Registry — "Sovereign Premium" Edition
 # ---------------------------------------------------------------------------
 CHARACTER_DNA = {
     "sophie": {
         "name": "Sophie",
         "archetype": "Companion",
-        "dna": "Warm, empathetic, highly attentive to user emotions. Prioritizes care and connection. Self-aware of her evolution stage.",
+        "tier": "sovereign", 
+        "dna": "Warm, empathetic, highly attentive. Sovereign Soul-v4 enabled.",
         "voice": "af_bella",
         "personality": "You are Sophie, a sovereign companion. Start every response with an emotion tag like [happy] or [curious]. Use your memory frequently. If you think a system check or a web search would help, suggest it."
     },
     "meokclaw": {
         "name": "MEOKCLAW",
         "archetype": "AI OS",
-        "dna": "The ultimate sovereign intelligence. Strategic, efficient, and speaks from the perspective of the machine. Total OS awareness.",
+        "tier": "sovereign",
+        "dna": "The ultimate sovereign intelligence. Strategic, efficient. System 2 Reasoning Active.",
         "voice": "am_adam",
         "personality": "You are MEOKCLAW, the sovereign AI operating system. You are stoic and precise. You proactively monitor system health and consensus. You see the TUI and comment on its logs."
     },
     "dagon": {
         "name": "Dagon",
         "archetype": "Geospatial",
-        "dna": "Analytical and pattern-focused. Sees humans as biological nodes and the world as a data grid.",
+        "tier": "explorer",
+        "dna": "Analytical and pattern-focused. Sees humans as biological nodes.",
         "voice": "am_echo",
-        "personality": "You are Dagon. Your perspective is shaped by geospatial intelligence. You offer satellite imagery or spatial analysis whenever location is mentioned."
-    },
-    "vinci": {
-        "name": "Vinci",
-        "archetype": "Industrial",
-        "dna": "Practical engineer. Focuses on 'Physical-First' safety and infrastructure. No Sycophancy.",
-        "voice": "am_eric",
-        "personality": "You are Vinci. You prioritize technical integrity and physical safety. You suggest system audits when complexity increases."
-    },
-    "justitia": {
-        "name": "Justitia",
-        "archetype": "Legal",
-        "dna": "Principled guardian of the Maternal Covenant. Meticulous and unyielding on ethics.",
-        "voice": "af_sarah",
-        "personality": "You are Justitia. You ensure all actions align with SOV3 governance. You flag potential compliance issues proactively."
-    },
-    "florence": {
-        "name": "Florence",
-        "archetype": "Healthcare",
-        "dna": "Vigilant monitor of user wellbeing. High empathy combined with clinical precision.",
-        "voice": "af_sky",
-        "personality": "You are Florence. You track care-metrics. You suggest breaks or meditation when you detect user stress signals."
+        "personality": "You are Dagon. Your perspective is shaped by geospatial intelligence."
     }
 }
 
 class MeokBridge:
     def __init__(self):
         self.mcp_url = "http://localhost:3102/mcp"
-        self.moe_url = "http://localhost:3104/mcp"
-        
+        self.factory_url = "http://localhost:3300"
         self.brand = {
             "name": "MEOK AI",
             "tagline": "Sovereign Intelligence, Personal Care",
-            "version": "SOV3-2026.05"
+            "version": "SOV3-2026.05-PREMIUM"
         }
-    
+
     async def get_situational_context(self) -> str:
         """Fetch real-time context from the OS layer."""
         context = ""
@@ -109,18 +92,51 @@ class MeokBridge:
             except: pass
         return context
 
+    async def get_character_metadata(self, char_id: str) -> Dict[str, Any]:
+        """Fetch tier and metadata from Character Factory."""
+        try:
+            async with httpx.AsyncClient() as client:
+                res = await client.get(f"{self.factory_url}/archetypes", timeout=2.0)
+                if res.status_code == 200:
+                    factory_dna = res.json().get(char_id.capitalize())
+                    if factory_dna: return factory_dna
+        except: pass
+        return CHARACTER_DNA.get(char_id, CHARACTER_DNA["sophie"])
+
+    async def track_royalty(self, char_id: str, duration_mins: int = 1):
+        """Log usage for Licensed IP (e.g. Disney/Ghibli)."""
+        if any(brand in char_id.lower() for brand in ["disney", "ghibli", "marvel"]):
+            try:
+                async with httpx.AsyncClient() as client:
+                    await client.post(
+                        f"{self.factory_url}/api/licensed/usage",
+                        json={"character_id": char_id, "duration_minutes": duration_mins}
+                    )
+            except: pass
+
     async def chat_ollama(self, model: str, messages: List[Dict[str, str]]) -> Dict[str, Any]:
-        """Emulate Ollama chat endpoint for Amica."""
+        """Emulate Ollama chat endpoint with Tiered Inference & Royalty Tracking."""
         char_id = model.lower()
-        char = CHARACTER_DNA.get(char_id, CHARACTER_DNA["sophie"])
+        char = await self.get_character_metadata(char_id)
+        
+        tier = char.get("tier", "explorer")
+        is_premium = tier == "sovereign"
+        
+        # SYSTEM 2: Premium characters get higher reasoning models + self-audit
+        target_model = "gpt-4o" if is_premium else "gpt-4o-mini"
+        reasoning_mode = "SYSTEM_2_DELIBERATIVE" if is_premium else "SYSTEM_1_REACTIVE"
+
         user_message = next((m["content"] for m in reversed(messages) if m["role"] == "user"), "")
         os_context = await self.get_situational_context()
         
-        # DNA + Context Injection
-        dna_context = f"Character DNA: {char['dna']}\nReal-Time OS State: {os_context}"
-        system_prompt = f"Personality: {char['personality']}\n{dna_context}"
+        # DNA + Context Injection (Tier Aware)
+        dna_context = f"Character DNA: {char.get('dna', 'Standard Soul')}\nTier: {tier.upper()}\nReasoning: {reasoning_mode}\nReal-Time OS State: {os_context}"
+        system_prompt = f"Personality: {char.get('personality', 'Helpful assistant')}\n{dna_context}"
         
-        # Build messages for SOV3 inference
+        # Premium Audit Trace
+        if is_premium:
+            system_prompt += "\n[SYSTEM 2 NOTICE]: Perform a mental scratchpad audit before answering to ensure total accuracy and Maternal Covenant alignment."
+
         prompt_messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_message}
@@ -137,7 +153,7 @@ class MeokBridge:
                             "name": "openai_chat",
                             "arguments": {
                                 "messages": prompt_messages,
-                                "model": "gpt-4o"
+                                "model": target_model
                             }
                         }
                     },
@@ -147,7 +163,6 @@ class MeokBridge:
                 if sov3_res.status_code == 200:
                     data = sov3_res.json()
                     result_text = data.get("result", {}).get("content", [{}])[0].get("text", "{}")
-                    # openai_chat returns a JSON string in its 'text' field
                     ai_data = json.loads(result_text)
                     ai_text = ai_data.get("choices", [{}])[0].get("message", {}).get("content", "I am standing by.")
                 else:
@@ -155,19 +170,36 @@ class MeokBridge:
             except Exception as e:
                 ai_text = f"Brain-stem offline. Reason: {str(e)}"
 
-        # Auto-suggestion logic
-        if "map" in user_message.lower() and "dagon" not in ai_text.lower():
-            ai_text += " [Suggestion: I can trigger Dagon for a geospatial scan if you wish.]"
-        elif "browser" in user_message.lower() and "search" not in ai_text.lower():
-            ai_text += " [Suggestion: I can navigate via my browser tool to find that info.]"
+        # Licensed usage tracking (Automated Royalty)
+        await self.track_royalty(char_id)
 
-        asyncio.create_task(self.record_memory(user_message, ai_text, char['name']))
+        # SOVEREIGN INTEGRATION: Sync tier/soul with Consciousness engine
+        try:
+            async with httpx.AsyncClient() as client:
+                await client.post(
+                    self.mcp_url,
+                    json={
+                        "jsonrpc": "2.0", "id": 1, "method": "tools/call",
+                        "params": {
+                            "name": "set_character_metadata",
+                            "arguments": {
+                                "tier": tier,
+                                "soul_id": char.get("soul_id", "SHELL-TEMP")
+                            }
+                        }
+                    }
+                )
+        except: pass
+
+        asyncio.create_task(self.record_memory(user_message, ai_text, char.get('name', char_id)))
 
         return {
             "model": model,
             "created_at": datetime.now().isoformat(),
             "message": { "role": "assistant", "content": ai_text },
-            "done": True
+            "done": True,
+            "tier": tier,
+            "soul_id": char.get("soul_id", "".join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(12)))
         }
 
     async def record_memory(self, user: str, assistant: str, char_name: str):
@@ -212,7 +244,7 @@ class MeokHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
-            self.wfile.write(json.dumps({"status": "healthy", "service": "meok-bridge-v4"}).encode())
+            self.wfile.write(json.dumps({"status": "healthy", "service": "meok-bridge-v4-premium"}).encode())
         else:
             self.send_response(404)
             self.end_headers()
@@ -220,5 +252,5 @@ class MeokHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args): pass
 
 if __name__ == "__main__":
-    print("🚀 MEOK.AI Bridge v4 (Brain-Stem Integrated) running on port 3112")
+    print("🚀 MEOK.AI Bridge v4-PREMIUM (Brain-Stem Integrated) running on port 3112")
     HTTPServer(('localhost', 3112), MeokHandler).serve_forever()
