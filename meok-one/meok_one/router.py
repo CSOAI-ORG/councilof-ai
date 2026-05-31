@@ -39,6 +39,9 @@ MODELS = {
     "qwen3:8b":   ("local", "qwen3:8b"),
     "qwen3:4b":   ("local", "qwen3:4b"),
     "qwen3:0.6b": ("local", "qwen3:0.6b"),
+    "qwen2.5:3b": ("local", "qwen2.5:3b"),   # stronger local (on the VM)
+    "llama3.2:3b":("local", "llama3.2:3b"),
+    "meok-sov3":  ("local", "meok-sov3"),    # OUR SOV3 care model on the VM (the 'talk to one')
     # sov3 tools
     "hermes":     ("sov3", "hermes_ask"),
     "nemotron":   ("sov3", "nemotron_chat"),
