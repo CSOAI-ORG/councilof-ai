@@ -5,9 +5,13 @@ levels." Honest reframe: I can't deliver "year 2100" — that's not a real deliv
 CAN deliver is the **highest-value focused push** toward the July-4 launch, build-only,
 budget-capped, verifying every claim. This doc is the contract I hold myself to while you sleep._
 
+## Nick's locked decisions (2026-05-31, before sleep)
+- **Spend cap: $10 total** (paid OpenRouter, overnight, ON TOP of the ~$2.26 suite already running). Hard stop, log skips.
+- **Focus: ALL phases** (B wire-winner, C tools-as-actions, D IP-pack, E funding, F 3-window UI) — in plan order, value-first.
+
 ## Hard guardrails (I will NOT cross these unattended)
 - **Branch:** work ONLY on `claude/meok-one`. NEVER commit to `main`. NEVER `git add -A`. NEVER force-push. (COORDINATION rules.)
-- **Money:** hard cap on paid API spend = **[SET BY NICK]**. Stop at the cap, log what was skipped.
+- **Money:** hard cap on paid API spend = **$10 total** overnight. Stop at the cap, log what was skipped.
 - **No irreversible / public actions:** no public deploys, no DNS, no Stripe changes, no emails/posts, no new domains, no deleting. Build + commit + push my own branch only.
 - **No identity spoofing:** commit as `Claude (Opus 4.8)` only. Won't touch other agents' folders.
 - **Honesty:** verify with real output before writing "done." Save incrementally. If the bash channel stalls (it has ~6× today), I log state and resume, never fabricate a result.
