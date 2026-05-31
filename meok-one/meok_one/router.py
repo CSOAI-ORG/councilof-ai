@@ -26,6 +26,17 @@ import re
 import urllib.request
 import urllib.error
 
+# Load gitignored .env.local FIRST so MEOK_VM_LLM/GOOGLE_API_KEY are in env before we read them.
+def _load_env_local():
+    """Load meok-one/.env.local (gitignored) so GOOGLE_API_KEY etc. are available."""
+    p = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env.local")
+    if os.path.exists(p):
+        for line in open(p):
+            if "=" in line and not line.strip().startswith("#"):
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip())
+_load_env_local()
+
 # Ollama: prefer the GCP VM (off the M4) when configured, else local. Cloud brain, M4 idle.
 _VM = os.environ.get("MEOK_VM_LLM", "").rstrip("/")
 OLLAMA = _VM or os.environ.get("OLLAMA_URL", "http://localhost:11434")
@@ -140,15 +151,6 @@ def _ask_sov3(tool: str, prompt: str) -> "str | None":
     return None
 
 
-def _load_env_local():
-    """Load meok-one/.env.local (gitignored) so GOOGLE_API_KEY etc. are available."""
-    p = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env.local")
-    if os.path.exists(p):
-        for line in open(p):
-            if "=" in line and not line.strip().startswith("#"):
-                k, v = line.split("=", 1)
-                os.environ.setdefault(k.strip(), v.strip())
-_load_env_local()
 
 
 def _ask_gemini(model_id: str, prompt: str) -> "tuple":
