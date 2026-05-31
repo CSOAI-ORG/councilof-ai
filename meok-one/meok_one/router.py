@@ -88,10 +88,23 @@ def list_models(tier: str = "pro") -> list:
 
 def _ask_local(model_id: str, prompt: str) -> "str | None":
     body = json.dumps({"model": model_id, "prompt": prompt, "stream": False}).encode()
-    hdrs = {"Content-Type": "application/json"}
-    if _VM_KEY and OLLAMA.startswith("https"):
-        hdrs["X-MEOK-Key"] = _VM_KEY   # GCP VM proxy requires the key header
-    req = urllib.request.Request(f"{OLLAMA}/api/generate", data=body, headers=hdrs)
+    # The GCP VM is HTTPS+key. macOS Python 3.9 ships LibreSSL which fails Caddy's TLS
+    # handshake (curl/system-TLS works fine), so route the VM call through curl. Local
+    # http://localhost Ollama uses urllib as normal.
+    if OLLAMA.startswith("https"):
+        import subprocess
+        cmd = ["curl", "-sS", "--max-time", "120", f"{OLLAMA}/api/generate",
+               "-H", "Content-Type: application/json"]
+        if _VM_KEY:
+            cmd += ["-H", f"X-MEOK-Key: {_VM_KEY}"]
+        cmd += ["-d", body.decode()]
+        try:
+            out = subprocess.run(cmd, capture_output=True, timeout=130).stdout.decode()
+            return json.loads(out).get("response")
+        except (subprocess.SubprocessError, json.JSONDecodeError, OSError):
+            return None
+    req = urllib.request.Request(f"{OLLAMA}/api/generate", data=body,
+                                 headers={"Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=60) as r:
             return json.loads(r.read().decode()).get("response")
