@@ -1,0 +1,76 @@
+{
+  "_doc": "MEOK Sovereign — mapping each of the 12 council nodes to the tools/MCPs it wields. The companion node (warm voice) gets memory+care tools; each of the 11 expert lenses gets the SOV3 inner tools + published MCP packages relevant to its viewpoint. This is the 'spread the ~300 tools across the 12' design Nick asked for: a node doesn't just hold an opinion, it can ACT through its specialist toolset. SOV3 tools are live on the VM (:3101, 106 verified). MCP packages are standalone published products (~317).",
+  "_generated": "2026-05-31 by Claude (Opus 4.8); SOV3 tools verified from sovereign-mcp-server.py, MCP pkgs from revenue/CANONICAL_PACKAGE_NAMES_2026-05-29.md",
+  "companion": {
+    "role": "the warm in-character voice (drafts + synthesizes)",
+    "sov3_tools": ["record_memory", "query_memories", "list_memories", "get_unified_context",
+                   "recognize_emotions", "analyze_sentiment", "get_engagement_score",
+                   "predict_relationship_evolution"],
+    "mcp_packages": []
+  },
+  "lenses": {
+    "security_sentinel": {
+      "focus": "security / attack-surface / Byzantine hardening",
+      "sov3_tools": ["detect_threats", "trigger_security_hardening", "get_active_alerts",
+                     "guardian_scan_network", "guardian_check_wifi_security"],
+      "mcp_packages": ["meok-prompt-injection-firewall", "meok-mcp-injection-scan-mcp",
+                       "meok-policy-enforcement"]
+    },
+    "compliance_oracle": {
+      "focus": "EU AI Act / GDPR / NIS2 / DORA / regulatory",
+      "sov3_tools": ["validate_care", "get_audit_logs", "submit_council_proposal"],
+      "mcp_packages": ["meok-eu-ai-act", "meok-dora", "meok-nis2", "meok-nis2-de-register",
+                       "meok-iso-42001", "meok-cra", "meok-nist-ai-rmf",
+                       "meok-ai-incident-reporting"]
+    },
+    "antifragile_architect": {
+      "focus": "stress-tolerance / chaos / convexity",
+      "sov3_tools": ["run_quantum_batch", "trigger_maintenance", "get_system_status",
+                     "get_maintenance_status", "suggest_exploration"],
+      "mcp_packages": []
+    },
+    "contrarian_devil": {
+      "focus": "devil's advocate / groupthink detection",
+      "sov3_tools": ["find_bisociations", "get_meta_observations", "vote_on_proposal"],
+      "mcp_packages": []
+    },
+    "code_slimmer": {
+      "focus": "concision / cut the generic / maintainability",
+      "sov3_tools": ["execute_with_claw_code", "riri_build_tool", "kimi_review_code"],
+      "mcp_packages": []
+    },
+    "temporal_arbitrageur": {
+      "focus": "cost / latency / cheapest-correct-path",
+      "sov3_tools": ["get_dashboard_metrics", "hourman_get_status", "get_qd_archive_stats"],
+      "mcp_packages": []
+    },
+    "convergence_spotter": {
+      "focus": "intent-match / anti-sycophancy",
+      "sov3_tools": ["detect_intent", "get_unified_context", "get_temporal_chain",
+                     "apply_resonance", "get_resonance_profile"],
+      "mcp_packages": []
+    },
+    "care_governor": {
+      "focus": "distress / emotional safety / care floor (GAP 6)",
+      "sov3_tools": ["analyze_care_patterns", "nemotron_analyze_care", "nemotron_care_response",
+                     "validate_care", "recognize_emotions", "guardian_moderate_chat",
+                     "guardian_check_game_content"],
+      "mcp_packages": ["meok-bias-detection"]
+    },
+    "billing_anomaly_detector": {
+      "focus": "fraud / money-extraction / cost anomaly",
+      "sov3_tools": ["get_audit_logs", "get_dashboard_metrics"],
+      "mcp_packages": []
+    },
+    "prompt_injection_guard": {
+      "focus": "instruction-hijack / adversarial input",
+      "sov3_tools": ["detect_threats", "guardian_moderate_chat"],
+      "mcp_packages": ["meok-prompt-injection-firewall", "meok-mcp-injection-scan-mcp"]
+    },
+    "hallucination_spotter": {
+      "focus": "factuality / unverified claims",
+      "sov3_tools": ["hermes_research", "query_memories", "k25_analyze_image"],
+      "mcp_packages": ["meok-watermark-attest", "meok-attestation-verify"]
+    }
+  }
+}
