@@ -199,9 +199,14 @@ def _eigen_agreement(reviews: list) -> "float | None":
 
 def sovereign_council(character_id: str, message: str, tier: str = "free",
                       user_id: str = "anon", quorum: int = 12,
-                      max_workers: int = 4) -> dict:
+                      max_workers: int = 4, roster: "list | None" = None) -> dict:
     """The BFT-of-MoEs deliberation. 1 companion draft + (quorum-1) expert lenses
     (each a real model through a specialist viewpoint) + Sovereign synthesis.
+
+    roster: optional explicit list of model aliases (len >= quorum). roster[0] is the
+    companion; roster[1:] are assigned to the expert lenses. This is what lets the
+    BFT lab swap in frontier models (big-around-small, small-around-big, etc.). When
+    None, models are auto-selected from the tier (round-robin local/cloud).
 
     Returns: {character, reply, safe, council:{draft, reviews[], vetoes[], ...}}
     """
@@ -211,7 +216,10 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
     lenses = _load_lenses()
     n_experts = max(0, min(quorum - 1, len(lenses)))  # 1 seat is the companion
     lenses = lenses[:n_experts]
-    models = _council_models(tier, n_experts + 1)
+    if roster and len(roster) >= n_experts + 1:
+        models = list(roster[:n_experts + 1])
+    else:
+        models = _council_models(tier, n_experts + 1)
 
     # --- Node 0: the COMPANION drafts the warm reply (the voice the user hears) ---
     draft_out = ask(_companion_prompt(env, message), model=models[0], tier=tier)
