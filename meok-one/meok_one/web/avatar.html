@@ -125,6 +125,40 @@
   .vitals .vbond{ color:var(--accent2); font-weight:700; }
   .bondpop{ animation:bondpop .5s var(--ease); }
   @keyframes bondpop{ 0%{transform:scale(1)} 40%{transform:scale(1.18)} 100%{transform:scale(1)} }
+
+  /* ── SETTINGS / MODES (progressive disclosure: Simple ↔ Pro ↔ Council ↔ Orb) ── */
+  .gear{ position:absolute; top:40px; right:12px; z-index:6; width:30px; height:30px; border-radius:50%;
+    background:rgba(0,0,0,.45); border:1px solid var(--line); color:var(--dim); font-size:.95rem;
+    cursor:pointer; backdrop-filter:blur(6px); }
+  .gear:hover{ color:#fff; border-color:var(--accent2); }
+  .settings{ position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
+    background:rgba(5,4,10,.6); backdrop-filter:blur(4px); }
+  .settings.open{ display:flex; }
+  .scard{ width:min(92vw,420px); max-height:86vh; overflow-y:auto; background:var(--panel); border:1px solid var(--line);
+    border-radius:18px; padding:1.1rem 1.2rem; box-shadow:0 20px 60px rgba(0,0,0,.6); }
+  .scard h3{ font-size:1.05rem; font-weight:800; margin-bottom:.2rem; }
+  .scard .sub{ font-size:.72rem; color:var(--dim); margin-bottom:.9rem; }
+  .sgroup{ margin:.9rem 0; }
+  .sgroup label{ display:block; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); margin-bottom:.4rem; }
+  .modegrid{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+  .modebtn{ background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:.6rem .7rem;
+    cursor:pointer; text-align:left; transition:.15s var(--ease); }
+  .modebtn.on{ border-color:var(--accent2); background:linear-gradient(135deg,rgba(124,58,237,.4),rgba(168,85,247,.4)); }
+  .modebtn b{ display:block; font-size:.85rem; color:#fff; }
+  .modebtn span{ font-size:.66rem; color:var(--dim); }
+  .srow{ display:flex; gap:.5rem; flex-wrap:wrap; }
+  .schip{ background:var(--panel2); border:1px solid var(--line); border-radius:99px; padding:.35rem .7rem;
+    font-size:.72rem; color:var(--dim); cursor:pointer; }
+  .schip.on{ color:#fff; border-color:var(--accent2); background:var(--panel); }
+  .sclose{ width:100%; margin-top:1rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff;
+    border:none; border-radius:12px; padding:.7rem; font-weight:700; cursor:pointer; }
+  /* TUI window (pro/council modes) */
+  .tuiwin{ display:none; position:absolute; bottom:46px; left:12px; right:12px; max-height:34%; overflow-y:auto;
+    background:rgba(5,8,6,.88); border:1px solid #1c3a2a; border-radius:10px; padding:.5rem .6rem;
+    font-family:ui-monospace,Menlo,monospace; font-size:.62rem; color:#5fe39a; z-index:5; }
+  body.mode-pro .tuiwin, body.mode-council .tuiwin{ display:block; }
+  body.mode-simple .vitals, body.mode-simple .picker{ opacity:.0; pointer-events:none; }  /* simple = just character+chat */
+  body.mode-simple .picker{ opacity:1; pointer-events:auto; }  /* keep picker even in simple */
 </style>
 </head>
 <body>
@@ -149,7 +183,9 @@
       <div class="bondwrap"><div class="bondbar" id="vBondBar"></div></div>
     </div>
     <div class="voicetgl" id="voicetgl">🔊 voice on</div>
+    <button class="gear" id="gear" title="settings & modes">⚙</button>
     <a class="twoD" href="/">2D ›</a>
+    <div class="tuiwin" id="tuiwin">MEOK TUI · idle</div>
     <div class="bubble" id="bubble"></div>
     <div class="nameplate"><h2 id="cname">…</h2><div class="tag" id="ctag"></div></div>
     <div class="loading" id="loading"><div class="egg">🥚</div><div id="loadtxt">summoning your sovereign…</div></div>
@@ -169,6 +205,40 @@
       <input id="msgInput" placeholder="talk to your sovereign…" autocomplete="off">
       <button id="sendBtn">↑</button>
     </div>
+  </div>
+</div>
+
+<!-- SETTINGS & MODES — progressive disclosure (Simple ↔ Pro ↔ Council ↔ Orb) -->
+<div class="settings" id="settings">
+  <div class="scard">
+    <h3>⚙ MEOK ONE — Settings</h3>
+    <div class="sub">Same sovereign underneath. Choose how much you want to see.</div>
+    <div class="sgroup">
+      <label>Mode</label>
+      <div class="modegrid" id="modeGrid">
+        <button class="modebtn" data-mode="simple"><b>Simple</b><span>just your character + chat</span></button>
+        <button class="modebtn" data-mode="pro"><b>Pro</b><span>+ TUI window + controls</span></button>
+        <button class="modebtn" data-mode="council"><b>Council</b><span>watch the AI team work</span></button>
+        <button class="modebtn" data-mode="orb"><b>Orb</b><span>minimise to a circle</span></button>
+      </div>
+    </div>
+    <div class="sgroup">
+      <label>Brain (how it thinks)</label>
+      <div class="srow" id="brainRow">
+        <button class="schip" data-brain="left">🔒 Private</button>
+        <button class="schip" data-brain="right">⚡ Powerful</button>
+        <button class="schip" data-brain="both">⚖️ Both</button>
+      </div>
+    </div>
+    <div class="sgroup">
+      <label>Theme</label>
+      <div class="srow" id="themeRow">
+        <button class="schip" data-theme="violet">Violet</button>
+        <button class="schip" data-theme="teal">Teal</button>
+        <button class="schip" data-theme="amber">Amber</button>
+      </div>
+    </div>
+    <button class="sclose" id="sClose">Done</button>
   </div>
 </div>
 
@@ -533,8 +603,62 @@ async function runHatch(){
   nameIn.addEventListener("keydown", e=>{ if(e.key==="Enter") enter(); });
 }
 
+// ---- SETTINGS & MODES (progressive disclosure; persisted) ----
+const PREFS_KEY = "meok_prefs_v1";
+function loadPrefs(){ try{ return JSON.parse(localStorage.getItem(PREFS_KEY)) || {}; }catch(e){ return {}; } }
+function savePrefs(p){ localStorage.setItem(PREFS_KEY, JSON.stringify(p)); }
+const THEMES = {
+  violet: { a:"#7C3AED", a2:"#a855f7" }, teal: { a:"#0d9488", a2:"#2dd4bf" }, amber: { a:"#d97706", a2:"#fbbf24" },
+};
+function applyTheme(name){
+  const t = THEMES[name] || THEMES.violet;
+  document.documentElement.style.setProperty("--accent", t.a);
+  document.documentElement.style.setProperty("--accent2", t.a2);
+  document.querySelectorAll("#themeRow .schip").forEach(c=>c.classList.toggle("on", c.dataset.theme===name));
+}
+function applyMode(mode){
+  document.body.classList.remove("mode-simple","mode-pro","mode-council","mode-orb");
+  document.body.classList.add("mode-"+mode);
+  document.querySelectorAll("#modeGrid .modebtn").forEach(b=>b.classList.toggle("on", b.dataset.mode===mode));
+  // orb mode = minimise the whole app to a small floating character circle (Nick's spec)
+  const app = document.querySelector(".app");
+  if(mode==="orb"){
+    app.style.cssText = "position:fixed;bottom:18px;right:18px;width:96px;height:96px;max-width:96px;border-radius:50%;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.6);cursor:pointer;z-index:80";
+    app.onclick = ()=>{ applyMode(loadPrefs().mode==="orb" ? "simple" : "simple"); setMode("calm"); };
+  } else {
+    app.style.cssText = ""; app.onclick = null;
+  }
+  if(mode==="council"){ $("#tuiwin").textContent = "MEOK COUNCIL · left + right brains deliberating → SOV3 reconciles"; }
+}
+function applyBrainPref(b){
+  brain = b;
+  const map = {left:0,right:1,both:2};
+  document.querySelectorAll("#brainToggle button").forEach(x=>x.classList.remove("on"));
+  const btn = document.querySelector(`#brainToggle button[data-brain="${b}"]`); if(btn) btn.classList.add("on");
+  $("#glider").style.transform = `translateX(${(map[b]||0)*100}%)`;
+  document.querySelectorAll("#brainRow .schip").forEach(c=>c.classList.toggle("on", c.dataset.brain===b));
+}
+function openSettings(){ $("#settings").classList.add("open"); }
+function closeSettings(){ $("#settings").classList.remove("open"); }
+$("#gear").onclick = openSettings;
+$("#sClose").onclick = closeSettings;
+$("#settings").onclick = e => { if(e.target.id==="settings") closeSettings(); };
+$("#modeGrid").onclick = e => { const b=e.target.closest(".modebtn"); if(!b)return;
+  const p=loadPrefs(); p.mode=b.dataset.mode; savePrefs(p); applyMode(p.mode); };
+$("#brainRow").onclick = e => { const c=e.target.closest(".schip"); if(!c)return;
+  const p=loadPrefs(); p.brain=c.dataset.brain; savePrefs(p); applyBrainPref(p.brain); };
+$("#themeRow").onclick = e => { const c=e.target.closest(".schip"); if(!c)return;
+  const p=loadPrefs(); p.theme=c.dataset.theme; savePrefs(p); applyTheme(p.theme); };
+function initPrefs(){
+  const p = loadPrefs();
+  applyMode(p.mode || "simple");      // simple by default — grandma-friendly
+  applyBrainPref(p.brain || "left");
+  applyTheme(p.theme || "violet");
+}
+
 // ---- boot ----
 (async function(){
+  initPrefs();
   await loadCharacters();
   const saved = localStorage.getItem(HATCH_KEY);
   if(saved){
