@@ -17,6 +17,7 @@ Legend: 🟢 built+real · 🟡 partial/started · 🔵 name/concept only · ⭐
 | **MEOK MCP** | The connective tissue — 264 PyPI MCPs + gateway that exposes every tool | `meok-api-gateway/`, `mcp-marketplace/`, `mcp-bridge/`, 264 published | 🟢⭐ |
 | **MEOK SIGIL** | Wire format — 2.4× denser than JSON, HMAC-signed (agent comms) | `meok-sigil/` | 🟢 |
 | **MEOK SYNC** *(new, spec'd)* | The A2A bus — agents talk over SYNC, SIGIL-encoded, COUNCIL-gated | `MEOK_BRIDGE_SPEC.md` + a2a/agentfacts/orchestrator MCPs | 🟡 |
+| **MEOK BRIDGE** *(19th — BUILT 2026-05-31)* | The router: left+right brains each draw from BOTH local AND api; SOV3 centre reconciles; every hop logged as a SIGIL line (inner-comms). Right-brain Vertex/Gemini connector = the £742 credit engine. | `meok-one/meok_one/bridge.py` (runs, SIGIL trail verified) + `vertex.py` | 🟢 |
 | **MEOK MESH** | libp2p peer mesh (decentralised transport) | `meok-mesh/` | 🟡 |
 | **MEOK EI3** | The safety substrate — care/ethics layer over everything | `csoai-org/`, `safetyof-ai/`, EI3 manifest | 🟢 |
 
