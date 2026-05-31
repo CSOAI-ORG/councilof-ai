@@ -17,15 +17,12 @@ I wrote `meok_gcp_bootstrap.sh` which does ALL the server setup for you once you
 5. Make sure **billing is linked**: ☰ menu → Billing → confirm the project shows a billing account.
 
 ## PART B — Install gcloud CLI (Terminal, ~5 min) — YOU run, then I take over
-Your Mac has no `brew` and no `gcloud`. Use Google's official installer (no brew needed):
+You HAVE Homebrew (`/opt/homebrew/bin/brew`), so this is one line:
 ```bash
-cd ~ && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-darwin-arm.tar.gz
-tar -xzf google-cloud-cli-darwin-arm.tar.gz
-./google-cloud-sdk/install.sh --quiet
-# reload shell so `gcloud` is on PATH:
-exec -l $SHELL
+brew install --cask gcloud-cli
 gcloud init     # opens browser → pick your Google account → pick the `meok` project
 ```
+(If `gcloud-cli` cask isn't found, use `brew install --cask google-cloud-sdk`.)
 When `gcloud init` finishes, run:
 ```bash
 gcloud config get-value project    # should print your project id
