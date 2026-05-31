@@ -65,9 +65,10 @@ _PROFILES = {
 # preferred concrete model per (side, backend) — BRIDGE's routing table
 _PICK = {
     ("left", "local"):  "qwen3:0.6b",      # bench winner — private, fast, free
-    ("left", "cloud"):  "deepseek-chat",   # cheap MoE when local isn't enough
+    ("left", "cloud"):  "gemini-lite",     # cheap fast Gemini (flash-lite) when local isn't enough
     ("right", "local"): "qwen3:4b",        # bigger local when offline
-    ("right", "cloud"): os.environ.get("MEOK_RIGHT_MODEL", "gpt-4o"),  # frontier (Vertex Gemini once wired)
+    # right brain = frontier on Nick's credit. Default to the VERIFIED-working Gemini model.
+    ("right", "cloud"): os.environ.get("MEOK_RIGHT_MODEL", "gemini"),  # → gemini-flash-latest
 }
 
 
