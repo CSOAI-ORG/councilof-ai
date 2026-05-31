@@ -44,6 +44,11 @@ MODELS = {
     "claude":         ("cloud", "anthropic/claude-3.5-sonnet"),
     "gemini-2.5-pro": ("cloud", "google/gemini-2.5-pro"),
     "deepseek-r1":    ("cloud", "deepseek/deepseek-r1"),
+    # direct Gemini (AI Studio key) — the right-brain engine on Nick's credit (verified free quota)
+    "gemini":         ("cloud", "gemini-flash-latest"),
+    "gemini-flash":   ("cloud", "gemini-flash-latest"),
+    "gemini-lite":    ("cloud", "gemini-flash-lite-latest"),
+    "gemma":          ("cloud", "gemma-4-31b-it"),
 }
 
 # Which backends a billing tier may use. Local tier = local only (free, self-host).
@@ -114,13 +119,55 @@ def _ask_sov3(tool: str, prompt: str) -> "str | None":
     return None
 
 
+def _load_env_local():
+    """Load meok-one/.env.local (gitignored) so GOOGLE_API_KEY etc. are available."""
+    p = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env.local")
+    if os.path.exists(p):
+        for line in open(p):
+            if "=" in line and not line.strip().startswith("#"):
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip())
+_load_env_local()
+
+
+def _ask_gemini(model_id: str, prompt: str) -> "tuple":
+    """Direct Google Gemini (AI Studio key, AIza...). The right-brain engine on Nick's
+    £742/free-tier credit — no OpenRouter needed. Returns (reply, note)."""
+    key = os.environ.get("GOOGLE_API_KEY", "")
+    if not key.startswith("AIza"):
+        return None, "gemini not configured (set GOOGLE_API_KEY=AIza... in .env.local)"
+    # accept ids like 'google/gemini-flash-latest' or 'gemini-flash-latest'
+    m = model_id.split("/")[-1]
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={key}"
+    body = json.dumps({"contents": [{"parts": [{"text": prompt}]}]}).encode()
+    req = urllib.request.Request(url, data=body,
+                                 headers={"Content-Type": "application/json"}, method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            d = json.loads(r.read().decode())
+        return d["candidates"][0]["content"]["parts"][0]["text"], f"gemini:{m}"
+    except urllib.error.HTTPError as e:
+        return None, f"gemini {e.code}"
+    except Exception as e:
+        return None, f"gemini error: {type(e).__name__}"
+
+
 def _ask_cloud(model_id: str, prompt: str) -> "tuple":
-    """Cloud via OpenRouter (one key → all models). Returns (reply, note).
-    BYOK: needs OPENROUTER_API_KEY. If unset, returns an honest 'not configured'
-    rather than pretending. This is the governance-wrapper path, NOT token resale."""
+    """Cloud. Gemini direct (Google AI Studio key) takes priority when the model is a
+    Gemini/Gemma id or only GOOGLE_API_KEY is set; else OpenRouter (BYOK). Honest 'not
+    configured' rather than pretending. Governance-wrapper path, NOT token resale."""
+    mlow = model_id.lower()
+    if "gemini" in mlow or "gemma" in mlow or (os.environ.get("GOOGLE_API_KEY", "").startswith("AIza")
+                                               and not os.environ.get("OPENROUTER_API_KEY")):
+        reply, note = _ask_gemini(model_id, prompt)
+        if reply:
+            return reply, note
+        # if gemini failed AND no openrouter, return the gemini note honestly
+        if not os.environ.get("OPENROUTER_API_KEY"):
+            return None, note
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key:
-        return None, "cloud not configured (set OPENROUTER_API_KEY; BYOK on paid tiers)"
+        return None, "cloud not configured (set GOOGLE_API_KEY=AIza... or OPENROUTER_API_KEY)"
     body = json.dumps({"model": model_id,
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     req = urllib.request.Request("https://openrouter.ai/api/v1/chat/completions",
@@ -145,7 +192,11 @@ def ask(prompt: str, model: str = "auto", tier: str = "free") -> dict:
         order = []
         if "local" in allowed: order.append(("local", "qwen3:8b"))
         if "sov3" in allowed:  order.append(("sov3", "hermes_ask"))
-        if "cloud" in allowed: order.append(("cloud", "openai/gpt-4o"))
+        if "cloud" in allowed:
+            # prefer direct Gemini when its key is present (Nick's credit); else OpenRouter
+            order.append(("cloud", "gemini-flash-latest"
+                          if os.environ.get("GOOGLE_API_KEY", "").startswith("AIza")
+                          else "openai/gpt-4o"))
     else:
         if model not in MODELS:
             return {"reply": None, "model": model, "backend": None,
