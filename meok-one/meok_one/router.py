@@ -130,14 +130,31 @@ def _ask_sov3(tool: str, prompt: str) -> "str | None":
     args = {"prompt": prompt} if tool == "hermes_ask" else {"message": prompt, "system_prompt": ""}
     payload = {"jsonrpc": "2.0", "id": 1, "method": "tools/call",
                "params": {"name": tool, "arguments": args}}
-    req = urllib.request.Request(SOV3_MCP, method="POST", data=json.dumps(payload).encode(),
-                                 headers={"Content-Type": "application/json",
-                                          "Accept": "application/json, text/event-stream"})
-    try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            body = r.read().decode()
-    except (urllib.error.URLError, TimeoutError, OSError):
-        return None
+    data = json.dumps(payload).encode()
+    # The VM SOV3 is HTTPS+key behind Caddy. macOS Python 3.9 LibreSSL fails Caddy's TLS
+    # handshake (curl/system-TLS works), so route HTTPS SOV3 calls through curl, mirroring
+    # _ask_local. Local http://localhost SOV3 uses urllib as normal.
+    if SOV3_MCP.startswith("https"):
+        import subprocess
+        cmd = ["curl", "-sS", "--max-time", "120", SOV3_MCP,
+               "-H", "Content-Type: application/json",
+               "-H", "Accept: application/json, text/event-stream"]
+        if _VM_KEY:
+            cmd += ["-H", f"X-MEOK-Key: {_VM_KEY}"]
+        cmd += ["-d", data.decode()]
+        try:
+            body = subprocess.run(cmd, capture_output=True, timeout=130).stdout.decode()
+        except (subprocess.SubprocessError, OSError):
+            return None
+    else:
+        req = urllib.request.Request(SOV3_MCP, method="POST", data=data,
+                                     headers={"Content-Type": "application/json",
+                                              "Accept": "application/json, text/event-stream"})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                body = r.read().decode()
+        except (urllib.error.URLError, TimeoutError, OSError):
+            return None
     if "data:" in body:
         lines = [l[5:].strip() for l in body.splitlines() if l.startswith("data:")]
         body = lines[-1] if lines else body
