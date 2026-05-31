@@ -26,7 +26,10 @@ import re
 import urllib.request
 import urllib.error
 
-OLLAMA = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+# Ollama: prefer the GCP VM (off the M4) when configured, else local. Cloud brain, M4 idle.
+_VM = os.environ.get("MEOK_VM_LLM", "").rstrip("/")
+OLLAMA = _VM or os.environ.get("OLLAMA_URL", "http://localhost:11434")
+_VM_KEY = os.environ.get("MEOK_VM_KEY", "")
 SOV3_MCP = os.environ.get("SOV3_MCP", "http://localhost:3101/mcp")
 
 # model alias -> (backend, concrete-id). "auto" resolves per tier.
@@ -85,7 +88,9 @@ def list_models(tier: str = "pro") -> list:
 
 def _ask_local(model_id: str, prompt: str) -> "str | None":
     body = json.dumps({"model": model_id, "prompt": prompt, "stream": False}).encode()
-    req = urllib.request.Request(f"{OLLAMA}/api/generate", data=body,
+    hdrs={"Content-Type":"application/json"}
+    if _VM_KEY and OLLAMA.startswith("https"): hdrs["X-MEOK-Key"]=_VM_KEY
+    req = urllib.request.Request(f"{OLLAMA}/api/generate", data=body, headers=hdrs
                                  headers={"Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=60) as r:
