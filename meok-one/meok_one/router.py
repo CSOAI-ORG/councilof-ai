@@ -66,6 +66,22 @@ MODELS = {
     "gemini-flash":   ("cloud", "gemini-flash-latest"),
     "gemini-lite":    ("cloud", "gemini-flash-lite-latest"),
     "gemma":          ("cloud", "gemma-4-31b-it"),
+    # frontier via OpenRouter (the BFT-of-MoEs TEST ROSTER — large + small mix, one key).
+    # These let the council swap small local reviewers for top MoE models, and add
+    # Claude Opus 4.8 (this agent) + DeepSeek/Kimi/Step as real council nodes.
+    "deepseek":         ("cloud", "deepseek/deepseek-chat"),          # DeepSeek MoE (stable id)
+    "deepseek-v4":      ("cloud", "deepseek/deepseek-v4-pro"),        # V4-Pro (1.6T MoE) if live
+    "deepseek-v4-flash":("cloud", "deepseek/deepseek-v4-flash"),
+    "kimi":             ("cloud", "moonshotai/kimi-k2.6"),            # Kimi K2.6 MoE
+    "kimi-free":        ("cloud", "moonshotai/kimi-k2.6:free"),
+    "opus":             ("cloud", "anthropic/claude-opus-4.8"),       # Claude Opus 4.8 — ME, as a node
+    "opus-fast":        ("cloud", "anthropic/claude-opus-4.8-fast"),
+    "gemini-or":        ("cloud", "google/gemini-2.5-flash"),         # Gemini via OpenRouter (no 429)
+    "step":             ("cloud", "stepfun/step-3.5-flash"),          # StepFun Step-3.5 MoE
+    "step-3.7":         ("cloud", "stepfun/step-3.7-flash"),          # Step-3.7 vision MoE
+    "glm":              ("cloud", "z-ai/glm-4.5"),                    # Zhipu GLM
+    "qwen-max":         ("cloud", "qwen/qwen-2.5-72b-instruct"),      # big Qwen
+    "llama4":           ("cloud", "meta-llama/llama-4-maverick"),     # Llama 4 Maverick
 }
 
 # Which backends a billing tier may use. Local tier = local only (free, self-host).
