@@ -17,6 +17,10 @@ Key: meok-one/.meok_vm_key.txt (gitignored). Endpoint+key in meok-one/.env.local
 - ⚠️ Still SPOT — can be preempted (auto-restarts on `gcloud compute instances start`, IP now static).
   For launch, consider converting to a standard (non-preemptible) instance so it never drops.
 - gcloud now installed locally (~/google-cloud-sdk, account nicholastempleman@gmail.com, project meok-498012).
+- 2026-06-01 (pt 2) LIVE: glass-marble logo + glowing-golden-core glass egg (from the deck),
+  AND cross-device seamless login — passwordless anon-first + device-pairing (auth.py, stdlib
+  JWT, MEOK_JWT_SECRET set on the VM). Bond/memory keyed by user_id → follows you desktop↔mobile.
+  "🔗 Devices" panel in the OS. Verified live (anon→pair→claim = same account).
 
 ## ✅ WORKING + VERIFIED (real output)
 - Ollama on VM: qwen3:0.6b, qwen2.5:3b, llama3.2:3b, **meok-sov3** (our care model = qwen2.5:3b + SOV3 persona)
