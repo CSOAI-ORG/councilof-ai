@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>MEOK Verified MCP Registry — safety-tiered, attested tools</title>
+<link rel="icon" href="/icon.svg"/>
+<!-- F4: the Verified MCP Registry, packaged as a product. Live stats from /api/tools;
+     the safety-tier gateway + proofof.ai attestation are the moat, sold as a cert. -->
+<style>
+  :root{--accent:#7c5cff;--accent2:#38bdf8;--ok:#34d399;--warn:#ffb648;--ink:#f3f0ff;--dim:#9a9ab4;--bg:#05040c;--panel:#12121e;--line:#26263a}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#16122e,var(--bg));color:var(--ink);
+       font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:28px 18px 80px}
+  .wrap{max-width:760px;margin:0 auto}
+  h1{font-size:27px;margin:0 0 6px;background:linear-gradient(90deg,#fff,#c9b8ff 55%,#8fd6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--dim);margin:0 0 22px;font-size:15px}
+  h2{font-size:16px;margin:28px 0 10px;color:#fff}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:16px 0}
+  .stat{background:rgba(18,18,30,.7);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+  .stat .n{font-size:26px;font-weight:800;color:#fff}.stat .l{font-size:11px;color:var(--dim);margin-top:2px}
+  .tiers{display:grid;gap:10px;margin:14px 0}
+  .tier{display:flex;gap:12px;align-items:flex-start;background:rgba(18,18,30,.7);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .tier .ic{font-size:20px}.tier b{color:#fff}.tier .d{color:var(--dim);font-size:13px}
+  .tier.read{border-color:rgba(52,211,153,.4)}.tier.write{border-color:rgba(255,182,72,.4)}.tier.no{border-color:rgba(255,92,168,.4)}
+  .card{background:rgba(18,18,30,.7);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:14px 0}
+  .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:14px 0}
+  .plan{background:linear-gradient(160deg,#16122e,#0d0b1c);border:1px solid rgba(124,92,255,.35);border-radius:16px;padding:18px}
+  .plan h3{margin:0 0 4px;font-size:16px}.plan .price{font-size:24px;font-weight:800;color:#fff;margin:4px 0}
+  .plan ul{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--dim)}.plan li{margin:4px 0}
+  .cta{display:inline-block;margin-top:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:99px;padding:.7rem 1.4rem;font-weight:700;text-decoration:none;font-size:14px}
+  .pill{display:inline-flex;gap:6px;font-size:12px;border-radius:20px;padding:4px 11px;margin:3px 6px 3px 0;color:#c9b8ff;border:1px solid rgba(124,92,255,.4)}
+  a{color:var(--accent2)} .note{color:var(--dim);font-size:13px}
+  .foot{margin-top:34px;color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🛡️ MEOK Verified MCP Registry</h1>
+  <p class="sub">Every tool an AI can reach should be <b>safety-tiered and attested</b> — not a blind
+     trust fall. MEOK routes <span id="total">459</span> tools through one Sovereign gateway: read-only
+     runs free, writes need confirmation, dangerous actions are refused. Each verified MCP gets a
+     signed <a href="https://proofof.ai" target="_blank">proofof.ai</a> attestation.</p>
+
+  <div>
+    <span class="pill">🔐 3-tier safety classifier</span>
+    <span class="pill">✍️ signed attestations</span>
+    <span class="pill">🧩 works with any MCP</span>
+  </div>
+
+  <h2>Live in the gateway right now</h2>
+  <div class="stats" id="stats">
+    <div class="stat"><div class="n" id="s-total">…</div><div class="l">tools routed</div></div>
+    <div class="stat"><div class="n" id="s-read">…</div><div class="l">read · auto-approved</div></div>
+    <div class="stat"><div class="n" id="s-write">…</div><div class="l">write · confirm-gated</div></div>
+    <div class="stat"><div class="n" id="s-worlds">…</div><div class="l">tool worlds</div></div>
+  </div>
+
+  <h2>The three tiers — how every call is judged</h2>
+  <div class="tiers">
+    <div class="tier read"><span class="ic">✓</span><div><b>READ — auto</b><div class="d">Lookups, searches, reads. No side effects → run immediately.</div></div></div>
+    <div class="tier write"><span class="ic">⚠️</span><div><b>WRITE — confirm</b><div class="d">Sends, edits, posts, purchases. The user must approve each one before it runs.</div></div></div>
+    <div class="tier no"><span class="ic">⛔</span><div><b>PROHIBITED — never</b><div class="d">Move money, change access control, delete data, bypass auth. Refused outright — even if asked.</div></div></div>
+  </div>
+
+  <h2>Get your MCP verified</h2>
+  <div class="plans">
+    <div class="plan"><h3>Verify</h3><div class="price">£49<span style="font-size:13px;color:var(--dim)">/MCP</span></div>
+      <ul><li>3-tier classification audit</li><li>signed proofof.ai attestation</li><li>listed in the registry</li><li>“Verified by MEOK” badge</li></ul>
+      <a class="cta" href="https://proofof.ai" target="_blank" rel="noopener">Verify my MCP →</a></div>
+    <div class="plan"><h3>Continuous</h3><div class="price">£199<span style="font-size:13px;color:var(--dim)">/mo</span></div>
+      <ul><li>everything in Verify</li><li>re-attested on every release</li><li>drift + regression alerts</li><li>priority listing</li></ul>
+      <a class="cta" href="https://proofof.ai" target="_blank" rel="noopener">Start continuous →</a></div>
+  </div>
+  <p class="note">Pricing indicative — final tiers set at launch. The gateway + attestation are live today.</p>
+
+  <div class="foot">MEOK ONE · the Sovereign layer keeps every tool safe. <a href="/os">Open the OS →</a></div>
+</div>
+<script>
+fetch("/api/tools").then(r=>r.json()).then(d=>{
+  const t=d.safety_tiers||{}, w=d.worlds||{};
+  document.getElementById("s-total").textContent=d.total_tools||"—";
+  document.getElementById("total").textContent=d.total_tools||"459";
+  document.getElementById("s-read").textContent=t.read??"—";
+  document.getElementById("s-write").textContent=t.write??"—";
+  document.getElementById("s-worlds").textContent=Object.keys(w).length||"—";
+}).catch(()=>{});
+</script>
+</body>
+</html>

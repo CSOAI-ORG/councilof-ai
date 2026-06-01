@@ -143,6 +143,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "widget.html"))
         if path in ("/embed", "/embed.html"):
             return self._html(os.path.join(_HERE, "web", "embed.html"))
+        if path in ("/registry", "/registry.html", "/verified"):
+            return self._html(os.path.join(_HERE, "web", "registry.html"))
         # PWA assets (installable on iOS/Android home screen + offline)
         if path in ("/manifest.webmanifest", "/sw.js", "/icon.svg",
                     "/icon-192.png", "/icon-512.png", "/embed.js"):
