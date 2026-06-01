@@ -104,6 +104,14 @@ test.describe('MEOK OS — 3-window operating system', () => {
     await expect(page.locator('#prodframe')).toHaveAttribute('src', '/dome');
   });
 
+  // Marketplace must render a NATIVE hub, never the blank external iframe (audit fix).
+  test('Marketplace tab renders a native hub (not blank)', async ({ page }) => {
+    await page.goto('/os');
+    await page.click('#prodtabs button:has-text("Marketplace")');
+    await expect.poll(async () => page.frameLocator('#prodframe').locator('.hubcard').count()).toBeGreaterThan(0);
+    await expect.poll(async () => page.frameLocator('#prodframe').locator('.card').count()).toBeGreaterThan(10);
+  });
+
   // E4 — Characters marketplace: browse the 27 faces, tap one to become the active character.
   test('E4 — Characters grid browses + selecting a card switches the active character', async ({ page }) => {
     await page.goto('/os');

@@ -291,7 +291,7 @@ const PRODUCTS = [
   {id:"chars",  em:"🧬", label:"Characters",  url:"/api/characters",  kind:"json"},
   {id:"agents", em:"🔭", label:"Agents",      url:"/api/agents",      kind:"json"},
   {id:"tools",  em:"🛠️", label:"Tools",       url:"/api/tools",       kind:"json"},
-  {id:"market", em:"🛒", label:"Marketplace", url:"https://loopfactory.ai", kind:"ext"},
+  {id:"market", em:"🛒", label:"Marketplace", url:"/api/characters", kind:"json"},
   {id:"care",   em:"💗", label:"Care",        url:"https://aquaponics.app", kind:"ext"},
   {id:"comply", em:"⚖️", label:"Compliance",  url:"https://csoai.org",      kind:"ext"},
 ];
@@ -316,6 +316,7 @@ async function openProduct(id){
   log("tui",`❯ product → ${p.label}`);
   if(p.kind==="json"){
     // render a MEOK-native panel from our own API (character can act on these via tools)
+    frame.removeAttribute("src");   // clear any stale external src so srcdoc takes over cleanly
     try{
       const d=await (await fetch(API+p.url)).json();
       frame.srcdoc=prodPanel(p,d);
@@ -337,6 +338,16 @@ function prodPanel(p,d){
     script=`<scr`+`ipt>document.addEventListener("click",function(e){var c=e.target.closest(".card");if(!c)return;
       document.querySelectorAll(".card").forEach(function(x){x.classList.remove("on")});c.classList.add("on");
       parent.postMessage({type:"meok:select-char",id:c.getAttribute("data-id"),name:c.querySelector(".nm").textContent},"*");});</scr`+`ipt>`; }
+  else if(p.id==="market"){ const cs=d.characters||[];
+    body=`<h2>MEOK Marketplace <span class="dim">— adopt a character · verify an MCP</span></h2>
+      <div class="hub">
+        <a class="hubcard" href="/registry" target="_blank" rel="noopener"><div class="em">🛡️</div><div class="nm">Verified MCP Registry</div><div class="ar">browse &amp; certify tools →</div></a>
+        <a class="hubcard" href="https://loopfactory.ai" target="_blank" rel="noopener"><div class="em">✦</div><div class="nm">Sell &amp; resell</div><div class="ar">loopfactory (soon)</div></a>
+      </div>
+      <h2 style="margin-top:18px">Adopt a character <span class="dim">— tap to make it yours</span></h2>
+      <div class="grid">`+cs.map(c=>`<div class="card" data-id="${c.id}" title="${c.archetype||""}">
+        <div class="em">${c.emoji||"🧬"}</div><div class="nm">${c.name}</div><div class="ar">${c.archetype||"companion"}</div></div>`).join("")+`</div>`;
+    script=`<scr`+`ipt>document.addEventListener("click",function(e){var c=e.target.closest(".card");if(!c)return;document.querySelectorAll(".card").forEach(function(x){x.classList.remove("on")});c.classList.add("on");parent.postMessage({type:"meok:select-char",id:c.getAttribute("data-id"),name:c.querySelector(".nm").textContent},"*");});</scr`+`ipt>`; }
   else if(p.id==="agents"){ const a=d.agents||[];
     body=`<h2>assitti — ${d.count||a.length} verified agents</h2>`+a.map(x=>`<div class="row">[${x.trust_grade||"?"}] <b>${x.name}</b> <span class="dim">${x.skill_count||0} skills · ${x.domain||""}</span></div>`).join(""); }
   else if(p.id==="tools"){ const t=d.safety_tiers||{};
@@ -348,7 +359,8 @@ function prodPanel(p,d){
     .card{background:#15151f;border:1px solid #26263a;border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:.15s}
     .card:hover{border-color:#7c5cff;transform:translateY(-2px)}.card.on{border-color:#7c5cff;box-shadow:0 0 0 1px #7c5cff,0 8px 24px rgba(124,92,255,.3)}
     .em{font-size:30px;line-height:1}.nm{font-weight:700;font-size:13px;margin-top:5px}.ar{color:#8a8aa0;font-size:10px;margin-top:1px}
-    .mkt{display:inline-block;color:#38bdf8;text-decoration:none;font-size:13px}</style>${body}${script}</body>`;
+    .mkt{display:inline-block;color:#38bdf8;text-decoration:none;font-size:13px}
+    .hub{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hubcard{display:block;background:#15151f;border:1px solid #26263a;border-radius:14px;padding:14px;text-decoration:none;color:#e8e8f0;transition:.15s}.hubcard:hover{border-color:#7c5cff;transform:translateY(-2px)}</style>${body}${script}</body>`;
 }
 buildTabs();
 
