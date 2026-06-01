@@ -126,6 +126,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "hatch.html"))
         if path in ("/dome", "/dome.html", "/world", "/map"):
             return self._html(os.path.join(_HERE, "web", "dome.html"))
+        if path in ("/siri", "/siri.html", "/shortcut"):
+            return self._html(os.path.join(_HERE, "web", "siri.html"))
         # PWA assets (installable on iOS/Android home screen + offline)
         if path in ("/manifest.webmanifest", "/sw.js", "/icon.svg",
                     "/icon-192.png", "/icon-512.png"):
@@ -270,6 +272,25 @@ class Handler(BaseHTTPRequestHandler):
                 except Exception as e:
                     out["vitals_error"] = str(e)
                 return self._json(200, out)
+            if path == "/api/siri":
+                # SIRI / Apple Shortcuts bridge. A spoken query → a MEOK character's reply,
+                # routed through the SAME Sovereign gate as everything else, so Siri inherits
+                # MEOK's safety membrane (crisis→Samaritans, unsafe veto) + OpenRouter model
+                # routing. Fast (cloud) brain by default = snappy for voice. Returns voice-clean
+                # plain text in `speech` (Shortcuts: Get Dictionary Value → Speak Text).
+                cid = b.get("character", "aria")
+                msg = b.get("q") or b.get("message") or ""
+                out = think(cid, msg, brain=b.get("brain", "right"),
+                            tier=b.get("tier", "pro"), user_id=b.get("user_id", "siri"))
+                from .sovereign_gate import gate as _gate
+                _g = _gate(out.get("reply", ""), character=cid, user_id=b.get("user_id", "siri"),
+                           engine=out.get("engine", "right"), user_message=msg,
+                           tier=b.get("tier", "pro"))
+                return self._json(200, {"speech": _voiceify(_g["reply"]),
+                                        "character": out.get("character", cid),
+                                        "engine": out.get("engine", "right"),
+                                        "held": bool(_g.get("held", False)),
+                                        "care_flagged": bool(_g.get("care_flagged", False))})
             if path == "/api/voice":
                 return self._json(200, voice_reply(b.get("character", "aria"), b.get("message", "")))
             if path == "/api/tts":
@@ -284,6 +305,25 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as e:
             return self._json(500, {"error": f"{type(e).__name__}: {e}"})
         return self._json(404, {"error": "not found", "path": path})
+
+
+def _voiceify(text, limit=600):
+    """Turn a chat reply into clean speech for Siri's 'Speak Text': drop code/markdown/URLs,
+    collapse whitespace, and cut at a sentence boundary so it never reads a half-word aloud."""
+    import re
+    t = text or ""
+    t = re.sub(r"```.*?```", " ", t, flags=re.S)            # code blocks
+    t = re.sub(r"`([^`]*)`", r"\1", t)                       # inline code
+    t = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", t)           # md links -> label
+    t = re.sub(r"https?://\S+", "", t)                       # bare URLs (don't read aloud)
+    t = re.sub(r"\*\*([^*]*)\*\*", r"\1", t)                 # bold
+    t = re.sub(r"[*_#>`|]", "", t)                            # leftover md punctuation
+    t = re.sub(r"\s+", " ", t).strip()
+    if len(t) > limit:
+        cut = t[:limit]
+        m = max(cut.rfind(". "), cut.rfind("! "), cut.rfind("? "))
+        t = (cut[:m + 1] if m > 200 else cut).strip()
+    return t or "I'm here."
 
 
 def main(port: int = 4173):
