@@ -88,9 +88,15 @@ def _new_record(character_id: str) -> dict:
             "first_seen": time.time(), "last_seen": time.time(), "name": None}
 
 
-def vitals(character_id: str) -> dict:
-    """Current life-state of this character (read-only)."""
-    rec = _load().get(character_id) or _new_record(character_id)
+def _key(user_id: str, character_id: str) -> str:
+    """Per-user, per-character state key. The bond is between THIS user and THIS character,
+    so it follows the user across devices (same user_id) — never shared between users."""
+    return f"{user_id or 'web'}::{character_id}"
+
+
+def vitals(character_id: str, user_id: str = "web") -> dict:
+    """Current life-state of this character for this user (read-only)."""
+    rec = _load().get(_key(user_id, character_id)) or _new_record(character_id)
     thresh, stage, stage_emoji = _stage_for(rec["bond"])
     nxt = next((t for t, _, _ in _STAGES if t > rec["bond"]), None)
     return {
@@ -108,10 +114,12 @@ def vitals(character_id: str) -> dict:
     }
 
 
-def on_interaction(character_id: str, message: str = "", name: str = None) -> dict:
-    """Record an interaction: grow the bond, update mood from the message, persist."""
+def on_interaction(character_id: str, message: str = "", name: str = None,
+                   user_id: str = "web") -> dict:
+    """Record an interaction: grow the bond, update mood from the message, persist (per user)."""
     data = _load()
-    rec = data.get(character_id) or _new_record(character_id)
+    k = _key(user_id, character_id)
+    rec = data.get(k) or _new_record(character_id)
 
     # bond growth: +1 per interaction, +0.5 bonus for warm messages, cap 200
     low = (message or "").lower()
@@ -127,25 +135,26 @@ def on_interaction(character_id: str, message: str = "", name: str = None) -> di
     rec["mood"] = mood["mood"]
     rec["emoji"] = mood["emoji"]
 
-    data[character_id] = rec
+    data[k] = rec
     _save(data)
-    out = vitals(character_id)
+    out = vitals(character_id, user_id)
     out.update({"mood_color": mood["color"], "mood_greeting": mood["greeting"]})
     return out
 
 
-def decay(character_id: str) -> dict:
+def decay(character_id: str, user_id: str = "web") -> dict:
     """Apply gentle bond decay for time away (the Tamagotchi 'needs you' pull)."""
     data = _load()
-    rec = data.get(character_id)
+    k = _key(user_id, character_id)
+    rec = data.get(k)
     if not rec:
-        return vitals(character_id)
+        return vitals(character_id, user_id)
     hours_away = (time.time() - rec.get("last_seen", time.time())) / 3600.0
     if hours_away >= 24:
         rec["bond"] = max(0.0, rec["bond"] - min(5.0, hours_away / 24.0))  # ~1/day, capped
-        data[character_id] = rec
+        data[k] = rec
         _save(data)
-    return vitals(character_id)
+    return vitals(character_id, user_id)
 
 
 if __name__ == "__main__":

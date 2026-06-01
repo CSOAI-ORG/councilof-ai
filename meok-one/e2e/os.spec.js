@@ -104,6 +104,22 @@ test.describe('MEOK OS — 3-window operating system', () => {
     await expect(page.locator('#prodframe')).toHaveAttribute('src', '/dome');
   });
 
+  // Cross-device identity: anonymous account → pair code → SAME account on another device.
+  // This is what makes "logged in on desktop + mobile" share one character/memory/bond.
+  test('cross-device identity — anon account + single-use pair code link to the SAME account', async ({ request }) => {
+    const a = await (await request.post('/api/auth/anon')).json();
+    expect(a.user_id, 'anon user_id minted').toMatch(/^u_/);
+    expect((a.token || '').length, 'JWT issued').toBeGreaterThan(50);
+    const sp = await (await request.post('/api/auth/link/start',
+      { headers: { Authorization: 'Bearer ' + a.token }, data: {} })).json();
+    expect(sp.pair_code, 'pair code minted').toMatch(/^[A-Z0-9]{6}$/);
+    const cl = await (await request.post('/api/auth/link/claim', { data: { code: sp.pair_code } })).json();
+    expect(cl.user_id, 'claim resolves to the SAME account').toBe(a.user_id);
+    expect(cl.token, 'new device gets its own token for that account').toBeTruthy();
+    const again = await (await request.post('/api/auth/link/claim', { data: { code: sp.pair_code } })).json();
+    expect(again.error, 'pair code is single-use').toBeTruthy();
+  });
+
   // SIRI bridge inherits the Sovereign safety gate. A crisis query MUST be care-flagged and
   // routed to real human support — Siri can NEVER bypass the membrane. Safety-critical guard.
   test('SIRI bridge — crisis query is held by the Sovereign gate (Samaritans)', async ({ request }) => {

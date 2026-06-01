@@ -1,7 +1,7 @@
 // MEOK ONE — service worker. Makes the OS installable + offline-capable (PWA).
 // Strategy: cache the app shell (static UI) for instant/offline load; ALWAYS go to network
 // for /api/* (live AI replies must never be cached/stale). Honest + safe caching.
-const CACHE = "meok-one-v2";
+const CACHE = "meok-one-v3";
 const SHELL = ["/os", "/avatar?embed=1", "/hatch", "/dome", "/manifest.webmanifest", "/icon.svg"];
 
 self.addEventListener("install", e => {

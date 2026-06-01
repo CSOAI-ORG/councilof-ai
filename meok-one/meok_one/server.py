@@ -31,6 +31,7 @@ import subprocess
 import tempfile
 
 from . import default, ladder, __version__
+from . import auth
 from .brains import brains, think
 from .hatch import HatchSession
 from .voice import voice_reply
@@ -42,6 +43,16 @@ _INDEX = os.path.join(_HERE, "web", "index.html")
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):  # quiet
         pass
+
+    def _uid(self, body=None):
+        """Resolve the user from the Bearer token (cross-device identity). Falls back to a
+        body-supplied user_id, then 'web', so unauthenticated calls still work (anonymous)."""
+        a = self.headers.get("Authorization", "")
+        if a.startswith("Bearer "):
+            p = auth.verify_token(a[7:].strip())
+            if p and p.get("sub"):
+                return p["sub"]
+        return (body or {}).get("user_id", "web")
 
     def _json(self, code, obj):
         body = json.dumps(obj).encode()
@@ -194,10 +205,14 @@ class Handler(BaseHTTPRequestHandler):
             cid = qs.get("character", ["aria"])[0]
             try:
                 from . import vitals as _v
-                return self._json(200, _v.decay(cid))   # decay() also returns current vitals
+                return self._json(200, _v.decay(cid, self._uid()))  # decay() also returns current vitals
             except Exception as e:
                 return self._json(200, {"character": cid, "bond": 0, "stage": "egg",
                                         "stage_emoji": "🥚", "mood": "calm", "error": str(e)})
+        if path == "/api/auth/me":
+            uid = self._uid()
+            return self._json(200, auth.me(uid) if auth.user_exists(uid)
+                              else {"user_id": None, "anon": True})
         if path == "/api/tools":
             # The unified tool catalog (459 tools, 3 worlds, by safety tier).
             try:
@@ -221,7 +236,21 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         path = urlparse(self.path).path
         b = self._body()
+        uid = self._uid(b)   # cross-device identity (Bearer token → user_id; else 'web')
         try:
+            # ---- passwordless cross-device identity ----
+            if path == "/api/auth/anon":
+                return self._json(200, auth.create_anon())           # just-start: durable account
+            if path == "/api/auth/link/start":
+                if not auth.user_exists(uid):
+                    return self._json(401, {"error": "sign in on this device first"})
+                return self._json(200, auth.start_pair(uid))          # mint a pair code
+            if path == "/api/auth/link/claim":
+                return self._json(200, auth.claim_pair(b.get("code", "")))  # claim on a new device
+            if path == "/api/auth/email":
+                if not auth.user_exists(uid):
+                    return self._json(401, {"error": "no account"})
+                return self._json(200, auth.attach_email(uid, b.get("email", "")))
             if path == "/api/hatch":
                 s = HatchSession()
                 return self._json(200, s.hatch(b.get("archetype", "nurturer"),
@@ -231,19 +260,19 @@ class Handler(BaseHTTPRequestHandler):
                 cid = b.get("character", "aria")
                 out = think(cid, b.get("message", ""),
                             brain=b.get("brain", "left"), tier=b.get("tier", "pro"),
-                            user_id=b.get("user_id", "web"))
+                            user_id=uid)
                 # SOVEREIGN GATE — the mandatory last filter. Whatever engine ran (incl. a
                 # user-swapped model), re-filter the reply so the user is always protected.
                 from .sovereign_gate import gate as _gate
-                _g = _gate(out.get("reply", ""), character=cid, user_id=b.get("user_id", "web"),
+                _g = _gate(out.get("reply", ""), character=cid, user_id=uid,
                            engine=out.get("engine", out.get("brain", "?")),
                            user_message=b.get("message", ""), tier=b.get("tier", "pro"))
                 out["reply"] = _g["reply"]
                 out["sovereign_gate"] = {k: _g[k] for k in ("gate", "care_flagged", "held", "swappable_engine")}
-                # Stage 1 Tamagotchi: grow the bond + update mood from this interaction
+                # Stage 1 Tamagotchi: grow the bond + update mood from this interaction (per user)
                 try:
                     from . import vitals as _v
-                    out["vitals"] = _v.on_interaction(cid, b.get("message", ""), name=b.get("name"))
+                    out["vitals"] = _v.on_interaction(cid, b.get("message", ""), name=b.get("name"), user_id=uid)
                 except Exception as e:
                     out["vitals_error"] = str(e)
                 return self._json(200, out)
@@ -255,20 +284,20 @@ class Handler(BaseHTTPRequestHandler):
                 from .sovereign import sovereign_council
                 out = sovereign_council(cid, b.get("message", ""),
                                         tier=b.get("tier", "pro"),
-                                        user_id=b.get("user_id", "web"),
+                                        user_id=uid,
                                         reconcile=b.get("reconcile", "code"),
                                         orchestrator=b.get("orchestrator"),
                                         quorum=int(b.get("quorum", 6)),     # 5 lenses + companion = fast
                                         deadline_s=float(b.get("deadline_s", 40)))
                 from .sovereign_gate import gate as _gate
-                _g = _gate(out.get("reply", ""), character=cid, user_id=b.get("user_id", "web"),
+                _g = _gate(out.get("reply", ""), character=cid, user_id=uid,
                            engine=out.get("engine", "council"),
                            user_message=b.get("message", ""), tier=b.get("tier", "pro"))
                 out["reply"] = _g["reply"]
                 out["sovereign_gate"] = {k: _g[k] for k in ("gate", "care_flagged", "held", "swappable_engine")}
                 try:
                     from . import vitals as _v
-                    out["vitals"] = _v.on_interaction(cid, b.get("message", ""), name=b.get("name"))
+                    out["vitals"] = _v.on_interaction(cid, b.get("message", ""), name=b.get("name"), user_id=uid)
                 except Exception as e:
                     out["vitals_error"] = str(e)
                 return self._json(200, out)
@@ -281,9 +310,9 @@ class Handler(BaseHTTPRequestHandler):
                 cid = b.get("character", "aria")
                 msg = b.get("q") or b.get("message") or ""
                 out = think(cid, msg, brain=b.get("brain", "right"),
-                            tier=b.get("tier", "pro"), user_id=b.get("user_id", "siri"))
+                            tier=b.get("tier", "pro"), user_id=(uid if uid != "web" else "siri"))
                 from .sovereign_gate import gate as _gate
-                _g = _gate(out.get("reply", ""), character=cid, user_id=b.get("user_id", "siri"),
+                _g = _gate(out.get("reply", ""), character=cid, user_id=(uid if uid != "web" else "siri"),
                            engine=out.get("engine", "right"), user_message=msg,
                            tier=b.get("tier", "pro"))
                 return self._json(200, {"speech": _voiceify(_g["reply"]),

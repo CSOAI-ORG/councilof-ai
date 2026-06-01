@@ -118,6 +118,23 @@
   .status{position:fixed;bottom:10px;left:12px;font-size:11px;color:var(--dim);z-index:20}
   .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);margin-right:5px;vertical-align:middle}
   .dot.ok{background:var(--ok)}
+  /* account / link-device (cross-device sync) */
+  .acctchip{position:fixed;bottom:10px;right:12px;z-index:25;font-size:11px;color:var(--dim);
+    background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:4px 11px;cursor:pointer;display:flex;align-items:center;gap:5px}
+  .acctchip:hover{color:var(--ink);border-color:var(--accent)}
+  .acctmodal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(5,4,12,.72);backdrop-filter:blur(8px)}
+  .acctmodal.on{display:flex}
+  .acctcard{width:min(92vw,360px);background:linear-gradient(160deg,#16122e,#0d0b1c);border:1px solid rgba(124,92,255,.4);
+    border-radius:20px;padding:24px 22px;color:var(--ink);box-shadow:0 30px 80px rgba(124,92,255,.3);text-align:center;position:relative}
+  .acctcard h3{margin:0 0 4px;font-size:17px}
+  .acctcard p{margin:6px 0;font-size:12.5px;color:var(--dim);line-height:1.5}
+  .acctcard .x{position:absolute;top:10px;right:14px;cursor:pointer;color:var(--dim)}
+  .acctbtn{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;border-radius:99px;
+    padding:.7rem 1.3rem;font-size:13px;font-weight:700;cursor:pointer;margin:.3rem}
+  .acctbtn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .codebig{font:700 30px/1.2 ui-monospace,monospace;letter-spacing:.3em;color:var(--accent2);margin:14px 0;padding:12px;border:1px dashed rgba(56,189,248,.5);border-radius:12px}
+  .acctin{background:#0a0a14;border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;color:var(--ink);
+    font:600 18px ui-monospace,monospace;text-align:center;letter-spacing:.25em;width:60%;text-transform:uppercase}
 </style>
 </head>
 <body class="simple">
@@ -201,10 +218,56 @@
 
   <div class="status"><span class="dot" id="sdot"></span><span id="stxt">connecting to SOV3…</span></div>
 
+  <!-- cross-device sync: link desktop ↔ mobile so your AI + memory + bond follow you -->
+  <div class="acctchip" id="acctChip" title="Sync this AI across your devices">🔗 <span>Devices</span></div>
+  <div class="acctmodal" id="acctModal">
+    <div class="acctcard">
+      <span class="x" id="acctX">✕</span>
+      <h3>Your AI, on every device</h3>
+      <p id="acctMe">One account holds your character, memory and bond — link your phone and laptop so it's all connected.</p>
+      <div id="acctHome">
+        <button class="acctbtn" id="acctLink">Link another device</button>
+        <button class="acctbtn ghost" id="acctHave">I have a code</button>
+      </div>
+      <div id="acctShow" style="display:none">
+        <p>On your other device, open MEOK → 🔗 Devices → “I have a code”, and enter:</p>
+        <div class="codebig" id="acctCode">······</div>
+        <p>Expires in 10 minutes · one-time use.</p>
+        <button class="acctbtn ghost" id="acctBack">Done</button>
+      </div>
+      <div id="acctEnter" style="display:none">
+        <p>Enter the code shown on your other device:</p>
+        <input class="acctin" id="acctInput" maxlength="6" placeholder="ABC123" autocomplete="one-time-code"/>
+        <div style="margin-top:12px"><button class="acctbtn" id="acctClaim">Link</button>
+          <button class="acctbtn ghost" id="acctBack2">Back</button></div>
+        <p id="acctErr" style="color:#ff8aa0;display:none"></p>
+      </div>
+    </div>
+  </div>
+
 <script>
 const $=s=>document.querySelector(s);
 const API=location.origin;
 let CHAR="aria";
+
+// ---- cross-device identity: anonymous-first + Bearer on every /api call ----
+// The user "just starts" → a durable account is created → character + bond + memory persist
+// server-side. Link another device (desktop↔mobile) with a code → same account, all shared.
+const _origFetch = window.fetch.bind(window);
+let TOKEN = localStorage.getItem("meok_token") || "";
+window.fetch = (url, opts={}) => {            // inject token for our own API (live value each call)
+  try{ const u=(typeof url==="string")?url:url.url;
+    if(TOKEN && u && (u.startsWith("/api")||u.includes(location.host+"/api"))){
+      opts = {...opts, headers:{...(opts.headers||{}), Authorization:"Bearer "+TOKEN}}; } }catch(_){}
+  return _origFetch(url, opts);
+};
+async function ensureAccount(){
+  if(TOKEN) return;
+  try{ const d=await (await _origFetch(API+"/api/auth/anon",{method:"POST",
+        headers:{"Content-Type":"application/json"},body:"{}"})).json();
+    if(d.token){ TOKEN=d.token; localStorage.setItem("meok_token",TOKEN); } }catch(_){}
+}
+ensureAccount();   // fire-and-forget; user-agnostic boot calls are fine token-less
 
 // ---- mode switching (D6 progressive disclosure + D5 layout) ----
 const MODES=["simple","pro","council","orb"];
@@ -412,6 +475,25 @@ $("#tuiIn").addEventListener("keydown",e=>{if(e.key==="Enter"){tuiCmd(e.target.v
 
 // voice layout commands (D5) — say it in chat too
 window.addEventListener("keydown",e=>{ if(e.altKey&&e.key>="1"&&e.key<="4")setMode(MODES[+e.key-1]); });
+
+// ---- account / link-device UI (cross-device sync via SOV3 identity) ----
+(function(){
+  const M=$("#acctModal"), home=$("#acctHome"), show=$("#acctShow"), enter=$("#acctEnter");
+  function panel(which){ home.style.display=which==="home"?"":"none"; show.style.display=which==="show"?"":"none"; enter.style.display=which==="enter"?"":"none"; }
+  async function refreshMe(){ try{ const me=await (await fetch(API+"/api/auth/me")).json();
+    if(me&&me.devices) $("#acctMe").textContent=`This account is on ${me.devices} device${me.devices>1?"s":""}. Link another so your character, memory and bond are everywhere.`; }catch(_){} }
+  const open=()=>{ M.classList.add("on"); panel("home"); refreshMe(); };
+  const close=()=>M.classList.remove("on");
+  $("#acctChip").onclick=open; $("#acctX").onclick=close; M.onclick=e=>{ if(e.target===M) close(); };
+  $("#acctLink").onclick=async()=>{ const d=await (await fetch(API+"/api/auth/link/start",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"})).json();
+    if(d.pair_code){ $("#acctCode").textContent=d.pair_code; panel("show"); } };
+  $("#acctHave").onclick=()=>{ $("#acctErr").style.display="none"; panel("enter"); };
+  $("#acctBack").onclick=()=>panel("home"); $("#acctBack2").onclick=()=>panel("home");
+  $("#acctClaim").onclick=async()=>{ const code=$("#acctInput").value.trim().toUpperCase();
+    const d=await (await fetch(API+"/api/auth/link/claim",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})})).json();
+    if(d.token){ TOKEN=d.token; localStorage.setItem("meok_token",TOKEN); location.reload(); }
+    else { const e=$("#acctErr"); e.textContent=d.error||"Couldn't link — check the code"; e.style.display=""; } };
+})();
 </script>
 </body>
 </html>
