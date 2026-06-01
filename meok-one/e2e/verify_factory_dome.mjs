@@ -86,6 +86,24 @@ const ariaOk = await page.evaluate(async () => {
 });
 must(ariaOk, 'API /api/character returns full seed record (traits + backstory)');
 
+// ---------- distinct per-character voices ----------
+// switch across several seeds and confirm the loaded VOICE_SPEC actually varies
+const specs = [];
+for (const id of ['aria', 'sage', 'atlas', 'nova']) {
+  const got = await page.evaluate(async (cid) => {
+    const s = document.querySelector('#charSel');
+    if (![...s.options].some(o => o.value === cid)) return null;
+    s.value = cid; s.dispatchEvent(new Event('change'));
+    await new Promise(r => setTimeout(r, 450));
+    const V = (typeof VOICE_SPEC !== 'undefined') ? VOICE_SPEC : {};
+    return { id: cid, pitch: V.pitch, rate: V.rate, voice: V.voice };
+  }, id);
+  if (got) specs.push(got);
+}
+const distinctPitch = new Set(specs.map(s => `${s.pitch}|${s.rate}`)).size;
+must(distinctPitch >= 2, `Characters load DISTINCT voice specs (${specs.map(s => s.id + ':' + s.pitch + '/' + s.rate).join(', ')})`);
+must(specs.every(s => typeof s.pitch === 'number'), 'VOICE_SPEC.pitch is wired on switch');
+
 // ---------- DOME world: the creation lives there as a gold pin ----------
 await page.goto(`${BASE}/dome.html`, { waitUntil: 'networkidle' });
 await page.waitForTimeout(2500);   // boot gate (load/idle/timeout) + markers

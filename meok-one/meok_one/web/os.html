@@ -482,7 +482,7 @@ function focusCharacter(id,label){
   if([...sel.options].some(o=>o.value===id)){ sel.value=id; }
   CHAR=id; $("#charFrame").src="/avatar?embed=1&character="+CHAR;
   log("tui",`❯ character → ${label||id}`);
-  refreshVitals();
+  refreshVitals(); loadVoiceSpec(CHAR);   // each character speaks in its own voice
 }
 // ---- vitals/bond HUD: the Tamagotchi made visible. The bond grows the more you talk + is
 // per-user (follows you across devices via SOV3 identity). Refreshed on load/switch/each reply.
@@ -545,9 +545,10 @@ fetch(API+"/api/characters").then(r=>r.json()).then(d=>{
     const o=document.createElement("option");o.value=c.id;o.textContent=(c.emoji||"🧬")+" "+c.name;sel.appendChild(o);});
   sel.value=CHAR;
 }).catch(()=>{});
+loadVoiceSpec(CHAR);   // first character gets its voice on boot
 $("#charSel").onchange=e=>{CHAR=e.target.value;
   $("#charFrame").src="/avatar?embed=1&character="+CHAR;
-  log("tui",`❯ character → ${CHAR}`); refreshVitals();};
+  log("tui",`❯ character → ${CHAR}`); refreshVitals(); loadVoiceSpec(CHAR);};
 $("#facBtn").onclick=()=>{ if(window.__openFactory) window.__openFactory(); };
 
 fetch(API+"/api/tools").then(r=>r.json()).then(d=>{
@@ -569,14 +570,35 @@ async function fetchJSON(ep,body,ms){
 }
 // ---- A5 voice loop + D5 voice/text layout & theme control (the AI reshapes the UI) ----
 let VOICE_ON=false;   // mic turns this on for the turn; the loop speaks the reply back
+// Each character has a DISTINCT voice: pitch+rate from its spec (audibly different on any
+// device) + a deterministic, gender-appropriate system-voice pick from recommended_voice.
+let VOICE_SPEC={pitch:1,rate:1.03,voice:""};
+async function loadVoiceSpec(id){
+  try{ const d=await (await fetch(API+"/api/character?id="+encodeURIComponent(id))).json();
+    const v=(d.character||{}).voice||{};
+    VOICE_SPEC={ pitch:Math.max(0,Math.min(2,+v.pitch||1)),
+                 rate:Math.max(.5,Math.min(2,(+v.rate||1)*1.03)),
+                 voice:v.recommended_voice||"" };
+  }catch(_){ VOICE_SPEC={pitch:1,rate:1.03,voice:""}; }
+}
+const _FEMALE_NAMES=["rachel","grace","serena","bella","sarah","elli","dorothy","aria","luna","nova","mira","iris","cleo","thea","willa","esme","faye","greta","priya","saskia","nadia","ines","kira","maren","ottilie","cosima","dahlia","briony","yara","zara","elowen"];
+function pickVoice(vs,name){
+  const fem=_FEMALE_NAMES.includes((name||"").toLowerCase());
+  const femHint=/(female|woman|samantha|victoria|karen|moira|tessa|fiona|serena|allison|ava|zoe|kate|amelie|google uk english female|martha|libby)/i;
+  const malHint=/(male|\bman\b|daniel|alex|fred|oliver|thomas|arthur|gordon|aaron|reed|rishi|google uk english male)/i;
+  let pool=vs.filter(v=>(fem?femHint:malHint).test(v.name));
+  if(!pool.length) pool=vs;
+  let h=0; for(const c of (name||"x")) h=(h*31+c.charCodeAt(0))>>>0;   // deterministic per character
+  return pool[h%pool.length];
+}
 function speak(text){
   try{ if(!window.speechSynthesis||!text) return;
     const clean=text.replace(/```[\s\S]*?```/g," ").replace(/[*_#`>|]/g,"").replace(/https?:\/\/\S+/g,"").trim().slice(0,420);
     speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(clean); u.rate=1.03; u.lang="en-GB";
-    const vs=speechSynthesis.getVoices();
-    const pref=vs.find(v=>/Samantha|Serena|Google UK English Female/i.test(v.name))||vs.find(v=>v.lang&&v.lang.startsWith("en"));
-    if(pref) u.voice=pref;
+    const u=new SpeechSynthesisUtterance(clean);
+    u.rate=VOICE_SPEC.rate||1.03; u.pitch=VOICE_SPEC.pitch||1.0; u.lang="en-GB";
+    const vs=speechSynthesis.getVoices().filter(v=>/en[-_]/i.test(v.lang||""));
+    if(vs.length){ const pv=pickVoice(vs,VOICE_SPEC.voice); if(pv) u.voice=pv; }
     const cf=$("#charFrame").contentWindow;
     try{ cf.postMessage({type:"meok-speak",state:"start"},"*"); }catch(_){}
     u.onend=()=>{ try{ cf.postMessage({type:"meok-speak",state:"end"},"*"); }catch(_){} };
