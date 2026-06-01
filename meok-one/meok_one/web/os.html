@@ -2,8 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"/>
 <title>MEOK OS — talk to your character</title>
+<!-- PWA: installable on iOS/Android home screen + offline -->
+<link rel="manifest" href="/manifest.webmanifest"/>
+<meta name="theme-color" content="#0a0a12"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="MEOK"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script>
 <!--
   MEOK OS — the 3-window operating system (Nick's vision, MEOK_ONE_VISION.md).
   RIGHT side of screen = 3 stacked windows:

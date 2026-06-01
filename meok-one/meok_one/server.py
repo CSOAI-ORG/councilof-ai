@@ -124,6 +124,24 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "os.html"))
         if path in ("/hatch", "/hatch.html", "/emerge", "/begin"):
             return self._html(os.path.join(_HERE, "web", "hatch.html"))
+        # PWA assets (installable on iOS/Android home screen + offline)
+        if path in ("/manifest.webmanifest", "/sw.js", "/icon.svg",
+                    "/icon-192.png", "/icon-512.png"):
+            fp = os.path.join(_HERE, "web", path.lstrip("/"))
+            if os.path.isfile(fp):
+                ctype = ("application/manifest+json" if path.endswith("webmanifest")
+                         else "image/svg+xml" if path.endswith(".svg")
+                         else "image/png" if path.endswith(".png")
+                         else "application/javascript")
+                with open(fp, "rb") as f:
+                    body = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", ctype)
+                self.send_header("Service-Worker-Allowed", "/")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers(); self.wfile.write(body); return
+            return self._json(404, {"error": "not found", "path": path})
         if path.endswith((".vrm", ".vrma")):
             # serve any VRM model / VRMA animation under web/ (path-traversal safe)
             base = os.path.join(_HERE, "web")
