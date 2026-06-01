@@ -118,6 +118,11 @@
   .status{position:fixed;bottom:10px;left:12px;font-size:11px;color:var(--dim);z-index:20}
   .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);margin-right:5px;vertical-align:middle}
   .dot.ok{background:var(--ok)}
+  /* stall-and-engage: the bubble breathes while the brain works, then the answer types in */
+  .msg.think{animation:mpulse 1.3s ease-in-out infinite}
+  @keyframes mpulse{0%,100%{opacity:1}50%{opacity:.5}}
+  .msg .cursor{display:inline-block;width:7px;background:var(--accent);margin-left:1px;animation:cblink .9s steps(2) infinite}
+  @keyframes cblink{50%{opacity:0}}
   /* account / link-device (cross-device sync) */
   .acctchip{position:fixed;bottom:10px;right:12px;z-index:25;font-size:11px;color:var(--dim);
     background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:4px 11px;cursor:pointer;display:flex;align-items:center;gap:5px}
@@ -481,6 +486,26 @@ function tryLocalCommand(text,voice){
   return false;
 }
 
+// ---- stall-and-engage + streaming feel (Nick's idea: the character responds INSTANTLY while
+// the brain/council works, then the answer reveals progressively). The reply is STILL fully
+// Sovereign-gated server-side — we never show raw/ungated tokens; the typewriter just reveals
+// the already-safe text, so safety is never bypassed. ----
+let _stallN=0;
+const STALLS={
+  fast:["Mm, let me think with you for a sec…","Good one — gathering my thoughts…","Let me sit with that a moment…","Okay, let me get this right for you…","On it — thinking it through…"],
+  deep:["Let me bring this to the council…","Asking a few minds — one moment…","Thinking this through properly with the council…","Weighing some perspectives for you…"]};
+function pickStall(deep){ const a=deep?STALLS.deep:STALLS.fast; return a[(_stallN++)%a.length]; }
+function typewriter(el, text){
+  return new Promise(res=>{
+    const full=text||""; let i=0; const step=Math.max(1,Math.round(full.length/80));
+    el.innerHTML=""; const cur=document.createElement("span"); cur.className="cursor"; cur.textContent=" ";
+    el.parentElement.appendChild(cur);
+    const t=setInterval(()=>{ i+=step; el.textContent=full.slice(0,i);
+      el.parentElement.parentElement.scrollTop=1e9;
+      if(i>=full.length){ clearInterval(t); el.textContent=full; cur.remove(); res(); } }, 16);
+  });
+}
+
 async function sendChat(text, voice=false){
   if(!text.trim())return;
   addMsg("you",text,"user");$("#chatIn").value="";
@@ -491,18 +516,24 @@ async function sendChat(text, voice=false){
   const body = sovereign ? {character:CHAR,message:text,tier:"pro"} : {character:CHAR,message:text,brain,tier:"pro"};
   const slow = sovereign||both||brain==="left";       // these can be slow on the CPU VM
   const ms = sovereign?55000:(slow?40000:15000);
-  const typing=addMsg(CHAR, slow?"thinking deeply… (this brain can take a moment)":"…","char");
+  // INSTANT stall (0ms): the character acknowledges in-character while the brain/council works
+  const typing=addMsg(CHAR,"","char"); typing.classList.add("think");
+  typing.innerHTML=`<div class="who">${CHAR} · thinking…</div><span class="tw">${pickStall(slow)}</span>`;
+  const twEl=typing.querySelector(".tw");
   const t0=Date.now();
   try{
     const d=await fetchJSON(ep,body,ms);
     const secs=((Date.now()-t0)/1000).toFixed(1);
-    typing.innerHTML=`<div class="who">${d.character||CHAR} · ${d.engine||brain} · ${secs}s</div>${(d.reply||"[no reply]").replace(/</g,"&lt;")}`;
-    // make the 3D character REACT to what it just said (amica emoteController upgrade)
+    typing.classList.remove("think");
+    typing.querySelector(".who").textContent=`${d.character||CHAR} · ${d.engine||brain} · ${secs}s`;
+    // emote + speak the moment the GATED answer lands, then reveal it (streaming feel, safe)
     try{ $("#charFrame").contentWindow.postMessage({type:"meok-emote",text:d.reply||""},"*"); }catch(_){}
-    if(voice||VOICE_ON) speak(d.reply||"");   // A5: hands-free — the character speaks back
+    if(voice||VOICE_ON) speak(d.reply||"");   // A5: hands-free — speaks the full gated reply
+    await typewriter(twEl, d.reply||"[no reply]");
     if(d.council){log("tui",`❯ council: ${d.council.decision} · ${d.council.available_nodes||0} nodes · ${d.council.passes||0} pass / ${(d.council.vetoes||[]).length} veto`);}
   }catch(e){
     const aborted = e.name==="AbortError";
+    typing.classList.remove("think");
     typing.innerHTML=`<div class="who">${CHAR} · couldn't reach this brain</div>`+
       (aborted
         ? `That brain is taking too long (the local models run on a slow CPU). Try <b>⚡ Fast (cloud)</b> from the selector — it's instant.`
