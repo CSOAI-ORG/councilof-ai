@@ -54,6 +54,9 @@
   .dot.on{background:var(--gold);transform:scale(1.3)}
 </style></head>
 <body>
+  <!-- Rive layer (designer-grade egg→koi→dragon). Hidden until a real .riv asset loads;
+       falls back to the canvas cinematic below if absent/unreachable. -->
+  <canvas id="rive" style="position:fixed;inset:0;width:100vw;height:100vh;display:none"></canvas>
   <canvas id="c"></canvas>
   <div class="dots" id="dots"></div>
   <div class="skip" id="skip">skip ›</div>
@@ -278,5 +281,35 @@ function loop(now){
 setStageUI(); requestAnimationFrame(loop);
 // gentle auto-advance for the first 4 stages so it plays cinematically even without taps
 let auto=setInterval(()=>{ if(stage<3 && tapReady){ advance(); } else if(stage>=3){ clearInterval(auto);} }, 4200);
+
+// ── RIVE UPGRADE (progressive enhancement) ───────────────────────────────────
+// If a designer-authored hatch.riv exists, swap the canvas cinematic for the Rive
+// animation and drive its state machine per stage. If not (today), this is a silent
+// no-op and the canvas cinematic above is what ships. NO failure, NO blank screen.
+let riveInst=null, riveStageInput=null;
+async function tryRive(){
+  // does a .riv asset exist? (HEAD it first so we never flash a broken Rive canvas)
+  let has=false;
+  try{ const r=await fetch('/hatch.riv',{method:'HEAD'}); has=r.ok && (r.headers.get('content-type')||'').indexOf('html')===-1; }catch(_){ has=false; }
+  if(!has) return;  // no asset yet → keep the canvas cinematic (the current shipping path)
+  // load the Rive runtime from CDN, then the asset
+  await new Promise((res,rej)=>{ const s=document.createElement('script');
+    s.src='https://unpkg.com/@rive-app/canvas@2.7.0'; s.onload=res; s.onerror=rej; document.head.appendChild(s); }).catch(()=>null);
+  if(!window.rive) return;
+  const rc=$('#rive'); rc.width=innerWidth*DPR; rc.height=innerHeight*DPR;
+  try{
+    riveInst=new rive.Rive({ src:'/hatch.riv', canvas:rc, autoplay:true,
+      stateMachines:'Emergence', fit:rive.Fit?.Cover, alignment:rive.Alignment?.Center,
+      onLoad:()=>{ rc.style.display='block'; $('#c').style.display='none';   // Rive wins
+        try{ const inputs=riveInst.stateMachineInputs('Emergence')||[];
+          riveStageInput=inputs.find(i=>/stage/i.test(i.name)); pushStageToRive(); }catch(_){}}, });
+  }catch(_){ /* keep canvas */ }
+}
+function pushStageToRive(){ if(riveStageInput){ try{ riveStageInput.value=stage; }catch(_){}}}
+// keep Rive's state machine in sync with the stage on every advance
+const _adv=advance; advance=function(){ _adv(); pushStageToRive(); };
+const _set=setStageUI; // (skip/emerge also re-sync)
+['#skip'].forEach(q=>$(q)&&$(q).addEventListener('click',()=>setTimeout(pushStageToRive,50)));
+tryRive();
 </script>
 </body></html>
