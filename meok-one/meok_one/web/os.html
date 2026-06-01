@@ -303,8 +303,8 @@ const PRODUCTS = [
   {id:"agents", em:"🔭", label:"Agents",      url:"/api/agents",      kind:"json"},
   {id:"tools",  em:"🛠️", label:"Tools",       url:"/api/tools",       kind:"json"},
   {id:"market", em:"🛒", label:"Marketplace", url:"/api/characters", kind:"json"},
-  {id:"care",   em:"💗", label:"Care",        url:"https://aquaponics.app", kind:"ext"},
-  {id:"comply", em:"⚖️", label:"Compliance",  url:"https://csoai.org",      kind:"ext"},
+  {id:"care",   em:"💗", label:"Care",        url:"/api/vitals?character=aria", kind:"json"},
+  {id:"comply", em:"⚖️", label:"Compliance",  url:"/registry",              kind:"ext"},
 ];
 let activeProd="dome";
 function buildTabs(){
@@ -359,11 +359,30 @@ function prodPanel(p,d){
       <div class="grid">`+cs.map(c=>`<div class="card" data-id="${c.id}" title="${c.archetype||""}">
         <div class="em">${c.emoji||"🧬"}</div><div class="nm">${c.name}</div><div class="ar">${c.archetype||"companion"}</div></div>`).join("")+`</div>`;
     script=`<scr`+`ipt>document.addEventListener("click",function(e){var c=e.target.closest(".card");if(!c)return;document.querySelectorAll(".card").forEach(function(x){x.classList.remove("on")});c.classList.add("on");parent.postMessage({type:"meok:select-char",id:c.getAttribute("data-id"),name:c.querySelector(".nm").textContent},"*");});</scr`+`ipt>`; }
+  else if(p.id==="care"){
+    body=`<h2>💗 Your wellbeing <span class="dim">— MEOK keeps you safe across every reply</span></h2>
+     <div class="row">Mood: ${d.mood_emoji||"🌸"} ${d.mood||"calm"} · Bond 💜${Math.round(d.bond||0)} · ${d.stage_emoji||"🥚"} ${d.stage||"egg"}</div>
+     <p class="dim" style="font-size:13px;margin:12px 0 4px">Every reply passes the <b style="color:#34d399">Sovereign care gate</b> — distress is always met with real human support, never ignored or amplified.</p>
+     <h2 style="margin-top:14px">If you need a person, right now</h2>
+     <div class="row">🆘 <b>Samaritans</b> — call <b>116 123</b> (UK · free · 24/7)</div>
+     <div class="row">💬 <b>SHOUT</b> — text <b>85258</b></div>
+     <div class="row">🚑 Emergency — <b>999</b> (UK) · 112 (EU)</div>
+     <p style="margin-top:14px"><a class="mkt" href="https://aquaponics.app" target="_blank" rel="noopener">🌱 MEOK care tools & community →</a></p>`; }
   else if(p.id==="agents"){ const a=d.agents||[];
     body=`<h2>assitti — ${d.count||a.length} verified agents</h2>`+a.map(x=>`<div class="row">[${x.trust_grade||"?"}] <b>${x.name}</b> <span class="dim">${x.skill_count||0} skills · ${x.domain||""}</span></div>`).join(""); }
   else if(p.id==="tools"){ const t=d.safety_tiers||{};
-    body=`<h2>${d.total_tools||0} tools through SOV3</h2><div class="row">✓ ${t.read||0} read (auto)</div><div class="row">⚠ ${t.write||0} write (confirm)</div><div class="row">✗ ${t.prohibited||0} prohibited (never)</div>`+
-    Object.entries(d.worlds||{}).map(([k,v])=>`<div class="row dim">${k}: ${v.tools||v.packages||0}</div>`).join(""); }
+    body=`<h2>${d.total_tools||0} tools through SOV3 — the safe gateway</h2><div class="row">✓ ${t.read||0} read (auto-run)</div><div class="row">⚠ ${t.write||0} write (confirm)</div><div class="row">✗ ${t.prohibited||0} prohibited (refused)</div>`+
+    Object.entries(d.worlds||{}).map(([k,v])=>`<div class="row dim">${k}: ${v.tools||v.packages||0}</div>`).join("")+
+    `<h2 style="margin-top:16px">Run a tool <span class="dim">— read=instant · write=confirm · dangerous=refused</span></h2>
+     <div style="display:flex;gap:6px;margin:8px 0"><input id="tn" placeholder="tool name e.g. get_system_status" style="flex:1;background:#0a0a14;border:1px solid #26263a;border-radius:8px;padding:8px 10px;color:#e8e8f0;font:13px monospace">
+     <button id="trun" style="background:#7c5cff;border:0;color:#fff;border-radius:8px;padding:0 14px;cursor:pointer">Run</button></div>
+     <pre id="to" style="white-space:pre-wrap;color:#9fe6b8;font:12px/1.5 monospace;margin:6px 0"></pre>`;
+    script=`<scr`+`ipt>var T=document.getElementById("tn"),O=document.getElementById("to");
+      async function run(){var n=T.value.trim();if(!n)return;O.textContent="…";
+        try{var r=await(await fetch("/api/tool",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tool:n,args:{}})})).json();
+          O.textContent=n+" → tier="+r.tier+" · executed="+r.executed+(r.confirm_required?" (needs confirm)":"")+(r.refusal?" ⛔ "+r.refusal:"")+(r.result?"\\n"+JSON.stringify(r.result).slice(0,300):"");
+        }catch(e){O.textContent="error: "+e.message;}}
+      document.getElementById("trun").onclick=run;T.addEventListener("keydown",function(e){if(e.key==="Enter")run();});</scr`+`ipt>`; }
   return `<!doctype html><body style="margin:0;background:#0e0e1a;color:#e8e8f0;font:14px -apple-system,sans-serif;padding:18px;overflow:auto">
     <style>h2{font-size:16px;margin:0 0 14px;color:#fff}.row{padding:6px 8px;border-bottom:1px solid #26263a}.dim{color:#8a8aa0;font-size:12px}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:10px;margin-bottom:14px}
@@ -578,7 +597,7 @@ $("#mic").onclick=()=>{
 // ---- TUI (D3) — real commands through the gateway ----
 async function tuiCmd(c){
   log("tui",`❯ ${c}`);const a=c.trim().split(/\s+/);
-  if(a[0]==="help"){log("tui","commands: tools · agents · tool &lt;name&gt; · mode &lt;simple|pro|council|orb&gt; · clear");return;}
+  if(a[0]==="help"){log("tui","commands: tools · agents · tool &lt;name&gt; · mode &lt;…&gt; · clear · &lt;anything else&gt; = ask the selected model");return;}
   if(a[0]==="clear"){$("#tui").innerHTML="";return;}
   if(a[0]==="mode"){setMode(a[1]||"pro");return;}
   if(a[0]==="tools"){const d=await(await fetch(API+"/api/tools")).json();
@@ -588,7 +607,14 @@ async function tuiCmd(c){
   if(a[0]==="tool"&&a[1]){const r=await(await fetch(API+"/api/tool",{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({tool:a[1],args:{}})})).json();
     log("tui",`${a[1]} → tier=${r.tier} executed=${r.executed} ${r.confirm_required?"(needs confirm)":""}${r.refusal?"⛔ "+r.refusal:""}`);return;}
-  log("tui","unknown — type help");
+  // anything else → a coding/dev prompt to the SELECTED model (wires codeSel; Sovereign-gated)
+  const model=$("#codeSel").value;
+  log("tui",`❯ ${model} …`);
+  try{
+    const r=await fetchJSON("/api/ask",{model,prompt:c,character:CHAR},45000);
+    const rep=(r.reply||r.note||"[no reply]").replace(/</g,"&lt;");
+    log("tui",`${model}: ${rep.slice(0,800)}`);
+  }catch(e){ log("tui",`✗ ${model}: ${e.message} — try the ⚡ models`); }
 }
 $("#tuiIn").addEventListener("keydown",e=>{if(e.key==="Enter"){tuiCmd(e.target.value);e.target.value="";}});
 

@@ -340,6 +340,20 @@ class Handler(BaseHTTPRequestHandler):
                                         "engine": out.get("engine", "right"),
                                         "held": bool(_g.get("held", False)),
                                         "care_flagged": bool(_g.get("care_flagged", False))})
+            if path == "/api/ask":
+                # Generic gated model ask — powers the TUI coding REPL (per-window model selector).
+                # Any allowed model alias; still passes the Sovereign gate like everything else.
+                from .router import ask as _ask
+                prompt = b.get("prompt") or b.get("message") or ""
+                out = _ask(prompt, model=b.get("model", "deepseek-v4"),
+                           tier=b.get("tier", "pro"), max_tokens=b.get("max_tokens"))
+                from .sovereign_gate import gate as _gate
+                _g = _gate(out.get("reply") or "", character=b.get("character", "aria"), user_id=uid,
+                           engine=out.get("model") or "?", user_message=prompt, tier="pro")
+                return self._json(200, {"reply": _g["reply"], "model": out.get("model"),
+                                        "backend": out.get("backend"),
+                                        "note": out.get("note"),
+                                        "care_flagged": bool(_g.get("care_flagged", False))})
             if path == "/api/voice":
                 return self._json(200, voice_reply(b.get("character", "aria"), b.get("message", "")))
             if path == "/api/tts":
