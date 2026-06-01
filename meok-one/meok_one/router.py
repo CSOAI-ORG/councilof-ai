@@ -221,10 +221,21 @@ def _ask_cloud(model_id: str, prompt: str) -> "tuple":
         # if gemini failed AND no openrouter, return the gemini note honestly
         if not os.environ.get("OPENROUTER_API_KEY"):
             return None, note
+        # Gemini failed (e.g. free-tier 429) but OpenRouter IS set → FALL THROUGH to it.
+        # Map the bare Gemini id to an OpenRouter model id OpenRouter recognises, so the
+        # fallback actually works (was passing 'gemini-flash-latest' → 404).
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key:
         return None, "cloud not configured (set GOOGLE_API_KEY=AIza... or OPENROUTER_API_KEY)"
-    body = json.dumps({"model": model_id,
+    # normalise bare provider ids to OpenRouter's "provider/model" form
+    _OR_MAP = {"gemini-flash-latest": "google/gemini-2.5-flash",
+               "gemini-flash-lite-latest": "google/gemini-2.5-flash-lite",
+               "gemini-pro-latest": "google/gemini-2.5-pro",
+               "gemma-4-31b-it": "google/gemini-2.5-flash"}
+    or_model = _OR_MAP.get(model_id, model_id)
+    if "/" not in or_model:  # last-resort: a bare id OpenRouter won't know → use a safe default
+        or_model = "google/gemini-2.5-flash"
+    body = json.dumps({"model": or_model,
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     req = urllib.request.Request("https://openrouter.ai/api/v1/chat/completions",
                                  data=body, headers={"Authorization": f"Bearer {key}",

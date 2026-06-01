@@ -217,13 +217,17 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(200, out)
             if path == "/api/sovereign":
                 # The FULL 12-around-1 BFT council powers the reply (vs /api/think's 2-node).
+                # DEADLINE so chat never hangs: reviews that miss it are dropped, Sovereign
+                # reconciles whatever returned. Smaller council for snappy interactive chat.
                 cid = b.get("character", "aria")
                 from .sovereign import sovereign_council
                 out = sovereign_council(cid, b.get("message", ""),
                                         tier=b.get("tier", "pro"),
                                         user_id=b.get("user_id", "web"),
                                         reconcile=b.get("reconcile", "code"),
-                                        orchestrator=b.get("orchestrator"))
+                                        orchestrator=b.get("orchestrator"),
+                                        quorum=int(b.get("quorum", 6)),     # 5 lenses + companion = fast
+                                        deadline_s=float(b.get("deadline_s", 40)))
                 try:
                     from . import vitals as _v
                     out["vitals"] = _v.on_interaction(cid, b.get("message", ""), name=b.get("name"))

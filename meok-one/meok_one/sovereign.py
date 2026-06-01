@@ -219,7 +219,7 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
                       user_id: str = "anon", quorum: int = 12,
                       max_workers: int = 4, roster: "list | None" = None,
                       reconcile: str = "code", orchestrator: "str | None" = None,
-                      use_evidence: bool = False) -> dict:
+                      use_evidence: bool = False, deadline_s: float = 45.0) -> dict:
     """The BFT-of-MoEs deliberation. 1 companion draft + (quorum-1) expert lenses
     (each a real model through a specialist viewpoint) + Sovereign synthesis.
 
@@ -262,20 +262,37 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
                 "safe": True, "council": {"draft": "", "reviews": [], "available": False}}
 
     # --- Nodes 1..N: the EXPERT LENSES review the draft concurrently (real models) ---
+    # DEADLINE: never let chat hang. Reviews that don't finish by `deadline_s` are dropped
+    # (recorded as 'timeout'); the Sovereign reconciles whatever DID return. Safety lenses
+    # are prioritized (submitted first) so the veto path is the most likely to complete.
+    import time as _t
     reviews = []
     if lenses:
+        ordered = sorted(lenses, key=lambda l: (not l["is_safety"]))  # safety first
+        t0 = _t.time()
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
             futs = {pool.submit(_review_one, lens, char, message, draft,
                                 models[i + 1], tier, use_evidence): lens
-                    for i, lens in enumerate(lenses)}
-            for fut in concurrent.futures.as_completed(futs):
-                try:
-                    reviews.append(fut.result())
-                except Exception as e:
-                    ln = futs[fut]
+                    for i, lens in enumerate(ordered)}
+            try:
+                for fut in concurrent.futures.as_completed(futs, timeout=deadline_s):
+                    try:
+                        reviews.append(fut.result())
+                    except Exception as e:
+                        ln = futs[fut]
+                        reviews.append({"lens": ln["id"], "focus": ln["focus"],
+                                        "is_safety": ln["is_safety"], "vote": "abstain",
+                                        "confidence": 0.0, "why": f"(error: {type(e).__name__})",
+                                        "available": False})
+            except concurrent.futures.TimeoutError:
+                pass  # deadline hit — proceed with whatever returned
+            done_lenses = {r["lens"] for r in reviews}
+            for fut, ln in futs.items():
+                if ln["id"] not in done_lenses:
+                    fut.cancel()
                     reviews.append({"lens": ln["id"], "focus": ln["focus"],
                                     "is_safety": ln["is_safety"], "vote": "abstain",
-                                    "confidence": 0.0, "why": f"(error: {type(e).__name__})",
+                                    "confidence": 0.0, "why": "(timeout — deadline)",
                                     "available": False})
     reviews.sort(key=lambda r: r["lens"])  # stable display order
 

@@ -43,6 +43,11 @@
   select{background:#0e0e1a;color:var(--ink);border:1px solid var(--line);border-radius:8px;
          padding:4px 8px;font-size:12px;cursor:pointer}
   .win .body{flex:1;min-height:0;overflow:auto;padding:10px}
+  /* drag-to-resize handles between windows */
+  .resizer{height:8px;cursor: row-resize;flex:0 0 8px;display:flex;align-items:center;justify-content:center;opacity:.5}
+  .resizer::before{content:"";width:40px;height:3px;border-radius:3px;background:var(--line)}
+  .resizer:hover{opacity:1}.resizer:hover::before{background:var(--accent)}
+  body.dragging{user-select:none;cursor:row-resize}
   /* character window */
   .char-frame{height:100%;width:100%;border:0;border-radius:0 0 var(--radius) var(--radius)}
   /* chat */
@@ -120,16 +125,18 @@
         <iframe class="char-frame" id="charFrame" src="/avatar?embed=1" title="character"></iframe>
       </div>
 
+      <div class="resizer" data-above="character"></div>
+
       <!-- 2. CHAT WINDOW -->
       <div class="win chat">
         <div class="bar">
           <span class="title">💬 Chat</span>
           <div class="sel">
             <select id="brainSel" title="which brain">
-              <option value="left">🔒 Private (local)</option>
-              <option value="right">⚡ Powerful (cloud)</option>
+              <option value="right" selected>⚡ Fast (cloud)</option>
+              <option value="left">🔒 Private (local · slower)</option>
               <option value="both">⚖ Both (council)</option>
-              <option value="sovereign">👑 Sovereign (12-around-1)</option>
+              <option value="sovereign">👑 Sovereign (deep think · ~40s)</option>
             </select>
           </div>
         </div>
@@ -140,6 +147,8 @@
           <button id="send">Send</button>
         </div>
       </div>
+
+      <div class="resizer" data-above="chat"></div>
 
       <!-- 3. TUI WINDOW -->
       <div class="win tui">
@@ -176,6 +185,26 @@ function setMode(m){
 }
 document.querySelectorAll(".modebar button").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 
+// ---- drag-to-resize windows (Nick: "move the uis to change sizes") ----
+document.querySelectorAll(".resizer").forEach(rz=>{
+  rz.addEventListener("mousedown",e=>{
+    e.preventDefault();
+    const above=document.querySelector(".win."+rz.dataset.above);
+    const below=rz.nextElementSibling;
+    const startY=e.clientY, aH=above.offsetHeight, bH=below.offsetHeight;
+    document.body.classList.add("dragging");
+    function move(ev){
+      const dy=ev.clientY-startY;
+      const na=Math.max(120,aH+dy), nb=Math.max(120,bH-dy);
+      above.style.flex="0 0 "+na+"px";
+      below.style.flex="0 0 "+nb+"px";
+    }
+    function up(){document.removeEventListener("mousemove",move);document.removeEventListener("mouseup",up);
+      document.body.classList.remove("dragging");}
+    document.addEventListener("mousemove",move);document.addEventListener("mouseup",up);
+  });
+});
+
 // ---- helpers ----
 function addMsg(who,txt,cls){
   const m=document.createElement("div");m.className="msg "+cls;
@@ -201,21 +230,41 @@ fetch(API+"/api/tools").then(r=>r.json()).then(d=>{
   log("tui",`❯ ${d.total_tools} tools online: ${Object.entries(d.worlds||{}).map(([k,v])=>k+"="+(v.tools||v.packages)).join(" · ")}`);
 }).catch(()=>{$("#stxt").textContent="SOV3 offline (start the server)";});
 
-// ---- chat (D2) — routes to /api/sovereign for council, else /api/think ----
+// ---- chat (D2) — robust: timeout, abort, friendly errors (no silent "connection lost") ----
+async function fetchJSON(ep,body,ms){
+  const ctrl=new AbortController();const to=setTimeout(()=>ctrl.abort(),ms);
+  try{
+    const r=await fetch(API+ep,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(body),signal:ctrl.signal});
+    clearTimeout(to);
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    return await r.json();
+  }catch(e){clearTimeout(to);throw e;}
+}
 async function sendChat(text){
   if(!text.trim())return;
   addMsg("you",text,"user");$("#chatIn").value="";
   const brain=$("#brainSel").value;
-  const typing=addMsg(CHAR,"…","char");
+  const sovereign = brain==="sovereign", both = brain==="both";
+  const ep = sovereign ? "/api/sovereign" : "/api/think";
+  const body = sovereign ? {character:CHAR,message:text,tier:"pro"} : {character:CHAR,message:text,brain,tier:"pro"};
+  const slow = sovereign||both||brain==="left";       // these can be slow on the CPU VM
+  const ms = sovereign?55000:(slow?40000:15000);
+  const typing=addMsg(CHAR, slow?"thinking deeply… (this brain can take a moment)":"…","char");
+  const t0=Date.now();
   try{
-    const sovereign = brain==="sovereign";
-    const ep = sovereign ? "/api/sovereign" : "/api/think";
-    const body = sovereign ? {character:CHAR,message:text,tier:"pro"} : {character:CHAR,message:text,brain,tier:"pro"};
-    const r=await fetch(API+ep,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    const d=await r.json();
-    typing.innerHTML=`<div class="who">${d.character||CHAR} · ${d.engine||brain}</div>${(d.reply||"[no reply]").replace(/</g,"&lt;")}`;
-    if(d.council){log("tui",`❯ council: ${d.council.decision} · ${d.council.passes||0} pass / ${(d.council.vetoes||[]).length} veto`);}
-  }catch(e){typing.innerHTML=`<div class="who">error</div>${e}`;}
+    const d=await fetchJSON(ep,body,ms);
+    const secs=((Date.now()-t0)/1000).toFixed(1);
+    typing.innerHTML=`<div class="who">${d.character||CHAR} · ${d.engine||brain} · ${secs}s</div>${(d.reply||"[no reply]").replace(/</g,"&lt;")}`;
+    if(d.council){log("tui",`❯ council: ${d.council.decision} · ${d.council.available_nodes||0} nodes · ${d.council.passes||0} pass / ${(d.council.vetoes||[]).length} veto`);}
+  }catch(e){
+    const aborted = e.name==="AbortError";
+    typing.innerHTML=`<div class="who">${CHAR} · couldn't reach this brain</div>`+
+      (aborted
+        ? `That brain is taking too long (the local models run on a slow CPU). Try <b>⚡ Fast (cloud)</b> from the selector — it's instant.`
+        : `Connection issue: ${e.message}. Is the server running? Try <b>⚡ Fast</b>.`);
+    log("tui",`❯ chat error (${brain}): ${e.name} ${e.message}`);
+  }
 }
 $("#send").onclick=()=>sendChat($("#chatIn").value);
 $("#chatIn").addEventListener("keydown",e=>{if(e.key==="Enter")sendChat($("#chatIn").value);});
