@@ -375,6 +375,12 @@ window.addEventListener("message", e=>{
 // embed mode: when shown inside the MEOK OS character window (?embed=1), use the compact
 // layout so the hatch overlay fits a short iframe and never clips.
 if(new URLSearchParams(location.search).get("embed")==="1") document.body.classList.add("embed");
+// listen for the cinematic hatch finishing (koi→dragon), carry the chosen name in
+window.addEventListener("message", e=>{
+  if(e.data && e.data.type==="meok-hatched" && e.data.name){
+    try{ if(typeof setMood==="function") setMood("speak"); }catch(_){}
+  }
+});
 
 // ---- load a character's VRM (unloads previous, attaches idle + lookAt) ----
 async function loadModel(url){

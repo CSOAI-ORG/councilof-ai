@@ -122,6 +122,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "avatar.html"))
         if path in ("/os", "/os.html", "/windows"):
             return self._html(os.path.join(_HERE, "web", "os.html"))
+        if path in ("/hatch", "/hatch.html", "/emerge", "/begin"):
+            return self._html(os.path.join(_HERE, "web", "hatch.html"))
         if path.endswith((".vrm", ".vrma")):
             # serve any VRM model / VRMA animation under web/ (path-traversal safe)
             base = os.path.join(_HERE, "web")
