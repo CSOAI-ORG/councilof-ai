@@ -325,10 +325,13 @@ class Handler(BaseHTTPRequestHandler):
                             f"archetypes = {archs}\ncare_styles = {cares}\n"
                             f'description = "{desc[:400]}"\n'
                             'Reply with ONLY compact JSON: {"archetype":"..","care_style":"..","name":".."}')
+                        # tier="pro" so the openclaw CLOUD substrate is allowed (free tier is
+                        # local/sov3 only); this is a server-internal mint helper, not metered chat.
                         r = _router.ask(prompt, model=b.get("model", "turbo-llama8"),
-                                        tier="free", max_tokens=80)
+                                        tier="pro", max_tokens=120)
                         raw = (r or {}).get("reply", "") if isinstance(r, dict) else str(r or "")
                         import re as _re
+                        raw = raw.replace("```json", "").replace("```", "")   # strip code fences
                         m = _re.search(r"\{.*\}", raw, _re.S)
                         if m:
                             j = json.loads(m.group(0))
