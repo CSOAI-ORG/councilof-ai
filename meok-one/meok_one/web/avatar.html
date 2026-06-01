@@ -93,6 +93,12 @@
     justify-content:center; gap:1.4rem; background:radial-gradient(120% 100% at 50% 38%, #2a1f54 0%, #0e0b1c 55%, #05040a 100%);
     transition:opacity .8s var(--ease); text-align:center; padding:1.5rem; }
   #hatch.gone{ opacity:0; pointer-events:none; }
+  /* embed mode (inside the MEOK OS character window): fit a short iframe, never clip */
+  body.embed #hatch{ position:absolute; overflow:auto; gap:.7rem; padding:1rem; justify-content:flex-start; }
+  body.embed .hegg{ font-size:4rem; }
+  body.embed #hatch h1{ font-size:1.1rem; }
+  body.embed #hatch p{ font-size:.8rem; max-width:90%; }
+  body.embed .hbtn{ padding:.6rem 1.3rem; font-size:.9rem; }
   .hegg{ font-size:7rem; cursor:pointer; user-select:none; filter:drop-shadow(0 0 28px rgba(168,85,247,.55));
     animation:hbreathe 3s var(--ease) infinite; transition:transform .25s var(--ease); }
   .hegg:active{ transform:scale(.92); }
@@ -366,6 +372,9 @@ window.emoteFromText = emoteFromText;  // chat layer calls this with each reply
 window.addEventListener("message", e=>{
   if(e.data && e.data.type==="meok-emote") emoteFromText(e.data.text||"");
 });
+// embed mode: when shown inside the MEOK OS character window (?embed=1), use the compact
+// layout so the hatch overlay fits a short iframe and never clips.
+if(new URLSearchParams(location.search).get("embed")==="1") document.body.classList.add("embed");
 
 // ---- load a character's VRM (unloads previous, attaches idle + lookAt) ----
 async function loadModel(url){
