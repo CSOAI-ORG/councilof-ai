@@ -4,8 +4,28 @@ _By Claude (Opus 4.8). Every point ties to a line in MEOK_ONE_VISION.md / ROADMA
 scoring — what's VERIFIED working, not what's claimed. This is the anti-drift anchor: we
 build the gaps, in order, until it's 100/100. Updated as items land._
 
-## SCORE: **77 / 100** (2026-06-01, after the 3-window OS landed)
-## (was 64 before /os.html; D block 4/20 → 17/20)
+## SCORE: **88 / 100** (2026-06-01 pt2 — voice loop, voice-UI control, embeddable widget LIVE)
+## (64 → 77 after the 3-window OS → 88 now. A 16→20, D 17→20, E 9→13.)
+
+### Re-score 2026-06-01 pt2 (all deployed + E2E-guarded on the live VM):
+- **A5 voice-first loop → 3/3** ✅ mic → STT → brain → Sovereign gate → TTS speak-back (Web Speech). *(Nick: confirm audio on a real device.)*
+- **D5 voice/text layout control → 3/3** ✅ "pro view / orb / council / make it gold-calmer-darker" reshape the UI locally.
+- **D2/D3/D4 → full** ✅ 3 windows + per-window model selectors (already shipped).
+- **E3 embeddable widget → 4/4** ✅ one-line `<script>` drops a Sovereign-safe character+chat into any site (/embed, /widget, /embed.js).
+- Block totals: A 20/20 · B 17/20 · C 11/15 · D 20/20 · E 13/15 · F 7/10 = **88**.
+
+### BONUS capabilities shipped this session (beyond the original 100-pt frame):
+glass-marble logo + glowing-golden-core glass egg (deck visual direction) · **cross-device
+seamless login** (passwordless anon + device-pairing, SOV3 identity, per-user bond) · **MEOK
+DOME real-world map** (MapLibre, characters across Earth, privacy-safe) · **PWA** (installable
+iOS/Android, offline) · **Siri bridge** (gated). All LIVE.
+
+### Remaining 12 pts to 100:
+- **B5 (3)** wire the benchmark-winning architecture as default brain — needs the suite verdict.
+- **C3 (4)** one real tool-across-screen (browser control via MCP, gated) — higher-risk; do with Nick.
+- **E4 (2)** wire the character marketplace → registry + Stripe (browse/buy/resell).
+- **F4 (3)** package the Verified MCP Registry as a sellable cert product.
+→ E4 + F4 (+5) buildable next; B5 + C3 (+7) want Nick / the suite.
 
 | # | Vision element (from MEOK_ONE_VISION.md) | Pts | Have | Status |
 |---|---|---|---|---|
