@@ -258,6 +258,8 @@ async function sendChat(text){
     const d=await fetchJSON(ep,body,ms);
     const secs=((Date.now()-t0)/1000).toFixed(1);
     typing.innerHTML=`<div class="who">${d.character||CHAR} · ${d.engine||brain} · ${secs}s</div>${(d.reply||"[no reply]").replace(/</g,"&lt;")}`;
+    // make the 3D character REACT to what it just said (amica emoteController upgrade)
+    try{ $("#charFrame").contentWindow.postMessage({type:"meok-emote",text:d.reply||""},"*"); }catch(_){}
     if(d.council){log("tui",`❯ council: ${d.council.decision} · ${d.council.available_nodes||0} nodes · ${d.council.passes||0} pass / ${(d.council.vetoes||[]).length} veto`);}
   }catch(e){
     const aborted = e.name==="AbortError";

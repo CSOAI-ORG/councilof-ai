@@ -338,6 +338,35 @@ function setMood(m){
   }
 }
 
+// ---- emotion FROM the reply text (the amica emoteController upgrade) ----
+// amica's character reacts to WHAT it says. We detect sentiment from the reply and
+// play the matching VRM expression — the character feels alive, not just rendered.
+const EMOTION_CUES = [
+  { exp:"happy",    w:0.9,  rx:/\b(haha|lol|great|wonderful|love|yay|excited|delighted|joy|glad|amazing|congratulat|🎉|😊|😄|❤️)\b/i },
+  { exp:"sad",      w:0.8,  rx:/\b(sorry|sad|hurt|grief|lonely|cry|miss you|heartbreak|unfortunately|😢|💔)\b/i },
+  { exp:"surprised",w:0.5,  rx:/\b(wow|whoa|really\?|amazing|incredible|no way|unbelievable|😮|😲)\b/i },
+  { exp:"angry",    w:0.6,  rx:/\b(angry|furious|unfair|outrage|how dare|frustrat)\b/i },
+  { exp:"relaxed",  w:0.7,  rx:/\b(calm|breathe|gentle|rest|peace|it's okay|here for you|take your time|safe)\b/i },
+];
+let emoteTimer = null;
+function emoteFromText(text){
+  if(!vrm?.expressionManager || !text) return;
+  const cue = EMOTION_CUES.find(c => c.rx.test(text)) || {exp:"happy", w:0.4};  // default warm
+  // fade current, apply the detected emotion (amica playEmotion pattern)
+  if(curExp && curExp!=="neutral") vrm.expressionManager.setValue(curExp,0);
+  if(cue.exp!=="neutral") vrm.expressionManager.setValue(cue.exp, cue.w);
+  curExp = cue.exp;
+  $("#moodchip").textContent = cue.exp;
+  // hold the expression ~4s then settle back to calm (so it doesn't freeze emoting)
+  clearTimeout(emoteTimer);
+  emoteTimer = setTimeout(()=>setMood("calm"), 4000);
+}
+window.emoteFromText = emoteFromText;  // chat layer calls this with each reply
+// listen for emote requests from the parent OS window (the chat in os.html)
+window.addEventListener("message", e=>{
+  if(e.data && e.data.type==="meok-emote") emoteFromText(e.data.text||"");
+});
+
 // ---- load a character's VRM (unloads previous, attaches idle + lookAt) ----
 async function loadModel(url){
   if(vrm){ scene.remove(vrm.scene); try{ VRMUtils.deepDispose(vrm.scene); }catch(e){} vrm=null; mixer=null; }
