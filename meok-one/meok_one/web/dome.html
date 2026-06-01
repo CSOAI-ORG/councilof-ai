@@ -161,7 +161,11 @@ const SEED = [ // fallback if the API isn't reachable, so the DOME is never empt
 ];
 async function boot(){
   let chars=SEED;
-  try{ const d=await (await fetch("/api/characters")).json(); if(d.characters&&d.characters.length) chars=d.characters; }catch(_){}
+  // include the visitor's token so their Character-Factory creations also live in the world
+  try{ const _t=localStorage.getItem("meok_token");
+    const h=_t?{Authorization:"Bearer "+_t}:{};
+    const d=await (await fetch("/api/characters",{headers:h})).json();
+    if(d.characters&&d.characters.length) chars=d.characters; }catch(_){}
   document.getElementById("count").textContent=chars.length;
   chars.forEach(c=>{
     const p=placeFor(c.id||c.name), el=makePin(c.emoji,null);

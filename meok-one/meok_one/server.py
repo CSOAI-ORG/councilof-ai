@@ -213,7 +213,11 @@ class Handler(BaseHTTPRequestHandler):
                 "stages": reg.emergence_stages(),
             })
         if path == "/api/characters":
-            return self._json(200, {"characters": reg.list_characters()})
+            chars = reg.list_characters()
+            _u = self._uid()   # include this user's Character-Factory creations
+            if auth.user_exists(_u):
+                chars = chars + auth.list_characters(_u)
+            return self._json(200, {"characters": chars})
         if path == "/api/brains":
             return self._json(200, brains(qs.get("tier", ["pro"])[0]))
         if path == "/api/tiers":
@@ -281,6 +285,17 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(200, s.hatch(b.get("archetype", "nurturer"),
                                                b.get("care_style", "gentle"),
                                                b.get("name") or None))
+            if path == "/api/factory":
+                # Character Factory: mint a NEW character (archetype × care-style × name) and
+                # persist it to THIS user's roster, so it lives in their OS + DOME world forever.
+                from . import factory as _factory
+                try:
+                    char = _factory.mint(b.get("archetype", "nurturer"),
+                                         b.get("care_style", "gentle"), b.get("name") or None)
+                except KeyError as e:
+                    return self._json(400, {"error": str(e)})
+                saved = auth.add_character(uid, char) if auth.user_exists(uid) else {"ok": False}
+                return self._json(200, {"character": char, "created": True, "roster": saved.get("count")})
             if path == "/api/think":
                 cid = b.get("character", "aria")
                 out = think(cid, b.get("message", ""),

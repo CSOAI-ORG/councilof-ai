@@ -177,6 +177,7 @@
           <span class="title">🧬 Character</span>
           <span class="vhud" id="vhud" title="your bond grows the more you talk — it remembers you"></span>
           <div class="sel">
+            <button id="facBtn" title="Create your own AI" style="background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:3px 8px;font-size:11px;cursor:pointer;margin-right:6px">✨ New</button>
             <select id="charSel" title="which character"></select>
           </div>
         </div>
@@ -256,6 +257,25 @@
       </div>
       <p style="font-size:11px;color:var(--dim)">🛡️ Every reply passes the Sovereign safety gate. Your bond + memory are private to your account.</p>
       <button class="acctbtn" id="setDone">Done</button>
+    </div>
+  </div>
+
+  <!-- Character Factory: mint your own AI (archetype × care-style × name) → lives in your DOME world -->
+  <div class="acctmodal" id="facModal">
+    <div class="acctcard">
+      <span class="x" id="facX">✕</span>
+      <h3>✨ Create your own AI</h3>
+      <p>Mint a brand-new character — choose its nature, name it, and it's yours forever. It joins your roster and lives in your DOME world.</p>
+      <div style="text-align:left;margin:12px 0">
+        <div style="font-size:12px;color:var(--dim);margin:6px 0 4px">Archetype</div>
+        <select id="facArch" style="width:100%;background:#0a0a14;border:1px solid var(--line);border-radius:10px;padding:.55rem;color:var(--ink);font-size:13px"></select>
+        <div style="font-size:12px;color:var(--dim);margin:12px 0 4px">Care style</div>
+        <select id="facCare" style="width:100%;background:#0a0a14;border:1px solid var(--line);border-radius:10px;padding:.55rem;color:var(--ink);font-size:13px"></select>
+        <div style="font-size:12px;color:var(--dim);margin:12px 0 4px">Name <span class="dim">(optional)</span></div>
+        <input id="facName" placeholder="leave blank to auto-name" style="width:100%;background:#0a0a14;border:1px solid var(--line);border-radius:10px;padding:.55rem;color:var(--ink);font-size:14px"/>
+      </div>
+      <button class="acctbtn" id="facCreate">✨ Create &amp; meet them</button>
+      <p id="facMsg" style="font-size:11.5px;color:var(--dim);margin-top:8px"></p>
     </div>
   </div>
 
@@ -373,10 +393,10 @@ function prodPanel(p,d){
   let body="", script="";
   if(p.id==="chars"){ const cs=d.characters||[];
     body=`<h2>Your characters <span class="dim">— ${cs.length} faces · tap one to become your AI</span></h2>
-      <div class="grid">`+cs.map(c=>`<div class="card" data-id="${c.id}" title="${c.archetype||""}">
+      <div class="grid"><div class="card" data-create="1" style="border-style:dashed;border-color:#7c5cff"><div class="em">✨</div><div class="nm">Create</div><div class="ar">your own AI</div></div>`+cs.map(c=>`<div class="card" data-id="${c.id}" title="${c.archetype||""}">
         <div class="em">${c.emoji||"🧬"}</div><div class="nm">${c.name}</div><div class="ar">${c.archetype||"companion"}</div></div>`).join("")+
       `</div><a class="mkt" href="https://loopfactory.ai" target="_blank" rel="noopener">✦ Browse the character marketplace — discover, buy &amp; resell →</a>`;
-    script=`<scr`+`ipt>document.addEventListener("click",function(e){var c=e.target.closest(".card");if(!c)return;
+    script=`<scr`+`ipt>document.addEventListener("click",function(e){var c=e.target.closest(".card");if(!c)return;if(c.getAttribute("data-create")){parent.postMessage({type:"meok:create"},"*");return;}
       document.querySelectorAll(".card").forEach(function(x){x.classList.remove("on")});c.classList.add("on");
       parent.postMessage({type:"meok:select-char",id:c.getAttribute("data-id"),name:c.querySelector(".nm").textContent},"*");});</scr`+`ipt>`; }
   else if(p.id==="market"){ const cs=d.characters||[];
@@ -453,6 +473,7 @@ window.addEventListener("message",e=>{
     window.__meokContext=`DOME · ${d.name||d.character} near ${d.city||"the world"}`;
   }
   if(d.type==="meok:select-char"&&d.id){ focusCharacter(d.id,d.name); }   // Characters marketplace grid
+  if(d.type==="meok:create"){ if(window.__openFactory) window.__openFactory(); }   // ✨ Create from a grid
 });
 
 // ---- drag-to-resize windows (Nick: "move the uis to change sizes") ----
@@ -498,6 +519,7 @@ fetch(API+"/api/characters").then(r=>r.json()).then(d=>{
 $("#charSel").onchange=e=>{CHAR=e.target.value;
   $("#charFrame").src="/avatar?embed=1&character="+CHAR;
   log("tui",`❯ character → ${CHAR}`); refreshVitals();};
+$("#facBtn").onclick=()=>{ if(window.__openFactory) window.__openFactory(); };
 
 fetch(API+"/api/tools").then(r=>r.json()).then(d=>{
   $("#sdot").classList.add("ok");
@@ -686,6 +708,34 @@ window.addEventListener("keydown",e=>{ if(e.altKey&&e.key>="1"&&e.key<="4")setMo
   // restore persisted prefs on load
   try{ const sb=localStorage.getItem("meok_brain"); if(sb&&[...$("#brainSel").options].some(o=>o.value===sb)) $("#brainSel").value=sb;
        if(localStorage.getItem("meok_voice")) VOICE_ON=true; }catch(_){}
+})();
+
+// ---- Character Factory: mint a brand-new AI (archetype × care-style × name), persisted to your roster ----
+(function(){
+  const M=$("#facModal");
+  async function fill(){ try{ const a=await (await fetch(API+"/api/archetypes")).json();
+    $("#facArch").innerHTML=(a.archetypes||[]).map(x=>{const id=x.id||x.name;return `<option value="${id}">${x.emoji||"🧬"} ${id}${x.domain?" — "+x.domain:""}</option>`;}).join("");
+    const cs=a.care_styles, keys=Array.isArray(cs)?cs:Object.keys(cs||{});
+    $("#facCare").innerHTML=keys.map(k=>`<option value="${k}">${k}</option>`).join(""); }catch(_){}}
+  const open=()=>{ M.classList.add("on"); $("#facMsg").textContent=""; if(!$("#facArch").options.length) fill(); };
+  const close=()=>M.classList.remove("on");
+  $("#facX").onclick=close; M.onclick=e=>{ if(e.target===M) close(); };
+  $("#facCreate").onclick=async()=>{
+    $("#facMsg").textContent="✨ minting…";
+    try{
+      const d=await (await fetch(API+"/api/factory",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({archetype:$("#facArch").value,care_style:$("#facCare").value,name:($("#facName").value||"").trim()||null})})).json();
+      if(d.character){ const c=d.character, sel=$("#charSel");
+        if(![...sel.options].some(o=>o.value===c.id)){ const o=document.createElement("option"); o.value=c.id; o.textContent=(c.emoji||"🧬")+" "+c.name; sel.appendChild(o); }
+        focusCharacter(c.id,c.name);
+        $("#facMsg").textContent=`✨ ${c.name} is yours — ${c.archetype} · ${c.care_style}`;
+        $("#facName").value="";
+        if(["dome","chars","market"].includes(activeProd)) openProduct(activeProd);   // refresh world/grid
+        setTimeout(close,1500);
+      } else { $("#facMsg").textContent=d.error||"couldn't create — try again"; }
+    }catch(e){ $("#facMsg").textContent="error: "+e.message; }
+  };
+  window.__openFactory=open;
 })();
 </script>
 </body>

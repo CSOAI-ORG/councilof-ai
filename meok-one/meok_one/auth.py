@@ -140,4 +140,23 @@ def me(uid: str) -> dict:
     if not u:
         return {"error": "unknown user"}
     return {"user_id": uid, "created": u["created"],
-            "devices": u.get("devices", 1), "email": u.get("email")}
+            "devices": u.get("devices", 1), "email": u.get("email"),
+            "characters": len(u.get("characters", []))}
+
+
+# ---------- per-user character roster (the Character Factory persists creations here) ----------
+def add_character(uid: str, char: dict) -> dict:
+    d = _load()
+    u = d.get("users", {}).get(uid)
+    if not u:
+        return {"error": "unknown user"}
+    keep = {k: char.get(k) for k in ("id", "name", "emoji", "archetype", "care_style", "color", "tagline")}
+    roster = [c for c in u.get("characters", []) if c.get("id") != keep.get("id")]
+    roster.append(keep)
+    u["characters"] = roster[-50:]   # cap per user
+    _save(d)
+    return {"ok": True, "count": len(u["characters"])}
+
+
+def list_characters(uid: str) -> list:
+    return _load().get("users", {}).get(uid, {}).get("characters", [])
