@@ -25,7 +25,7 @@
        height:100vh;overflow:hidden}
   .app{display:grid;grid-template-columns:1fr 420px;height:100vh}
   .stage{position:relative;display:flex;align-items:center;justify-content:center;
-         padding:24px;color:var(--dim);text-align:center}
+         padding:24px;padding-top:64px;color:var(--dim);text-align:center}
   .stage .hint{max-width:340px}
   .stage h1{font-size:42px;margin:0 0 8px;color:var(--ink);
             background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -33,9 +33,9 @@
   .dock{display:flex;flex-direction:column;gap:10px;padding:12px;height:100vh;overflow:hidden}
   .win{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
        display:flex;flex-direction:column;overflow:hidden;min-height:0;transition:flex .25s ease,opacity .2s}
-  .win.character{flex:1.1}
-  .win.chat{flex:1.5}
-  .win.tui{flex:1}
+  .win.character{flex:1.1;min-height:240px}
+  .win.chat{flex:1.5;min-height:200px}
+  .win.tui{flex:1;min-height:160px}
   .win .bar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--panel2);
             border-bottom:1px solid var(--line);font-size:12px}
   .win .bar .title{font-weight:600;letter-spacing:.3px}
@@ -66,11 +66,12 @@
   .tui-in{display:flex;border-top:1px solid var(--line);background:#0a0a14}
   .tui-in span{color:var(--accent);padding:6px 4px 6px 8px;font-family:monospace}
   .tui-in input{flex:1;background:transparent;border:0;color:#9fe6b8;font:12px/1.4 monospace;padding:6px 8px;outline:none}
-  /* mode bar */
-  .modebar{position:fixed;top:12px;left:12px;display:flex;gap:6px;z-index:20}
+  /* mode bar — sits in the LEFT stage column only (never overlaps the dock/selectors) */
+  .modebar{position:absolute;top:16px;left:16px;display:flex;gap:6px;z-index:20;flex-wrap:wrap;max-width:260px}
   .modebar button{background:var(--panel);border:1px solid var(--line);color:var(--dim);
                   border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer}
   .modebar button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  body.orb .modebar{position:fixed}
   /* ORB mode */
   body.orb .app{grid-template-columns:1fr}
   body.orb .dock{position:fixed;bottom:20px;right:20px;height:auto;width:auto;padding:0}
@@ -90,15 +91,14 @@
 </style>
 </head>
 <body class="simple">
-  <div class="modebar">
-    <button data-mode="simple" class="on">● Simple</button>
-    <button data-mode="pro">⊞ Pro</button>
-    <button data-mode="council">⚖ Council</button>
-    <button data-mode="orb">◯ Orb</button>
-  </div>
-
   <div class="app">
     <div class="stage">
+      <div class="modebar">
+        <button data-mode="simple" class="on">● Simple</button>
+        <button data-mode="pro">⊞ Pro</button>
+        <button data-mode="council">⚖ Council</button>
+        <button data-mode="orb">◯ Orb</button>
+      </div>
       <div class="hint">
         <h1>MEOK OS</h1>
         <p>Your character lives in the windows on the right. Talk to it — it remembers you,

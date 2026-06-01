@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "meok-one",
+      "name": "meok-os",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["-lc", "cd /Users/nicholas/clawd/meok-one && exec python3 -m meok_one.server 4173"],
+      "runtimeArgs": ["-lc", "cd /Users/nicholas/clawd/meok-one && exec env PYTHONPATH=/Users/nicholas/clawd/meok-one:/Users/nicholas/clawd python3 -m meok_one.server 4173"],
       "port": 4173
     }
   ]
