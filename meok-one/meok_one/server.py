@@ -43,7 +43,12 @@ _INDEX = os.path.join(_HERE, "web", "index.html")
 #  - code-reconcile NEVER error-corrects (votes but keeps the draft); llm-reconcile DOES (it
 #    synthesizes a corrected answer from the lens critiques — lifted a weak draft to correct).
 #  - local-Ollama lenses time out on the CPU VM, so the deployed council uses a fast CLOUD roster.
-_COUNCIL_ROSTER = ["deepseek-v4", "gemini", "qwen-max", "llama4", "glm", "step-3.7", "gemma"]
+#  TURBO (2026-06-01 research): lenses pinned to Groq (~0.5s each, verified). Use only fast
+#  NON-reasoning models — reasoning models (gpt-oss/qwen3) burn the 96-tok cap on hidden thinking
+#  and return empty. Synthesis stays on Opus (reliable quality; conditional + falls back via
+#  allow_fallbacks). Override orchestrator="turbo-llama70" for a faster (jittery) all-Groq path.
+_COUNCIL_ROSTER = ["turbo-llama70", "turbo-llama4s", "turbo-llama8", "turbo-llama4s", "turbo-llama8"]
+_COUNCIL_PROVIDER = ["Groq", "Cerebras"]
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -300,7 +305,8 @@ class Handler(BaseHTTPRequestHandler):
                                         user_id=uid,
                                         reconcile=b.get("reconcile", "llm"),     # llm-synthesis: the mode that actually error-corrects
                                         orchestrator=b.get("orchestrator", "opus"),
-                                        roster=_roster,                          # fast cloud lenses (local Ollama times out on the CPU VM)
+                                        roster=_roster,                          # turbo cloud lenses (Groq/Cerebras)
+                                        provider=b.get("provider") or _COUNCIL_PROVIDER,  # ultra-fast inference
                                         quorum=int(b.get("quorum", len(_roster))),
                                         deadline_s=float(b.get("deadline_s", 60)))
                 from .sovereign_gate import gate as _gate

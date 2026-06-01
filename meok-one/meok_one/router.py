@@ -82,6 +82,14 @@ MODELS = {
     "glm":              ("cloud", "z-ai/glm-4.5"),                    # Zhipu GLM
     "qwen-max":         ("cloud", "qwen/qwen-2.5-72b-instruct"),      # big Qwen
     "llama4":           ("cloud", "meta-llama/llama-4-maverick"),     # Llama 4 Maverick
+    # TURBO lenses — served by Groq/Cerebras at 0.3-0.8s (verified 2026-06-01). Pair with
+    # provider=["Groq","Cerebras"] for the deep-think council so 11 lenses finish in ~1s.
+    "turbo-llama70":    ("cloud", "meta-llama/llama-3.3-70b-instruct"),
+    "turbo-llama4s":    ("cloud", "meta-llama/llama-4-scout"),
+    "turbo-ossbig":     ("cloud", "openai/gpt-oss-120b"),
+    "turbo-oss":        ("cloud", "openai/gpt-oss-20b"),
+    "turbo-qwen":       ("cloud", "qwen/qwen3-32b"),
+    "turbo-llama8":     ("cloud", "meta-llama/llama-3.1-8b-instruct"),  # Groq instant, non-reasoning
 }
 
 # Which backends a billing tier may use. Local tier = local only (free, self-host).
@@ -214,7 +222,8 @@ def _ask_gemini(model_id: str, prompt: str, max_tokens: "int | None" = None) -> 
         return None, f"gemini error: {type(e).__name__}"
 
 
-def _ask_cloud(model_id: str, prompt: str, max_tokens: "int | None" = None) -> "tuple":
+def _ask_cloud(model_id: str, prompt: str, max_tokens: "int | None" = None,
+               provider: "list | None" = None) -> "tuple":
     """Cloud. Gemini direct (Google AI Studio key) takes priority when the model is a
     Gemini/Gemma id or only GOOGLE_API_KEY is set; else OpenRouter (BYOK). Honest 'not
     configured' rather than pretending. Governance-wrapper path, NOT token resale."""
@@ -241,6 +250,8 @@ def _ask_cloud(model_id: str, prompt: str, max_tokens: "int | None" = None) -> "
     _orp = {"model": or_model, "messages": [{"role": "user", "content": prompt}]}
     if max_tokens:
         _orp["max_tokens"] = int(max_tokens)
+    if provider:  # route to ultra-fast inference (Groq/Cerebras ~5x); fall back if unserved
+        _orp["provider"] = {"order": list(provider), "allow_fallbacks": True}
     body = json.dumps(_orp).encode()
     req = urllib.request.Request("https://openrouter.ai/api/v1/chat/completions",
                                  data=body, headers={"Authorization": f"Bearer {key}",
@@ -253,11 +264,13 @@ def _ask_cloud(model_id: str, prompt: str, max_tokens: "int | None" = None) -> "
         return None, f"cloud error: {type(e).__name__}"
 
 
-def ask(prompt: str, model: str = "auto", tier: str = "free", max_tokens: "int | None" = None) -> dict:
+def ask(prompt: str, model: str = "auto", tier: str = "free", max_tokens: "int | None" = None,
+        provider: "list | None" = None) -> dict:
     """Route a prompt to a model the tier is allowed to use. Returns
     {reply, model, backend, source}. model='auto' picks the best allowed backend
     (local→sov3→cloud). Honest: no fabrication; says when nothing answered.
-    max_tokens caps the output (SIGIL bounded-verdict: terse lens reviews → far faster)."""
+    max_tokens caps the output (SIGIL bounded-verdict: terse lens reviews → far faster).
+    provider pins OpenRouter inference providers, e.g. ["Groq","Cerebras"] (~5x faster)."""
     allowed = _TIER_BACKENDS.get(tier, {"local"})
 
     # resolve which (backend, id) to try
@@ -292,7 +305,7 @@ def ask(prompt: str, model: str = "auto", tier: str = "free", max_tokens: "int |
                 return {"reply": _strip_thinking(reply), "model": mid,
                         "backend": "sov3", "source": f"sov3:{mid}"}
         elif backend == "cloud":
-            reply, note = _ask_cloud(mid, prompt, max_tokens)
+            reply, note = _ask_cloud(mid, prompt, max_tokens, provider)
             if reply:
                 return {"reply": _strip_thinking(reply), "model": mid,
                         "backend": "cloud", "source": note}

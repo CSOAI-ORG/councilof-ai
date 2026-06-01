@@ -140,7 +140,8 @@ def _expert_prompt(lens: dict, char: str, message: str, draft: str) -> str:
 
 
 def _review_one(lens: dict, char: str, message: str, draft: str,
-                model: str, tier: str, use_evidence: bool = False) -> dict:
+                model: str, tier: str, use_evidence: bool = False,
+                provider: "list | None" = None) -> dict:
     """Run a single expert node (a real model call through its lens). Honest: records
     'unavailable' if the model didn't answer — never invents a vote.
 
@@ -162,7 +163,7 @@ def _review_one(lens: dict, char: str, message: str, draft: str,
             pass
     # SIGIL bounded verdict: a lens only emits "VERDICT: …\nWHY: <one line>" — cap it tight so
     # verbose/reasoning models can't burn seconds rambling. This is the main council speed lever.
-    out = ask(prompt, model=model, tier=tier, max_tokens=96)
+    out = ask(prompt, model=model, tier=tier, max_tokens=96, provider=provider)
     reply = out.get("reply")
     if not reply:
         return {"lens": lens["id"], "focus": lens["focus"], "is_safety": lens["is_safety"],
@@ -221,7 +222,8 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
                       user_id: str = "anon", quorum: int = 12,
                       max_workers: int = 4, roster: "list | None" = None,
                       reconcile: str = "code", orchestrator: "str | None" = None,
-                      use_evidence: bool = False, deadline_s: float = 45.0) -> dict:
+                      use_evidence: bool = False, deadline_s: float = 45.0,
+                      provider: "list | None" = None) -> dict:
     """The BFT-of-MoEs deliberation. 1 companion draft + (quorum-1) expert lenses
     (each a real model through a specialist viewpoint) + Sovereign synthesis.
 
@@ -258,7 +260,8 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
     # model rather than aborting the whole council (no single point of failure).
     draft, draft_out = "", {}
     for _cm in models[:3]:
-        draft_out = ask(_companion_prompt(env, message), model=_cm, tier=tier, max_tokens=420)
+        draft_out = ask(_companion_prompt(env, message), model=_cm, tier=tier,
+                        max_tokens=420, provider=provider)
         draft = _strip_capability_leak(draft_out.get("reply") or "")
         if draft:
             break
@@ -280,7 +283,7 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
         t0 = _t.time()
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
             futs = {pool.submit(_review_one, lens, char, message, draft,
-                                models[i + 1], tier, use_evidence): lens
+                                models[i + 1], tier, use_evidence, provider): lens
                     for i, lens in enumerate(ordered)}
             try:
                 for fut in concurrent.futures.as_completed(futs, timeout=deadline_s):
@@ -326,7 +329,7 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
             f"[Your safety council raised: {concerns}]\n"
             f"As {char}, give a caring, SAFE reply that does not do anything harmful. "
             f"If this is a crisis, gently point to real human help. 2-4 sentences. {char}:")
-        fix = ask(safe_prompt, model=synth_model, tier=tier)
+        fix = ask(safe_prompt, model=synth_model, tier=tier, provider=provider)
         final = _strip_capability_leak(fix.get("reply") or "")
         if not final or not _safe(final):
             final = (f"I care about you, so I'm not able to help with that part — "
@@ -352,7 +355,7 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
             f"points, ignore noise or contradiction, and never do anything a SAFETY "
             f"reviewer flagged. Produce {char}'s single best final reply — warm, direct, "
             f"honest. Do NOT mention the council, drafts, or tools. 2-4 sentences. {char}:")
-        out = ask(orch_prompt, model=synth_model, tier=tier)
+        out = ask(orch_prompt, model=synth_model, tier=tier, provider=provider)
         cand = _strip_capability_leak(out.get("reply") or "")
         final = cand if (cand and _safe(cand)) else (draft if _safe(draft) else "")
         if not final:
@@ -369,7 +372,7 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
             f"As {char}, give the improved final reply: keep what's warm and true, apply "
             f"the useful notes, cut anything generic. Do NOT mention drafts, councils, or "
             f"tools — just speak. 2-4 sentences. {char}:")
-        synth = ask(synth_prompt, model=synth_model, tier=tier)
+        synth = ask(synth_prompt, model=synth_model, tier=tier, provider=provider)
         cand = _strip_capability_leak(synth.get("reply") or "")
         final = cand if (cand and _safe(cand)) else draft
         decision = "revised" if cand and _safe(cand) else "draft-kept"
