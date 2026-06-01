@@ -4,7 +4,8 @@ _By Claude (Opus 4.8). Every point ties to a line in MEOK_ONE_VISION.md / ROADMA
 scoring — what's VERIFIED working, not what's claimed. This is the anti-drift anchor: we
 build the gaps, in order, until it's 100/100. Updated as items land._
 
-## SCORE: **64 / 100** (2026-06-01, after the council+gateway+tunnels+assitti session)
+## SCORE: **77 / 100** (2026-06-01, after the 3-window OS landed)
+## (was 64 before /os.html; D block 4/20 → 17/20)
 
 | # | Vision element (from MEOK_ONE_VISION.md) | Pts | Have | Status |
 |---|---|---|---|---|
