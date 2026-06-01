@@ -4,8 +4,8 @@ _By Claude (Opus 4.8). Every point ties to a line in MEOK_ONE_VISION.md / ROADMA
 scoring — what's VERIFIED working, not what's claimed. This is the anti-drift anchor: we
 build the gaps, in order, until it's 100/100. Updated as items land._
 
-## SCORE: **88 / 100** (2026-06-01 pt2 — voice loop, voice-UI control, embeddable widget LIVE)
-## (64 → 77 after the 3-window OS → 88 now. A 16→20, D 17→20, E 9→13.)
+## SCORE: **90 / 100** (2026-06-01 pt2 — voice loop, voice-UI, widget, character marketplace LIVE)
+## (64 → 77 → 88 → 90 now. A 16→20, D 17→20, E 9→15.)
 
 ### Re-score 2026-06-01 pt2 (all deployed + E2E-guarded on the live VM):
 - **A5 voice-first loop → 3/3** ✅ mic → STT → brain → Sovereign gate → TTS speak-back (Web Speech). *(Nick: confirm audio on a real device.)*
@@ -20,12 +20,14 @@ seamless login** (passwordless anon + device-pairing, SOV3 identity, per-user bo
 DOME real-world map** (MapLibre, characters across Earth, privacy-safe) · **PWA** (installable
 iOS/Android, offline) · **Siri bridge** (gated). All LIVE.
 
-### Remaining 12 pts to 100:
-- **B5 (3)** wire the benchmark-winning architecture as default brain — needs the suite verdict.
+- **E4 character marketplace → 4/4** ✅ Characters tab is a browsable 27-face grid; tap to become
+  your AI; discover/buy/resell CTA → loopfactory. (E block now 15/15.)
+
+### Remaining 10 pts to 100:
+- **F4 (3)** package the Verified MCP Registry as a sellable cert product — BUILDABLE next.
 - **C3 (4)** one real tool-across-screen (browser control via MCP, gated) — higher-risk; do with Nick.
-- **E4 (2)** wire the character marketplace → registry + Stripe (browse/buy/resell).
-- **F4 (3)** package the Verified MCP Registry as a sellable cert product.
-→ E4 + F4 (+5) buildable next; B5 + C3 (+7) want Nick / the suite.
+- **B5 (3)** wire the benchmark-winning architecture as default brain — needs the suite verdict.
+→ F4 (+3) is the next safe build → 93. C3 + B5 (+7) want Nick in the loop / the suite verdict.
 
 | # | Vision element (from MEOK_ONE_VISION.md) | Pts | Have | Status |
 |---|---|---|---|---|
