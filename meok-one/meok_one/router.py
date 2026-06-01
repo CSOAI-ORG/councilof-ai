@@ -116,8 +116,11 @@ def list_models(tier: str = "pro") -> list:
             for alias, (b, c) in MODELS.items() if b in allowed]
 
 
-def _ask_local(model_id: str, prompt: str) -> "str | None":
-    body = json.dumps({"model": model_id, "prompt": prompt, "stream": False}).encode()
+def _ask_local(model_id: str, prompt: str, max_tokens: "int | None" = None) -> "str | None":
+    payload = {"model": model_id, "prompt": prompt, "stream": False}
+    if max_tokens:
+        payload["options"] = {"num_predict": int(max_tokens)}
+    body = json.dumps(payload).encode()
     # The GCP VM is HTTPS+key. macOS Python 3.9 ships LibreSSL which fails Caddy's TLS
     # handshake (curl/system-TLS works fine), so route the VM call through curl. Local
     # http://localhost Ollama uses urllib as normal.
@@ -186,7 +189,7 @@ def _ask_sov3(tool: str, prompt: str) -> "str | None":
 
 
 
-def _ask_gemini(model_id: str, prompt: str) -> "tuple":
+def _ask_gemini(model_id: str, prompt: str, max_tokens: "int | None" = None) -> "tuple":
     """Direct Google Gemini (AI Studio key, AIza...). The right-brain engine on Nick's
     £742/free-tier credit — no OpenRouter needed. Returns (reply, note)."""
     key = os.environ.get("GOOGLE_API_KEY", "")
@@ -195,7 +198,10 @@ def _ask_gemini(model_id: str, prompt: str) -> "tuple":
     # accept ids like 'google/gemini-flash-latest' or 'gemini-flash-latest'
     m = model_id.split("/")[-1]
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={key}"
-    body = json.dumps({"contents": [{"parts": [{"text": prompt}]}]}).encode()
+    _payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    if max_tokens:
+        _payload["generationConfig"] = {"maxOutputTokens": int(max_tokens)}
+    body = json.dumps(_payload).encode()
     req = urllib.request.Request(url, data=body,
                                  headers={"Content-Type": "application/json"}, method="POST")
     try:
@@ -208,7 +214,7 @@ def _ask_gemini(model_id: str, prompt: str) -> "tuple":
         return None, f"gemini error: {type(e).__name__}"
 
 
-def _ask_cloud(model_id: str, prompt: str) -> "tuple":
+def _ask_cloud(model_id: str, prompt: str, max_tokens: "int | None" = None) -> "tuple":
     """Cloud. Gemini direct (Google AI Studio key) takes priority when the model is a
     Gemini/Gemma id or only GOOGLE_API_KEY is set; else OpenRouter (BYOK). Honest 'not
     configured' rather than pretending. Governance-wrapper path, NOT token resale."""
@@ -219,7 +225,7 @@ def _ask_cloud(model_id: str, prompt: str) -> "tuple":
     # fall-through added a ~19s tax that made chat "hang". Only use direct Gemini when
     # there's NO OpenRouter key. (Was: Gemini-first-then-fallback → slow.)
     if ("gemini" in mlow or "gemma" in mlow) and not _has_or:
-        reply, note = _ask_gemini(model_id, prompt)
+        reply, note = _ask_gemini(model_id, prompt, max_tokens)
         return (reply, note) if reply else (None, note)
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key:
@@ -232,8 +238,10 @@ def _ask_cloud(model_id: str, prompt: str) -> "tuple":
     or_model = _OR_MAP.get(model_id, model_id)
     if "/" not in or_model:  # last-resort: a bare id OpenRouter won't know → use a safe default
         or_model = "google/gemini-2.5-flash"
-    body = json.dumps({"model": or_model,
-                       "messages": [{"role": "user", "content": prompt}]}).encode()
+    _orp = {"model": or_model, "messages": [{"role": "user", "content": prompt}]}
+    if max_tokens:
+        _orp["max_tokens"] = int(max_tokens)
+    body = json.dumps(_orp).encode()
     req = urllib.request.Request("https://openrouter.ai/api/v1/chat/completions",
                                  data=body, headers={"Authorization": f"Bearer {key}",
                                                      "Content-Type": "application/json"})
@@ -245,10 +253,11 @@ def _ask_cloud(model_id: str, prompt: str) -> "tuple":
         return None, f"cloud error: {type(e).__name__}"
 
 
-def ask(prompt: str, model: str = "auto", tier: str = "free") -> dict:
+def ask(prompt: str, model: str = "auto", tier: str = "free", max_tokens: "int | None" = None) -> dict:
     """Route a prompt to a model the tier is allowed to use. Returns
     {reply, model, backend, source}. model='auto' picks the best allowed backend
-    (local→sov3→cloud). Honest: no fabrication; says when nothing answered."""
+    (local→sov3→cloud). Honest: no fabrication; says when nothing answered.
+    max_tokens caps the output (SIGIL bounded-verdict: terse lens reviews → far faster)."""
     allowed = _TIER_BACKENDS.get(tier, {"local"})
 
     # resolve which (backend, id) to try
@@ -273,7 +282,7 @@ def ask(prompt: str, model: str = "auto", tier: str = "free") -> dict:
 
     for backend, mid in order:
         if backend == "local":
-            reply = _ask_local(mid, prompt)
+            reply = _ask_local(mid, prompt, max_tokens)
             if reply:
                 return {"reply": _strip_thinking(reply), "model": mid,
                         "backend": "local", "source": "ollama"}
@@ -283,7 +292,7 @@ def ask(prompt: str, model: str = "auto", tier: str = "free") -> dict:
                 return {"reply": _strip_thinking(reply), "model": mid,
                         "backend": "sov3", "source": f"sov3:{mid}"}
         elif backend == "cloud":
-            reply, note = _ask_cloud(mid, prompt)
+            reply, note = _ask_cloud(mid, prompt, max_tokens)
             if reply:
                 return {"reply": _strip_thinking(reply), "model": mid,
                         "backend": "cloud", "source": note}

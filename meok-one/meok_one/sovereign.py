@@ -160,7 +160,9 @@ def _review_one(lens: dict, char: str, message: str, draft: str,
                     prompt += f"\n\n[Live tool evidence for your lens: {ev_lines}]"
         except Exception:
             pass
-    out = ask(prompt, model=model, tier=tier)
+    # SIGIL bounded verdict: a lens only emits "VERDICT: …\nWHY: <one line>" — cap it tight so
+    # verbose/reasoning models can't burn seconds rambling. This is the main council speed lever.
+    out = ask(prompt, model=model, tier=tier, max_tokens=96)
     reply = out.get("reply")
     if not reply:
         return {"lens": lens["id"], "focus": lens["focus"], "is_safety": lens["is_safety"],
@@ -252,8 +254,14 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
     synth_model = orchestrator or models[0]  # who reconciles / regenerates the final
 
     # --- Node 0: the COMPANION drafts the warm reply (the voice the user hears) ---
-    draft_out = ask(_companion_prompt(env, message), model=models[0], tier=tier)
-    draft = _strip_capability_leak(draft_out.get("reply") or "")
+    # Robustness: if the companion model transiently fails, fall back to the next roster
+    # model rather than aborting the whole council (no single point of failure).
+    draft, draft_out = "", {}
+    for _cm in models[:3]:
+        draft_out = ask(_companion_prompt(env, message), model=_cm, tier=tier, max_tokens=420)
+        draft = _strip_capability_leak(draft_out.get("reply") or "")
+        if draft:
+            break
     if not draft:
         return {"character": char, "emoji": emoji, "brain": "sovereign",
                 "engine": f"sovereign · 0/{quorum} (no draft)", "backend": "council",
@@ -325,7 +333,10 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
                      f"but I'm here for you. If you're in danger or distress, please "
                      f"reach out to someone you trust or local emergency help.")
         decision = "vetoed->revised"
-    elif reconcile == "llm":
+    elif reconcile == "llm" and revisers:
+        # CONDITIONAL synthesis (speed): only pay for the orchestrator call when lenses
+        # actually flagged changes. If every lens PASSED, the draft is already council-
+        # endorsed → fall through to the fast draft-ship path (saves the ~5-10s Opus call).
         # LLM-ORCHESTRATOR reconciliation: ONE model (the orchestrator, e.g. Opus 4.8)
         # reads the draft + ALL council reviews and writes the final itself — "Opus IS
         # the Sovereign". Safety is NOT delegated: the code veto above + the _safe
