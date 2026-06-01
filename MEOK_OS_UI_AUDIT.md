@@ -39,13 +39,14 @@ exercised, console watched). ✅ works · 🟡 works but thin/external · 🔴 b
 ## Standalone surfaces (separate from the OS tabs — all ✅ this session)
 `/hatch` cinematic · `/dome` map · `/siri` setup · `/embed` + `/widget` · `/registry`
 
-## Prioritised fix list
+## Prioritised fix list — ALL CLOSED except Agents (data-limited)
 1. ✅ **Marketplace blank** → FIXED: native hub (MCP registry + adopt-a-character grid).
-2. 🔴 **`codeSel` cosmetic** → wire the TUI coding-model selector to real behaviour, or remove it. *(quick)*
-3. 🟡 **Vitals/bond HUD** → surface bond/mood/level in the character window (small overlay). *(medium)*
-4. 🟡 **Tools tab** → browsable/searchable tool list + per-tool invoke + fix the "0 prohibited" count. *(medium)*
-5. 🟡 **Agents tab** → populate the registry + agent detail + invoke/talk. *(medium)*
-6. 🟡 **Care / Compliance** → native panels (Care: check-in/mood/crisis; Compliance → `/registry`). *(medium-big)*
+2. ✅ **`codeSel`** → FIXED: TUI is a per-model coding REPL via gated `/api/ask`.
+3. ✅ **Vitals/bond HUD** → FIXED: live `🐣 L2 · 💜12 · 🙂` in the character window.
+4. ✅ **Tools tab** → FIXED: invoke any tool by name, 3-tier gated, real result shown.
+5. 🟡 **Agents tab** → still sparse (registry has 2 agents) — *data*, not UI. Populate later.
+6. ✅ **Care / Compliance** → FIXED: Care = native wellbeing + crisis resources; Compliance → native `/registry`.
 7. ✅ `openProduct` clears `frame.src` before `srcdoc` → FIXED.
 
-→ Items 1, 2, 7 are quick wins; 3 is the highest user-delight (the Tamagotchi becomes visible).
+→ Every UI gap closed except the Agents registry being thin (a content/data task, not a UI fix).
+Plus cross-cutting: a fuller **Settings panel** (theme picker UI, model/privacy) is still light — Devices + voice + voice-theme only.
