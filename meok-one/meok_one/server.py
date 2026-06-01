@@ -139,9 +139,13 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "dome.html"))
         if path in ("/siri", "/siri.html", "/shortcut"):
             return self._html(os.path.join(_HERE, "web", "siri.html"))
+        if path in ("/widget", "/widget.html"):
+            return self._html(os.path.join(_HERE, "web", "widget.html"))
+        if path in ("/embed", "/embed.html"):
+            return self._html(os.path.join(_HERE, "web", "embed.html"))
         # PWA assets (installable on iOS/Android home screen + offline)
         if path in ("/manifest.webmanifest", "/sw.js", "/icon.svg",
-                    "/icon-192.png", "/icon-512.png"):
+                    "/icon-192.png", "/icon-512.png", "/embed.js"):
             fp = os.path.join(_HERE, "web", path.lstrip("/"))
             if os.path.isfile(fp):
                 ctype = ("application/manifest+json" if path.endswith("webmanifest")

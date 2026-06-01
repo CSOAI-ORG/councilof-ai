@@ -104,6 +104,21 @@ test.describe('MEOK OS — 3-window operating system', () => {
     await expect(page.locator('#prodframe')).toHaveAttribute('src', '/dome');
   });
 
+  // E3 — embeddable widget: the loader injects a launcher into any page; it opens the /widget.
+  test('E3 — embed loader injects launcher + opens the widget', async ({ page }) => {
+    await page.goto('/embed');
+    const launcher = page.locator('button[aria-label="Open your MEOK AI"]');
+    await expect(launcher).toBeVisible();
+    await launcher.click();
+    await expect.poll(async () =>
+      page.evaluate(() => [...document.querySelectorAll('iframe')].some(f => f.src.includes('/widget')))
+    ).toBe(true);
+    // the widget itself has a working composer
+    await page.goto('/widget?character=aria');
+    await expect(page.locator('#in')).toBeVisible();
+    await expect(page.locator('#send')).toBeVisible();
+  });
+
   // D5 — the AI reshapes the UI by voice/text: "pro view", "minimise to an orb", "make it gold".
   test('D5 — voice/text commands reshape the UI (mode + theme), no brain call', async ({ page }) => {
     await page.goto('/os');

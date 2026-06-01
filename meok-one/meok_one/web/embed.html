@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Embed MEOK on any site — one line</title>
+<link rel="icon" href="/icon.svg"/>
+<style>
+  :root{--accent:#7c5cff;--accent2:#38bdf8;--ok:#34d399;--ink:#f3f0ff;--dim:#9a9ab4;--bg:#05040c;--panel:#12121e;--line:#26263a}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#16122e,var(--bg));color:var(--ink);
+       font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:28px 18px 90px}
+  .wrap{max-width:720px;margin:0 auto}
+  h1{font-size:26px;margin:0 0 6px;background:linear-gradient(90deg,#fff,#c9b8ff 55%,#8fd6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--dim);margin:0 0 22px}
+  h2{font-size:16px;margin:26px 0 10px;color:#fff}
+  .card{background:rgba(18,18,30,.7);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:14px 0}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+  code{background:#0c0c16;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:#bfe9ff}
+  pre{background:#0a0a14;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;color:#cfeaff;position:relative}
+  .copy{position:absolute;top:8px;right:8px;font-size:11px;background:var(--accent);border:0;color:#fff;border-radius:8px;padding:4px 9px;cursor:pointer}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  td{padding:6px 8px;border-bottom:1px solid var(--line)} td:first-child{color:var(--accent2);white-space:nowrap}
+  .pill{display:inline-flex;gap:6px;font-size:12px;border-radius:20px;padding:4px 11px;margin:3px 6px 3px 0;color:#c9b8ff;border:1px solid rgba(124,92,255,.4)}
+  .note{color:var(--dim);font-size:13px}
+  a{color:var(--accent2)}
+  .foot{margin-top:34px;color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🪟 Embed MEOK on any site</h1>
+  <p class="sub">Drop a Sovereign-safe AI character — 3D face, chat, memory — into any page with
+     <b>one line</b>. It lives in a floating glass bubble (bottom-right). Try the one on this page →</p>
+
+  <div>
+    <span class="pill">🧬 3D character + chat</span>
+    <span class="pill">🛡️ Sovereign-gated</span>
+    <span class="pill">📱 mobile-ready</span>
+    <span class="pill">🔗 syncs with the user's MEOK account</span>
+  </div>
+
+  <h2>1. The one line</h2>
+  <div class="card">
+    <pre id="snip"><button class="copy" onclick="cp()">copy</button>&lt;script src="https://meok-one.35.242.143.249.sslip.io/embed.js"
+        data-character="aria" data-accent="#7c5cff"&gt;&lt;/script&gt;</pre>
+    <p class="note">Paste before <code>&lt;/body&gt;</code>. That's it — the launcher appears and opens the widget.</p>
+  </div>
+
+  <h2>2. Options (data-attributes)</h2>
+  <div class="card">
+    <table>
+      <tr><td>data-character</td><td>which of the 27 MEOK characters (default <code>aria</code>)</td></tr>
+      <tr><td>data-accent</td><td>brand colour, any hex (default <code>#7c5cff</code>)</td></tr>
+      <tr><td>data-position</td><td><code>right</code> (default) or <code>left</code></td></tr>
+    </table>
+  </div>
+
+  <h2>3. Or inline as an iframe</h2>
+  <div class="card">
+    <pre>&lt;iframe src="https://meok-one.35.242.143.249.sslip.io/widget?character=aria"
+        style="width:360px;height:560px;border:0;border-radius:18px" allow="microphone"&gt;&lt;/iframe&gt;</pre>
+    <p class="note">Same widget, embedded directly in your layout instead of a floating bubble.</p>
+  </div>
+
+  <div class="foot">MEOK ONE · your AI, forever. Every reply passes the Sovereign safety gate — on your site, too.</div>
+</div>
+
+<script>
+function cp(){ const t=document.getElementById("snip").innerText.replace(/^copy/,"").trim(); navigator.clipboard&&navigator.clipboard.writeText(t); const b=document.querySelector(".copy"); b.textContent="copied!"; setTimeout(()=>b.textContent="copy",1500); }
+</script>
+<!-- live demo: this very page embeds MEOK -->
+<script src="/embed.js" data-character="aria" data-accent="#7c5cff"></script>
+</body>
+</html>
