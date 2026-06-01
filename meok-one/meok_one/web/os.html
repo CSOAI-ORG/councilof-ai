@@ -177,6 +177,7 @@
           <span class="title">🧬 Character</span>
           <span class="vhud" id="vhud" title="your bond grows the more you talk — it remembers you"></span>
           <div class="sel">
+            <button id="detBtn" title="About this character" style="background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:3px 8px;font-size:11px;cursor:pointer;margin-right:6px">ⓘ</button>
             <button id="facBtn" title="Create your own AI" style="background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:3px 8px;font-size:11px;cursor:pointer;margin-right:6px">✨ New</button>
             <select id="charSel" title="which character"></select>
           </div>
@@ -289,6 +290,21 @@
       </div>
       <button class="acctbtn" id="facCreate">✨ Create &amp; meet them</button>
       <p id="facMsg" style="font-size:11.5px;color:var(--dim);margin-top:8px"></p>
+    </div>
+  </div>
+
+  <!-- Character detail card: inspect any character — face, nature, traits, voice, story -->
+  <div class="acctmodal" id="detModal">
+    <div class="acctcard" style="max-width:390px">
+      <span class="x" id="detX">✕</span>
+      <div id="detEgg" style="width:84px;height:84px;margin:4px auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 0 30px rgba(124,58,237,.5);border:2px solid rgba(255,255,255,.18)">🧬</div>
+      <h3 id="detName" style="margin:0">…</h3>
+      <div id="detSub" style="font-size:12px;color:var(--dim);margin-top:3px;text-transform:capitalize"></div>
+      <div id="detTraits" style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:11px 0"></div>
+      <p id="detDomain" style="font-size:12px;color:var(--dim);margin:6px 0"></p>
+      <p id="detVoice" style="font-size:11.5px;color:var(--dim);margin:6px 0"></p>
+      <p id="detStory" style="font-size:12.5px;color:var(--ink);text-align:left;margin:10px 2px;line-height:1.55"></p>
+      <button class="acctbtn" id="detMine">💬 Chat with them</button>
     </div>
   </div>
 
@@ -781,6 +797,33 @@ window.addEventListener("keydown",e=>{ if(e.altKey&&e.key>="1"&&e.key<="4")setMo
     }catch(e){ $("#facMsg").textContent="error: "+e.message; }
   };
   window.__openFactory=open;
+})();
+
+// ---- Character detail card: inspect any character (seeds + your creations), then chat ----
+(function(){
+  const M=$("#detModal"); const close=()=>M.classList.remove("on");
+  async function open(id){ if(!id) return;
+    M.classList.add("on");
+    $("#detName").textContent="…"; $("#detSub").textContent=""; $("#detTraits").innerHTML="";
+    $("#detDomain").textContent=""; $("#detVoice").textContent=""; $("#detStory").textContent="";
+    try{ const d=await (await fetch(API+"/api/character?id="+encodeURIComponent(id))).json();
+      const c=d.character; if(!c){ $("#detName").textContent="not found"; return; }
+      const v=c.visual||{}, vo=c.voice||{};
+      $("#detEgg").style.background=v.gradient||"radial-gradient(circle,#7C3AED,#0c0c16)";
+      $("#detEgg").textContent=v.emoji||c.emoji||"🧬";
+      $("#detName").textContent=c.name||"";
+      $("#detSub").textContent=[c.archetype,c.care_style].filter(Boolean).join(" · ");
+      const traits=c.personality_traits||c.traits||[];
+      $("#detTraits").innerHTML=traits.slice(0,6).map(t=>`<span style="border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:11px;color:var(--ink)">${t}</span>`).join("");
+      $("#detDomain").textContent=c.domain?("✦ "+c.domain):"";
+      const vn=vo.recommended_voice||""; $("#detVoice").textContent=vn?("🎙 voice: "+vn):"";
+      $("#detStory").textContent=c.backstory||c.tagline||"";
+      $("#detMine").onclick=()=>{ focusCharacter(c.id||id,c.name); close(); };
+    }catch(e){ $("#detName").textContent="couldn't load"; }
+  }
+  $("#detX").onclick=close; M.onclick=e=>{ if(e.target===M) close(); };
+  $("#detBtn").onclick=()=>open(CHAR);
+  window.__openDetail=open;
 })();
 </script>
 </body>

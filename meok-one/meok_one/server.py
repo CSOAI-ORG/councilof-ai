@@ -223,6 +223,25 @@ class Handler(BaseHTTPRequestHandler):
             except KeyError as e:
                 return self._json(400, {"error": str(e)})
             return self._json(200, {"character": char})
+        if path == "/api/character":
+            # Full record for one character (detail card): traits, voice, domain, backstory.
+            cid = (qs.get("id", [""])[0] or "").strip()
+            try:
+                return self._json(200, {"character": reg.get(cid)})
+            except KeyError:
+                # minted (gen_*) — rebuild the full record from this user's roster entry,
+                # which keeps (archetype, care_style, name) → re-mint is deterministic (same id).
+                _u = self._uid()
+                for r in (auth.list_characters(_u) if auth.user_exists(_u) else []):
+                    if r.get("id") == cid:
+                        from . import factory as _factory
+                        try:
+                            full = _factory.mint(r.get("archetype", "nurturer"),
+                                                 r.get("care_style", "gentle"), r.get("name"))
+                            return self._json(200, {"character": full})
+                        except Exception:
+                            return self._json(200, {"character": r})   # trimmed fallback
+                return self._json(404, {"error": f"unknown character {cid!r}"})
         if path == "/api/characters":
             chars = reg.list_characters()
             _u = self._uid()   # include this user's Character-Factory creations

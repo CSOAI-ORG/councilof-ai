@@ -67,6 +67,25 @@ const apiCount = await page.evaluate(async () => {
 });
 must(apiCount >= 1, `Creation persisted to roster (${apiCount} gen_ character(s))`);
 
+// ---------- per-character detail card ----------
+await page.click('#detBtn');
+await page.waitForSelector('#detModal.on', { timeout: 3000 });
+await page.waitForTimeout(500);
+const detName = (await page.textContent('#detName'))?.trim();
+must(detName && detName !== '…' && detName !== "couldn't load", `Detail card loads a name (${detName})`);
+const detTraits = await page.$$eval('#detTraits span', e => e.length);
+must(detTraits >= 1, `Detail card shows trait chips (${detTraits})`);
+const detStory = (await page.textContent('#detStory'))?.trim();
+must(!!detStory, 'Detail card shows a backstory/tagline');
+await page.click('#detX');
+await page.waitForTimeout(200);
+const ariaOk = await page.evaluate(async () => {
+  const d = await (await fetch('/api/character?id=aria')).json();
+  const c = d.character || {};
+  return !!(c.personality_traits && c.personality_traits.length && c.backstory);
+});
+must(ariaOk, 'API /api/character returns full seed record (traits + backstory)');
+
 // ---------- DOME world: the creation lives there as a gold pin ----------
 await page.goto(`${BASE}/dome.html`, { waitUntil: 'networkidle' });
 await page.waitForTimeout(2500);   // boot gate (load/idle/timeout) + markers
