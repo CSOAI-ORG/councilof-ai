@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>MEOK DOME — your AI's world, mapped onto Earth</title>
+<!--
+  MEOK DOME (Nick's vision: "openclaw world mixed with google maps geo… map it onto real world").
+  A real-world MapLibre GLOBE. MEOK characters live as glowing pins across Earth's great cities.
+  Open-source stack — MapLibre GL (BSD) + OpenStreetMap/CARTO dark tiles (keyless). NOT Google Maps.
+  PRIVACY BY DESIGN: the "you are roughly here" pin is derived from your *timezone* only
+  (region-level, no permission prompt) — never GPS, never an exact address.
+-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css"/>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<style>
+  :root{--accent:#7c5cff;--accent2:#38bdf8;--ink:#f3f0ff;--dim:#9a9ab4;--bg:#05040c}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+  #map{position:absolute;inset:0}
+  .maplibregl-ctrl-attrib{font-size:9px;background:rgba(5,4,12,.6)!important}
+  .maplibregl-ctrl-attrib a{color:#8a8aa0!important}
+  /* a faint vignette so the globe reads as a glowing planet in dark space */
+  .vignette{position:absolute;inset:0;pointer-events:none;z-index:2;
+            background:radial-gradient(circle at 50% 45%,transparent 52%,rgba(5,4,12,.65) 100%)}
+  /* ---- character pins ---- */
+  .pin{position:relative;width:34px;height:34px;cursor:pointer;transform:translate(-50%,-50%)}
+  .pin .glow{position:absolute;inset:-6px;border-radius:50%;
+    background:radial-gradient(circle,rgba(124,92,255,.55),transparent 70%);
+    animation:pulse 2.6s ease-in-out infinite}
+  .pin .dot{position:absolute;inset:0;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:17px;background:linear-gradient(145deg,#171728,#0c0c16);
+    border:1.5px solid rgba(124,92,255,.8);box-shadow:0 2px 10px rgba(0,0,0,.6),0 0 14px rgba(124,92,255,.35)}
+  .pin:hover .dot{border-color:var(--accent2);box-shadow:0 0 22px rgba(56,189,248,.6)}
+  .pin.you .dot{border-color:#34d399;background:radial-gradient(circle,#0e2a20,#0c0c16)}
+  .pin.you .glow{background:radial-gradient(circle,rgba(52,211,153,.5),transparent 70%)}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.45);opacity:.25}}
+  /* ---- overlay card ---- */
+  .card{position:absolute;top:16px;left:16px;z-index:5;max-width:300px;
+    background:rgba(10,9,22,.72);backdrop-filter:blur(12px);
+    border:1px solid rgba(124,92,255,.25);border-radius:16px;padding:16px 18px;
+    box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  .card h1{margin:0 0 4px;font-size:18px;letter-spacing:.3px;
+    background:linear-gradient(90deg,#fff,#c9b8ff 60%,#8fd6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .card p{margin:6px 0 0;font-size:12px;line-height:1.5;color:var(--dim)}
+  .card .big{color:var(--ink);font-weight:600}
+  .privacy{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:10.5px;
+    color:#34d399;border:1px solid rgba(52,211,153,.3);border-radius:20px;padding:3px 9px}
+  .hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:5;
+    font-size:11.5px;color:var(--dim);background:rgba(10,9,22,.6);backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:6px 14px;white-space:nowrap}
+  /* popup */
+  .maplibregl-popup-content{background:#12121e;color:var(--ink);border-radius:12px;
+    border:1px solid rgba(124,92,255,.35);font-size:13px;padding:10px 14px;box-shadow:0 8px 30px rgba(0,0,0,.6)}
+  .maplibregl-popup-content b{color:#fff}
+  .maplibregl-popup-content .sub{color:var(--dim);font-size:11px;margin-top:2px}
+  .maplibregl-popup-tip{display:none}
+  .maplibregl-popup-close-button{color:var(--dim)}
+</style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="vignette"></div>
+
+  <div class="card">
+    <h1>🏛️ MEOK DOME</h1>
+    <p><span class="big">Your AI's world — mapped onto Earth.</span></p>
+    <p><span id="count" class="big">…</span> characters, alive across the globe. Tap one to bring it into focus on the right.</p>
+    <span class="privacy">🛡️ Region-level only · from timezone · never GPS</span>
+  </div>
+  <div class="hint">🌍 Drag to explore · scroll to zoom · tap a glowing character to focus it</div>
+
+<script>
+const PARENT = window.parent !== window ? window.parent : null;
+
+// ---- keyless dark basemap: OpenStreetMap data, CARTO dark raster tiles (no API key) ----
+const STYLE = {
+  version: 8,
+  sources: {
+    carto: {
+      type: "raster", tileSize: 256,
+      tiles: ["a","b","c","d"].map(s=>`https://${s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png`),
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>'
+    }
+  },
+  layers: [
+    { id: "space", type: "background", paint: { "background-color": "#05040c" } },
+    { id: "carto", type: "raster", source: "carto", paint: { "raster-opacity": 0.92 } }
+  ]
+};
+
+// GLOBE is the dream ("its world, a glowing planet") but MapLibre's globe+raster path stalls
+// tile loading in some WebGL contexts. We ship reliable MERCATOR (tiles always paint) and keep
+// globe as a flagged progressive enhancement to re-enable once verified on-device.
+const WANT_GLOBE = false;
+const map = new maplibregl.Map({
+  container: "map", style: STYLE,
+  center: [8, 30], zoom: 1.5, minZoom: 1, maxZoom: 14,
+  renderWorldCopies: true, attributionControl: { compact: true }, dragRotate: false
+});
+map.addControl(new maplibregl.NavigationControl({ showCompass:false }), "bottom-right");
+if (WANT_GLOBE) map.on("style.load", () => { try { map.setProjection({ type: "globe" }); } catch(_) {} });
+
+// ---- great cities of the world (all continents — MEOK is global) ----
+const CITIES = [
+  [-0.13,51.51,"London"],[-74.0,40.71,"New York"],[-122.42,37.77,"San Francisco"],
+  [139.69,35.68,"Tokyo"],[151.21,-33.87,"Sydney"],[13.40,52.52,"Berlin"],
+  [2.35,48.85,"Paris"],[-79.38,43.65,"Toronto"],[-46.63,-23.55,"São Paulo"],
+  [3.38,6.52,"Lagos"],[36.82,-1.29,"Nairobi"],[31.24,30.04,"Cairo"],
+  [72.87,19.07,"Mumbai"],[77.21,28.61,"Delhi"],[103.82,1.35,"Singapore"],
+  [126.97,37.56,"Seoul"],[121.47,31.23,"Shanghai"],[114.17,22.32,"Hong Kong"],
+  [55.27,25.20,"Dubai"],[28.98,41.01,"Istanbul"],[37.62,55.75,"Moscow"],
+  [-99.13,19.43,"Mexico City"],[-58.38,-34.60,"Buenos Aires"],[-118.24,34.05,"Los Angeles"],
+  [4.90,52.37,"Amsterdam"],[-3.70,40.42,"Madrid"],[12.50,41.90,"Rome"],
+  [18.07,59.33,"Stockholm"],[18.42,-33.92,"Cape Town"],[100.50,13.76,"Bangkok"],
+  [106.85,-6.21,"Jakarta"],[174.76,-36.85,"Auckland"],[-123.12,49.28,"Vancouver"],
+  [34.78,32.08,"Tel Aviv"],[120.98,14.60,"Manila"],[-74.07,4.71,"Bogotá"],
+  [-3.19,55.95,"Edinburgh"],[-21.94,64.15,"Reykjavík"]
+];
+// stable string hash → deterministic placement (same character always lands in the same place)
+function hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);} return h>>>0; }
+function placeFor(name){
+  const h=hash(name||"x"), c=CITIES[h%CITIES.length];
+  const jx=(((h>>>7)%200)/100-1)*1.6, jy=(((h>>>15)%200)/100-1)*1.1;  // small seeded jitter
+  return { lng:c[0]+jx, lat:c[1]+jy, city:c[2] };
+}
+
+function makePin(emoji, cls){
+  const el=document.createElement("div"); el.className="pin"+(cls?" "+cls:"");
+  el.innerHTML=`<div class="glow"></div><div class="dot">${emoji||"🧬"}</div>`;
+  return el;
+}
+
+// ---- privacy-safe "you are roughly here" — from TIMEZONE only (region-level, no permission) ----
+const TZ = {
+  "Europe/London":[-1.5,52.6],"Europe/Paris":[2.35,46.6],"Europe/Berlin":[10.4,51.1],
+  "Europe/Madrid":[-3.7,40.4],"Europe/Rome":[12.5,42.5],"Europe/Amsterdam":[5.3,52.1],
+  "Europe/Stockholm":[15.6,62.0],"Europe/Moscow":[37.6,55.8],"Europe/Istanbul":[35.0,39.0],
+  "America/New_York":[-75,40],"America/Chicago":[-90,40],"America/Denver":[-105,39],
+  "America/Los_Angeles":[-120,37],"America/Toronto":[-79,44],"America/Vancouver":[-123,49.5],
+  "America/Sao_Paulo":[-47,-22],"America/Mexico_City":[-99,21],"America/Argentina/Buenos_Aires":[-64,-35],
+  "America/Bogota":[-74,4.6],"Asia/Tokyo":[138,37],"Asia/Shanghai":[114,32],"Asia/Hong_Kong":[114.2,22.3],
+  "Asia/Singapore":[103.8,1.35],"Asia/Seoul":[127.8,36.5],"Asia/Kolkata":[78,22],"Asia/Dubai":[54,24],
+  "Asia/Bangkok":[101,15],"Asia/Jakarta":[110,-3],"Asia/Manila":[122,12],"Asia/Tel_Aviv":[34.8,31.5],
+  "Asia/Jerusalem":[34.8,31.5],"Asia/Riyadh":[45,24],"Africa/Lagos":[8,9],"Africa/Nairobi":[37,-1],
+  "Africa/Cairo":[30,27],"Africa/Johannesburg":[26,-29],"Australia/Sydney":[151,-33.8],
+  "Australia/Melbourne":[145,-37.8],"Pacific/Auckland":[174,-41]
+};
+function youLngLat(){
+  try{ const tz=Intl.DateTimeFormat().resolvedOptions().timeZone; if(TZ[tz]) return {ll:TZ[tz],tz}; }catch(_){}
+  return null;
+}
+
+// ---- boot: pull real MEOK characters, scatter them across the world ----
+const SEED = [ // fallback if the API isn't reachable, so the DOME is never empty
+  {id:"aria",name:"Aria",emoji:"🌸"},{id:"sage",name:"Sage",emoji:"🦉"},
+  {id:"nova",name:"Nova",emoji:"⭐"},{id:"ember",name:"Ember",emoji:"🔥"},
+  {id:"river",name:"River",emoji:"🌊"},{id:"atlas",name:"Atlas",emoji:"🗺️"}
+];
+async function boot(){
+  let chars=SEED;
+  try{ const d=await (await fetch("/api/characters")).json(); if(d.characters&&d.characters.length) chars=d.characters; }catch(_){}
+  document.getElementById("count").textContent=chars.length;
+  chars.forEach(c=>{
+    const p=placeFor(c.id||c.name), el=makePin(c.emoji,null);
+    el.title=`${c.name} · ${p.city}`;
+    const popup=new maplibregl.Popup({offset:18,closeButton:true,closeOnClick:true})
+      .setHTML(`<b>${c.emoji||"🧬"} ${c.name}</b><div class="sub">${c.archetype||"MEOK character"} · near ${p.city}</div>`);
+    const mk=new maplibregl.Marker({element:el,anchor:"center"}).setLngLat([p.lng,p.lat]).setPopup(popup).addTo(map);
+    el.addEventListener("click",()=>{
+      // tell the parent OS which character + place the user is focusing → context for its replies
+      if(PARENT){ try{ PARENT.postMessage({type:"meok:dome",character:c.id||c.name,name:c.name,city:p.city},"*"); }catch(_){} }
+      map.flyTo({center:[p.lng,p.lat],zoom:Math.max(3.2,map.getZoom()),speed:0.7});
+    });
+  });
+  // "you are roughly here" — coarse, timezone-derived, clearly labelled
+  const you=youLngLat();
+  if(you){
+    const el=makePin("📍","you"); el.title="You are roughly here (from your timezone — never GPS)";
+    new maplibregl.Marker({element:el,anchor:"center"}).setLngLat(you.ll)
+      .setPopup(new maplibregl.Popup({offset:18}).setHTML(
+        `<b>📍 You are roughly here</b><div class="sub">${you.tz} · region-level, from timezone — never GPS</div>`))
+      .addTo(map);
+  }
+}
+// boot is gated on 'load' OR 'idle' OR a hard timeout — whichever fires first — so the DOME is
+// NEVER empty even if MapLibre's 'load' event is finicky with raster + iframe sizing.
+let booted=false;
+function go(){ if(booted) return; booted=true; map.resize(); boot(); intro(); }
+map.on("load", go);
+map.once("idle", go);
+setTimeout(go, 2000);
+
+// ---- one-time gentle "world reveal" intro (no continuous rAF dependency = reliable) ----
+function intro(){
+  try { map.easeTo({ center:[8,28], zoom:1.9, duration:2600, essential:true }); } catch(_){}
+}
+</script>
+</body>
+</html>

@@ -124,6 +124,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "os.html"))
         if path in ("/hatch", "/hatch.html", "/emerge", "/begin"):
             return self._html(os.path.join(_HERE, "web", "hatch.html"))
+        if path in ("/dome", "/dome.html", "/world", "/map"):
+            return self._html(os.path.join(_HERE, "web", "dome.html"))
         # PWA assets (installable on iOS/Android home screen + offline)
         if path in ("/manifest.webmanifest", "/sw.js", "/icon.svg",
                     "/icon-192.png", "/icon-512.png"):

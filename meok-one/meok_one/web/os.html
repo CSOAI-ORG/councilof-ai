@@ -223,7 +223,7 @@ document.querySelectorAll(".modebar button").forEach(b=>b.onclick=()=>setMode(b.
 // The character (right windows) stays constant; each tab is a place it can work with you.
 // `url` null = the DOME home hint; a path/URL = load that product's UI in the iframe.
 const PRODUCTS = [
-  {id:"dome",   em:"🏛️", label:"DOME",        url:null},
+  {id:"dome",   em:"🏛️", label:"DOME",        url:"/dome", kind:"ext"},
   {id:"chars",  em:"🧬", label:"Characters",  url:"/api/characters",  kind:"json"},
   {id:"agents", em:"🔭", label:"Agents",      url:"/api/agents",      kind:"json"},
   {id:"tools",  em:"🛠️", label:"Tools",       url:"/api/tools",       kind:"json"},
@@ -276,6 +276,18 @@ function prodPanel(p,d){
     <style>h2{font-size:16px;margin:0 0 12px;color:#fff}.row{padding:6px 8px;border-bottom:1px solid #26263a}.dim{color:#8a8aa0;font-size:12px}</style>${body}</body>`;
 }
 buildTabs();
+
+// ---- DOME map → OS bridge: tapping a character on the world map focuses it here ----
+window.addEventListener("message",e=>{
+  const d=e.data||{};
+  if(d.type==="meok:dome"&&d.character){
+    const sel=$("#charSel");
+    if([...sel.options].some(o=>o.value===d.character)){ sel.value=d.character; CHAR=d.character;
+      $("#charFrame").src="/avatar?embed=1&character="+CHAR; }
+    window.__meokContext=`DOME · ${d.name||d.character} near ${d.city||"the world"}`;
+    log("tui",`❯ DOME → focus ${d.name||d.character} (${d.city||"world"})`);
+  }
+});
 
 // ---- drag-to-resize windows (Nick: "move the uis to change sizes") ----
 // Uses POINTER EVENTS + setPointerCapture: the correct drag API. Capture routes every

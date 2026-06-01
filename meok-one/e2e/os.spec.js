@@ -96,4 +96,28 @@ test.describe('MEOK OS — 3-window operating system', () => {
     // the TUI should print the real tool count
     await expect(page.locator('#tui')).toContainText(/\d+ tools/, { timeout: 10_000 });
   });
+
+  test('DOME tab wires the real-world map into the OS', async ({ page }) => {
+    await page.goto('/os');
+    await page.click('#prodtabs button:has-text("DOME")');
+    await expect(page.locator('#prodframe')).toBeVisible();
+    await expect(page.locator('#prodframe')).toHaveAttribute('src', '/dome');
+  });
+
+  // Guards the "black map" regression: MapLibre must actually finish loading + paint real
+  // basemap tiles (the bug was a stalled render loop → 0 tile requests). Needs network (CARTO).
+  test('DOME world map renders — MapLibre tiles + character pins, no console errors', async ({ page }) => {
+    const errors = [];
+    page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+    let tiles = 0;
+    page.on('requestfinished', r => { if (r.url().includes('cartocdn')) tiles++; });
+    await page.goto('/dome', { waitUntil: 'load' });
+    await expect
+      .poll(async () => await page.evaluate(() => (typeof map !== 'undefined') && map.loaded()), { timeout: 15_000 })
+      .toBe(true);
+    expect(tiles, 'CARTO basemap tiles must load (else the map is black)').toBeGreaterThan(5);
+    const pins = await page.locator('.pin').count();
+    expect(pins, 'character pins on the world map').toBeGreaterThanOrEqual(6);
+    expect(errors, 'console errors on DOME: ' + errors.join(' | ')).toHaveLength(0);
+  });
 });
