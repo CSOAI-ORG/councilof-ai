@@ -245,7 +245,15 @@ class Handler(BaseHTTPRequestHandler):
                 tier = qs.get("tier", [None])[0]
                 if q or tier:
                     return self._json(200, {"agents": assitti.search(q, tier=tier)})
-                return self._json(200, assitti.directory())
+                d = assitti.directory()
+                # also surface the REAL council nodes that review every reply (12-around-1)
+                try:
+                    from .sovereign import _load_lenses
+                    d["council"] = [{"id": l["id"], "focus": l["focus"], "is_safety": l["is_safety"]}
+                                    for l in _load_lenses()]
+                except Exception:
+                    d["council"] = []
+                return self._json(200, d)
             except Exception as e:
                 return self._json(200, {"error": f"{type(e).__name__}: {e}"})
         return self._json(404, {"error": "not found", "path": path})

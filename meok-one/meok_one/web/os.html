@@ -229,6 +229,36 @@
 
   <div class="status"><span class="dot" id="sdot"></span><span id="stxt">connecting to SOV3…</span></div>
 
+  <!-- settings: visual theme picker + voice + default brain (also voice-controllable) -->
+  <div class="acctchip" id="setChip" style="right:96px" title="Settings — theme, voice, brain">⚙️ <span>Settings</span></div>
+  <div class="acctmodal" id="setModal">
+    <div class="acctcard">
+      <span class="x" id="setX">✕</span>
+      <h3>Settings</h3>
+      <p>Make MEOK yours. You can also just say it — "make it gold", "show me pro view".</p>
+      <div style="text-align:left;margin:12px 0">
+        <div style="font-size:12px;color:var(--dim);margin:6px 0 4px">Theme</div>
+        <div id="themeBtns" style="display:flex;flex-wrap:wrap;gap:6px">
+          <button class="acctbtn ghost" data-t="default">Default</button>
+          <button class="acctbtn ghost" data-t="calm">Calm</button>
+          <button class="acctbtn ghost" data-t="gold">Gold</button>
+          <button class="acctbtn ghost" data-t="dark">Dark</button>
+          <button class="acctbtn ghost" data-t="bright">Bright</button>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin:14px 0 4px">Default brain</div>
+        <select id="setBrain" style="width:100%;background:#0a0a14;border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;color:var(--ink);font-size:13px">
+          <option value="right">⚡ Fast (cloud)</option><option value="left">🔒 Private (local)</option>
+          <option value="both">⚖ Both</option><option value="sovereign">👑 Sovereign (deep think)</option>
+        </select>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;cursor:pointer">
+          <input type="checkbox" id="setVoice"/> 🔊 Speak replies aloud (voice mode)
+        </label>
+      </div>
+      <p style="font-size:11px;color:var(--dim)">🛡️ Every reply passes the Sovereign safety gate. Your bond + memory are private to your account.</p>
+      <button class="acctbtn" id="setDone">Done</button>
+    </div>
+  </div>
+
   <!-- cross-device sync: link desktop ↔ mobile so your AI + memory + bond follow you -->
   <div class="acctchip" id="acctChip" title="Sync this AI across your devices">🔗 <span>Devices</span></div>
   <div class="acctmodal" id="acctModal">
@@ -368,8 +398,11 @@ function prodPanel(p,d){
      <div class="row">💬 <b>SHOUT</b> — text <b>85258</b></div>
      <div class="row">🚑 Emergency — <b>999</b> (UK) · 112 (EU)</div>
      <p style="margin-top:14px"><a class="mkt" href="https://aquaponics.app" target="_blank" rel="noopener">🌱 MEOK care tools & community →</a></p>`; }
-  else if(p.id==="agents"){ const a=d.agents||[];
-    body=`<h2>assitti — ${d.count||a.length} verified agents</h2>`+a.map(x=>`<div class="row">[${x.trust_grade||"?"}] <b>${x.name}</b> <span class="dim">${x.skill_count||0} skills · ${x.domain||""}</span></div>`).join(""); }
+  else if(p.id==="agents"){ const a=d.agents||[], c=d.council||[];
+    body=`<h2>🧠 The council behind your AI <span class="dim">— ${c.length} lenses review every reply (12-around-1 BFT)</span></h2>`+
+      c.map(l=>`<div class="row">${l.is_safety?"🛡️":"🔎"} <b>${(l.id||"").replace(/_/g," ")}</b> <span class="dim">${l.focus||""}${l.is_safety?" · safety (can veto)":""}</span></div>`).join("")+
+      `<h2 style="margin-top:16px">assitti — ${d.count||a.length} verified external agents</h2>`+
+      a.map(x=>`<div class="row">[${x.trust_grade||"?"}] <b>${x.name}</b> <span class="dim">${x.skill_count||0} skills · ${x.domain||""}</span></div>`).join(""); }
   else if(p.id==="tools"){ const t=d.safety_tiers||{};
     body=`<h2>${d.total_tools||0} tools through SOV3 — the safe gateway</h2><div class="row">✓ ${t.read||0} read (auto-run)</div><div class="row">⚠ ${t.write||0} write (confirm)</div><div class="row">✗ ${t.prohibited||0} prohibited (refused)</div>`+
     Object.entries(d.worlds||{}).map(([k,v])=>`<div class="row dim">${k}: ${v.tools||v.packages||0}</div>`).join("")+
@@ -638,6 +671,21 @@ window.addEventListener("keydown",e=>{ if(e.altKey&&e.key>="1"&&e.key<="4")setMo
     const d=await (await fetch(API+"/api/auth/link/claim",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})})).json();
     if(d.token){ TOKEN=d.token; localStorage.setItem("meok_token",TOKEN); location.reload(); }
     else { const e=$("#acctErr"); e.textContent=d.error||"Couldn't link — check the code"; e.style.display=""; } };
+})();
+
+// ---- Settings panel: visual theme picker + default brain + voice toggle (persisted) ----
+(function(){
+  const M=$("#setModal");
+  const open=()=>{ M.classList.add("on"); $("#setBrain").value=$("#brainSel").value; $("#setVoice").checked=VOICE_ON; };
+  const close=()=>M.classList.remove("on");
+  $("#setChip").onclick=open; $("#setX").onclick=close; $("#setDone").onclick=close;
+  M.onclick=e=>{ if(e.target===M) close(); };
+  document.querySelectorAll("#themeBtns button").forEach(btn=>btn.onclick=()=>{ ack(`Done — ${applyTheme(btn.dataset.t)} theme.`,false); });
+  $("#setBrain").onchange=e=>{ $("#brainSel").value=e.target.value; try{localStorage.setItem("meok_brain",e.target.value);}catch(_){}; log("tui",`❯ default brain → ${e.target.value}`); };
+  $("#setVoice").onchange=e=>{ VOICE_ON=e.target.checked; try{localStorage.setItem("meok_voice",VOICE_ON?"1":"");}catch(_){}; };
+  // restore persisted prefs on load
+  try{ const sb=localStorage.getItem("meok_brain"); if(sb&&[...$("#brainSel").options].some(o=>o.value===sb)) $("#brainSel").value=sb;
+       if(localStorage.getItem("meok_voice")) VOICE_ON=true; }catch(_){}
 })();
 </script>
 </body>
