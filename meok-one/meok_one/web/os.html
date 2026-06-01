@@ -414,9 +414,50 @@ async function fetchJSON(ep,body,ms){
     return await r.json();
   }catch(e){clearTimeout(to);throw e;}
 }
-async function sendChat(text){
+// ---- A5 voice loop + D5 voice/text layout & theme control (the AI reshapes the UI) ----
+let VOICE_ON=false;   // mic turns this on for the turn; the loop speaks the reply back
+function speak(text){
+  try{ if(!window.speechSynthesis||!text) return;
+    const clean=text.replace(/```[\s\S]*?```/g," ").replace(/[*_#`>|]/g,"").replace(/https?:\/\/\S+/g,"").trim().slice(0,420);
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(clean); u.rate=1.03; u.lang="en-GB";
+    const vs=speechSynthesis.getVoices();
+    const pref=vs.find(v=>/Samantha|Serena|Google UK English Female/i.test(v.name))||vs.find(v=>v.lang&&v.lang.startsWith("en"));
+    if(pref) u.voice=pref;
+    const cf=$("#charFrame").contentWindow;
+    try{ cf.postMessage({type:"meok-speak",state:"start"},"*"); }catch(_){}
+    u.onend=()=>{ try{ cf.postMessage({type:"meok-speak",state:"end"},"*"); }catch(_){} };
+    speechSynthesis.speak(u);
+  }catch(_){}
+}
+function ack(msg,voice){ addMsg(CHAR,msg,"char"); log("tui",`❯ ${msg}`); if(voice||VOICE_ON) speak(msg); }
+function applyTheme(t){
+  const r=document.documentElement.style, b=document.body.style;
+  if(/gold|warm/.test(t)){ r.setProperty("--accent","#f5c542"); r.setProperty("--accent2","#ffb648"); b.filter=""; }
+  else if(/calm|cool|blue|teal|soft/.test(t)){ r.setProperty("--accent","#38bdf8"); r.setProperty("--accent2","#34d399"); b.filter=""; }
+  else if(/dark/.test(t)){ b.filter="brightness(.84)"; }
+  else if(/bright|light|vibrant/.test(t)){ b.filter="brightness(1.12)"; r.setProperty("--accent","#a855f7"); r.setProperty("--accent2","#ff5ca8"); }
+  else { r.setProperty("--accent","#7c5cff"); r.setProperty("--accent2","#ff5ca8"); b.filter=""; }
+  try{ localStorage.setItem("meok_theme",JSON.stringify({a:r.getPropertyValue("--accent"),a2:r.getPropertyValue("--accent2"),f:b.filter})); }catch(_){}
+  return /gold|warm/.test(t)?"warm gold":/calm|cool|blue|teal|soft/.test(t)?"calmer":/dark/.test(t)?"darker":/bright|light|vibrant/.test(t)?"brighter":"reset";
+}
+function restoreTheme(){ try{ const s=JSON.parse(localStorage.getItem("meok_theme")||"null"); if(s){ const r=document.documentElement.style; if(s.a)r.setProperty("--accent",s.a); if(s.a2)r.setProperty("--accent2",s.a2); document.body.style.filter=s.f||""; } }catch(_){} }
+restoreTheme();
+function tryLocalCommand(text,voice){
+  const t=text.toLowerCase();
+  const cmd=/\b(view|mode|window|layout|show|switch|make it|go to|open|minimi[sz]e|maximi[sz]e|expand|put it|set it|turn it|change to|give me)\b/.test(t);
+  const L=[[/\b(simple|minimal|clean)\b/,"simple"],[/\b(pro|three|3[ -]?window|all windows|full view|everything)\b/,"pro"],[/\b(council|debate|panel)\b/,"council"],[/\b(orb|circle|minimi[sz]e|float|tiny|bubble)\b/,"orb"]];
+  if(cmd){ for(const [re,m] of L){ if(re.test(t)){ setMode(m); ack(`Switched to ${m} view.`,voice); return true; } } }
+  if(/\b(theme|colou?r|make it|turn it|go)\b/.test(t) && /\b(calm|calmer|dark|darker|gold|golden|warm|warmer|bright|brighter|light|vibrant|cool|blue|teal|soft|reset|default)\b/.test(t)){
+    ack(`Done — ${applyTheme(t)} theme.`,voice); return true;
+  }
+  return false;
+}
+
+async function sendChat(text, voice=false){
   if(!text.trim())return;
   addMsg("you",text,"user");$("#chatIn").value="";
+  if(tryLocalCommand(text,voice)) return;   // D5: layout/theme handled locally, no brain call
   const brain=$("#brainSel").value;
   const sovereign = brain==="sovereign", both = brain==="both";
   const ep = sovereign ? "/api/sovereign" : "/api/think";
@@ -431,6 +472,7 @@ async function sendChat(text){
     typing.innerHTML=`<div class="who">${d.character||CHAR} · ${d.engine||brain} · ${secs}s</div>${(d.reply||"[no reply]").replace(/</g,"&lt;")}`;
     // make the 3D character REACT to what it just said (amica emoteController upgrade)
     try{ $("#charFrame").contentWindow.postMessage({type:"meok-emote",text:d.reply||""},"*"); }catch(_){}
+    if(voice||VOICE_ON) speak(d.reply||"");   // A5: hands-free — the character speaks back
     if(d.council){log("tui",`❯ council: ${d.council.decision} · ${d.council.available_nodes||0} nodes · ${d.council.passes||0} pass / ${(d.council.vetoes||[]).length} veto`);}
   }catch(e){
     const aborted = e.name==="AbortError";
@@ -451,7 +493,7 @@ $("#mic").onclick=()=>{
   if(!SR){log("tui","❯ voice: browser STT unavailable");return;}
   if(rec){rec.stop();rec=null;$("#mic").classList.remove("live");return;}
   rec=new SR();rec.lang="en-GB";rec.interimResults=false;
-  rec.onresult=e=>{const t=e.results[0][0].transcript;$("#chatIn").value=t;sendChat(t);};
+  rec.onresult=e=>{const t=e.results[0][0].transcript;$("#chatIn").value=t;VOICE_ON=true;sendChat(t,true);};
   rec.onend=()=>{$("#mic").classList.remove("live");rec=null;};
   rec.start();$("#mic").classList.add("live");
 };

@@ -104,6 +104,22 @@ test.describe('MEOK OS — 3-window operating system', () => {
     await expect(page.locator('#prodframe')).toHaveAttribute('src', '/dome');
   });
 
+  // D5 — the AI reshapes the UI by voice/text: "pro view", "minimise to an orb", "make it gold".
+  test('D5 — voice/text commands reshape the UI (mode + theme), no brain call', async ({ page }) => {
+    await page.goto('/os');
+    // chat input is visible in simple + pro; orb hides it, so test orb LAST
+    await page.fill('#chatIn', 'show me the pro view'); await page.press('#chatIn', 'Enter');
+    await expect(page.locator('body')).toHaveClass(/pro/);
+    await page.fill('#chatIn', 'make it gold'); await page.press('#chatIn', 'Enter');
+    await expect.poll(async () =>
+      page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim())
+    ).toBe('#f5c542');
+    // voice loop (A5) is wired: the speak() fn + VOICE_ON exist
+    expect(await page.evaluate(() => typeof speak === 'function' && typeof VOICE_ON !== 'undefined')).toBe(true);
+    await page.fill('#chatIn', 'minimise to an orb'); await page.press('#chatIn', 'Enter');
+    await expect(page.locator('body')).toHaveClass(/orb/);
+  });
+
   // Cross-device identity: anonymous account → pair code → SAME account on another device.
   // This is what makes "logged in on desktop + mobile" share one character/memory/bond.
   test('cross-device identity — anon account + single-use pair code link to the SAME account', async ({ request }) => {
