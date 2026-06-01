@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>MEOK OS — talk to your character</title>
+<!--
+  MEOK OS — the 3-window operating system (Nick's vision, MEOK_ONE_VISION.md).
+  RIGHT side of screen = 3 stacked windows:
+    1. Character (3D VRM)   2. Chat   3. TUI
+  Each window has its own LIVE model selector. Modes: Simple / Pro / Council / Orb.
+  All sync through SOV3 (the spine). Progressive disclosure: Simple = just character+chat.
+  Scorecard items: D2 (chat window) + D3 (TUI window) + D4 (per-window selector)
+                   + D6 (progressive disclosure) + D5 (layout: split/large/orb).
+-->
+<style>
+  :root{
+    --bg:#0a0a12; --panel:#12121f; --panel2:#1a1a2e; --ink:#e8e8f0; --dim:#8a8aa0;
+    --accent:#7c5cff; --accent2:#ff5ca8; --ok:#3ddc97; --warn:#ffb648; --line:#26263a;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 800px at 80% -10%,#1a1230,#0a0a12 60%);
+       color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       height:100vh;overflow:hidden}
+  .app{display:grid;grid-template-columns:1fr 420px;height:100vh}
+  .stage{position:relative;display:flex;align-items:center;justify-content:center;
+         padding:24px;color:var(--dim);text-align:center}
+  .stage .hint{max-width:340px}
+  .stage h1{font-size:42px;margin:0 0 8px;color:var(--ink);
+            background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* the 3-window dock on the right */
+  .dock{display:flex;flex-direction:column;gap:10px;padding:12px;height:100vh;overflow:hidden}
+  .win{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+       display:flex;flex-direction:column;overflow:hidden;min-height:0;transition:flex .25s ease,opacity .2s}
+  .win.character{flex:1.1}
+  .win.chat{flex:1.5}
+  .win.tui{flex:1}
+  .win .bar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--panel2);
+            border-bottom:1px solid var(--line);font-size:12px}
+  .win .bar .title{font-weight:600;letter-spacing:.3px}
+  .win .bar .sel{margin-left:auto;display:flex;gap:6px;align-items:center}
+  select{background:#0e0e1a;color:var(--ink);border:1px solid var(--line);border-radius:8px;
+         padding:4px 8px;font-size:12px;cursor:pointer}
+  .win .body{flex:1;min-height:0;overflow:auto;padding:10px}
+  /* character window */
+  .char-frame{height:100%;width:100%;border:0;border-radius:0 0 var(--radius) var(--radius)}
+  /* chat */
+  .msgs{display:flex;flex-direction:column;gap:8px}
+  .msg{max-width:88%;padding:8px 12px;border-radius:14px;font-size:14px;white-space:pre-wrap}
+  .msg.user{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+  .msg.char{align-self:flex-start;background:var(--panel2);border:1px solid var(--line);border-bottom-left-radius:4px}
+  .msg .who{font-size:10px;color:var(--dim);margin-bottom:2px}
+  .composer{display:flex;gap:6px;padding:8px;border-top:1px solid var(--line);background:var(--panel2)}
+  .composer input{flex:1;background:#0e0e1a;border:1px solid var(--line);border-radius:10px;
+                  color:var(--ink);padding:8px 10px;font-size:14px}
+  .composer button,.mic{background:var(--accent);border:0;color:#fff;border-radius:10px;
+                        padding:8px 12px;cursor:pointer;font-weight:600}
+  .mic{background:var(--panel);border:1px solid var(--line)}
+  .mic.live{background:var(--accent2);animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.6}}
+  /* tui */
+  .tui{font:12px/1.45 "SF Mono",ui-monospace,Menlo,monospace;background:#07070f;color:#9fe6b8}
+  .tui .ln{white-space:pre-wrap}
+  .tui .pr{color:var(--accent)}
+  .tui-in{display:flex;border-top:1px solid var(--line);background:#0a0a14}
+  .tui-in span{color:var(--accent);padding:6px 4px 6px 8px;font-family:monospace}
+  .tui-in input{flex:1;background:transparent;border:0;color:#9fe6b8;font:12px/1.4 monospace;padding:6px 8px;outline:none}
+  /* mode bar */
+  .modebar{position:fixed;top:12px;left:12px;display:flex;gap:6px;z-index:20}
+  .modebar button{background:var(--panel);border:1px solid var(--line);color:var(--dim);
+                  border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer}
+  .modebar button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  /* ORB mode */
+  body.orb .app{grid-template-columns:1fr}
+  body.orb .dock{position:fixed;bottom:20px;right:20px;height:auto;width:auto;padding:0}
+  body.orb .win.chat,body.orb .win.tui{display:none}
+  body.orb .win.character{width:120px;height:120px;border-radius:50%;flex:none;box-shadow:0 8px 40px rgba(124,92,255,.5)}
+  body.orb .win.character .bar{display:none}
+  /* SIMPLE mode = character + chat only */
+  body.simple .win.tui{display:none}
+  body.simple .win.character{flex:1}
+  /* LARGE mode = chat takes over */
+  body.large .win.character{flex:.5}
+  body.large .win.tui{display:none}
+  body.large .win.chat{flex:4}
+  .status{position:fixed;bottom:10px;left:12px;font-size:11px;color:var(--dim);z-index:20}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);margin-right:5px;vertical-align:middle}
+  .dot.ok{background:var(--ok)}
+</style>
+</head>
+<body class="simple">
+  <div class="modebar">
+    <button data-mode="simple" class="on">● Simple</button>
+    <button data-mode="pro">⊞ Pro</button>
+    <button data-mode="council">⚖ Council</button>
+    <button data-mode="orb">◯ Orb</button>
+  </div>
+
+  <div class="app">
+    <div class="stage">
+      <div class="hint">
+        <h1>MEOK OS</h1>
+        <p>Your character lives in the windows on the right. Talk to it — it remembers you,
+           keeps you safe, and can use 459 tools through SOV3.</p>
+        <p style="font-size:12px">Say <b>"Pro"</b> for the 3-window OS · <b>"Orb"</b> to minimise ·
+           <b>"Council"</b> to watch the AI team work.</p>
+      </div>
+    </div>
+
+    <div class="dock">
+      <!-- 1. CHARACTER WINDOW -->
+      <div class="win character">
+        <div class="bar">
+          <span class="title">🧬 Character</span>
+          <div class="sel">
+            <select id="charSel" title="which character"></select>
+          </div>
+        </div>
+        <iframe class="char-frame" id="charFrame" src="/avatar?embed=1" title="character"></iframe>
+      </div>
+
+      <!-- 2. CHAT WINDOW -->
+      <div class="win chat">
+        <div class="bar">
+          <span class="title">💬 Chat</span>
+          <div class="sel">
+            <select id="brainSel" title="which brain">
+              <option value="left">🔒 Private (local)</option>
+              <option value="right">⚡ Powerful (cloud)</option>
+              <option value="both">⚖ Both (council)</option>
+              <option value="sovereign">👑 Sovereign (12-around-1)</option>
+            </select>
+          </div>
+        </div>
+        <div class="body"><div class="msgs" id="msgs"></div></div>
+        <div class="composer">
+          <button class="mic" id="mic" title="hold to talk">🎤</button>
+          <input id="chatIn" placeholder="Talk to your character…" autocomplete="off"/>
+          <button id="send">Send</button>
+        </div>
+      </div>
+
+      <!-- 3. TUI WINDOW -->
+      <div class="win tui">
+        <div class="bar">
+          <span class="title">⌨ TUI</span>
+          <div class="sel">
+            <select id="codeSel" title="coding model">
+              <option value="deepseek-v4">DeepSeek V4</option>
+              <option value="opus">Claude Opus 4.8</option>
+              <option value="kimi">Kimi K2.6</option>
+              <option value="qwen-max">Qwen Max</option>
+            </select>
+          </div>
+        </div>
+        <div class="body tui" id="tui"><div class="ln"><span class="pr">meok ❯</span> SOV3 spine online. 459 tools tunnelled. type <b>help</b>.</div></div>
+        <div class="tui-in"><span>❯</span><input id="tuiIn" placeholder="command…" autocomplete="off"/></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status"><span class="dot" id="sdot"></span><span id="stxt">connecting to SOV3…</span></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const API=location.origin;
+let CHAR="aria";
+
+// ---- mode switching (D6 progressive disclosure + D5 layout) ----
+const MODES=["simple","pro","council","orb"];
+function setMode(m){
+  document.body.className=m;
+  document.querySelectorAll(".modebar button").forEach(b=>b.classList.toggle("on",b.dataset.mode===m));
+  log("tui",`❯ layout → ${m}`);
+}
+document.querySelectorAll(".modebar button").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+
+// ---- helpers ----
+function addMsg(who,txt,cls){
+  const m=document.createElement("div");m.className="msg "+cls;
+  m.innerHTML=`<div class="who">${who}</div>${txt.replace(/</g,"&lt;")}`;
+  $("#msgs").appendChild(m);$("#msgs").parentElement.scrollTop=1e9;return m;
+}
+function log(_,txt){const d=document.createElement("div");d.className="ln";
+  d.innerHTML=txt.replace(/^❯/,'<span class="pr">meok ❯</span>');$("#tui").appendChild(d);$("#tui").scrollTop=1e9;}
+
+// ---- boot: characters + health ----
+fetch(API+"/api/characters").then(r=>r.json()).then(d=>{
+  const sel=$("#charSel");(d.characters||[]).forEach(c=>{
+    const o=document.createElement("option");o.value=c.id;o.textContent=(c.emoji||"🧬")+" "+c.name;sel.appendChild(o);});
+  sel.value=CHAR;
+}).catch(()=>{});
+$("#charSel").onchange=e=>{CHAR=e.target.value;
+  $("#charFrame").src="/avatar?embed=1&character="+CHAR;
+  log("tui",`❯ character → ${CHAR}`);};
+
+fetch(API+"/api/tools").then(r=>r.json()).then(d=>{
+  $("#sdot").classList.add("ok");
+  $("#stxt").textContent=`SOV3 online · ${d.total_tools||0} tools (${(d.safety_tiers||{}).read||0} read / ${(d.safety_tiers||{}).write||0} confirm)`;
+  log("tui",`❯ ${d.total_tools} tools online: ${Object.entries(d.worlds||{}).map(([k,v])=>k+"="+(v.tools||v.packages)).join(" · ")}`);
+}).catch(()=>{$("#stxt").textContent="SOV3 offline (start the server)";});
+
+// ---- chat (D2) — routes to /api/sovereign for council, else /api/think ----
+async function sendChat(text){
+  if(!text.trim())return;
+  addMsg("you",text,"user");$("#chatIn").value="";
+  const brain=$("#brainSel").value;
+  const typing=addMsg(CHAR,"…","char");
+  try{
+    const sovereign = brain==="sovereign";
+    const ep = sovereign ? "/api/sovereign" : "/api/think";
+    const body = sovereign ? {character:CHAR,message:text,tier:"pro"} : {character:CHAR,message:text,brain,tier:"pro"};
+    const r=await fetch(API+ep,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const d=await r.json();
+    typing.innerHTML=`<div class="who">${d.character||CHAR} · ${d.engine||brain}</div>${(d.reply||"[no reply]").replace(/</g,"&lt;")}`;
+    if(d.council){log("tui",`❯ council: ${d.council.decision} · ${d.council.passes||0} pass / ${(d.council.vetoes||[]).length} veto`);}
+  }catch(e){typing.innerHTML=`<div class="who">error</div>${e}`;}
+}
+$("#send").onclick=()=>sendChat($("#chatIn").value);
+$("#chatIn").addEventListener("keydown",e=>{if(e.key==="Enter")sendChat($("#chatIn").value);});
+
+// ---- voice (A5 seed: browser STT → chat → it speaks via avatar) ----
+let rec=null;
+$("#mic").onclick=()=>{
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){log("tui","❯ voice: browser STT unavailable");return;}
+  if(rec){rec.stop();rec=null;$("#mic").classList.remove("live");return;}
+  rec=new SR();rec.lang="en-GB";rec.interimResults=false;
+  rec.onresult=e=>{const t=e.results[0][0].transcript;$("#chatIn").value=t;sendChat(t);};
+  rec.onend=()=>{$("#mic").classList.remove("live");rec=null;};
+  rec.start();$("#mic").classList.add("live");
+};
+
+// ---- TUI (D3) — real commands through the gateway ----
+async function tuiCmd(c){
+  log("tui",`❯ ${c}`);const a=c.trim().split(/\s+/);
+  if(a[0]==="help"){log("tui","commands: tools · agents · tool &lt;name&gt; · mode &lt;simple|pro|council|orb&gt; · clear");return;}
+  if(a[0]==="clear"){$("#tui").innerHTML="";return;}
+  if(a[0]==="mode"){setMode(a[1]||"pro");return;}
+  if(a[0]==="tools"){const d=await(await fetch(API+"/api/tools")).json();
+    log("tui",`${d.total_tools} tools — read:${d.safety_tiers.read} confirm:${d.safety_tiers.write} never:${d.safety_tiers.prohibited}`);return;}
+  if(a[0]==="agents"){const d=await(await fetch(API+"/api/agents")).json();
+    log("tui",`assitti: ${d.count} agents — grades ${JSON.stringify(d.by_grade)}`);return;}
+  if(a[0]==="tool"&&a[1]){const r=await(await fetch(API+"/api/tool",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({tool:a[1],args:{}})})).json();
+    log("tui",`${a[1]} → tier=${r.tier} executed=${r.executed} ${r.confirm_required?"(needs confirm)":""}${r.refusal?"⛔ "+r.refusal:""}`);return;}
+  log("tui","unknown — type help");
+}
+$("#tuiIn").addEventListener("keydown",e=>{if(e.key==="Enter"){tuiCmd(e.target.value);e.target.value="";}});
+
+// voice layout commands (D5) — say it in chat too
+window.addEventListener("keydown",e=>{ if(e.altKey&&e.key>="1"&&e.key<="4")setMode(MODES[+e.key-1]); });
+</script>
+</body>
+</html>
