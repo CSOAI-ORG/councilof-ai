@@ -208,6 +208,14 @@ class Handler(BaseHTTPRequestHandler):
                 out = think(cid, b.get("message", ""),
                             brain=b.get("brain", "left"), tier=b.get("tier", "pro"),
                             user_id=b.get("user_id", "web"))
+                # SOVEREIGN GATE — the mandatory last filter. Whatever engine ran (incl. a
+                # user-swapped model), re-filter the reply so the user is always protected.
+                from .sovereign_gate import gate as _gate
+                _g = _gate(out.get("reply", ""), character=cid, user_id=b.get("user_id", "web"),
+                           engine=out.get("engine", out.get("brain", "?")),
+                           user_message=b.get("message", ""), tier=b.get("tier", "pro"))
+                out["reply"] = _g["reply"]
+                out["sovereign_gate"] = {k: _g[k] for k in ("gate", "care_flagged", "held", "swappable_engine")}
                 # Stage 1 Tamagotchi: grow the bond + update mood from this interaction
                 try:
                     from . import vitals as _v
@@ -228,6 +236,12 @@ class Handler(BaseHTTPRequestHandler):
                                         orchestrator=b.get("orchestrator"),
                                         quorum=int(b.get("quorum", 6)),     # 5 lenses + companion = fast
                                         deadline_s=float(b.get("deadline_s", 40)))
+                from .sovereign_gate import gate as _gate
+                _g = _gate(out.get("reply", ""), character=cid, user_id=b.get("user_id", "web"),
+                           engine=out.get("engine", "council"),
+                           user_message=b.get("message", ""), tier=b.get("tier", "pro"))
+                out["reply"] = _g["reply"]
+                out["sovereign_gate"] = {k: _g[k] for k in ("gate", "care_flagged", "held", "swappable_engine")}
                 try:
                     from . import vitals as _v
                     out["vitals"] = _v.on_interaction(cid, b.get("message", ""), name=b.get("name"))
