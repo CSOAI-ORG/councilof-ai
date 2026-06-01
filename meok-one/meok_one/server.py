@@ -172,6 +172,24 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as e:
                 return self._json(200, {"character": cid, "bond": 0, "stage": "egg",
                                         "stage_emoji": "🥚", "mood": "calm", "error": str(e)})
+        if path == "/api/tools":
+            # The unified tool catalog (459 tools, 3 worlds, by safety tier).
+            try:
+                from .tunnels import open_all_tunnels
+                return self._json(200, open_all_tunnels())
+            except Exception as e:
+                return self._json(200, {"error": f"{type(e).__name__}: {e}"})
+        if path == "/api/agents":
+            # assitti — the verified Agent Discovery directory.
+            try:
+                from . import assitti
+                q = qs.get("q", [""])[0]
+                tier = qs.get("tier", [None])[0]
+                if q or tier:
+                    return self._json(200, {"agents": assitti.search(q, tier=tier)})
+                return self._json(200, assitti.directory())
+            except Exception as e:
+                return self._json(200, {"error": f"{type(e).__name__}: {e}"})
         return self._json(404, {"error": "not found", "path": path})
 
     def do_POST(self):
@@ -195,10 +213,30 @@ class Handler(BaseHTTPRequestHandler):
                 except Exception as e:
                     out["vitals_error"] = str(e)
                 return self._json(200, out)
+            if path == "/api/sovereign":
+                # The FULL 12-around-1 BFT council powers the reply (vs /api/think's 2-node).
+                cid = b.get("character", "aria")
+                from .sovereign import sovereign_council
+                out = sovereign_council(cid, b.get("message", ""),
+                                        tier=b.get("tier", "pro"),
+                                        user_id=b.get("user_id", "web"),
+                                        reconcile=b.get("reconcile", "code"),
+                                        orchestrator=b.get("orchestrator"))
+                try:
+                    from . import vitals as _v
+                    out["vitals"] = _v.on_interaction(cid, b.get("message", ""), name=b.get("name"))
+                except Exception as e:
+                    out["vitals_error"] = str(e)
+                return self._json(200, out)
             if path == "/api/voice":
                 return self._json(200, voice_reply(b.get("character", "aria"), b.get("message", "")))
             if path == "/api/tts":
                 return self._tts(b)
+            if path == "/api/tool":
+                # Safe tool invocation through the gateway (read=auto, write=confirm, prohibited=never).
+                from .tunnels import safe_call
+                return self._json(200, safe_call(b.get("tool", ""), b.get("args", {}),
+                                                 confirm=b.get("confirm")))
         except KeyError as e:
             return self._json(400, {"error": f"unknown id {e}"})
         except Exception as e:
