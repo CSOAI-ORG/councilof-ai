@@ -327,30 +327,45 @@ async function openProduct(id){
   try{ window.__meokContext = p.label; }catch(_){}
 }
 function prodPanel(p,d){
-  // a tiny dark panel rendering our JSON products (characters/agents/tools) natively
-  let body="";
+  // native panels for our products. Characters = a browsable, selectable marketplace grid (E4).
+  let body="", script="";
   if(p.id==="chars"){ const cs=d.characters||[];
-    body=`<h2>${cs.length} characters</h2>`+cs.slice(0,40).map(c=>`<div class="row">${c.emoji||"🧬"} <b>${c.name}</b> <span class="dim">${c.archetype||""}</span></div>`).join(""); }
+    body=`<h2>Your characters <span class="dim">— ${cs.length} faces · tap one to become your AI</span></h2>
+      <div class="grid">`+cs.map(c=>`<div class="card" data-id="${c.id}" title="${c.archetype||""}">
+        <div class="em">${c.emoji||"🧬"}</div><div class="nm">${c.name}</div><div class="ar">${c.archetype||"companion"}</div></div>`).join("")+
+      `</div><a class="mkt" href="https://loopfactory.ai" target="_blank" rel="noopener">✦ Browse the character marketplace — discover, buy &amp; resell →</a>`;
+    script=`<scr`+`ipt>document.addEventListener("click",function(e){var c=e.target.closest(".card");if(!c)return;
+      document.querySelectorAll(".card").forEach(function(x){x.classList.remove("on")});c.classList.add("on");
+      parent.postMessage({type:"meok:select-char",id:c.getAttribute("data-id"),name:c.querySelector(".nm").textContent},"*");});</scr`+`ipt>`; }
   else if(p.id==="agents"){ const a=d.agents||[];
     body=`<h2>assitti — ${d.count||a.length} verified agents</h2>`+a.map(x=>`<div class="row">[${x.trust_grade||"?"}] <b>${x.name}</b> <span class="dim">${x.skill_count||0} skills · ${x.domain||""}</span></div>`).join(""); }
   else if(p.id==="tools"){ const t=d.safety_tiers||{};
     body=`<h2>${d.total_tools||0} tools through SOV3</h2><div class="row">✓ ${t.read||0} read (auto)</div><div class="row">⚠ ${t.write||0} write (confirm)</div><div class="row">✗ ${t.prohibited||0} prohibited (never)</div>`+
     Object.entries(d.worlds||{}).map(([k,v])=>`<div class="row dim">${k}: ${v.tools||v.packages||0}</div>`).join(""); }
   return `<!doctype html><body style="margin:0;background:#0e0e1a;color:#e8e8f0;font:14px -apple-system,sans-serif;padding:18px;overflow:auto">
-    <style>h2{font-size:16px;margin:0 0 12px;color:#fff}.row{padding:6px 8px;border-bottom:1px solid #26263a}.dim{color:#8a8aa0;font-size:12px}</style>${body}</body>`;
+    <style>h2{font-size:16px;margin:0 0 14px;color:#fff}.row{padding:6px 8px;border-bottom:1px solid #26263a}.dim{color:#8a8aa0;font-size:12px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:10px;margin-bottom:14px}
+    .card{background:#15151f;border:1px solid #26263a;border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:.15s}
+    .card:hover{border-color:#7c5cff;transform:translateY(-2px)}.card.on{border-color:#7c5cff;box-shadow:0 0 0 1px #7c5cff,0 8px 24px rgba(124,92,255,.3)}
+    .em{font-size:30px;line-height:1}.nm{font-weight:700;font-size:13px;margin-top:5px}.ar{color:#8a8aa0;font-size:10px;margin-top:1px}
+    .mkt{display:inline-block;color:#38bdf8;text-decoration:none;font-size:13px}</style>${body}${script}</body>`;
 }
 buildTabs();
 
-// ---- DOME map → OS bridge: tapping a character on the world map focuses it here ----
+// ---- product panels → OS bridge: DOME map + Characters grid focus a character here ----
+function focusCharacter(id,label){
+  const sel=$("#charSel");
+  if([...sel.options].some(o=>o.value===id)){ sel.value=id; }
+  CHAR=id; $("#charFrame").src="/avatar?embed=1&character="+CHAR;
+  log("tui",`❯ character → ${label||id}`);
+}
 window.addEventListener("message",e=>{
   const d=e.data||{};
   if(d.type==="meok:dome"&&d.character){
-    const sel=$("#charSel");
-    if([...sel.options].some(o=>o.value===d.character)){ sel.value=d.character; CHAR=d.character;
-      $("#charFrame").src="/avatar?embed=1&character="+CHAR; }
+    focusCharacter(d.character,d.name);
     window.__meokContext=`DOME · ${d.name||d.character} near ${d.city||"the world"}`;
-    log("tui",`❯ DOME → focus ${d.name||d.character} (${d.city||"world"})`);
   }
+  if(d.type==="meok:select-char"&&d.id){ focusCharacter(d.id,d.name); }   // Characters marketplace grid
 });
 
 // ---- drag-to-resize windows (Nick: "move the uis to change sizes") ----

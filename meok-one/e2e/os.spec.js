@@ -104,6 +104,17 @@ test.describe('MEOK OS — 3-window operating system', () => {
     await expect(page.locator('#prodframe')).toHaveAttribute('src', '/dome');
   });
 
+  // E4 — Characters marketplace: browse the 27 faces, tap one to become the active character.
+  test('E4 — Characters grid browses + selecting a card switches the active character', async ({ page }) => {
+    await page.goto('/os');
+    await page.click('#prodtabs button:has-text("Characters")');
+    const cards = page.frameLocator('#prodframe').locator('.card');
+    await expect.poll(async () => cards.count()).toBeGreaterThan(10);
+    const before = await page.getAttribute('#charFrame', 'src');
+    await cards.nth(2).click();
+    await expect.poll(async () => page.getAttribute('#charFrame', 'src')).not.toBe(before);
+  });
+
   // E3 — embeddable widget: the loader injects a launcher into any page; it opens the /widget.
   test('E3 — embed loader injects launcher + opens the widget', async ({ page }) => {
     await page.goto('/embed');
