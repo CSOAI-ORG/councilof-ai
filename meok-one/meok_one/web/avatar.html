@@ -170,9 +170,9 @@
 <body>
 <!-- HATCH CEREMONY — shown only on first visit (free first character) -->
 <div id="hatch">
-  <div class="hsub" id="hStage">a new bond begins</div>
+  <div class="hsub" id="hStage">hatch your AI</div>
   <div class="hegg" id="hEgg">🥚</div>
-  <h1 id="hTitle">Your sovereign is waiting</h1>
+  <h1 id="hTitle">Your AI is waiting to hatch</h1>
   <p id="hBody">Tap the egg to begin. Your first companion is free — hatch it, name it, and it remembers you from here on.</p>
   <button class="hbtn" id="hBtn" style="display:none">Hatch</button>
   <input id="hatchName" placeholder="give them a name…" style="display:none" autocomplete="off">
@@ -271,6 +271,11 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
 import { VRMAnimationLoaderPlugin, createVRMAnimationClip } from "@pixiv/three-vrm-animation";
+// post-processing: UnrealBloom for the "breathtaking" volumetric glow (MIT, three addons)
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 const $ = s => document.querySelector(s);
 let brain = "left", current = null, characters = [];
@@ -291,6 +296,8 @@ const canvas = $("#vrmCanvas");
 const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x12101f, 1);             // solid bg confirms the canvas is compositing
+renderer.toneMapping = THREE.ACESFilmicToneMapping;   // cinematic tone curve (premium look)
+renderer.toneMappingExposure = 1.15;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 20);
 camera.position.set(0, 1.3, 1.5);
@@ -301,8 +308,16 @@ const hemi = new THREE.HemisphereLight(0xffffff, 0x444466, 1.2); scene.add(hemi)
 // gaze target lives in front of the camera so the avatar looks at YOU (Amica autoLookAt)
 const lookTarget = new THREE.Object3D(); camera.add(lookTarget); lookTarget.position.set(0, 0, -8); scene.add(camera);
 
+// ---- post-processing composer: soft volumetric bloom (the "breathtaking" glow) ----
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(1,1), 0.55, 0.7, 0.85); // strength,radius,threshold
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
 function resize(){ const w=canvas.clientWidth, h=canvas.clientHeight; if(!w||!h) return;
-  renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+  renderer.setSize(w,h,false); composer.setSize(w,h); bloom.setSize(w,h);
+  camera.aspect=w/h; camera.updateProjectionMatrix(); }
 window.addEventListener("resize", resize);
 
 const loader = new GLTFLoader();
@@ -428,7 +443,7 @@ function animate(){
     }
     vrm.update(dt);               // drives lookAt + spring bones
   }
-  renderer.render(scene, camera);
+  composer.render();             // bloom post-processing (was renderer.render)
 }
 animate();
 

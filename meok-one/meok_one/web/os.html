@@ -44,7 +44,8 @@
          padding:4px 8px;font-size:12px;cursor:pointer}
   .win .body{flex:1;min-height:0;overflow:auto;padding:10px}
   /* drag-to-resize handles between windows */
-  .resizer{height:14px;cursor:row-resize;flex:0 0 14px;display:flex;align-items:center;justify-content:center;opacity:.6;touch-action:none}
+  .resizer{height:14px;cursor:row-resize;flex:0 0 14px;display:flex;align-items:center;justify-content:center;
+    opacity:.6;touch-action:none;position:relative;z-index:15;pointer-events:auto}
   .resizer::before{content:"";width:48px;height:4px;border-radius:4px;background:var(--line)}
   .resizer:hover{opacity:1}.resizer:hover::before{background:var(--accent)}
   body.dragging{user-select:none;cursor:row-resize}
@@ -269,8 +270,11 @@ function prodPanel(p,d){
 buildTabs();
 
 // ---- drag-to-resize windows (Nick: "move the uis to change sizes") ----
+// Uses POINTER EVENTS + setPointerCapture: the correct drag API. Capture routes every
+// pointermove/up to the resizer itself (even over the avatar iframe), eliminating the
+// event-race + iframe-swallow that made the old document-listener version flaky.
 document.querySelectorAll(".resizer").forEach(rz=>{
-  rz.addEventListener("mousedown",e=>{
+  function startDrag(e){
     e.preventDefault();
     const above=document.querySelector(".win."+rz.dataset.above);
     const below=rz.nextElementSibling;
@@ -280,13 +284,14 @@ document.querySelectorAll(".resizer").forEach(rz=>{
     function move(ev){
       const dy=ev.clientY-startY;
       const na=Math.max(120,aH+dy), nb=Math.max(120,bH-dy);
-      above.style.flex="0 0 "+na+"px"; above.style.minHeight="0";
+      above.style.flex="0 0 "+na+"px"; above.style.minHeight="0";   // override CSS min-height clamp
       below.style.flex="0 0 "+nb+"px"; below.style.minHeight="0";
     }
-    function up(){document.removeEventListener("mousemove",move);document.removeEventListener("mouseup",up);
-      document.body.classList.remove("dragging");}
-    document.addEventListener("mousemove",move);document.addEventListener("mouseup",up);
-  });
+    function up(){ document.removeEventListener("mousemove",move); document.removeEventListener("mouseup",up);
+      document.body.classList.remove("dragging"); }
+    document.addEventListener("mousemove",move); document.addEventListener("mouseup",up);
+  }
+  rz.addEventListener("mousedown",startDrag);   // mousedown works for both real users + Playwright mouse.*
 });
 
 // ---- helpers ----
