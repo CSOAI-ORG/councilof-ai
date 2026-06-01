@@ -11,7 +11,7 @@ exercised, console watched). ✅ works · 🟡 works but thin/external · 🔴 b
 | 🧬 **Characters** | ✅ | Native grid of all 27 faces, tap → becomes your AI, marketplace CTA | No per-character **detail/preview** card; no distinct "hatch this" vs "select"; premium/pricing not shown |
 | 🔭 **Agents** | 🟡 | Native list, renders | **Only 2 agents** in the registry (assitti near-empty); **read-only** — can't open, inspect, or invoke/talk to an agent |
 | 🛠️ **Tools** | 🟡 | Native stats (459 · 60 read · 399 confirm) | **Read-only** — can't browse/search the 459 tools or invoke from the panel (only via TUI `tool <name>`); **"0 prohibited" looks wrong** (prohibited tier not surfaced); no per-tool detail/tier reason |
-| 🛒 **Marketplace** | 🔴 | — | **BLANK** — points to loopfactory.ai which refuses to iframe (no content loads). Broken tab. Should be a **native** buy/sell/resell surface |
+| 🛒 **Marketplace** | ✅ FIXED | Native hub: Verified MCP Registry + Sell/resell cards + 27-character adopt grid (tap → become your AI) | ~~BLANK (loopfactory won't iframe)~~ fixed 2026-06-01: now native, no external-iframe dependency |
 | 💗 **Care** | 🟡 | Loads aquaponics.app (iframes OK) | It's a **different product's site**, not a native MEOK care surface (no check-ins, mood history, crisis resources, care-membrane status) |
 | ⚖️ **Compliance** | 🟡 | Loads csoai.org (iframes OK) | External site (minor SVG glitch on their page); should point to the **native /registry** product we just built |
 
@@ -40,12 +40,12 @@ exercised, console watched). ✅ works · 🟡 works but thin/external · 🔴 b
 `/hatch` cinematic · `/dome` map · `/siri` setup · `/embed` + `/widget` · `/registry`
 
 ## Prioritised fix list
-1. 🔴 **Marketplace blank** → repoint to a native surface (character marketplace / `/registry`) instead of the dead loopfactory iframe. *(quick)*
+1. ✅ **Marketplace blank** → FIXED: native hub (MCP registry + adopt-a-character grid).
 2. 🔴 **`codeSel` cosmetic** → wire the TUI coding-model selector to real behaviour, or remove it. *(quick)*
 3. 🟡 **Vitals/bond HUD** → surface bond/mood/level in the character window (small overlay). *(medium)*
 4. 🟡 **Tools tab** → browsable/searchable tool list + per-tool invoke + fix the "0 prohibited" count. *(medium)*
 5. 🟡 **Agents tab** → populate the registry + agent detail + invoke/talk. *(medium)*
 6. 🟡 **Care / Compliance** → native panels (Care: check-in/mood/crisis; Compliance → `/registry`). *(medium-big)*
-7. ⚪ `openProduct` should clear `frame.src` when setting `srcdoc` (stale-src cosmetic). *(tiny)*
+7. ✅ `openProduct` clears `frame.src` before `srcdoc` → FIXED.
 
 → Items 1, 2, 7 are quick wins; 3 is the highest user-delight (the Tamagotchi becomes visible).
