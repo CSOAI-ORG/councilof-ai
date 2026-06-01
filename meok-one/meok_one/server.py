@@ -39,6 +39,12 @@ from .voice import voice_reply
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _INDEX = os.path.join(_HERE, "web", "index.html")
 
+# Deep-think council default (benchmark 2026-06-01, MEOK_COUNCIL_BENCHMARK):
+#  - code-reconcile NEVER error-corrects (votes but keeps the draft); llm-reconcile DOES (it
+#    synthesizes a corrected answer from the lens critiques — lifted a weak draft to correct).
+#  - local-Ollama lenses time out on the CPU VM, so the deployed council uses a fast CLOUD roster.
+_COUNCIL_ROSTER = ["deepseek-v4", "gemini", "qwen-max", "llama4", "glm", "step-3.7", "gemma"]
+
 
 _VISION_PROMPT = ("Reply with ONLY this, no preamble or thinking: one short sentence describing the "
                   "screen, then ' — ' and a comma-separated list of the key UI elements.")
