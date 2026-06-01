@@ -29,8 +29,9 @@ SOV3_MCP = "http://localhost:3101/mcp"
 # Verified live 2026-05-30: validate_care returns care_score; record_memory returns result.
 SKILLS = {
     "remember":      ("record_memory",   lambda **k: {"content": k["content"],
+                                                       "source_agent": k.get("source_agent", "meok-one"),
                                                        "memory_type": k.get("type", "episodic"),
-                                                       "importance": k.get("importance", 0.6)}),
+                                                       "care_weight": k.get("importance", 0.6)}),
     "recall":        ("query_memories",  lambda **k: {"query": k["query"], "limit": k.get("limit", 5)}),
     "validate_care": ("validate_care",   lambda **k: {"text": k["text"]}),
     "care_response": ("nemotron_care_response", lambda **k: {"message": k["message"]}),

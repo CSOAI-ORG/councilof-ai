@@ -58,9 +58,12 @@ class MemoryBridge:
     def record(self, user_id: str, content: str, platform: str = "unknown") -> dict:
         """Store a memory for this user (from whatever platform they're on)."""
         tagged = f"[{_tag(user_id)}|{platform}] {content}"
+        # SOV3 record_memory requires source_agent + uses care_weight (not importance). Use the
+        # per-user tag as source_agent for structured isolation; content also carries the tag.
         res = _call_sov3("record_memory", {"content": tagged,
+                                           "source_agent": _tag(user_id),
                                            "memory_type": "episodic",
-                                           "importance": 0.6})
+                                           "care_weight": 0.6})
         if res is not None:
             return {"stored": True, "user_id": user_id, "platform": platform,
                     "source": "sov3"}

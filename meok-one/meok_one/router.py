@@ -90,6 +90,7 @@ MODELS = {
     "turbo-oss":        ("cloud", "openai/gpt-oss-20b"),
     "turbo-qwen":       ("cloud", "qwen/qwen3-32b"),
     "turbo-llama8":     ("cloud", "meta-llama/llama-3.1-8b-instruct"),  # Groq instant, non-reasoning
+    "minimax":          ("cloud", "minimax/minimax-m3"),               # MiniMax M3 (MSA, 1M ctx)
 }
 
 # Which backends a billing tier may use. Local tier = local only (free, self-host).
