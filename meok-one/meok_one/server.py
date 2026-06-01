@@ -43,7 +43,12 @@ _INDEX = os.path.join(_HERE, "web", "index.html")
 #  - code-reconcile NEVER error-corrects (votes but keeps the draft); llm-reconcile DOES (it
 #    synthesizes a corrected answer from the lens critiques — lifted a weak draft to correct).
 #  - local-Ollama lenses time out on the CPU VM, so the deployed council uses a fast CLOUD roster.
-_COUNCIL_ROSTER = ["deepseek-v4", "gemini", "qwen-max", "llama4", "glm", "step-3.7", "gemma"]
+#  TURBO (2026-06-01 research): lenses pinned to Groq (~0.5s each, verified). Use only fast
+#  NON-reasoning models — reasoning models (gpt-oss/qwen3) burn the 96-tok cap on hidden thinking
+#  and return empty. Synthesis stays on Opus (reliable quality; conditional + falls back via
+#  allow_fallbacks). Override orchestrator="turbo-llama70" for a faster (jittery) all-Groq path.
+_COUNCIL_ROSTER = ["turbo-llama70", "turbo-llama4s", "turbo-llama8", "turbo-llama4s", "turbo-llama8"]
+_COUNCIL_PROVIDER = ["Groq", "Cerebras"]
 
 
 _VISION_PROMPT = ("Reply with ONLY this, no preamble or thinking: one short sentence describing the "
