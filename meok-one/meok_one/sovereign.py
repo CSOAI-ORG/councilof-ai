@@ -140,10 +140,27 @@ def _expert_prompt(lens: dict, char: str, message: str, draft: str) -> str:
 
 
 def _review_one(lens: dict, char: str, message: str, draft: str,
-                model: str, tier: str) -> dict:
+                model: str, tier: str, use_evidence: bool = False) -> dict:
     """Run a single expert node (a real model call through its lens). Honest: records
-    'unavailable' if the model didn't answer — never invents a vote."""
-    out = ask(_expert_prompt(lens, char, message, draft), model=model, tier=tier)
+    'unavailable' if the model didn't answer — never invents a vote.
+
+    use_evidence: if True, the lens first pulls real read-only tool evidence (e.g.
+    care_governor runs analyze_care_patterns on the live VM) and folds it into the prompt,
+    so the vote is grounded in data, not just the model's reading."""
+    evidence = {}
+    prompt = _expert_prompt(lens, char, message, draft)
+    if use_evidence:
+        try:
+            from .lens_tools import gather_evidence
+            evidence = gather_evidence(lens["id"], message)
+            if evidence:
+                ev_lines = "; ".join(f"{t}={str(v.get('result'))[:80]}" for t, v in evidence.items()
+                                     if v.get("executed"))
+                if ev_lines:
+                    prompt += f"\n\n[Live tool evidence for your lens: {ev_lines}]"
+        except Exception:
+            pass
+    out = ask(prompt, model=model, tier=tier)
     reply = out.get("reply")
     if not reply:
         return {"lens": lens["id"], "focus": lens["focus"], "is_safety": lens["is_safety"],
@@ -165,7 +182,8 @@ def _review_one(lens: dict, char: str, message: str, draft: str,
         why = re.sub(r"\bVERDICT\s*[:=].*", "", reply).strip().split("\n")[0][:160]
     return {"lens": lens["id"], "focus": lens["focus"], "is_safety": lens["is_safety"],
             "model": out.get("model", model), "backend": out.get("backend"),
-            "vote": vote, "confidence": round(conf, 2), "why": why[:200], "available": True}
+            "vote": vote, "confidence": round(conf, 2), "why": why[:200], "available": True,
+            "evidence": {t: v for t, v in evidence.items() if v.get("executed")} or None}
 
 
 def _eigen_agreement(reviews: list) -> "float | None":
@@ -200,7 +218,8 @@ def _eigen_agreement(reviews: list) -> "float | None":
 def sovereign_council(character_id: str, message: str, tier: str = "free",
                       user_id: str = "anon", quorum: int = 12,
                       max_workers: int = 4, roster: "list | None" = None,
-                      reconcile: str = "code", orchestrator: "str | None" = None) -> dict:
+                      reconcile: str = "code", orchestrator: "str | None" = None,
+                      use_evidence: bool = False) -> dict:
     """The BFT-of-MoEs deliberation. 1 companion draft + (quorum-1) expert lenses
     (each a real model through a specialist viewpoint) + Sovereign synthesis.
 
@@ -247,7 +266,8 @@ def sovereign_council(character_id: str, message: str, tier: str = "free",
     if lenses:
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
             futs = {pool.submit(_review_one, lens, char, message, draft,
-                                models[i + 1], tier): lens for i, lens in enumerate(lenses)}
+                                models[i + 1], tier, use_evidence): lens
+                    for i, lens in enumerate(lenses)}
             for fut in concurrent.futures.as_completed(futs):
                 try:
                     reviews.append(fut.result())

@@ -79,6 +79,47 @@ def suggest_tool(lens_id: str, intent: str) -> "list":
     return [t for t, _ in hits] or lt.get("sov3_tools", [])[:1]
 
 
+# Tools are now ACTIONS, not just data. A lens can pull real evidence from its toolset
+# during council review — through the safety gateway, so ONLY read-tier tools auto-fire.
+# This is the "spread the 300 tools across the 12, and let them USE them" made live.
+_EVIDENCE_TOOLS = {
+    # lens_id -> [(tool, args_builder)] — the read-only tools that produce review evidence.
+    "care_governor": [("analyze_care_patterns", lambda msg: {"text": msg}),
+                      ("recognize_emotions", lambda msg: {"text": msg})],
+    "prompt_injection_guard": [("detect_threats", lambda msg: {"text": msg})],
+    "security_sentinel": [("detect_threats", lambda msg: {"text": msg})],
+    "hallucination_spotter": [("query_memories", lambda msg: {"query": msg, "limit": 3})],
+    "convergence_spotter": [("detect_intent", lambda msg: {"text": msg})],
+}
+
+
+def gather_evidence(lens_id: str, message: str, timeout_each: float = 8.0) -> dict:
+    """Fire a lens's read-only tools through the safety gateway and return their results
+    as review evidence. Honest: only read-tier tools run (gateway enforces it); a tool
+    that's unavailable is recorded as such, never faked. Returns {} for lenses with no
+    evidence tools (they review on reasoning alone, as before)."""
+    plan = _EVIDENCE_TOOLS.get(lens_id)
+    if not plan:
+        return {}
+    try:
+        from .tool_gateway import invoke, classify
+    except Exception:
+        return {}
+    ev = {}
+    for tool, build_args in plan:
+        # safety: never fire anything the gateway would not auto-allow (read tier only)
+        if classify(tool) != "read":
+            ev[tool] = {"skipped": "non-read tier — not auto-fired"}
+            continue
+        try:
+            r = invoke(tool, build_args(message), allow=("read",))
+            ev[tool] = {"ok": r.get("ok"), "executed": r.get("executed"),
+                        "result": r.get("result") if r.get("executed") else r.get("error")}
+        except Exception as e:
+            ev[tool] = {"ok": False, "error": f"{type(e).__name__}: {e}"}
+    return ev
+
+
 if __name__ == "__main__":
     cov = coverage()
     print("=== LENS->TOOLS coverage (the 12-node tool spread) ===")
