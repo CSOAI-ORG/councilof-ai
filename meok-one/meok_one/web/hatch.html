@@ -3,6 +3,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>MEOK — Sovereign Emergence</title>
+<link rel="icon" href="/icon.svg"/>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <!--
   MEOK HATCH CINEMATIC — "The Dragon Gate" (鯉躍龍門, modern).
@@ -225,6 +226,11 @@ function drawPulse(ms){
     rg.addColorStop(0,PULSE[i]); rg.addColorStop(.5,PULSE[i]+'88'); rg.addColorStop(1,'rgba(0,0,0,0)');
     X.fillStyle=rg; X.beginPath(); X.arc(px,py,R*0.9*breathe,0,7); X.fill(); }
   X.restore();
+  // golden core — the warm heart, unifying the orb with the glass egg + logo
+  const core=X.createRadialGradient(cx,cy+R*0.1,0,cx,cy+R*0.1,R*0.78*breathe);
+  core.addColorStop(0,'rgba(255,246,220,0.92)'); core.addColorStop(.35,'rgba(255,209,103,0.7)');
+  core.addColorStop(.75,'rgba(232,162,58,0.22)'); core.addColorStop(1,'rgba(232,162,58,0)');
+  X.fillStyle=core; X.beginPath(); X.arc(cx,cy+R*0.1,R*0.78*breathe,0,7); X.fill();
   // translucent glass shell
   X.beginPath(); X.arc(cx,cy,R*breathe,0,7);
   X.strokeStyle='rgba(255,255,255,0.35)'; X.lineWidth=2*DPR; X.shadowBlur=40*DPR; X.shadowColor='#a855f7'; X.stroke();
