@@ -1,5 +1,11 @@
 # Deploying MEOK ONE
 
+> ✅ **LIVE since 2026-06-01:** https://meok-one.35.242.143.249.sslip.io (one-origin GCP, valid LE cert).
+> Runs as systemd `meok-one` on meok-backend (static IP `35.242.143.249`, port 4173 behind Caddy).
+> Redeploy after code changes: `./deploy/deploy.sh meok-backend` (uses `gcloud compute` if no ssh alias —
+> the VM is reached via `gcloud compute ssh meok-backend --zone=europe-west2-a`). The one-time setup below
+> is already done on the VM.
+
 MEOK ONE is a **pure-stdlib Python server** (zero pip deps) that serves the static front
 (`/os`, `/avatar`, `/hatch`, `/dome`, `/siri`, PWA assets) **and** the `/api/*` backend from one
 process. That makes deploy unusually simple.
