@@ -123,6 +123,11 @@
   @keyframes mpulse{0%,100%{opacity:1}50%{opacity:.5}}
   .msg .cursor{display:inline-block;width:7px;background:var(--accent);margin-left:1px;animation:cblink .9s steps(2) infinite}
   @keyframes cblink{50%{opacity:0}}
+  /* bond/vitals HUD — the Tamagotchi made visible (it remembers you, the bond grows) */
+  .vhud{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);margin-left:auto;margin-right:8px;white-space:nowrap}
+  .vhud b{color:var(--ink)}
+  .vhud .bar2{width:40px;height:5px;border-radius:3px;background:#26263a;overflow:hidden;display:inline-block;vertical-align:middle}
+  .vhud .bar2 i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s ease}
   /* account / link-device (cross-device sync) */
   .acctchip{position:fixed;bottom:10px;right:12px;z-index:25;font-size:11px;color:var(--dim);
     background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:4px 11px;cursor:pointer;display:flex;align-items:center;gap:5px}
@@ -170,6 +175,7 @@
       <div class="win character">
         <div class="bar">
           <span class="title">🧬 Character</span>
+          <span class="vhud" id="vhud" title="your bond grows the more you talk — it remembers you"></span>
           <div class="sel">
             <select id="charSel" title="which character"></select>
           </div>
@@ -375,7 +381,19 @@ function focusCharacter(id,label){
   if([...sel.options].some(o=>o.value===id)){ sel.value=id; }
   CHAR=id; $("#charFrame").src="/avatar?embed=1&character="+CHAR;
   log("tui",`❯ character → ${label||id}`);
+  refreshVitals();
 }
+// ---- vitals/bond HUD: the Tamagotchi made visible. The bond grows the more you talk + is
+// per-user (follows you across devices via SOV3 identity). Refreshed on load/switch/each reply.
+async function refreshVitals(){
+  try{
+    const v=await (await fetch(API+"/api/vitals?character="+encodeURIComponent(CHAR))).json();
+    const bond=Math.round(v.bond||0), pct=Math.min(100,(bond%10)*10);
+    $("#vhud").innerHTML=`${v.stage_emoji||"🥚"} <b>L${v.level||1}</b> · 💜<b>${bond}</b> `+
+      `<span class="bar2"><i style="width:${pct}%"></i></span> · ${v.mood_emoji||"🌸"}`;
+  }catch(_){ $("#vhud").textContent=""; }
+}
+refreshVitals();
 window.addEventListener("message",e=>{
   const d=e.data||{};
   if(d.type==="meok:dome"&&d.character){
@@ -427,7 +445,7 @@ fetch(API+"/api/characters").then(r=>r.json()).then(d=>{
 }).catch(()=>{});
 $("#charSel").onchange=e=>{CHAR=e.target.value;
   $("#charFrame").src="/avatar?embed=1&character="+CHAR;
-  log("tui",`❯ character → ${CHAR}`);};
+  log("tui",`❯ character → ${CHAR}`); refreshVitals();};
 
 fetch(API+"/api/tools").then(r=>r.json()).then(d=>{
   $("#sdot").classList.add("ok");
@@ -530,6 +548,7 @@ async function sendChat(text, voice=false){
     try{ $("#charFrame").contentWindow.postMessage({type:"meok-emote",text:d.reply||""},"*"); }catch(_){}
     if(voice||VOICE_ON) speak(d.reply||"");   // A5: hands-free — speaks the full gated reply
     await typewriter(twEl, d.reply||"[no reply]");
+    refreshVitals();   // the bond just grew — reflect it live
     if(d.council){log("tui",`❯ council: ${d.council.decision} · ${d.council.available_nodes||0} nodes · ${d.council.passes||0} pass / ${(d.council.vetoes||[]).length} veto`);}
   }catch(e){
     const aborted = e.name==="AbortError";
