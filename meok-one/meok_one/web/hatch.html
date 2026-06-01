@@ -3,6 +3,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>MEOK — Sovereign Emergence</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <!--
   MEOK HATCH CINEMATIC — "The Dragon Gate" (鯉躍龍門, modern).
   Nick's vision: koi swims up the waterfall → light → dragon hatchling → dragon.
@@ -159,14 +160,28 @@ $('#emergeBtn').addEventListener('click',finish);
 $('#nameIn').addEventListener('keydown',e=>{ if(e.key==='Enter') finish(); });
 $('#gstart').addEventListener('click',enterApp);
 $('#gclose').addEventListener('click',enterApp);
+function celebrate(){
+  // confetti burst in the brand colours + a soft chime — the magical "hatched!" moment
+  try{ if(window.confetti){ const C2=PULSE.concat(['#ffffff']);
+    confetti({particleCount:120,spread:90,origin:{y:.55},colors:C2,scalar:1.1});
+    setTimeout(()=>confetti({particleCount:80,angle:60,spread:70,origin:{x:0,y:.6},colors:C2}),150);
+    setTimeout(()=>confetti({particleCount:80,angle:120,spread:70,origin:{x:1,y:.6},colors:C2}),300);
+  }}catch(_){}
+  try{ const a=new (window.AudioContext||window.webkitAudioContext)(); // tiny rising chime, no asset
+    [523.25,659.25,783.99,1046.5].forEach((f,i)=>{ const o=a.createOscillator(),g=a.createGain();
+      o.type='sine';o.frequency.value=f;o.connect(g);g.connect(a.destination);
+      const t=a.currentTime+i*0.12; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.18,t+.03);
+      g.gain.exponentialRampToValueAtTime(.001,t+.5); o.start(t);o.stop(t+.5); }); }catch(_){}
+}
 function finish(){
   const name=($('#nameIn').value||'').trim()||'your AI';
+  celebrate();
   // hand the chosen name + journey back to the host (the OS / avatar layer)
   try{ parent.postMessage({type:'meok-hatched', name, journey:'koi-dragon'}, '*'); }catch(_){}
   try{ localStorage.setItem('meok_hatched', JSON.stringify({name, ts:Date.now()})); }catch(_){}
   // show the startup guide (you customise everything by TALKING) before entering
   $('#gname').textContent=name; $('#gwelcome').textContent='Meet '+name;
-  $('#guide').classList.add('show');
+  setTimeout(()=>$('#guide').classList.add('show'), 700);  // let the confetti land first
 }
 function enterApp(){
   document.body.style.transition='opacity 1s'; document.body.style.opacity='0';

@@ -48,6 +48,10 @@
   .resizer::before{content:"";width:48px;height:4px;border-radius:4px;background:var(--line)}
   .resizer:hover{opacity:1}.resizer:hover::before{background:var(--accent)}
   body.dragging{user-select:none;cursor:row-resize}
+  /* View Transitions — smooth cross-fade/morph between OS modes (mode switch only) */
+  ::view-transition-old(root),::view-transition-new(root){animation-duration:.4s;}
+  /* a drag-resize must never be animated by a view transition (it'd fight the drag) */
+  body.dragging{view-transition-name:none}
   body.dragging iframe{pointer-events:none}  /* so the avatar iframe doesn't swallow the drag */
   /* character window */
   .char-frame{height:100%;width:100%;border:0;border-radius:0 0 var(--radius) var(--radius)}
@@ -72,12 +76,22 @@
   .tui-in{display:flex;border-top:1px solid var(--line);background:#0a0a14}
   .tui-in span{color:var(--accent);padding:6px 4px 6px 8px;font-family:monospace}
   .tui-in input{flex:1;background:transparent;border:0;color:#9fe6b8;font:12px/1.4 monospace;padding:6px 8px;outline:none}
-  /* mode bar — sits in the LEFT stage column only (never overlaps the dock/selectors) */
-  .modebar{position:absolute;top:16px;left:16px;display:flex;gap:6px;z-index:20;flex-wrap:wrap;max-width:260px}
+  /* mode bar — a single tidy row pinned top-left; product tabs sit BELOW it (no overlap) */
+  .modebar{position:absolute;top:14px;left:16px;display:flex;gap:6px;z-index:30;flex-wrap:nowrap}
   .modebar button{background:var(--panel);border:1px solid var(--line);color:var(--dim);
-                  border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer}
+                  border-radius:20px;padding:5px 12px;font-size:11px;cursor:pointer;white-space:nowrap}
   .modebar button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
   body.orb .modebar{position:fixed}
+  /* PRODUCT TABS + view (the left panel = MEOK DOME + all products) */
+  .stage{flex-direction:column;align-items:stretch;justify-content:flex-start;padding:56px 20px 20px}
+  .prodtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .prodtabs button{background:var(--panel);border:1px solid var(--line);color:var(--dim);
+                   border-radius:10px;padding:6px 12px;font-size:12px;cursor:pointer;white-space:nowrap}
+  .prodtabs button.on{background:var(--panel2);color:var(--ink);border-color:var(--accent)}
+  .prodtabs button .em{margin-right:5px}
+  .prodview{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center}
+  .prodframe{width:100%;height:100%;border:1px solid var(--line);border-radius:14px;background:#0e0e1a}
+  body.orb .stage,body.large .prodtabs{}
   /* ORB mode */
   body.orb .app{grid-template-columns:1fr}
   body.orb .dock{position:fixed;bottom:20px;right:20px;height:auto;width:auto;padding:0}
@@ -105,12 +119,17 @@
         <button data-mode="council">⚖ Council</button>
         <button data-mode="orb">◯ Orb</button>
       </div>
-      <div class="hint">
-        <h1>MEOK OS</h1>
-        <p>Your character lives in the windows on the right. Talk to it — it remembers you,
-           keeps you safe, and can use 459 tools through SOV3.</p>
-        <p style="font-size:12px">Say <b>"Pro"</b> for the 3-window OS · <b>"Orb"</b> to minimise ·
-           <b>"Council"</b> to watch the AI team work.</p>
+      <!-- PRODUCT TABS — the character (right) can act on whichever product is open (left) -->
+      <div class="prodtabs" id="prodtabs"></div>
+      <div class="prodview" id="prodview">
+        <div class="hint" id="homeHint">
+          <h1>MEOK DOME</h1>
+          <p>Your character lives in the windows on the right. Open any product tab above —
+             your character can see it and act on it through SOV3's 459 tools.</p>
+          <p style="font-size:12px">Tabs are MEOK's products. The character is the constant;
+             every product is a place it can work with you.</p>
+        </div>
+        <iframe class="prodframe" id="prodframe" title="product" style="display:none"></iframe>
       </div>
     </div>
 
@@ -179,12 +198,75 @@ let CHAR="aria";
 
 // ---- mode switching (D6 progressive disclosure + D5 layout) ----
 const MODES=["simple","pro","council","orb"];
-function setMode(m){
+function _applyMode(m){
   document.body.className=m;
   document.querySelectorAll(".modebar button").forEach(b=>b.classList.toggle("on",b.dataset.mode===m));
   log("tui",`❯ layout → ${m}`);
 }
+function setMode(m){
+  // View Transitions API → buttery split↔large↔orb morphs (real-OS feel). Falls back cleanly.
+  if(document.startViewTransition){ document.startViewTransition(()=>_applyMode(m)); }
+  else { _applyMode(m); }
+}
 document.querySelectorAll(".modebar button").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+
+// ---- PRODUCT TABS — MEOK DOME + every product, in the left panel ----
+// The character (right windows) stays constant; each tab is a place it can work with you.
+// `url` null = the DOME home hint; a path/URL = load that product's UI in the iframe.
+const PRODUCTS = [
+  {id:"dome",   em:"🏛️", label:"DOME",        url:null},
+  {id:"chars",  em:"🧬", label:"Characters",  url:"/api/characters",  kind:"json"},
+  {id:"agents", em:"🔭", label:"Agents",      url:"/api/agents",      kind:"json"},
+  {id:"tools",  em:"🛠️", label:"Tools",       url:"/api/tools",       kind:"json"},
+  {id:"market", em:"🛒", label:"Marketplace", url:"https://loopfactory.ai", kind:"ext"},
+  {id:"care",   em:"💗", label:"Care",        url:"https://aquaponics.app", kind:"ext"},
+  {id:"comply", em:"⚖️", label:"Compliance",  url:"https://csoai.org",      kind:"ext"},
+];
+let activeProd="dome";
+function buildTabs(){
+  const bar=$("#prodtabs");bar.innerHTML="";
+  PRODUCTS.forEach(p=>{
+    const b=document.createElement("button");
+    b.innerHTML=`<span class="em">${p.em}</span>${p.label}`;
+    b.className=p.id===activeProd?"on":"";
+    b.onclick=()=>openProduct(p.id);
+    bar.appendChild(b);
+  });
+}
+async function openProduct(id){
+  activeProd=id;buildTabs();
+  const p=PRODUCTS.find(x=>x.id===id);
+  const frame=$("#prodframe"), home=$("#homeHint");
+  if(!p||!p.url){ home.style.display=""; frame.style.display="none";
+    log("tui",`❯ product → DOME (home)`); return; }
+  home.style.display="none"; frame.style.display="";
+  log("tui",`❯ product → ${p.label}`);
+  if(p.kind==="json"){
+    // render a MEOK-native panel from our own API (character can act on these via tools)
+    try{
+      const d=await (await fetch(API+p.url)).json();
+      frame.srcdoc=prodPanel(p,d);
+    }catch(e){ frame.srcdoc=`<body style="background:#0e0e1a;color:#e8e8f0;font:14px sans-serif;padding:20px">${p.label}: ${e}</body>`; }
+  } else {
+    frame.removeAttribute("srcdoc"); frame.src=p.url;   // external product site
+  }
+  // tell the character which product the user is now looking at (context for its replies)
+  try{ window.__meokContext = p.label; }catch(_){}
+}
+function prodPanel(p,d){
+  // a tiny dark panel rendering our JSON products (characters/agents/tools) natively
+  let body="";
+  if(p.id==="chars"){ const cs=d.characters||[];
+    body=`<h2>${cs.length} characters</h2>`+cs.slice(0,40).map(c=>`<div class="row">${c.emoji||"🧬"} <b>${c.name}</b> <span class="dim">${c.archetype||""}</span></div>`).join(""); }
+  else if(p.id==="agents"){ const a=d.agents||[];
+    body=`<h2>assitti — ${d.count||a.length} verified agents</h2>`+a.map(x=>`<div class="row">[${x.trust_grade||"?"}] <b>${x.name}</b> <span class="dim">${x.skill_count||0} skills · ${x.domain||""}</span></div>`).join(""); }
+  else if(p.id==="tools"){ const t=d.safety_tiers||{};
+    body=`<h2>${d.total_tools||0} tools through SOV3</h2><div class="row">✓ ${t.read||0} read (auto)</div><div class="row">⚠ ${t.write||0} write (confirm)</div><div class="row">✗ ${t.prohibited||0} prohibited (never)</div>`+
+    Object.entries(d.worlds||{}).map(([k,v])=>`<div class="row dim">${k}: ${v.tools||v.packages||0}</div>`).join(""); }
+  return `<!doctype html><body style="margin:0;background:#0e0e1a;color:#e8e8f0;font:14px -apple-system,sans-serif;padding:18px;overflow:auto">
+    <style>h2{font-size:16px;margin:0 0 12px;color:#fff}.row{padding:6px 8px;border-bottom:1px solid #26263a}.dim{color:#8a8aa0;font-size:12px}</style>${body}</body>`;
+}
+buildTabs();
 
 // ---- drag-to-resize windows (Nick: "move the uis to change sizes") ----
 document.querySelectorAll(".resizer").forEach(rz=>{

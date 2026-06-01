@@ -213,17 +213,14 @@ def _ask_cloud(model_id: str, prompt: str) -> "tuple":
     Gemini/Gemma id or only GOOGLE_API_KEY is set; else OpenRouter (BYOK). Honest 'not
     configured' rather than pretending. Governance-wrapper path, NOT token resale."""
     mlow = model_id.lower()
-    if "gemini" in mlow or "gemma" in mlow or (os.environ.get("GOOGLE_API_KEY", "").startswith("AIza")
-                                               and not os.environ.get("OPENROUTER_API_KEY")):
+    _has_or = bool(os.environ.get("OPENROUTER_API_KEY"))
+    # PRIORITY FIX: if OpenRouter is configured, use it FIRST (it's fast + not free-tier
+    # rate-limited). Direct Gemini (Google AI Studio free key) 429s constantly and the
+    # fall-through added a ~19s tax that made chat "hang". Only use direct Gemini when
+    # there's NO OpenRouter key. (Was: Gemini-first-then-fallback → slow.)
+    if ("gemini" in mlow or "gemma" in mlow) and not _has_or:
         reply, note = _ask_gemini(model_id, prompt)
-        if reply:
-            return reply, note
-        # if gemini failed AND no openrouter, return the gemini note honestly
-        if not os.environ.get("OPENROUTER_API_KEY"):
-            return None, note
-        # Gemini failed (e.g. free-tier 429) but OpenRouter IS set → FALL THROUGH to it.
-        # Map the bare Gemini id to an OpenRouter model id OpenRouter recognises, so the
-        # fallback actually works (was passing 'gemini-flash-latest' → 404).
+        return (reply, note) if reply else (None, note)
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key:
         return None, "cloud not configured (set GOOGLE_API_KEY=AIza... or OPENROUTER_API_KEY)"
