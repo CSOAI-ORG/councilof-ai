@@ -31,12 +31,14 @@ await page.waitForTimeout(450);
 const egg = (await page.textContent('#facEgg'))?.trim();
 must(egg === '🛡️', `Preview egg updates with archetype (got ${egg})`);
 
-// "describe your AI" → conjure
+// "describe your AI" → conjure (may hit the cloud LLM, a few seconds — poll until resolved)
 await page.fill('#facDesc', 'a tough fitness coach who pushes me to hit my goals');
 await page.click('#facConjure');
-await page.waitForTimeout(700);
+await page.waitForFunction(
+  () => /conjured|shaped/.test(document.querySelector('#facMsg')?.textContent || ''),
+  { timeout: 20000 });
 const arch = await page.inputValue('#facArch');
-must(arch === 'challenger', `Conjure maps "fitness coach/push/goals" → challenger (got ${arch})`);
+must(['challenger', 'strategist'].includes(arch), `Conjure maps "fitness coach" → coach-like archetype (got ${arch})`);
 const facMsg = (await page.textContent('#facMsg'))?.trim();
 must(/conjured|shaped/.test(facMsg || ''), `Conjure status shown (${facMsg})`);
 
@@ -48,6 +50,14 @@ const after = await page.$$eval('#charSel option', o => o.length);
 must(after === before + 1, `Create adds the new AI to charSel (${before}→${after})`);
 const sel = await page.inputValue('#charSel');
 must(/^gen_/.test(sel), `New AI becomes the active character (${sel})`);
+// minted character must carry its real archetype emoji (not the 🧬 fallback)
+const selText = await page.$eval('#charSel', s => s.options[s.selectedIndex].textContent);
+must(!selText.includes('🧬'), `New AI shows its archetype emoji, not 🧬 fallback (${selText})`);
+const previewEmoji = await page.evaluate(async () => {
+  const d = await (await fetch('/api/factory/preview?archetype=guardian&care_style=gentle')).json();
+  return d.character.emoji;   // top-level emoji must now exist
+});
+must(previewEmoji === '🛡️', `mint() exposes top-level emoji (${previewEmoji})`);
 
 // confirm it persisted to the user's roster via the API (token-scoped)
 const apiCount = await page.evaluate(async () => {
@@ -70,6 +80,16 @@ await page.click('.pin.mine');
 await page.waitForTimeout(500);
 const adopt = await page.locator('.dome-adopt').count();
 must(adopt >= 1, 'Pin popup has a "✨ Make this my AI" button');
+
+// seed pins are tinted by archetype (a non-mine dot has an inline border color)
+const tinted = await page.$$eval('.pin:not(.mine):not(.you) .dot',
+  els => els.some(e => e.style.borderColor && e.style.borderColor !== ''));
+must(tinted, 'Seed pins are tinted by archetype color');
+
+// "fly to my region" control exists and fires without error
+const flyMe = await page.locator('#flyMe').count();
+must(flyMe === 1, '"Fly to my region" control present');
+if (flyMe) { await page.click('#flyMe'); await page.waitForTimeout(600); }
 
 ok(errs.length === 0, `Console errors: ${errs.length}${errs.length ? ' → ' + errs.slice(0, 3).join(' | ') : ''}`);
 if (errs.length) fails++;

@@ -130,6 +130,10 @@ def mint(archetype: str, care_style: str, name: str = None, tier: str = "free") 
     return {
         "id": cid,
         "name": name,
+        # top-level emoji + color mirror visual.* so every consumer (charSel, roster,
+        # DOME pins) shows the character's real archetype face — not a 🧬 fallback.
+        "emoji": A["emoji"],
+        "color": A["color"],
         "tagline": f"Your {archetype} companion, {care_style} by nature",
         "archetype": archetype,
         "archetypes": [archetype],

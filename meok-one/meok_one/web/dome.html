@@ -76,6 +76,7 @@
     <span class="privacy">🛡️ Region-level only · from timezone · never GPS</span>
   </div>
   <div class="hint">🌍 Drag to explore · scroll to zoom · tap a glowing character to focus it</div>
+  <button id="flyMe" title="Fly to your region — timezone-derived, never GPS" style="position:absolute;right:14px;bottom:46px;z-index:5;background:rgba(18,18,30,.85);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer;backdrop-filter:blur(6px)">📍 Fly to my region</button>
 
 <script>
 const PARENT = window.parent !== window ? window.parent : null;
@@ -138,9 +139,19 @@ function placeFor(name){
   return { lng:c[0]+jx, lat:c[1]+jy, city:c[2] };
 }
 
-function makePin(emoji, cls){
+// archetype → accent (mirrors the factory's archetype colors) so the world reads as a meaningful map
+const ARCH_COLOR={challenger:"#3b6ea5",nurturer:"#F472B6",explorer:"#7C3AED",strategist:"#6b7280",
+  creator:"#EC4899",guardian:"#ef4444",sage:"#22c55e",seeker:"#8b5cf6"};
+function hexA(hex,a){ const h=(hex||"").replace("#",""); if(!h) return `rgba(124,92,255,${a})`;
+  const n=parseInt(h.length===3?h.split("").map(c=>c+c).join(""):h,16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; }
+function makePin(emoji, cls, color){
   const el=document.createElement("div"); el.className="pin"+(cls?" "+cls:"");
   el.innerHTML=`<div class="glow"></div><div class="dot">${emoji||"🧬"}</div>`;
+  if(color && cls!=="you" && cls!=="mine"){   // mine=gold + you=green keep their class colors
+    el.querySelector(".dot").style.borderColor=color;
+    el.querySelector(".glow").style.background=`radial-gradient(circle,${hexA(color,.5)},transparent 70%)`;
+  }
   return el;
 }
 
@@ -181,7 +192,8 @@ async function boot(){
   let mineCount=0;
   chars.forEach(c=>{
     const mine=String(c.id||"").startsWith("gen_"); if(mine) mineCount++;   // your factory creations
-    const p=placeFor(c.id||c.name), el=makePin(c.emoji,mine?"mine":null);
+    const col=c.color||ARCH_COLOR[c.archetype]||null;
+    const p=placeFor(c.id||c.name), el=makePin(c.emoji,mine?"mine":null,col);
     el.title=`${c.name} · ${p.city}`+(mine?" · your creation":"");
     const nm=(c.name||"").replace(/"/g,"&quot;");
     const tag=c.tagline?`<div class="sub">${c.tagline}</div>`:"";
@@ -221,6 +233,12 @@ setTimeout(go, 2000);
 function intro(){
   try { map.easeTo({ center:[8,28], zoom:1.9, duration:2600, essential:true }); } catch(_){}
 }
+// "fly to my region" — coarse, timezone-derived (never GPS); falls back to a world view
+document.getElementById("flyMe").addEventListener("click",()=>{
+  const you=youLngLat();
+  try{ map.flyTo(you?{center:you.ll,zoom:4.2,speed:0.8,essential:true}
+                    :{center:[8,28],zoom:2.2,speed:0.8,essential:true}); }catch(_){}
+});
 </script>
 </body>
 </html>
