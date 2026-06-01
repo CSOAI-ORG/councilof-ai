@@ -70,13 +70,18 @@ must(apiCount >= 1, `Creation persisted to roster (${apiCount} gen_ character(s)
 // ---------- per-character detail card ----------
 await page.click('#detBtn');
 await page.waitForSelector('#detModal.on', { timeout: 3000 });
-await page.waitForTimeout(500);
+await page.waitForFunction(() => document.querySelector('#detJourney')?.children.length > 0, { timeout: 3000 }).catch(() => {});
 const detName = (await page.textContent('#detName'))?.trim();
 must(detName && detName !== '…' && detName !== "couldn't load", `Detail card loads a name (${detName})`);
 const detTraits = await page.$$eval('#detTraits span', e => e.length);
 must(detTraits >= 1, `Detail card shows trait chips (${detTraits})`);
 const detStory = (await page.textContent('#detStory'))?.trim();
 must(!!detStory, 'Detail card shows a backstory/tagline');
+// gamification: ownership badge + the egg→sovereign emergence journey
+const ownedBadge = (await page.textContent('#detBadge'))?.trim();
+must(/Yours forever/.test(ownedBadge || ''), `Detail card shows ownership badge (${ownedBadge})`);
+const journeyStages = await page.$$eval('#detJourney span', e => e.filter(x => x.textContent !== '›').length);
+must(journeyStages >= 6, `Detail card shows the egg→sovereign journey (${journeyStages} stages)`);
 await page.click('#detX');
 await page.waitForTimeout(200);
 const ariaOk = await page.evaluate(async () => {
