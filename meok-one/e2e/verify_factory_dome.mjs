@@ -128,6 +128,21 @@ const flyMe = await page.locator('#flyMe').count();
 must(flyMe === 1, '"Fly to my region" control present');
 if (flyMe) { await page.click('#flyMe'); await page.waitForTimeout(600); }
 
+// living DOME: agents gently wander + show ambient speech bubbles
+const life = await page.evaluate(async () => {
+  if (typeof AGENTS === 'undefined' || !AGENTS.length) return { moved: false, sayOn: false };
+  const a = AGENTS[0], p0 = a.marker.getLngLat();
+  let sayOn = false;
+  for (let i = 0; i < 16; i++) {   // poll ~8s — catch a bubble somewhere in the cycle
+    await new Promise(r => setTimeout(r, 500));
+    if (document.querySelector('.pin .say.on')) sayOn = true;
+  }
+  const p1 = a.marker.getLngLat();
+  return { moved: (p0.lng !== p1.lng || p0.lat !== p1.lat), sayOn };
+});
+must(life.moved, 'Living DOME: agents gently wander (marker LngLat changes)');
+must(life.sayOn, 'Living DOME: agents show ambient speech bubbles');
+
 ok(errs.length === 0, `Console errors: ${errs.length}${errs.length ? ' → ' + errs.slice(0, 3).join(' | ') : ''}`);
 if (errs.length) fails++;
 

@@ -41,9 +41,15 @@
   .pin.mine .glow{background:radial-gradient(circle,rgba(251,191,36,.5),transparent 70%)}
   .dome-adopt{margin-top:8px;width:100%;background:linear-gradient(135deg,#7C3AED,#38bdf8);
     border:0;color:#fff;border-radius:8px;padding:6px;font-size:12px;cursor:pointer}
+  /* ambient speech bubble — the world feels alive (openclawworld vibe on the real map) */
+  .pin .say{position:absolute;bottom:36px;left:50%;transform:translateX(-50%) translateY(4px) scale(.92);
+    background:#12121e;border:1px solid var(--line);color:var(--ink);font-size:11px;line-height:1.3;
+    padding:3px 8px;border-radius:11px;white-space:nowrap;max-width:170px;overflow:hidden;
+    text-overflow:ellipsis;opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;z-index:3}
+  .pin .say.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
   @keyframes pulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.45);opacity:.25}}
   /* ---- overlay card ---- */
-  .card{position:absolute;top:16px;left:16px;z-index:5;max-width:300px;
+  .card{position:absolute;top:16px;left:16px;z-index:5;max-width:300px;pointer-events:none;
     background:rgba(10,9,22,.72);backdrop-filter:blur(12px);
     border:1px solid rgba(124,92,255,.25);border-radius:16px;padding:16px 18px;
     box-shadow:0 12px 40px rgba(0,0,0,.5)}
@@ -53,7 +59,7 @@
   .card .big{color:var(--ink);font-weight:600}
   .privacy{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:10.5px;
     color:#34d399;border:1px solid rgba(52,211,153,.3);border-radius:20px;padding:3px 9px}
-  .hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:5;
+  .hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:5;pointer-events:none;
     font-size:11.5px;color:var(--dim);background:rgba(10,9,22,.6);backdrop-filter:blur(8px);
     border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:6px 14px;white-space:nowrap}
   /* popup */
@@ -147,7 +153,7 @@ function hexA(hex,a){ const h=(hex||"").replace("#",""); if(!h) return `rgba(124
   return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; }
 function makePin(emoji, cls, color){
   const el=document.createElement("div"); el.className="pin"+(cls?" "+cls:"");
-  el.innerHTML=`<div class="glow"></div><div class="dot">${emoji||"🧬"}</div>`;
+  el.innerHTML=`<div class="say"></div><div class="glow"></div><div class="dot">${emoji||"🧬"}</div>`;
   if(color && cls!=="you" && cls!=="mine"){   // mine=gold + you=green keep their class colors
     el.querySelector(".dot").style.borderColor=color;
     el.querySelector(".glow").style.background=`radial-gradient(circle,${hexA(color,.5)},transparent 70%)`;
@@ -181,6 +187,41 @@ const SEED = [ // fallback if the API isn't reachable, so the DOME is never empt
   {id:"nova",name:"Nova",emoji:"⭐"},{id:"ember",name:"Ember",emoji:"🔥"},
   {id:"river",name:"River",emoji:"🌊"},{id:"atlas",name:"Atlas",emoji:"🗺️"}
 ];
+const AGENTS=[];   // living characters on the map (for the gentle wander + ambient speech)
+// archetype-flavoured ambient one-liners — the town "talks" like openclawworld NPCs
+const AMBIENT={
+  nurturer:["thinking of you 💜","how are you, really?","I'm here 🌸","take a breath"],
+  challenger:["let's go 💪","one more rep","you've got this ⚡","no excuses"],
+  explorer:["what if…? 🔭","ooh, an idea!","let's explore","so curious"],
+  strategist:["here's the plan 🗺️","step one…","let's map it","focus"],
+  creator:["let's make something 🎨","I see colour","imagine this…","art!"],
+  guardian:["you're safe 🛡️","I've got your back","watching over","steady"],
+  sage:["breathe 🌿","this too shall pass","be present","stillness"],
+  seeker:["a sacred question 🕊️","sit with it","meaning matters","peace"],
+  _:["✨","💭","hello 🌍","hi there"]
+};
+function say(a){
+  const pool=AMBIENT[a.arch]||AMBIENT._;
+  const b=a.el&&a.el.querySelector(".say"); if(!b) return;
+  b.textContent=pool[(a._n++)%pool.length];
+  b.classList.add("on"); clearTimeout(a._t);
+  a._t=setTimeout(()=>b.classList.remove("on"),3400);
+}
+// bring the world to life — setInterval (NOT rAF, so it survives tab-background throttling)
+function startLife(){
+  if(window.__life||!AGENTS.length) return; window.__life=true;
+  let RM=false; try{ RM=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(_){}
+  let t=0;
+  setInterval(()=>{
+    t++;
+    if(!RM){ const R=0.16, sp=0.06;   // gentle orbit around each home city (~slow, ~18km radius)
+      for(const a of AGENTS){ if(a._hover) continue;   // frozen while you hover → clickable
+        a.marker.setLngLat([a.home.lng+R*Math.cos(t*sp+a.phase),
+                            a.home.lat+R*0.6*Math.sin(t*sp+a.phase)]); } }
+    if(t%4===0){ const k=Math.min(3,AGENTS.length);   // a few say something each beat
+      for(let i=0;i<k;i++) say(AGENTS[(t*7+i*13)%AGENTS.length]); }
+  },1400);
+}
 async function boot(){
   let chars=SEED;
   // include the visitor's token so their Character-Factory creations also live in the world
@@ -201,13 +242,18 @@ async function boot(){
       .setHTML(`<b>${c.emoji||"🧬"} ${c.name}${mine?" ✨":""}</b>`
         +`<div class="sub">${c.archetype||"MEOK character"} · near ${p.city}</div>`+tag
         +`<button class="dome-adopt" data-id="${c.id||c.name}" data-name="${nm}" data-city="${p.city}">✨ Make this my AI</button>`);
-    new maplibregl.Marker({element:el,anchor:"center"}).setLngLat([p.lng,p.lat]).setPopup(popup).addTo(map);
+    const marker=new maplibregl.Marker({element:el,anchor:"center"}).setLngLat([p.lng,p.lat]).setPopup(popup).addTo(map);
+    const agent={marker,el,home:{lng:p.lng,lat:p.lat},phase:(hash(c.id||c.name)%628)/100,arch:c.archetype||"_",_n:0,_hover:false};
+    AGENTS.push(agent);
+    el.addEventListener("mouseenter",()=>{agent._hover=true;});   // pause drift on hover → easy to click
+    el.addEventListener("mouseleave",()=>{agent._hover=false;});
     el.addEventListener("click",()=>{
       // tell the parent OS which character + place the user is focusing → context for its replies
       if(PARENT){ try{ PARENT.postMessage({type:"meok:dome",character:c.id||c.name,name:c.name,city:p.city},"*"); }catch(_){} }
       map.flyTo({center:[p.lng,p.lat],zoom:Math.max(3.2,map.getZoom()),speed:0.7});
     });
   });
+  startLife();   // bring the world to life: gentle wander + ambient speech bubbles
   if(mineCount){ const cl=document.getElementById("count");
     if(cl&&cl.parentElement) cl.parentElement.insertAdjacentHTML("beforeend",
       ` <span style="color:#fbbf24">· ${mineCount} yours ✨</span>`); }
