@@ -1,0 +1,51 @@
+# MEOK OS — E2E UI Audit (2026-06-01)
+
+_By Claude (Opus 4.8). Live sweep of the deployed OS (every tab clicked, every window/selector
+exercised, console watched). ✅ works · 🟡 works but thin/external · 🔴 broken or missing._
+
+## Product tabs (left panel)
+
+| Tab | State | What works | Missing / inner-feature gaps |
+|---|---|---|---|
+| 🏛️ **DOME** | ✅ | Native MapLibre map, 28 glowing pins, tap-to-focus, privacy-safe "you" | Globe projection off (flagged); no zoom-to-region detail; pins are symbolic not live presence |
+| 🧬 **Characters** | ✅ | Native grid of all 27 faces, tap → becomes your AI, marketplace CTA | No per-character **detail/preview** card; no distinct "hatch this" vs "select"; premium/pricing not shown |
+| 🔭 **Agents** | 🟡 | Native list, renders | **Only 2 agents** in the registry (assitti near-empty); **read-only** — can't open, inspect, or invoke/talk to an agent |
+| 🛠️ **Tools** | 🟡 | Native stats (459 · 60 read · 399 confirm) | **Read-only** — can't browse/search the 459 tools or invoke from the panel (only via TUI `tool <name>`); **"0 prohibited" looks wrong** (prohibited tier not surfaced); no per-tool detail/tier reason |
+| 🛒 **Marketplace** | 🔴 | — | **BLANK** — points to loopfactory.ai which refuses to iframe (no content loads). Broken tab. Should be a **native** buy/sell/resell surface |
+| 💗 **Care** | 🟡 | Loads aquaponics.app (iframes OK) | It's a **different product's site**, not a native MEOK care surface (no check-ins, mood history, crisis resources, care-membrane status) |
+| ⚖️ **Compliance** | 🟡 | Loads csoai.org (iframes OK) | External site (minor SVG glitch on their page); should point to the **native /registry** product we just built |
+
+## The 3 windows (right dock)
+
+| Window | State | Gaps |
+|---|---|---|
+| 🧬 **Character** | ✅ | `charSel` wired; 3D avatar + glass egg render. **Bond / mood / level (Tamagotchi) is NOT shown** — it grows server-side but is invisible in the OS |
+| 💬 **Chat** | ✅ | `brainSel` wired (Fast/Private/Both/Sovereign), mic (STT→TTS) wired, send wired. No streaming; no visible chat-history persistence; "Both/council" path unverified |
+| ⌨️ **TUI** | 🟡 | Commands work (help/tools/agents/tool/mode/clear). **`codeSel` (coding-model picker) is NOT wired — cosmetic**; the selected model is ignored. Limited command set |
+
+## Cross-cutting inner features
+
+| Feature | State |
+|---|---|
+| Voice hands-free loop (A5) | ✅ wired — *Nick to confirm audio on device* |
+| Voice/text UI control (D5) | ✅ "pro view / orb / make it gold" |
+| Cross-device sync (🔗 Devices) | ✅ anon + pair-code link |
+| Modes (simple/pro/council/orb) | ✅ |
+| Window drag-resize | ✅ (E2E-parked in headless) |
+| **Vitals/bond HUD** | 🔴 **missing** in the OS chrome |
+| **Settings panel** | 🟡 only Devices + voice; no theme picker UI, privacy/model settings, or profile |
+| Hatch in OS | ✅ glass egg embed |
+
+## Standalone surfaces (separate from the OS tabs — all ✅ this session)
+`/hatch` cinematic · `/dome` map · `/siri` setup · `/embed` + `/widget` · `/registry`
+
+## Prioritised fix list
+1. 🔴 **Marketplace blank** → repoint to a native surface (character marketplace / `/registry`) instead of the dead loopfactory iframe. *(quick)*
+2. 🔴 **`codeSel` cosmetic** → wire the TUI coding-model selector to real behaviour, or remove it. *(quick)*
+3. 🟡 **Vitals/bond HUD** → surface bond/mood/level in the character window (small overlay). *(medium)*
+4. 🟡 **Tools tab** → browsable/searchable tool list + per-tool invoke + fix the "0 prohibited" count. *(medium)*
+5. 🟡 **Agents tab** → populate the registry + agent detail + invoke/talk. *(medium)*
+6. 🟡 **Care / Compliance** → native panels (Care: check-in/mood/crisis; Compliance → `/registry`). *(medium-big)*
+7. ⚪ `openProduct` should clear `frame.src` when setting `srcdoc` (stale-src cosmetic). *(tiny)*
+
+→ Items 1, 2, 7 are quick wins; 3 is the highest user-delight (the Tamagotchi becomes visible).
