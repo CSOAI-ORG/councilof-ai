@@ -212,6 +212,17 @@ class Handler(BaseHTTPRequestHandler):
                 "care_styles": reg.care_styles(),
                 "stages": reg.emergence_stages(),
             })
+        if path == "/api/factory/preview":
+            # Mint WITHOUT persisting — powers the live glass-egg preview in the factory,
+            # so what you SEE before you commit is exactly what you'll get (same mint()).
+            from . import factory as _factory
+            try:
+                char = _factory.mint(qs.get("archetype", ["nurturer"])[0],
+                                     qs.get("care_style", ["gentle"])[0],
+                                     (qs.get("name", [""])[0] or "").strip() or None)
+            except KeyError as e:
+                return self._json(400, {"error": str(e)})
+            return self._json(200, {"character": char})
         if path == "/api/characters":
             chars = reg.list_characters()
             _u = self._uid()   # include this user's Character-Factory creations
@@ -296,6 +307,68 @@ class Handler(BaseHTTPRequestHandler):
                     return self._json(400, {"error": str(e)})
                 saved = auth.add_character(uid, char) if auth.user_exists(uid) else {"ok": False}
                 return self._json(200, {"character": char, "created": True, "roster": saved.get("count")})
+            if path == "/api/factory/suggest":
+                # "Describe your AI in words" → the openclaw multi-LLM substrate proposes a
+                # {archetype, care_style, name} the user can tweak. LLM-first; ALWAYS falls back
+                # to a keyword heuristic so a valid character is returned even fully offline.
+                from . import factory as _factory
+                desc = (b.get("description") or b.get("text") or "").strip()
+                archs = list(_factory._ARCHETYPES.keys())
+                cares = list(_factory._CARE.keys())
+                pick = {"archetype": None, "care_style": None, "name": None, "via": "heuristic"}
+                if desc:
+                    try:
+                        from . import router as _router
+                        prompt = (
+                            "You design AI companions. Map the description to EXACTLY one archetype "
+                            "and one care_style from the lists, and invent one evocative one-word NAME.\n"
+                            f"archetypes = {archs}\ncare_styles = {cares}\n"
+                            f'description = "{desc[:400]}"\n'
+                            'Reply with ONLY compact JSON: {"archetype":"..","care_style":"..","name":".."}')
+                        r = _router.ask(prompt, model=b.get("model", "turbo-llama8"),
+                                        tier="free", max_tokens=80)
+                        raw = (r or {}).get("reply", "") if isinstance(r, dict) else str(r or "")
+                        import re as _re
+                        m = _re.search(r"\{.*\}", raw, _re.S)
+                        if m:
+                            j = json.loads(m.group(0))
+                            if j.get("archetype") in archs: pick["archetype"] = j["archetype"]
+                            if j.get("care_style") in cares: pick["care_style"] = j["care_style"]
+                            nm = (j.get("name") or "").strip().split()
+                            if nm: pick["name"] = nm[0][:24]
+                            if pick["archetype"]: pick["via"] = "llm"
+                    except Exception:
+                        pass
+                low = desc.lower()
+                if not pick["archetype"]:
+                    kw = {
+                        "challenger": ["coach", "discipl", "push", "goal", "accountab", "fitness", "perform", "stronger"],
+                        "nurturer":  ["comfort", "gentle", "support", "listen", "kind", "care", "feel", "lonely", "warm", "soothe"],
+                        "explorer":  ["curious", "idea", "discover", "learn", "explore", "question", "wonder"],
+                        "strategist": ["plan", "strateg", "organi", "business", "decision", "execute", "focus", "productiv"],
+                        "creator":   ["art", "write", "music", "design", "create", "imagin", "story", "paint"],
+                        "guardian":  ["protect", "safe", "privacy", "secur", "watch", "defend", "shield"],
+                        "sage":      ["wisdom", "calm", "perspective", "meaning", "slow", "reflect", "philosoph", "star", "garden", "nature", "peace"],
+                        "seeker":    ["faith", "spirit", "pray", "purpose", "sacred", "soul", "god", "contempl"],
+                    }
+                    best, score = "nurturer", 0
+                    for a, words in kw.items():
+                        s = sum(1 for w in words if w in low)
+                        if s > score: best, score = a, s
+                    pick["archetype"] = best
+                if not pick["care_style"]:
+                    cmap = {"gentle": ["gentle", "calm", "slow", "soft", "soothe", "peace"],
+                            "supporter": ["support", "beside", "validate", "listen", "encourage"],
+                            "challenger": ["challeng", "push", "standard", "tough", "discipl", "goal"],
+                            "explorer": ["explore", "idea", "curious", "discover", "creative"],
+                            "seeker": ["faith", "spirit", "sacred", "doubt", "purpose", "soul"]}
+                    bc, sc = "gentle", 0
+                    for c, words in cmap.items():
+                        s = sum(1 for w in words if w in low)
+                        if s > sc: bc, sc = c, s
+                    pick["care_style"] = bc
+                char = _factory.mint(pick["archetype"], pick["care_style"], pick["name"])
+                return self._json(200, {"suggestion": pick, "character": char})
             if path == "/api/think":
                 cid = b.get("character", "aria")
                 out = think(cid, b.get("message", ""),

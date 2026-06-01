@@ -265,8 +265,21 @@
     <div class="acctcard">
       <span class="x" id="facX">✕</span>
       <h3>✨ Create your own AI</h3>
-      <p>Mint a brand-new character — choose its nature, name it, and it's yours forever. It joins your roster and lives in your DOME world.</p>
-      <div style="text-align:left;margin:12px 0">
+      <p>Mint a brand-new character — describe it in your own words and the council conjures it, or shape it by hand. It's yours forever, joins your roster, and lives in your DOME world.</p>
+      <div style="text-align:left;margin:10px 0 4px">
+        <div style="font-size:12px;color:var(--dim);margin:6px 0 4px">Describe your AI <span class="dim">(optional — let the council conjure it)</span></div>
+        <textarea id="facDesc" rows="2" placeholder="e.g. a calm gardener who loves the stars and helps me slow down" style="width:100%;background:#0a0a14;border:1px solid var(--line);border-radius:10px;padding:.55rem;color:var(--ink);font-size:13px;resize:vertical;font-family:inherit"></textarea>
+        <button id="facConjure" style="margin-top:6px;background:linear-gradient(135deg,#7C3AED,#38bdf8);border:0;color:#fff;border-radius:9px;padding:.5rem .8rem;font-size:12px;cursor:pointer;width:100%">✨ Conjure from words</button>
+        <div style="font-size:10px;color:var(--dim);text-align:center;margin:9px 0 2px">— or shape it by hand —</div>
+      </div>
+      <!-- live glass-egg preview: what you SEE is exactly what mint() returns -->
+      <div id="facPrev" style="display:none;margin:6px 0 10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#0a0a14;text-align:center">
+        <div id="facEgg" style="width:70px;height:70px;margin:0 auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 0 26px rgba(124,58,237,.5);border:2px solid rgba(255,255,255,.18)">🧬</div>
+        <div id="facPrevName" style="font-weight:600;font-size:15px"></div>
+        <div id="facPrevTag" style="font-size:11.5px;color:var(--dim);margin-top:2px"></div>
+        <div id="facPrevVoice" style="font-size:10.5px;color:var(--dim);margin-top:4px"></div>
+      </div>
+      <div style="text-align:left;margin:4px 0 12px">
         <div style="font-size:12px;color:var(--dim);margin:6px 0 4px">Archetype</div>
         <select id="facArch" style="width:100%;background:#0a0a14;border:1px solid var(--line);border-radius:10px;padding:.55rem;color:var(--ink);font-size:13px"></select>
         <div style="font-size:12px;color:var(--dim);margin:12px 0 4px">Care style</div>
@@ -717,7 +730,39 @@ window.addEventListener("keydown",e=>{ if(e.altKey&&e.key>="1"&&e.key<="4")setMo
     $("#facArch").innerHTML=(a.archetypes||[]).map(x=>{const id=x.id||x.name;return `<option value="${id}">${x.emoji||"🧬"} ${id}${x.domain?" — "+x.domain:""}</option>`;}).join("");
     const cs=a.care_styles, keys=Array.isArray(cs)?cs:Object.keys(cs||{});
     $("#facCare").innerHTML=keys.map(k=>`<option value="${k}">${k}</option>`).join(""); }catch(_){}}
-  const open=()=>{ M.classList.add("on"); $("#facMsg").textContent=""; if(!$("#facArch").options.length) fill(); };
+  // live glass-egg preview — render straight from a character dict (mint output)
+  function renderPrev(ch){ if(!ch){ $("#facPrev").style.display="none"; return; }
+    const v=ch.visual||{}, vo=ch.voice||{};
+    $("#facEgg").style.background=v.gradient||"radial-gradient(circle,#7C3AED,#0c0c16)";
+    $("#facEgg").textContent=v.emoji||"🧬";
+    $("#facPrevName").textContent=ch.name||"";
+    $("#facPrevTag").textContent=ch.tagline||"";
+    $("#facPrevVoice").textContent="🎙 "+(vo.recommended_voice||"—")+(ch.domain?" · "+ch.domain:"");
+    $("#facPrev").style.display="block"; }
+  let prevTimer=null;
+  async function preview(){ const a=$("#facArch").value, c=$("#facCare").value;
+    if(!a||!c){ $("#facPrev").style.display="none"; return; }
+    try{ const q=new URLSearchParams({archetype:a,care_style:c,name:($("#facName").value||"").trim()}).toString();
+      const d=await (await fetch(API+"/api/factory/preview?"+q)).json(); renderPrev(d.character);
+    }catch(_){ $("#facPrev").style.display="none"; } }
+  const dprev=()=>{ clearTimeout(prevTimer); prevTimer=setTimeout(preview,220); };
+  $("#facArch").onchange=preview; $("#facCare").onchange=preview; $("#facName").oninput=dprev;
+  $("#facConjure").onclick=async()=>{
+    const desc=($("#facDesc").value||"").trim();
+    if(!desc){ $("#facMsg").textContent="✏️ describe your AI first, or shape it by hand below"; return; }
+    $("#facMsg").textContent="✨ the council is conjuring…";
+    try{ const d=await (await fetch(API+"/api/factory/suggest",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({description:desc})})).json();
+      const s=d.suggestion||{};
+      if(s.archetype) $("#facArch").value=s.archetype;
+      if(s.care_style) $("#facCare").value=s.care_style;
+      if(s.name) $("#facName").value=s.name;
+      renderPrev(d.character);
+      $("#facMsg").textContent=(s.via==="llm"?"✨ conjured from your words":"✨ shaped from your words")+" — tweak it or create";
+    }catch(e){ $("#facMsg").textContent="couldn't conjure — shape it by hand"; }
+  };
+  const open=()=>{ M.classList.add("on"); $("#facMsg").textContent="";
+    if(!$("#facArch").options.length) fill().then(preview); else preview(); };
   const close=()=>M.classList.remove("on");
   $("#facX").onclick=close; M.onclick=e=>{ if(e.target===M) close(); };
   $("#facCreate").onclick=async()=>{
@@ -729,7 +774,7 @@ window.addEventListener("keydown",e=>{ if(e.altKey&&e.key>="1"&&e.key<="4")setMo
         if(![...sel.options].some(o=>o.value===c.id)){ const o=document.createElement("option"); o.value=c.id; o.textContent=(c.emoji||"🧬")+" "+c.name; sel.appendChild(o); }
         focusCharacter(c.id,c.name);
         $("#facMsg").textContent=`✨ ${c.name} is yours — ${c.archetype} · ${c.care_style}`;
-        $("#facName").value="";
+        $("#facName").value=""; $("#facDesc").value=""; $("#facPrev").style.display="none";
         if(["dome","chars","market"].includes(activeProd)) openProduct(activeProd);   // refresh world/grid
         setTimeout(close,1500);
       } else { $("#facMsg").textContent=d.error||"couldn't create — try again"; }

@@ -36,6 +36,11 @@
   .pin:hover .dot{border-color:var(--accent2);box-shadow:0 0 22px rgba(56,189,248,.6)}
   .pin.you .dot{border-color:#34d399;background:radial-gradient(circle,#0e2a20,#0c0c16)}
   .pin.you .glow{background:radial-gradient(circle,rgba(52,211,153,.5),transparent 70%)}
+  /* your OWN factory creations get a gold ring so you can spot them in the world */
+  .pin.mine .dot{border-color:#fbbf24;box-shadow:0 0 22px rgba(251,191,36,.65)}
+  .pin.mine .glow{background:radial-gradient(circle,rgba(251,191,36,.5),transparent 70%)}
+  .dome-adopt{margin-top:8px;width:100%;background:linear-gradient(135deg,#7C3AED,#38bdf8);
+    border:0;color:#fff;border-radius:8px;padding:6px;font-size:12px;cursor:pointer}
   @keyframes pulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.45);opacity:.25}}
   /* ---- overlay card ---- */
   .card{position:absolute;top:16px;left:16px;z-index:5;max-width:300px;
@@ -74,6 +79,12 @@
 
 <script>
 const PARENT = window.parent !== window ? window.parent : null;
+// "✨ Make this my AI" inside any popup → focus that character in the parent OS (event delegation)
+document.addEventListener("click",ev=>{
+  const b=ev.target.closest&&ev.target.closest(".dome-adopt"); if(!b) return;
+  if(PARENT){ try{ PARENT.postMessage({type:"meok:dome",character:b.getAttribute("data-id"),
+    name:b.getAttribute("data-name"),city:b.getAttribute("data-city")},"*"); }catch(_){} }
+});
 
 // ---- keyless dark basemap: OpenStreetMap data, CARTO dark raster tiles (no API key) ----
 const STYLE = {
@@ -167,18 +178,27 @@ async function boot(){
     const d=await (await fetch("/api/characters",{headers:h})).json();
     if(d.characters&&d.characters.length) chars=d.characters; }catch(_){}
   document.getElementById("count").textContent=chars.length;
+  let mineCount=0;
   chars.forEach(c=>{
-    const p=placeFor(c.id||c.name), el=makePin(c.emoji,null);
-    el.title=`${c.name} · ${p.city}`;
+    const mine=String(c.id||"").startsWith("gen_"); if(mine) mineCount++;   // your factory creations
+    const p=placeFor(c.id||c.name), el=makePin(c.emoji,mine?"mine":null);
+    el.title=`${c.name} · ${p.city}`+(mine?" · your creation":"");
+    const nm=(c.name||"").replace(/"/g,"&quot;");
+    const tag=c.tagline?`<div class="sub">${c.tagline}</div>`:"";
     const popup=new maplibregl.Popup({offset:18,closeButton:true,closeOnClick:true})
-      .setHTML(`<b>${c.emoji||"🧬"} ${c.name}</b><div class="sub">${c.archetype||"MEOK character"} · near ${p.city}</div>`);
-    const mk=new maplibregl.Marker({element:el,anchor:"center"}).setLngLat([p.lng,p.lat]).setPopup(popup).addTo(map);
+      .setHTML(`<b>${c.emoji||"🧬"} ${c.name}${mine?" ✨":""}</b>`
+        +`<div class="sub">${c.archetype||"MEOK character"} · near ${p.city}</div>`+tag
+        +`<button class="dome-adopt" data-id="${c.id||c.name}" data-name="${nm}" data-city="${p.city}">✨ Make this my AI</button>`);
+    new maplibregl.Marker({element:el,anchor:"center"}).setLngLat([p.lng,p.lat]).setPopup(popup).addTo(map);
     el.addEventListener("click",()=>{
       // tell the parent OS which character + place the user is focusing → context for its replies
       if(PARENT){ try{ PARENT.postMessage({type:"meok:dome",character:c.id||c.name,name:c.name,city:p.city},"*"); }catch(_){} }
       map.flyTo({center:[p.lng,p.lat],zoom:Math.max(3.2,map.getZoom()),speed:0.7});
     });
   });
+  if(mineCount){ const cl=document.getElementById("count");
+    if(cl&&cl.parentElement) cl.parentElement.insertAdjacentHTML("beforeend",
+      ` <span style="color:#fbbf24">· ${mineCount} yours ✨</span>`); }
   // "you are roughly here" — coarse, timezone-derived, clearly labelled
   const you=youLngLat();
   if(you){

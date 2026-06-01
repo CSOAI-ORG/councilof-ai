@@ -40,7 +40,7 @@ from .factory import mint, generate, space_size
 from .bench import bench, run_config
 from .brains import think, brains
 
-__version__ = "1.4.0"
+__version__ = "1.5.0"
 __all__ = [
     "Registry", "default",
     "Character", "talk",
