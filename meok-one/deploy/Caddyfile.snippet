@@ -1,0 +1,18 @@
+# MEOK ONE — Caddy site block. Add to the VM's Caddyfile (the same Caddy already fronting SOV3).
+# Front + API are ONE origin → no CORS, the service worker + PWA + Siri all just work over HTTPS.
+# Caddy auto-provisions the TLS cert. Pick the hostname you want MEOK ONE to live at.
+
+one.meok.ai {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:4173
+
+    # service worker must be allowed to control the whole origin
+    header /sw.js Service-Worker-Allowed "/"
+    # never let intermediaries cache the live AI API
+    header /api/* Cache-Control "no-store"
+}
+
+# Reload after editing:  sudo caddy reload --config /etc/caddy/Caddyfile
+#
+# (Hybrid option — Vercel front + this GCP API — instead points the static front at Vercel and
+#  exposes only /api/* here as e.g. api.meok.ai; see DEPLOY.md. One-origin above is simpler.)

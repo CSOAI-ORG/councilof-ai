@@ -1,0 +1,33 @@
+# MEOK ONE — systemd unit. Serves BOTH the static front and the /api/* backend from one
+# origin (pure stdlib server, zero pip deps). Bind is 127.0.0.1 → always behind Caddy/TLS.
+#
+# One-time install on the VM:
+#   sudo cp deploy/meok-one.service /etc/systemd/system/meok-one.service
+#   sudo systemctl daemon-reload && sudo systemctl enable --now meok-one
+#   systemctl status meok-one
+[Unit]
+Description=MEOK ONE — character OS (front + API), Sovereign-gated
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=meok
+Group=meok
+WorkingDirectory=/opt/meok-one
+Environment=PYTHONUNBUFFERED=1
+# Secrets (OPENROUTER_API_KEY for the fast cloud brain, etc.). NOT in git. Optional ("-" = ok if absent).
+EnvironmentFile=-/opt/meok-one/.env
+# 0.0.0.0 would be unsafe — server.main() binds 127.0.0.1; Caddy terminates TLS in front.
+ExecStart=/usr/bin/python3 -m meok_one.server 4173
+Restart=always
+RestartSec=3
+# light hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/meok-one
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
