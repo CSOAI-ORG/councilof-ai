@@ -7,8 +7,8 @@ exercised, console watched). ✅ works · 🟡 works but thin/external · 🔴 b
 
 | Tab | State | What works | Missing / inner-feature gaps |
 |---|---|---|---|
-| 🏛️ **DOME** | ✅ | Native MapLibre map, 28 glowing pins, tap-to-focus, privacy-safe "you" | Globe projection off (flagged); no zoom-to-region detail; pins are symbolic not live presence |
-| 🧬 **Characters** | ✅ | Native grid of all 27 faces, tap → becomes your AI, marketplace CTA | No per-character **detail/preview** card; no distinct "hatch this" vs "select"; premium/pricing not shown |
+| 🏛️ **DOME** | ✅✅ | Native MapLibre map, pins **tinted by archetype**, your creations **gold-ringed** + "N yours ✨" legend, tap-to-focus, popup tagline + "✨ Make this my AI" CTA, **📍 Fly to my region**, privacy-safe "you" | Globe projection off (flagged); pins still symbolic placement (timezone-jittered, not live presence) |
+| 🧬 **Characters** | ✅✅ | Native grid of all faces, tap → becomes your AI, **ⓘ detail card** (face, traits, voice, domain, backstory), **✨ Character Factory** (describe→conjure via openclaw LLM, live glass-egg preview, mint → roster → lives in DOME) | premium/pricing not shown on cards (tier exists in data) |
 | 🔭 **Agents** | 🟡 | Native list, renders | **Only 2 agents** in the registry (assitti near-empty); **read-only** — can't open, inspect, or invoke/talk to an agent |
 | 🛠️ **Tools** | 🟡 | Native stats (459 · 60 read · 399 confirm) | **Read-only** — can't browse/search the 459 tools or invoke from the panel (only via TUI `tool <name>`); **"0 prohibited" looks wrong** (prohibited tier not surfaced); no per-tool detail/tier reason |
 | 🛒 **Marketplace** | ✅ FIXED | Native hub: Verified MCP Registry + Sell/resell cards + 27-character adopt grid (tap → become your AI) | ~~BLANK (loopfactory won't iframe)~~ fixed 2026-06-01: now native, no external-iframe dependency |
@@ -19,7 +19,7 @@ exercised, console watched). ✅ works · 🟡 works but thin/external · 🔴 b
 
 | Window | State | Gaps |
 |---|---|---|
-| 🧬 **Character** | ✅ | `charSel` wired; 3D avatar + glass egg render. **Bond / mood / level (Tamagotchi) is NOT shown** — it grows server-side but is invisible in the OS |
+| 🧬 **Character** | ✅✅ | `charSel` wired; 3D avatar + glass egg render; **vitals HUD** (🐣 L· 💜bond · 🙂 mood) live; **✨ New** (Factory) + **ⓘ detail card** (traits/voice/domain/backstory) |
 | 💬 **Chat** | ✅ | `brainSel` wired (Fast/Private/Both/Sovereign), mic (STT→TTS) wired, send wired. No streaming; no visible chat-history persistence; "Both/council" path unverified |
 | ⌨️ **TUI** | 🟡 | Commands work (help/tools/agents/tool/mode/clear). **`codeSel` (coding-model picker) is NOT wired — cosmetic**; the selected model is ignored. Limited command set |
 
