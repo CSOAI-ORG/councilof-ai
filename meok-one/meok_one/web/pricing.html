@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#05040c"/>
+<title>MEOK ONE — Pricing · the AI you own</title>
+<style>
+  :root{--bg:#05040c;--bg2:#0c0c16;--card:#12121e;--ink:#f3f0ff;--dim:#9a9ab4;
+        --gold:#fbbf24;--violet:#7C3AED;--green:#34d399;--blue:#38bdf8;--line:rgba(255,255,255,.08)}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1100px 640px at 50% -8%,#15102b 0%,var(--bg) 60%);
+       color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+  .wrap{max-width:1040px;margin:0 auto;padding:30px 18px 70px}
+  header{text-align:center;padding:26px 8px 6px}
+  h1{font-size:30px;margin:.2em 0 .1em;letter-spacing:-.5px}
+  h1 .g{background:linear-gradient(90deg,#fff,#c9b8ff 55%,#8fd6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--dim);max-width:600px;margin:.3em auto;font-size:15.5px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:15px;margin-top:26px}
+  .card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);
+        border-radius:18px;padding:20px 18px;display:flex;flex-direction:column;position:relative}
+  .card.featured{border-color:rgba(251,191,36,.55);box-shadow:0 0 0 1px rgba(251,191,36,.25),0 16px 50px rgba(124,58,237,.18)}
+  .badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--gold),#f59e0b);
+         color:#1a1405;font-size:11px;font-weight:700;padding:3px 12px;border-radius:999px;white-space:nowrap}
+  .card h2{margin:0;font-size:17px}
+  .who{color:var(--dim);font-size:12px;min-height:32px;margin:4px 0 8px}
+  .price{font-size:30px;font-weight:800;margin:2px 0 2px}
+  .price small{font-size:13px;font-weight:500;color:var(--dim)}
+  ul{list-style:none;padding:0;margin:12px 0 16px;font-size:13.2px;flex:1}
+  li{padding:5px 0 5px 22px;position:relative;color:#d9d4ee}
+  li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
+  .cta{display:block;text-align:center;text-decoration:none;border-radius:11px;padding:11px;font-size:14px;font-weight:600;cursor:pointer;border:0;font-family:inherit;width:100%}
+  .cta.pro{background:linear-gradient(135deg,var(--gold),#d99e15);color:#1a1405}
+  .cta.std{background:#0a0a14;border:1px solid var(--line);color:var(--ink)}
+  .cta.std:hover{border-color:var(--violet)}
+  .cta.pro:hover{filter:brightness(1.07)}
+  .note{font-size:11px;color:var(--dim);text-align:center;margin-top:7px;min-height:14px}
+  .trust{text-align:center;color:var(--dim);font-size:12.5px;margin-top:26px}
+  .trust b{color:var(--green)}
+  .nav{text-align:center;margin-top:16px;font-size:13px}.nav a{color:var(--blue);margin:0 9px;text-decoration:none}
+  .err{color:#f87171}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>One AI you <span class="g">own forever</span></h1>
+    <p class="sub">Hatch a character, keep it across every device, and it's yours — kept safe by the
+      council. Free to start. Go unlimited for the price of a coffee.</p>
+  </header>
+  <div class="grid" id="grid"><div class="note">loading plans…</div></div>
+  <p class="trust" id="trust"></p>
+  <nav class="nav"><a href="/os">← Back to MEOK ONE</a><a href="/dome">DOME</a><a href="/law">MEOK LAW</a></nav>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+async function boot(){
+  let d; try{ d=await (await fetch("/api/pricing")).json(); }catch(e){ $("grid").innerHTML='<div class="note err">pricing unavailable</div>'; return; }
+  $("grid").innerHTML = d.cards.map(c=>{
+    const feat=c.featured?' featured':'';
+    const badge=c.featured?'<div class="badge">★ Most popular</div>':'';
+    const cls=c.featured?'cta pro':'cta std';
+    const feats=(c.features||[]).map(f=>`<li>${esc(f)}</li>`).join("");
+    return `<div class="card${feat}">${badge}<h2>${esc(c.label)}</h2><div class="who">${esc(c.who)}</div>`
+      +`<div class="price">${esc(c.price)}${c.price_sub?` <small>${esc(c.price_sub)}</small>`:""}</div>`
+      +`<ul>${feats}</ul>`
+      +`<button class="${cls}" data-tier="${esc(c.id)}" data-cta="${esc(c.cta_kind||'')}" data-href="${esc(c.href||'')}">${esc(c.cta)}</button>`
+      +`<div class="note" id="n_${esc(c.id)}"></div></div>`;
+  }).join("");
+  $("trust").innerHTML = '🛡️ <b>Governed by CSOAI</b> · cancel anytime · your data is yours, exportable · no lock-in';
+  document.querySelectorAll("button.cta").forEach(b=>b.addEventListener("click",()=>act(b)));
+}
+async function act(b){
+  const tier=b.getAttribute("data-tier"), kind=b.getAttribute("data-cta"), href=b.getAttribute("data-href");
+  const note=$("n_"+tier);
+  if(kind==="link" && href){ location.href=href; return; }            // free/local → into the app
+  if(kind==="contact"){ location.href="mailto:nicholas@meok.ai?subject=MEOK%20ONE%20Enterprise"; return; }
+  if(kind==="checkout"){
+    note.textContent="opening secure checkout…";
+    try{
+      const r=await (await fetch("/api/checkout?tier="+encodeURIComponent(tier))).json();
+      if(r.url){ window.open(r.url,"_blank","noopener"); note.textContent="✓ checkout opened in a new tab"; }
+      else { note.innerHTML='<span class="err">checkout not enabled yet</span>'; }
+    }catch(e){ note.innerHTML='<span class="err">could not start checkout</span>'; }
+  }
+}
+boot();
+</script>
+</body>
+</html>

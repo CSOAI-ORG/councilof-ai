@@ -232,6 +232,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "hud.html"))
         if path in ("/law", "/law.html", "/meoklaw", "/compliance"):
             return self._html(os.path.join(_HERE, "web", "law.html"))
+        if path in ("/pricing", "/pricing.html", "/plans", "/upgrade"):
+            return self._html(os.path.join(_HERE, "web", "pricing.html"))
         if path in ("/siri", "/siri.html", "/shortcut"):
             return self._html(os.path.join(_HERE, "web", "siri.html"))
         if path in ("/widget", "/widget.html"):
@@ -327,6 +329,40 @@ class Handler(BaseHTTPRequestHandler):
             # (map nodes + cosmos planets the user can fly to / open / ask their AI about).
             from . import products as _products
             return self._json(200, _products.products())
+        if path == "/api/pricing":
+            # Consumer pricing for MEOK ONE (the B2C product) — data-driven from tiers.py so it
+            # never drifts from the real ladder. Brand-clean: separate from the CSOAI compliance line.
+            from . import tiers as _t
+            _CTA = {"local": ("Get the code", "link", "/os"),
+                    "free": ("Start free", "link", "/hatch"),
+                    "pro": ("Upgrade to Pro", "checkout", ""),
+                    "enterprise": ("Contact us", "contact", "")}
+            _FEAT = {
+                "local": ["All 27 characters (on your machine)", "Your own LLM (Ollama) — fully private",
+                          "Hash-chained audit trail", "Open source · £0 forever"],
+                "free": ["1 hatched character", "Cross-device memory", "50 messages/day", "Free, hosted"],
+                "pro": ["All 27 characters", "Full cross-device memory", "2,000 messages/day",
+                        "Signed attestation on export"],
+                "enterprise": ["Everything in Pro", "RegGeoInt compliance map",
+                               "Full audit trail + SLA", "Custom characters"]}
+            cards = []
+            for tid in ("local", "free", "pro", "enterprise"):
+                t = _t.TIERS[tid]; cta, kind, href = _CTA[tid]
+                pm = t.price_gbp_month or 0
+                cards.append({"id": tid, "label": t.label.split(" (")[0], "who": t.who,
+                              "price": ("£0" if pm == 0 else f"£{pm:.0f}"),
+                              "price_sub": ("self-host" if tid == "local" else
+                                            "forever" if pm == 0 else "/month"),
+                              "features": _FEAT[tid], "cta": cta, "cta_kind": kind, "href": href,
+                              "featured": tid == "pro"})
+            return self._json(200, {"cards": cards, "currency": "GBP"})
+        if path == "/api/checkout":
+            # Returns the Stripe checkout URL for a paid tier from env (NEVER hardcoded/guessed —
+            # the payment link is created in Stripe by the owner and supplied via env).
+            tier = (qs.get("tier", ["pro"])[0] or "pro").strip()
+            env_key = {"pro": "MEOK_PRO_CHECKOUT_URL", "enterprise": "MEOK_ENTERPRISE_CHECKOUT_URL"}.get(tier, "")
+            url = (os.environ.get(env_key, "").strip() if env_key else "")
+            return self._json(200, {"tier": tier, "url": url or None, "configured": bool(url)})
         if path == "/api/law":
             # MEOK LAW — the capability map: frameworks, regions, crosswalk MCPs, honest coverage.
             from . import law as _law
