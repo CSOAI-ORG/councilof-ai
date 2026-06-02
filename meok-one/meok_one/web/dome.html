@@ -69,6 +69,63 @@
   .maplibregl-popup-content .sub{color:var(--dim);font-size:11px;margin-top:2px}
   .maplibregl-popup-tip{display:none}
   .maplibregl-popup-close-button{color:var(--dim)}
+
+  /* ===== DOME immersion: product nodes · cosmos · chat-to-control · live activity ===== */
+  .hint{top:12px;bottom:auto}                                   /* free the bottom for the chat bar */
+  #flyMe,#govBtn{bottom:70px!important}                          /* lift above the chat bar */
+  /* product nodes — the MEOK constellation bridged onto Earth */
+  .ppin{position:relative;width:30px;height:30px;cursor:pointer;transform:translate(-50%,-50%)}
+  .ppin .pdot{position:absolute;inset:0;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font-size:15px;background:linear-gradient(145deg,#1a1530,#0c0c16);border:1.5px solid rgba(251,191,36,.7);
+    box-shadow:0 2px 12px rgba(0,0,0,.6),0 0 16px rgba(251,191,36,.3);transition:transform .2s}
+  .ppin:hover .pdot{transform:scale(1.18)}
+  .ppin .pring{position:absolute;inset:-5px;border-radius:12px;border:1px dashed rgba(251,191,36,.35);animation:prot 9s linear infinite}
+  @keyframes prot{to{transform:rotate(360deg)}}
+  .ppin .plabel{position:absolute;top:33px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;
+    color:#e9e4ff;background:rgba(8,7,18,.7);padding:1px 6px;border-radius:6px;pointer-events:none;opacity:.9}
+  /* cosmos: the "zoom out to space, products as planets" cinematic layer */
+  #cosmos{position:fixed;inset:0;z-index:20;display:none;opacity:0;transition:opacity .9s ease;
+    background:radial-gradient(1200px 800px at 50% 42%,#1a1140 0%,#0a0820 45%,#03030a 100%);overflow:hidden}
+  #cosmos.on{opacity:1}
+  #stars{position:absolute;inset:0}
+  .sun{position:absolute;top:50%;left:50%;width:118px;height:118px;margin:-59px 0 0 -59px;border-radius:50%;
+    background:radial-gradient(circle at 40% 35%,#fff6d8,#ffd76b 40%,#f59e0b 70%,#7c4a00);
+    box-shadow:0 0 80px 20px rgba(251,191,36,.45);display:flex;align-items:center;justify-content:center;
+    font-size:12.5px;font-weight:700;color:#3a2a05;text-align:center;cursor:pointer;z-index:3;line-height:1.1}
+  .orbit{position:absolute;top:50%;left:50%;border:1px solid rgba(255,255,255,.07);border-radius:50%;transform:translate(-50%,-50%)}
+  .planet{position:absolute;top:50%;left:50%;cursor:pointer;z-index:4;transform:translate(-50%,-50%);
+    display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .25s}
+  .planet:hover{transform:translate(-50%,-50%) scale(1.16)}
+  .planet .pglobe{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;
+    background:radial-gradient(circle at 38% 32%,rgba(255,255,255,.22),rgba(10,9,22,.92));border:1px solid rgba(255,255,255,.18)}
+  .planet .pname{font-size:11px;color:#e9e4ff;text-shadow:0 1px 4px #000}
+  .planet .pkind{font-size:9px;color:#9a9ab4}
+  #cosmos .ctitle{position:absolute;top:20px;left:0;right:0;text-align:center;color:#f3f0ff;font-size:15px;letter-spacing:.4px;pointer-events:none}
+  #cosmos .ctitle small{display:block;color:#9a9ab4;font-size:11px;margin-top:3px}
+  .dive{position:fixed;inset:0;z-index:40;background:#fff;opacity:0;pointer-events:none}
+  .dive.on{animation:dive .65s ease forwards}
+  @keyframes dive{0%{opacity:0;transform:scale(1)}55%{opacity:.85}100%{opacity:0;transform:scale(1.5)}}
+  /* chat-to-control bar */
+  #chatbar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:25;display:flex;gap:8px;
+    width:min(560px,92vw);background:rgba(10,9,22,.82);backdrop-filter:blur(12px);border:1px solid rgba(124,92,255,.3);
+    border-radius:14px;padding:8px 10px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  #chatbar input{flex:1;background:#0a0a14;border:1px solid rgba(255,255,255,.1);color:#f3f0ff;border-radius:9px;
+    padding:9px 12px;font-size:13.5px;font-family:inherit;min-width:0}
+  #chatbar input:focus{outline:none;border-color:#7c5cff}
+  #chatbar button{background:linear-gradient(135deg,#7C3AED,#38bdf8);border:0;color:#fff;border-radius:9px;padding:9px 14px;font-size:13px;cursor:pointer;font-weight:600}
+  #chatReply{position:absolute;bottom:62px;left:50%;transform:translateX(-50%);z-index:25;width:min(560px,92vw);
+    max-height:34vh;overflow:auto;display:none;background:rgba(10,9,22,.92);backdrop-filter:blur(12px);
+    border:1px solid rgba(124,92,255,.3);border-radius:12px;padding:11px 14px;font-size:13px;line-height:1.5;color:#e9e4ff}
+  #chatReply .me{color:#8fd6ff;margin-bottom:4px}
+  #chatReply a{color:#fbbf24}
+  /* live activity panel + corner chips */
+  #actPanel{position:absolute;right:14px;top:54px;z-index:7;width:300px;max-height:62vh;overflow:auto;display:none;
+    background:rgba(10,9,22,.94);backdrop-filter:blur(14px);border:1px solid rgba(124,92,255,.3);border-radius:16px;
+    padding:13px 15px;box-shadow:0 16px 48px rgba(0,0,0,.55);font-size:12px;line-height:1.45}
+  #actPanel .ev{padding:6px 0;border-top:1px solid rgba(255,255,255,.07)}
+  #actPanel .op{display:inline-block;min-width:26px;text-align:center;font-size:10px;font-weight:700;border-radius:5px;padding:1px 5px;margin-right:6px}
+  .btnchip{position:absolute;z-index:8;background:rgba(18,18,30,.85);border:1px solid rgba(255,255,255,.1);color:#f3f0ff;
+    border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer;backdrop-filter:blur(6px)}
 </style>
 </head>
 <body>
@@ -313,6 +370,141 @@ document.getElementById("flyMe").addEventListener("click",()=>{
   }
   btn.addEventListener("click",()=>{ const open=(p.style.display==="none"||!p.style.display);
     p.style.display=open?"block":"none"; if(open&&!loaded){ loaded=true; render(); } });
+})();
+</script>
+
+<!-- ===== DOME immersion layer: products bridged in · cosmos · chat-to-control · live activity ===== -->
+<script>
+(function(){
+  const PRODUCTS=[]; let cosmosOn=false, _prodAdded=false;
+
+  // ---------- 1) bridge products onto the map as clickable nodes ----------
+  function addProductMarkers(){
+    if(_prodAdded||!PRODUCTS.length||typeof map==="undefined") return; _prodAdded=true;
+    PRODUCTS.forEach(p=>{
+      const el=document.createElement("div"); el.className="ppin";
+      el.innerHTML=`<div class="pring"></div><div class="pdot" style="border-color:${p.color}">${p.emoji}</div><div class="plabel">${p.name}</div>`;
+      el.title=`${p.name} — ${p.blurb}`;
+      const open=p.external
+        ? `<a href="${p.href}" target="_blank" rel="noopener" class="dome-adopt" style="display:block;text-align:center;text-decoration:none">Open ${p.name} ↗</a>`
+        : `<a href="${p.href}" class="dome-adopt" style="display:block;text-align:center;text-decoration:none">Open ${p.name} →</a>`;
+      const popup=new maplibregl.Popup({offset:18,closeButton:true,closeOnClick:true})
+        .setHTML(`<b>${p.emoji} ${p.name}</b><div class="sub">${p.kind} · MEOK product</div>`
+          +`<div style="font-size:11.5px;color:var(--dim);margin:5px 0 7px">${p.blurb}</div>${open}`);
+      new maplibregl.Marker({element:el,anchor:"center"}).setLngLat(p.geo).setPopup(popup).addTo(map);
+    });
+  }
+
+  // ---------- 2) cosmos mode: zoom out to space, products = planets ----------
+  function buildStars(canvas){
+    const ctx=canvas.getContext&&canvas.getContext("2d"); if(!ctx) return;
+    function draw(){ canvas.width=innerWidth; canvas.height=innerHeight;
+      for(let i=0;i<170;i++){ const x=(i*97+(i*i*13))%canvas.width, y=(i*53+(i*i*7))%canvas.height, r=(i%7===0)?1.6:.8;
+        ctx.fillStyle=`rgba(255,255,255,${.22+(i%5)*.13})`; ctx.beginPath(); ctx.arc(x,y,r,0,6.283); ctx.fill(); } }
+    addEventListener("resize",draw); draw();
+  }
+  function layoutPlanets(host){
+    const orb={surface:1,governance:2,vertical:3}, radii={1:150,2:240,3:330}, groups={1:[],2:[],3:[]};
+    PRODUCTS.forEach(p=>groups[orb[p.kind]||3].push(p));
+    Object.keys(groups).forEach(k=>{ const R=radii[k];
+      const ring=document.createElement("div"); ring.className="orbit"; ring.style.width=ring.style.height=(R*2)+"px"; host.appendChild(ring);
+      groups[k].forEach((p,i)=>{ const a=(i/groups[k].length)*6.283+Number(k);
+        const el=document.createElement("div"); el.className="planet";
+        el.style.marginLeft=Math.cos(a)*R+"px"; el.style.marginTop=Math.sin(a)*R+"px";
+        el.innerHTML=`<div class="pglobe" style="box-shadow:0 0 22px ${p.color}88;border-color:${p.color}66">${p.emoji}</div>`
+          +`<div class="pname">${p.name}</div><div class="pkind">${p.kind}</div>`;
+        el.title=p.blurb; el.addEventListener("click",()=>diveToProduct(p)); host.appendChild(el); }); });
+  }
+  function ensureCosmos(){
+    let c=document.getElementById("cosmos"); if(c) return c;
+    c=document.createElement("div"); c.id="cosmos";
+    c.innerHTML=`<canvas id="stars"></canvas>`
+      +`<div class="ctitle">🌌 The MEOK universe<small>every product orbits the same governed core — click a planet to dive in · click the sun for Earth</small></div>`
+      +`<div class="sun" id="sun">MEOK<br>core</div>`;
+    document.body.appendChild(c);
+    buildStars(c.querySelector("#stars")); layoutPlanets(c);
+    c.querySelector("#sun").addEventListener("click",exitCosmos);
+    return c;
+  }
+  function enterCosmos(){ const c=ensureCosmos(); c.style.display="block";
+    requestAnimationFrame(()=>c.classList.add("on")); cosmosOn=true;
+    try{ map.easeTo({zoom:1,duration:900,essential:true}); }catch(_){}    // pull away from Earth = the movie zoom-out
+    const b=document.getElementById("cosmosBtn"); if(b) b.textContent="🌍 Earth"; }
+  function exitCosmos(){ const c=document.getElementById("cosmos"); if(!c) return;
+    c.classList.remove("on"); cosmosOn=false; setTimeout(()=>{c.style.display="none";},900);
+    try{ map.easeTo({zoom:2.2,duration:1100,essential:true}); }catch(_){}
+    const b=document.getElementById("cosmosBtn"); if(b) b.textContent="🌌 Cosmos"; }
+  function toggleCosmos(){ cosmosOn?exitCosmos():enterCosmos(); }
+  function diveToProduct(p){ const d=document.createElement("div"); d.className="dive on"; document.body.appendChild(d);
+    setTimeout(()=>{ d.remove();
+      if(p.external){ window.open(p.href,"_blank","noopener"); exitCosmos(); }
+      else if(p.href.charAt(0)==="/"){ location.href=p.href; } },640); }
+
+  // ---------- 3) chat-to-control ----------
+  function findProduct(q){ return PRODUCTS.find(p=>q.includes(p.id)||q.includes(p.name.toLowerCase()))
+      || PRODUCTS.find(p=>p.name.toLowerCase().split(/[ .]/).some(w=>w.length>3&&q.includes(w))); }
+  function findCity(q){ return (typeof CITIES!=="undefined") && CITIES.find(c=>q.includes(c[2].toLowerCase())); }
+  function reply(html,isMe){ const r=document.getElementById("chatReply"); if(!r) return;
+    r.style.display="block"; r.innerHTML=(isMe?`<div class="me">› ${html}</div>`:html); }
+  async function onChat(text){ const q=(text||"").trim(); if(!q) return; const low=q.toLowerCase(); reply(q,true);
+    if(/\b(cosmos|space|planets?|universe|zoom out)\b/.test(low)){ enterCosmos(); return reply("🌌 Zooming out to the MEOK universe…"); }
+    if(cosmosOn && /\b(earth|back|zoom in|map|home)\b/.test(low)){ exitCosmos(); return reply("🌍 Diving back to Earth…"); }
+    if(/\b(activity|happening|council|agents?|doing|live)\b/.test(low)){ openActivity(); return reply("👁 Showing what your council + agents are doing (live)."); }
+    if(/\b(open|show|go to|launch|take me to|fly to)\b/.test(low)){
+      const p=findProduct(low);
+      if(p){ if(cosmosOn){ diveToProduct(p); return; }
+        try{ map.flyTo({center:p.geo,zoom:Math.max(4,map.getZoom()),speed:.85,essential:true}); }catch(_){}
+        return reply(`Flying to <b>${p.emoji} ${p.name}</b>. <a href="${p.href}" ${p.external?'target="_blank" rel="noopener"':''}>Open ${p.external?'↗':'→'}</a>`); }
+      const c=findCity(low);
+      if(c){ try{ map.flyTo({center:[c[0],c[1]],zoom:4.5,speed:.85,essential:true}); }catch(_){} return reply(`Flying to <b>${c[2]}</b>.`); }
+    }
+    reply("…thinking");
+    try{ const _t=localStorage.getItem("meok_token"); const h={"Content-Type":"application/json"}; if(_t) h.Authorization="Bearer "+_t;
+      const d=await (await fetch("/api/think",{method:"POST",headers:h,
+        body:JSON.stringify({character:"aria",message:q,brain:"left",tier:"pro"})})).json();
+      reply((d.reply||"(no reply)").replace(/</g,"&lt;"));
+    }catch(_){ reply("I couldn't reach your AI just now — try an action like “open MEOK LAW”."); }
+  }
+
+  // ---------- 4) live activity (SIGIL hash-chained audit = real agent decisions) ----------
+  const OPC={V:["#34d399","vote"],P:["#38bdf8","prop"],C:["#f472b6","care"],H:["#fbbf24","hand"],
+    M:["#c9b8ff","mem"],Q:["#8fd6ff","qry"],S:["#9a9ab4","stat"],A:["#ef4444","alrt"],F:["#7c5cff","see"],D:["#7c5cff","det"]};
+  async function openActivity(){ const p=document.getElementById("actPanel"); if(!p) return; p.style.display="block";
+    p.innerHTML='<div style="color:var(--dim)">reading the live audit chain…</div>';
+    try{ const d=await (await fetch("/api/sigil/recent?n=14")).json(); const recs=d.records||[], ch=d.chain||{};
+      let h=`<div style="font-weight:700;font-size:13.5px">👁 Live agent activity</div>`
+        +`<div style="color:var(--dim);font-size:11px;margin:2px 0 6px">hash-chained · ${ch.verified||0}/${ch.total||0} verified ${ch.intact?'✓':'✗'}</div>`;
+      if(!recs.length) h+='<div style="color:var(--dim)">Quiet right now — interact and watch decisions appear.</div>';
+      recs.forEach(r=>{ const o=OPC[r.op]||["#9a9ab4",r.op||"?"];
+        h+=`<div class="ev"><span class="op" style="background:${o[0]}22;color:${o[0]}">${o[1]}</span>${(r.gloss||r.line||"").replace(/</g,"&lt;")}</div>`; });
+      p.innerHTML=h;
+    }catch(_){ p.innerHTML='<div style="color:#f87171">activity unavailable</div>'; }
+  }
+
+  // ---------- wire controls + boot ----------
+  function addControls(){
+    const mk=(id,txt,css)=>{ const b=document.createElement("button"); b.id=id; b.className="btnchip"; b.textContent=txt; b.style.cssText=css; document.body.appendChild(b); return b; };
+    mk("cosmosBtn","🌌 Cosmos","top:12px;right:14px").addEventListener("click",toggleCosmos);
+    mk("liveBtn","👁 Live","top:12px;right:130px").addEventListener("click",()=>{ const p=document.getElementById("actPanel"); const open=(p.style.display==="none"||!p.style.display); if(open) openActivity(); else p.style.display="none"; });
+    const ap=document.createElement("div"); ap.id="actPanel"; document.body.appendChild(ap);
+    const bar=document.createElement("div"); bar.id="chatbar";
+    bar.innerHTML='<input id="chatIn" placeholder="Tell your AI…  “open MEOK LAW” · “show me the universe” · “what’s happening?”"/><button id="chatGo">Send</button>';
+    document.body.appendChild(bar);
+    const rep=document.createElement("div"); rep.id="chatReply"; document.body.appendChild(rep);
+    const send=()=>{ const i=document.getElementById("chatIn"); const v=i.value; i.value=""; onChat(v); };
+    document.getElementById("chatGo").addEventListener("click",send);
+    document.getElementById("chatIn").addEventListener("keydown",e=>{ if(e.key==="Enter") send(); });
+  }
+  async function initImmersion(){
+    addControls();
+    try{ const d=await (await fetch("/api/products")).json(); if(d&&d.products) PRODUCTS.push(...d.products); }catch(_){}
+    if(typeof map!=="undefined"){
+      if(map.loaded&&map.loaded()) addProductMarkers();
+      try{ map.on("load",addProductMarkers); map.once("idle",addProductMarkers); }catch(_){}
+      setTimeout(addProductMarkers,2200);
+    }
+  }
+  if(document.readyState!=="loading") initImmersion(); else addEventListener("DOMContentLoaded",initImmersion);
 })();
 </script>
 </body>

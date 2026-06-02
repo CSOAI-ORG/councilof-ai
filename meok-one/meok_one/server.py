@@ -322,6 +322,11 @@ class Handler(BaseHTTPRequestHandler):
             from . import sigil as _sigil
             line = qs.get("line", [""])[0]
             return self._json(200, {"line": line, "gloss": _sigil.gloss(line)})
+        if path == "/api/products":
+            # MEOK products bridged into the DOME — the geospatial product constellation
+            # (map nodes + cosmos planets the user can fly to / open / ask their AI about).
+            from . import products as _products
+            return self._json(200, _products.products())
         if path == "/api/law":
             # MEOK LAW — the capability map: frameworks, regions, crosswalk MCPs, honest coverage.
             from . import law as _law
