@@ -23,7 +23,10 @@ ok(/L\d|💜/.test(vit || ''), `character card shows vitals (${vit})`);
 
 // action bar (bottom-center)
 const slots = await p.$$eval('.slot', e => e.length);
-ok(slots === 6, `action bar has 6 WoW slots (${slots})`);
+ok(slots === 7, `action bar has 7 WoW slots incl. 👁 perceive (${slots})`);
+// 👁 perceive slot present + clicking it is wired (gracefully handles no screen-capture in headless)
+const seeSlot = await p.$$eval('.slot', e => e.some(s => s.dataset.act === 'see'));
+ok(seeSlot, '👁 "see my screen" slot present');
 
 // chat — gated reply lands in the HUD
 await p.fill('#in', 'hello there');

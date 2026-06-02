@@ -489,6 +489,42 @@ class Handler(BaseHTTPRequestHandler):
                     pick["care_style"] = bc
                 char = _factory.mint(pick["archetype"], pick["care_style"], pick["name"])
                 return self._json(200, {"suggestion": pick, "character": char})
+            if path == "/api/perceive":
+                # The EYES of the OS: a vision source (step3.7 / screen-grab) describes a frame →
+                # we compress it to SIGIL (F + optional D), REMEMBER it in SOV3, and LOG the pair
+                # so a future "salience" net can learn what's worth keeping. Does BOTH at once.
+                import time as _t, hashlib as _hl
+                from . import sigil as _sig
+                scene = (str(b.get("scene") or "screen")).strip()[:200]
+                objects = [str(o)[:40] for o in (b.get("objects") or [])][:12]
+                ref = (str(b.get("ref") or "")[:24]
+                       or "sha_" + _hl.sha256((scene + str(objects)).encode()).hexdigest()[:8])
+                care = max(0.0, min(1.0, float(b.get("care_weight", 0.5))))
+                rec = _sig.record({"op": "F", "scene": scene, "objects": objects, "ref": ref})
+                dets = []
+                for d in (b.get("detections") or [])[:8]:
+                    dr = _sig.record({"op": "D", "label": str(d.get("label", "?"))[:40],
+                                      "bbox": str(d.get("bbox", ""))[:40],
+                                      "conf": str(d.get("conf", "0.0"))[:6]})
+                    dets.append(dr["line"])
+                stored = {"stored": False}
+                try:
+                    from . import memory as _mem
+                    stored = _mem.bridge().record(uid, rec["line"], platform="hud-vision")
+                except Exception as e:
+                    stored = {"stored": False, "error": f"{type(e).__name__}: {e}"}
+                try:   # salience training dataset — the pairs the future net learns from
+                    dd = os.path.join(_HERE, "data"); os.makedirs(dd, exist_ok=True)
+                    with open(os.path.join(dd, "perception_pairs.jsonl"), "a") as f:
+                        f.write(json.dumps({"ts": int(_t.time()), "uid": uid, "sigil": rec["line"],
+                                            "gloss": rec["gloss"], "care_weight": care,
+                                            "stored": bool(stored.get("stored")),
+                                            "n_det": len(dets)}) + "\n")
+                except Exception:
+                    pass
+                return self._json(200, {"sigil": rec["line"], "gloss": rec["gloss"],
+                                        "detections": dets, "receipt": rec["receipt"],
+                                        "remembered": bool(stored.get("stored"))})
             if path == "/api/think":
                 cid = b.get("character", "aria")
                 out = think(cid, b.get("message", ""),

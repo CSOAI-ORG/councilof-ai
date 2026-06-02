@@ -125,7 +125,8 @@
     <div class="slot" data-act="tools" title="Tools">🛠️<span class="k">3</span></div>
     <div class="slot" data-act="audit" title="Audit trail (SIGIL)">⚖️<span class="k">4</span></div>
     <div class="slot" data-act="voice" id="voiceSlot" title="Voice mode">🎙️<span class="k">V</span></div>
-    <div class="slot" data-act="os" title="Full MEOK OS">⛶<span class="k">5</span></div>
+    <div class="slot" data-act="see" title="See my screen → remember (SIGIL → SOV3 memory)">👁️<span class="k">6</span></div>
+    <div class="slot" data-act="os" title="Full MEOK OS">⛶<span class="k">7</span></div>
   </div>
 
 <script>
@@ -206,17 +207,33 @@ function toggleVoice(){ VOICE_ON=!VOICE_ON; $("#voiceSlot").classList.toggle("on
   if(VOICE_ON&&SR){ try{ const r=new SR(); r.lang="en-GB"; r.onresult=e=>{const t=e.results[0][0].transcript; $("#in").value=t; send(t);}; r.start(); }catch(_){} } }
 $("#micB").onclick=toggleVoice;
 
+// ---- 👁 perceive: see the screen → SIGIL → SOV3 memory (privacy: browser asks consent each time) ----
+async function perceive(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia){ tui("screen capture not supported here"); return; }
+  tui("requesting screen (you choose what to share)…");
+  try{
+    const stream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false});
+    const t=stream.getVideoTracks()[0], s=t.getSettings(); t.stop();   // grab settings, release immediately
+    const scene=`screen captured ${s.width||"?"}×${s.height||"?"} · rich vision via step3.7 pending key`;
+    tui("perceiving → SIGIL → memory…");
+    const d=await (await fetch(API+"/api/perceive",{method:"POST",headers:{"Content-Type":"application/json",...authH()},
+      body:JSON.stringify({scene,objects:["active-window"],care_weight:0.6})})).json();
+    add("ai","👁️ "+(d.gloss||"perceived")+(d.remembered?"  · remembered ✓":""));
+    tui("remembered ["+(d.receipt||"")+"] — SIGIL in the audit trail");
+  }catch(e){ tui("screen share cancelled"); }
+}
 // ---- action bar ----
 document.querySelectorAll(".slot").forEach(s=>s.onclick=()=>{
   const a=s.dataset.act;
   if(a==="voice"){ toggleVoice(); return; }
+  if(a==="see"){ perceive(); return; }
   if(a==="dome"){ window.open("/dome","_blank"); return; }
   // characters / tools / audit / full-os → open the full MEOK OS (the rich surface)
   window.open("/os","_blank");
 });
-// keyboard hotbar 1-5 + V
+// keyboard hotbar 1-7 + V
 addEventListener("keydown",e=>{ if(e.target===$("#in"))return;
-  const map={"1":"dome","2":"chars","3":"tools","4":"audit","5":"os","v":"voice","V":"voice"};
+  const map={"1":"dome","2":"chars","3":"tools","4":"audit","6":"see","7":"os","v":"voice","V":"voice"};
   const a=map[e.key]; if(a){ const s=[...document.querySelectorAll(".slot")].find(x=>x.dataset.act===a); if(s)s.click(); }});
 
 boot();
