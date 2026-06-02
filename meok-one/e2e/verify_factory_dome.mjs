@@ -108,6 +108,28 @@ const sbt = await page.evaluate(async () => {
 must(sbt.prog && sbt.live === false && sbt.type === 'CharacterGenesis' && sbt.minted === false && sbt.charter === '6',
   `SBT bridge intent-only (type ${sbt.type}, charter ${sbt.charter}, minted ${sbt.minted}, live ${sbt.live})`);
 
+// SIGIL: faithful grammar + gloss
+const sg = await page.evaluate(async () => {
+  const m = await (await fetch('/api/sigil/manifest')).json();
+  const g = await (await fetch('/api/sigil/gloss?line=' + encodeURIComponent('V|care_governor|p1|+|0.9'))).json();
+  return { ops: (m.opcodes || []).length, gloss: g.gloss };
+});
+must(sg.ops === 8 && /votes approve/.test(sg.gloss || ''), `SIGIL grammar (${sg.ops} opcodes; "${(sg.gloss || '').slice(0, 30)}")`);
+// council EMITS SIGIL → hash-chained, verifiable
+const emit = await page.evaluate(async () => {
+  await fetch('/api/sovereign', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ character: 'aria', message: 'hello there', deadline_s: 14, quorum: 3 }) }).catch(() => {});
+  const r = await (await fetch('/api/sigil/recent')).json();
+  return { n: (r.records || []).length, intact: r.chain?.intact, verified: r.chain?.verified, total: r.chain?.total };
+});
+must(emit.n >= 1 && emit.intact === true && emit.verified === emit.total,
+  `SIGIL council emission + intact hash-chain (${emit.n} records, ${emit.verified}/${emit.total} verified)`);
+// Compliance tab = native SIGIL audit viewer
+await page.evaluate(() => { if (typeof openProduct === 'function') openProduct('comply'); });
+await page.waitForTimeout(1500);
+const srcdoc = (await page.locator('#prodframe').getAttribute('srcdoc').catch(() => '')) || '';
+must(/hash-chain|audit trail/i.test(srcdoc), 'Compliance tab renders the native SIGIL audit log');
+
 // ---------- distinct per-character voices ----------
 // switch across several seeds and confirm the loaded VOICE_SPEC actually varies
 const specs = [];

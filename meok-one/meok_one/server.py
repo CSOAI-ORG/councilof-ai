@@ -223,6 +223,21 @@ class Handler(BaseHTTPRequestHandler):
             except KeyError as e:
                 return self._json(400, {"error": str(e)})
             return self._json(200, {"character": char})
+        if path == "/api/sigil/recent":
+            # the live, hash-chained agent-decision audit trail (gloss + receipts)
+            from . import sigil as _sigil
+            n = int(qs.get("n", ["50"])[0] or 50)
+            return self._json(200, {"records": _sigil.recent(n), "chain": _sigil.verify_chain()})
+        if path == "/api/sigil/verify":
+            from . import sigil as _sigil
+            return self._json(200, _sigil.verify_chain())
+        if path == "/api/sigil/manifest":
+            from . import sigil as _sigil
+            return self._json(200, {"opcodes": _sigil.manifest()})
+        if path == "/api/sigil/gloss":
+            from . import sigil as _sigil
+            line = qs.get("line", [""])[0]
+            return self._json(200, {"line": line, "gloss": _sigil.gloss(line)})
         if path == "/api/sbt/status":
             from . import sbt as _sbt
             return self._json(200, _sbt.status())
@@ -519,6 +534,13 @@ class Handler(BaseHTTPRequestHandler):
                     out["vitals"] = _v.on_interaction(cid, b.get("message", ""), name=b.get("name"), user_id=uid)
                 except Exception as e:
                     out["vitals_error"] = str(e)
+                try:   # EMIT SIGIL — every council run becomes a hash-chained audit record
+                    from . import sigil as _sigil
+                    _sigil.emit_council(cid, b.get("message", ""), out.get("council", {}))
+                    _sigil.record({"op": "S", "fields": {"char": cid, "gate": _g.get("gate", "pass"),
+                                                         "care": _g.get("care_flagged", False)}})
+                except Exception:
+                    pass
                 return self._json(200, out)
             if path == "/api/siri":
                 # SIRI / Apple Shortcuts bridge. A spoken query → a MEOK character's reply,

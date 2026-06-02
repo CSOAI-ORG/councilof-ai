@@ -386,7 +386,7 @@ const PRODUCTS = [
   {id:"tools",  em:"🛠️", label:"Tools",       url:"/api/tools",       kind:"json"},
   {id:"market", em:"🛒", label:"Marketplace", url:"/api/characters", kind:"json"},
   {id:"care",   em:"💗", label:"Care",        url:"/api/vitals?character=aria", kind:"json"},
-  {id:"comply", em:"⚖️", label:"Compliance",  url:"/registry",              kind:"ext"},
+  {id:"comply", em:"⚖️", label:"Compliance",  url:"/api/sigil/recent?n=40",  kind:"json"},
 ];
 let activeProd="dome";
 function buildTabs(){
@@ -455,6 +455,15 @@ function prodPanel(p,d){
      <div class="row">💬 <b>SHOUT</b> — text <b>85258</b></div>
      <div class="row">🚑 Emergency — <b>999</b> (UK) · 112 (EU)</div>
      <p style="margin-top:14px"><a class="mkt" href="https://aquaponics.app" target="_blank" rel="noopener">🌱 MEOK care tools & community →</a></p>`; }
+  else if(p.id==="comply"){ const recs=d.records||[], ch=d.chain||{};
+    const EM={V:"🗳️",S:"📊",A:"🚨",C:"💜",H:"🤝",M:"🧠",Q:"🔎",P:"📋"};
+    body=`<h2>⚖️ Live audit trail <span class="dim">— every AI decision, glossed &amp; signed (SIGIL)</span></h2>
+      <div class="row">${ch.intact?"🟢":"🔴"} hash-chain <b>${ch.intact?"intact":"BROKEN"}</b> · ${ch.verified||0}/${ch.total||0} receipts verified · EU AI Act Art&nbsp;12 tamper-evident logging</div>`+
+      (recs.length?recs.map(r=>`<div class="row" style="display:block">
+         <div>${EM[r.op]||"·"} ${r.gloss}</div>
+         <div class="dim" style="font:11px/1.4 monospace;margin-top:2px">${r.line} <span style="color:#7c5cff">▸ ${r.receipt}</span></div></div>`).join("")
+       :`<p class="dim" style="margin-top:12px">No decisions logged yet — chat with your AI on the <b>Sovereign</b> brain and every council vote appears here, glossed in plain English and hash-chained for tamper-evidence.</p>`)+
+      `<p style="margin-top:14px"><a class="mkt" href="/registry" target="_blank" rel="noopener">🛡️ Verified MCP Registry →</a></p>`; }
   else if(p.id==="agents"){ const a=d.agents||[], c=d.council||[];
     body=`<h2>🧠 The council behind your AI <span class="dim">— ${c.length} lenses review every reply (12-around-1 BFT)</span></h2>`+
       c.map(l=>`<div class="row">${l.is_safety?"🛡️":"🔎"} <b>${(l.id||"").replace(/_/g," ")}</b> <span class="dim">${l.focus||""}${l.is_safety?" · safety (can veto)":""}</span></div>`).join("")+
