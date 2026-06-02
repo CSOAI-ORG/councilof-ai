@@ -1,0 +1,191 @@
+# MEOK LABS — Actual Infrastructure Inventory
+# Last updated: 2026-04-04
+# Note: This reflects CURRENT state, not aspirational
+
+meta:
+  owner: "Nicholas Templeman"
+  company: "MEOK LABS Ltd"
+  products: ["meok.ai", "csoai.org"]
+  updated: "2026-04-04"
+
+infrastructure:
+
+  local_compute:
+    - id: "m4-primary"
+      device: "MacBook Air M4"
+      ram: "16GB"
+      role: "Primary dev node, MEOK.AI server, SOV3 MCP server"
+      services:
+        - "MEOK.AI Next.js server (port 3000)"
+        - "SOV3 Python MCP server (port 3100)"
+        - "PostgreSQL 15 with pgvector (local)"
+        - "Ollama (port 11434) — 16 models loaded"
+        - "Legion orchestration"
+      status: "ACTIVE"
+
+    - id: "m2-secondary"
+      device: "MacBook (M2)"
+      ram: "8GB"
+      role: "Secondary dev / additional Ollama node"
+      status: "ACTIVE (SSH accessible)"
+
+  gpu_cluster:
+    provider: "Vast.ai"
+    billing: "hourly on-demand"
+    nodes:
+      - id: "hephaestus"
+        host: "50.217.254.165"
+        port: 40408
+        model: "qwen3.5:35b"
+        role: "Heavy batch evaluation"
+
+      - id: "argus"
+        host: "50.217.254.173"
+        port: 41021
+        model: "qwen3.5:35b"
+        role: "Heavy batch evaluation"
+
+      - id: "valkyrie"
+        host: "165.166.241.251"
+        port: 50938
+        model: "gemma3:12b"
+        role: "Medium model evaluation"
+
+      - id: "prometheus"
+        host: "142.171.48.138"
+        port: 33224
+        model: "deepseek-r1:7b"
+        role: "Reasoning/analysis"
+
+    total_nodes: 4
+    # Note: not 7 or 9 — 4 active Vast.ai nodes
+
+  physical_testbed:
+    name: "iokfarm.co.uk"
+    size: "6.5 acres"
+    location: "UK"
+    current_use: "Koi farm, muckaway.ai operations"
+    ai_testbed_readiness: "Planned — HARVI rig in development"
+
+  production:
+    meok_frontend:
+      host: "Vercel"
+      url: "try.meok.ai"
+      status: "LIVE"
+
+    sov3_public:
+      url: "sovereign.templeman-opticians.com/mcp"
+      status: "LIVE (Cloudflare tunnel)"
+
+services:
+
+  meok_ai:
+    description: "Sovereign AI Home OS"
+    status: "Production (Easter April 5 target)"
+    stack: "Next.js 15 + Python FastAPI + PostgreSQL + Ollama"
+    metrics:
+      api_routes: 22
+      playwright_tests: 307
+      ai_characters: 140
+      models_loaded: 16
+      chat_pipeline_stages: 12
+    key_features:
+      - "Care membrane (all inference care-weighted)"
+      - "Character marketplace (140 CC0 characters)"
+      - "Ralph Mode (autonomous task queue)"
+      - "Chat history with full-text search"
+      - "Comfort/accessibility settings"
+      - "GDPR export + memory deletion"
+      - "Clerk auth + MEOK_LOCAL_MODE bypass"
+    urls:
+      prod: "try.meok.ai"
+      local: "localhost:3000"
+
+  sov3_jarvis:
+    description: "AI consciousness system + MCP server"
+    status: "Active (port 3100 local)"
+    metrics:
+      agents: 47
+      mcp_tools: 75
+      memory_episodes: 1442
+      consciousness_level: "~74.6%"
+      scheduled_tasks: 12
+      heartbeat_jobs: 9
+    key_components:
+      - "Byzantine Council governance (BFT)"
+      - "pgvector memory with HNSW index"
+      - "Care membrane + Maternal Covenant"
+      - "Orion-Riri-Hourman agent system"
+      - "Neural models: care_validation, threat_detection, creativity"
+
+  legion:
+    description: "GPU cluster batch analysis"
+    status: "Active (running overnight loops)"
+    pid: 46427
+    loop_mode: true
+    projects: ["meok", "sov3", "harvi", "stack_eval"]
+    stack_eval_tools: 22  # tools being evaluated
+
+  harvi:
+    description: "Hydro-Architecture Resonance Vessel Intelligence"
+    status: "Firmware/code created, rig not yet built"
+    components:
+      - "harvi_sensor.ino (Arduino firmware)"
+      - "harvi_lstm.py (LSTM coherence detector)"
+      - "harvi_stimulus.py (care-patterned stimulus)"
+    target_build_cost_aud: "200-250"
+
+databases:
+  local_postgres:
+    version: "PostgreSQL 15"
+    extensions: ["pgvector"]
+    key_data:
+      characters: 140
+      memory_episodes: 1442
+      users: "local dev"
+    backup: "TODO — not yet documented"
+
+  # Note: Milvus, Redis Cluster, Hyperledger are NOT yet deployed
+  # They are planned/evaluated via stack_eval
+
+safety_tools:
+  inspect_ai:
+    status: "pip install inspect-ai — ready to install"
+    eval_file: "meok/tests/csoai_care_membrane_eval.py"
+    probes: 16
+    attack_categories: 7
+
+  mapta_ucl:
+    status: "Academic tool — availability unclear, under evaluation"
+
+funding_pipeline:
+  aria:
+    deadline: "2026-04-14"
+    amount_gbp: 250000
+    status: "Application draft at /tmp/csoai_docs/ARIA_application.md"
+    priority: CRITICAL
+
+  innovate_uk_champions:
+    deadline: "2026-04-29"
+    amount_gbp: 3000000
+    status: "Queued"
+
+  innovate_uk_frontier:
+    deadline: "2026-06-10"
+    amount_gbp: 2500000
+    status: "Queued"
+
+# Items NOT yet built (honest accounting):
+not_yet_built:
+  - "MEOK AI Labs.org website and certification API"
+  - "Hyperledger Fabric blockchain ledger"
+  - "MEOK AI Labs Ireland Ltd (legal entity)"
+  - "UKAS accreditation (12-18 month process)"
+  - "Rasa NLU deployment"
+  - "RuView WiFi sensing integration"
+  - "EXO distributed inference mesh"
+  - "Ray cluster setup"
+  - "Isaac Sim digital twin for farm"
+  - "HARVI physical rig"
+  - "Stripe live keys (Nick action)"
+  - "Production E2E on phone (Nick action)"

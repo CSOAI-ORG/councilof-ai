@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "meok-uk-fhi-mcp"
+version = "1.0.1"
+readme = "README.md"
+description = "MCP server wrapping the UK aquaculture regulatory stack — CEFAS Fish Health Inspectorate AW1 APB authorisation, APHA fish movement docs + IPAFFS imports, Environment Agency Site/Supplier/EPR discharge/Abstraction permits, AAHR 2009 listed-disease notifications. From MEOK AI Labs."
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "nicholas@meok.ai"}]
+keywords = ["mcp", "meok", "cefas", "apha", "environment-agency", "aquaculture", "uk-fish-farm", "fhi"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = ["mcp>=1.0.0"]
+
+[project.urls]
+Homepage = "https://meok.ai/aquaculture"
+Repository = "https://github.com/CSOAI-ORG/meok-uk-fhi-mcp"
+Pricing = "https://meok.ai/pricing"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+only-include = ["server.py"]
+
+[project.scripts]
+meok_uk_fhi_mcp = "server:main"

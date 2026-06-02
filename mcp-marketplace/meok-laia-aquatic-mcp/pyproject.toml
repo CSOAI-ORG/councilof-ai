@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "meok-laia-aquatic-mcp"
+version = "1.0.1"
+readme = "README.md"
+description = "England Animal Welfare (Licensing of Activities Involving Animals) Regulations 2018 — LAIA — for aquatic licensables: koi dealers, ornamental retailers, public aquaria, online live-fish sellers. Local-authority inspector-ready pack. From MEOK AI Labs."
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "nicholas@meok.ai"}]
+keywords = ["mcp", "meok", "laia", "ornamental", "koi", "aquarium", "oata", "uk-licensing"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = ["mcp>=1.0.0"]
+
+[project.urls]
+Homepage = "https://meok.ai/aquaponics"
+Repository = "https://github.com/CSOAI-ORG/meok-laia-aquatic-mcp"
+Pricing = "https://meok.ai/pricing"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+only-include = ["server.py"]
+
+[project.scripts]
+meok_laia_aquatic_mcp = "server:main"

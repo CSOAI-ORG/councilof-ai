@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "meok-koikeeper-ai-mcp"
+version = "1.0.1"
+readme = "README.md"
+description = "Koi-pond MCP server — varieties database (Gosanke + secondary), pond stocking calc, koi-specific diseases (KHV notifiable!), seasonal temperature-gated feeding schedule, UK winter-prep checklist. Powers koikeeper.ai. From MEOK AI Labs."
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "nicholas@meok.ai"}]
+keywords = ["mcp", "meok", "koi", "pond", "khv", "aquaculture", "koikeeper", "japanese-koi"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = ["mcp>=1.0.0"]
+
+[project.urls]
+Homepage = "https://koikeeper.ai"
+Repository = "https://github.com/CSOAI-ORG/meok-koikeeper-ai-mcp"
+Pricing = "https://meok.ai/pricing"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+only-include = ["server.py"]
+
+[project.scripts]
+meok_koikeeper_ai_mcp = "server:main"

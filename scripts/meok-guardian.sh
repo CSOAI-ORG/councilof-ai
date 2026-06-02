@@ -5,6 +5,22 @@
 
 set -uo pipefail
 
+# ─── Singleton guard (atomic mkdir lock) ──────────────────────────────────────
+# Root cause of the 2026-06-02 SOV3 crash-loop: cron (*/2) plus launchd spawned
+# many overlapping guardians with no mutual exclusion, so multiple restart_sov3()
+# passes raced on port 3101 (Errno 48) and the service could never stay up.
+# This lock guarantees only ONE guardian runs at a time. mkdir is atomic and
+# needs no external dependency (macOS has no flock by default).
+GUARDIAN_LOCK="/tmp/meok-guardian.lock"
+if ! mkdir "$GUARDIAN_LOCK" 2>/dev/null; then
+  if [ -f "$GUARDIAN_LOCK/pid" ] && kill -0 "$(cat "$GUARDIAN_LOCK/pid" 2>/dev/null)" 2>/dev/null; then
+    exit 0   # another guardian is alive — bail silently
+  fi
+  rm -rf "$GUARDIAN_LOCK" 2>/dev/null; mkdir "$GUARDIAN_LOCK" 2>/dev/null || exit 0
+fi
+echo $$ > "$GUARDIAN_LOCK/pid"
+trap 'rm -rf "$GUARDIAN_LOCK"' EXIT
+
 LOG="/tmp/meok_guardian.log"
 STATUS_DIR="/Users/nicholas/.clawdbot/shared-knowledge/status"
 MEMORY_DIR="/Users/nicholas/clawd/memory"
@@ -75,12 +91,38 @@ restart_meok_ui() {
   log "[INFO] Hermes is disconnected (needs QR scan). Skipping auto-restart."
 }
 
+wait_for_port_free() {  # return 0 once port $1 is NOT listening, within $2 seconds
+  local port=$1 timeout=$2 i=0
+  while [ "$i" -lt "$timeout" ]; do
+    lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1 || return 0
+    sleep 1; i=$((i+1))
+  done
+  return 1
+}
+wait_for_port_listen() {  # return 0 once port $1 IS listening, within $2 seconds
+  local port=$1 timeout=$2 i=0
+  while [ "$i" -lt "$timeout" ]; do
+    lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1 && return 0
+    sleep 1; i=$((i+1))
+  done
+  return 1
+}
+
 restart_sov3() {
   log "[RESTART] SOV3 (3101)"
-  pkill -9 -f "sovereign-mcp-server" 2>/dev/null || true
-  sleep 2
-  cd /Users/nicholas/clawd/sovereign-temple && nohup bash run-production.sh >> /tmp/sov3.log 2>&1 &
-  sleep 15
+  # 1. Graceful TERM on the old master; wait up to 10s for the port to free.
+  #    Only SIGKILL as a last resort. This avoids the Errno-48 collision.
+  pkill -TERM -f "sovereign-mcp-server" 2>/dev/null || true
+  wait_for_port_free 3101 10 || { pkill -9 -f "sovereign-mcp-server" 2>/dev/null || true; sleep 1; }
+  # 2. Launch exactly ONE instance, bound to localhost (safe default).
+  cd /Users/nicholas/clawd/sovereign-temple && HOST=127.0.0.1 nohup bash run-production.sh >> /tmp/sov3.log 2>&1 &
+  echo $! > /tmp/sov3.pid
+  # 3. Wait for the actual bind; give up cleanly instead of hammering forever.
+  if wait_for_port_listen 3101 25; then
+    log "[OK] SOV3 listening on 3101"
+  else
+    log "[FAIL] SOV3 did not bind 3101 in 25s — leaving for human, not re-hammering"
+  fi
 }
 
 restart_meok_mcp() {

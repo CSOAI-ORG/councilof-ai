@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "meok-asc-rspca-crosswalk-mcp"
+version = "1.0.1"
+readme = "README.md"
+description = "Flagship aquaculture crosswalk — one evidence pack satisfies ASC + RSPCA Assured + GlobalG.A.P. IFA Aquaculture v6. For UK retail-supplying farms hit by Sainsbury's 100% ASC + Co-op 2027 ASC commitments. From MEOK AI Labs."
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "nicholas@meok.ai"}]
+keywords = ["mcp", "meok", "asc", "rspca", "globalgap", "aquaculture", "crosswalk", "retail-compliance"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = ["mcp>=1.0.0"]
+
+[project.urls]
+Homepage = "https://meok.ai/aquaculture"
+Repository = "https://github.com/CSOAI-ORG/meok-asc-rspca-crosswalk-mcp"
+Pricing = "https://meok.ai/pricing"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+only-include = ["server.py"]
+
+[project.scripts]
+meok_asc_rspca_crosswalk_mcp = "server:main"
