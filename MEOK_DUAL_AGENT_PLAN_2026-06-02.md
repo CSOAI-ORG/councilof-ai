@@ -31,8 +31,44 @@ Owns: **live-probe audits, research, fact-verification, drift-detection, and dra
 - Keeps the **honest counts** current (re-run `tools/pypi_check.py`; flag any inflation).
 - **Drafts** (not posts) the side-effect artifacts for Nick: advisories, outreach, AAIF docs.
 
+### ✍️ Kimi = THE CONTENT/SOCIAL ENGINE (on the idle M2)  [Nick's tri-agent idea]
+Runs on the **M2 MacBook** (idle → put to work). Owns **website copy, blog, SEO, social** — a
+lane that does NOT touch meok-one code, so zero collision with Claude.
+- Writes to its OWN scope only: `meok/ui` content/blog, `csoai-org` copy, social drafts → in a
+  dedicated branch (e.g. `kimi/content`) or `content/` dirs. **Never** edits meok-one or pushes
+  to `claude/meok-one`. (This is the fix for the past "Kimi WIP scattered everywhere" mess.)
+- Calls SOV3 (:3101, now restart-safe) + the brand voice for on-message content.
+- Output is content PRs / drafts; Nick approves publishing (it's a side-effect).
+- **Setup (Nick / Claude-with-go):** m2 has SSH (`reference_key_locations`); install the agent,
+  point it at a `kimi/content` branch, give it the brand kit + a tight CONTENT-ONLY system prompt.
+
+### 🧠 SOV3 = THE SHARED BRAIN (substrate, not an agent)
+All three agents call SOV3's 110 MCP tools (:3101) for memory, care-gating, the council. It's the
+nervous system they share — not a worker in a lane. (Just recovered + restart-safe via the shim.)
+
 ### 🧭 Nick = THE SOVEREIGN (decisions + side-effects)
-Money, publishing, chain go-live, domain/DNS, deletions, strategic bets. Both agents draft; Nick fires.
+Money, publishing, chain go-live, domain/DNS, deletions, strategic bets. All agents draft; Nick fires.
+
+---
+
+## Tri-agent topology (the answer to "am I getting too complicated?" — No)
+```
+        M4 MacBook                         M2 MacBook
+   ┌──────────────────┐              ┌──────────────────┐
+   │ Claude  (builder)│              │ Kimi  (content/  │
+   │ MiniMax M3 (audit)│   ──────▶   │       social)    │
+   └────────┬─────────┘   verify     └────────┬─────────┘
+            │  build/ship                       │ content
+            ▼                                   ▼
+   ┌───────────────────────────────────────────────────┐
+   │     SOV3 (GCP :3101) — shared brain + memory        │
+   └───────────────────────────────────────────────────┘
+                         ▲
+                    Nick = decisions
+```
+Three machines, three NON-overlapping lanes, one brain, one human at the top. Not too complicated —
+*because the lanes don't touch each other's files.* That single rule (one writer per surface) is
+what keeps it sane.
 
 ---
 
