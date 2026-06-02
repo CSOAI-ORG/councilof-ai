@@ -188,9 +188,33 @@ function speak(t){ try{ if(!window.speechSynthesis||!t)return; speechSynthesis.c
   speechSynthesis.speak(u); }catch(_){} }
 function add(role,txt){ const m=document.createElement("div"); m.className="m "+role; m.textContent=txt; $("#msgs").appendChild(m); $("#msgs").scrollTop=$("#msgs").scrollHeight; return m; }
 function tui(t){ const e=$("#tui"); e.textContent="❯ "+t; }
+// ---- 🤝 AI co-pilot: see screen → propose ONE gated action → you approve → external MCP acts ----
+async function copilot(goal){
+  if(!goal){ tui("usage: /do <goal>"); return; }
+  add("you","/do "+goal);
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia){ tui("screen capture not supported here"); return; }
+  tui("co-pilot: seeing your screen (you choose what to share)…");
+  try{
+    const stream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:1},audio:false});
+    const v=document.createElement("video"); v.srcObject=stream; await v.play().catch(()=>{});
+    await new Promise(r=>setTimeout(r,350));
+    const W=Math.min(1024,v.videoWidth||1024),H=Math.round((v.videoHeight||768)*(W/(v.videoWidth||1024)));
+    const c=document.createElement("canvas"); c.width=W;c.height=H; c.getContext("2d").drawImage(v,0,0,W,H);
+    stream.getTracks().forEach(t=>t.stop());
+    tui("co-pilot: deciding (gated)…");
+    const d=await (await fetch(API+"/api/copilot/act",{method:"POST",headers:{"Content-Type":"application/json",...authH()},
+      body:JSON.stringify({goal,image:c.toDataURL("image/jpeg",0.6),character:CHAR})})).json();
+    if(d.refused){ add("ai","⛔ I won't do that — \""+(d.target||"that")+"\" is a prohibited action (money / credentials / delete). Some things only you should do."); tui("refused (prohibited)"); return; }
+    const badge=d.tier==="read"?"✓ safe":"✋ needs your OK";
+    add("ai",`🤝 Next move: ${d.action} → ${d.target||""}  ${d.reason?"("+d.reason+")":""}  [${badge}]`);
+    tui(d.needs_confirm?"approve to run via Open Computer Use (on your device)":"co-pilot ready");
+  }catch(e){ tui("co-pilot cancelled"); }
+}
 let busy=false;
 async function send(txt){
-  txt=(txt||$("#in").value).trim(); if(!txt||busy)return; busy=true;
+  txt=(txt||$("#in").value).trim(); if(!txt||busy)return;
+  if(txt.toLowerCase().startsWith("/do ")){ $("#in").value=""; copilot(txt.slice(4).trim()); return; }
+  busy=true;
   add("you",txt); $("#in").value=""; const th=add("ai","…"); tui("thinking…");
   try{ const d=await (await fetch(API+"/api/think",{method:"POST",headers:{"Content-Type":"application/json",...authH()},
       body:JSON.stringify({character:CHAR,message:txt,brain:"right",tier:"pro"})})).json();

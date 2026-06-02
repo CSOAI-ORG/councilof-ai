@@ -40,8 +40,24 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 _INDEX = os.path.join(_HERE, "web", "index.html")
 
 
-_VISION_PROMPT = ("Describe what is on this screen in one concise sentence, then a short "
-                  "comma-separated list of the key UI elements you can see.")
+_VISION_PROMPT = ("Reply with ONLY this, no preamble or thinking: one short sentence describing the "
+                  "screen, then ' — ' and a comma-separated list of the key UI elements.")
+
+
+def _classify_action(action: str, target: str = "", text: str = "") -> str:
+    """Gate a co-pilot desktop action through the Tool Gateway tiers: read (auto) / write
+    (confirm) / prohibited (refused). Observe-type = read; click/type/scroll/key = write;
+    anything touching money / credentials / purchases / account-deletion = prohibited."""
+    from . import tool_gateway as _gw
+    blob = f"{action} {target} {text}".lower()
+    if (_gw.classify(blob.replace(" ", "_")) == "prohibited"
+            or any(k in blob for k in ("password", "credential", "payment", "credit card", "bank",
+                                       "delete account", "buy now", "purchase", "checkout",
+                                       "wire ", "transfer fund", "ssn", "card number"))):
+        return "prohibited"
+    if action.lower() in ("observe", "read", "screenshot", "look", "wait", "none", "done"):
+        return "read"
+    return "write"   # click / type / scroll / key / drag — needs explicit human confirm
 
 
 def _parse_vision(txt: str):
@@ -599,6 +615,56 @@ class Handler(BaseHTTPRequestHandler):
                                         "remembered": bool(stored.get("stored")),
                                         "saw": saw,
                                         "vision_model": (os.environ.get("MEOK_VISION_MODEL", "moondream") if img else None)})
+            if path == "/api/copilot/act":
+                # AI CO-PILOT (gated): see the screen → propose the SINGLE next action → classify it
+                # through the Tool Gateway → return it for the user to approve. meok-one is the BRAIN;
+                # it NEVER executes — an approved action goes to the user's local Open Computer Use MCP
+                # (the HANDS, which the user enables on their device). prohibited = refused outright.
+                from . import sigil as _sig, router as _r
+                goal = (str(b.get("goal") or "")).strip()[:300]
+                cid = b.get("character", "aria")
+                scene = (str(b.get("scene") or "")).strip()[:200]
+                img = b.get("image")
+                if img:
+                    if isinstance(img, str) and img.startswith("data:"):
+                        img = img.split(",", 1)[-1]
+                    vs, _o = _vision_describe(img, b.get("vision_model"))
+                    if vs:
+                        scene = vs
+                scene = scene or "screen"
+                prompt = ("You are a co-pilot helping the user reach a goal on their own screen. "
+                          f"GOAL: {goal}\nSCREEN: {scene}\n"
+                          "Propose the SINGLE next UI action. Reply ONLY compact JSON: "
+                          '{"action":"click|type|scroll|key|observe|done","target":"<plain words>",'
+                          '"text":"<text to type if any>","reason":"<<=8 words>"}')
+                action = {"action": "observe", "target": "", "text": "", "reason": ""}
+                try:
+                    rr = _r.ask(prompt, model=b.get("model", "turbo-llama8"), tier="pro", max_tokens=140)
+                    raw = (rr or {}).get("reply", "") if isinstance(rr, dict) else str(rr or "")
+                    import re as _re
+                    m = _re.search(r"\{.*\}", raw, _re.S)
+                    if m:
+                        j = json.loads(m.group(0))
+                        for k in ("action", "target", "text", "reason"):
+                            if j.get(k) is not None:
+                                action[k] = str(j[k])[:120]
+                except Exception:
+                    pass
+                tier = _classify_action(action["action"], action.get("target", ""), action.get("text", ""))
+                refused = (tier == "prohibited")
+                try:
+                    _sig.record({"op": "H", "frm": cid, "to": "desktop",
+                                 "task": f'{action["action"]}:{action.get("target","")[:50]} [{tier}]'})
+                except Exception:
+                    pass
+                return self._json(200, {
+                    "goal": goal, "scene": scene,
+                    "action": (None if refused else action["action"]),
+                    "target": action.get("target"), "text": action.get("text"),
+                    "reason": action.get("reason"), "tier": tier,
+                    "needs_confirm": (tier == "write"), "refused": refused,
+                    "execute_via": "your local Open Computer Use MCP (meok-one never executes — it gates + audits)",
+                })
             if path == "/api/think":
                 cid = b.get("character", "aria")
                 out = think(cid, b.get("message", ""),
