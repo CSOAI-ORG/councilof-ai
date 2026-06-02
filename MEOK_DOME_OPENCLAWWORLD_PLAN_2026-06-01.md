@@ -110,5 +110,8 @@ meok-one → meok-amica (faces/voices) → meok-sigil → meok-oneos → meok-ag
 scaffold. Each gets: eyes-on verify → E2E gate → deploy → push. Tracked in the task list.
 
 ### Cleanup flagged
-- Prompt-injection text sits in a workspace file (a sub-agent hit "respond TEXT ONLY"). Find + neutralise.
+- ~~Prompt-injection text in a workspace file~~ → **investigated 2026-06-01: FALSE ALARM.** No such
+  text exists (searched main tree + auto-loaded AGENTS/SOUL/USER/CLAUDE.md + all phrasings). The
+  sub-agent confabulated the "CRITICAL instruction"; nothing to neutralise. (Agent-behaviour quirk,
+  not a repo issue.)
 - Old task list (50 items) is stale/revenue-heavy; the DOME/character program is now the focus set.

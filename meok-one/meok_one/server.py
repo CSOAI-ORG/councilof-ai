@@ -291,6 +291,23 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(200, brains(qs.get("tier", ["pro"])[0]))
         if path == "/api/tiers":
             return self._json(200, {"ladder": ladder()})
+        if path == "/api/marketplace":
+            # The honest creator economy (off-chain v1). Ownership today = your per-user roster;
+            # SBT-on-Solana is designed but Nick-authorized (see MEOK_EARNINGS_SBT_DESIGN).
+            _u = self._uid()
+            owned = len([c for c in (auth.list_characters(_u) if auth.user_exists(_u) else [])
+                         if str(c.get("id", "")).startswith("gen_")])
+            return self._json(200, {
+                "split": {"creator": 70, "platform": 30},
+                "ownership": {"today": "per-user roster — yours across devices via SOV3",
+                              "onchain": "SBT (soulbound) on Solana — designed, pending authorization",
+                              "badge": "✦ Yours forever · SBT-ready"},
+                "you": {"owned": owned},
+                "flow": ["free hatch", "buy pre-made", "hatch custom (paid, resellable)", "resell → keep 70%"],
+                "sellable": ["custom characters", "skins / themes", "MCP tools", "compliance packs"],
+                "settlement": "Stripe (fiat) for v1 — no crypto on the critical path",
+                "tiers": ladder(),
+            })
         if path == "/api/vitals":
             cid = qs.get("character", ["aria"])[0]
             try:

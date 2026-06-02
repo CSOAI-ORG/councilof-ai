@@ -91,6 +91,14 @@ const ariaOk = await page.evaluate(async () => {
 });
 must(ariaOk, 'API /api/character returns full seed record (traits + backstory)');
 
+// marketplace creator economy (off-chain v1: creator keeps 70%)
+const mkt = await page.evaluate(async () => {
+  const m = await (await fetch('/api/marketplace')).json();
+  return { creator: m.split?.creator, platform: m.split?.platform, flow: (m.flow || []).length, settlement: m.settlement };
+});
+must(mkt.creator === 70 && mkt.platform === 30 && mkt.flow >= 4,
+  `/api/marketplace economy (creator ${mkt.creator}% · ${mkt.flow}-step flow · ${(mkt.settlement || '').slice(0, 14)})`);
+
 // ---------- distinct per-character voices ----------
 // switch across several seeds and confirm the loaded VOICE_SPEC actually varies
 const specs = [];

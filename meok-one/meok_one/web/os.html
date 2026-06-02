@@ -432,15 +432,20 @@ function prodPanel(p,d){
       document.querySelectorAll(".card").forEach(function(x){x.classList.remove("on")});c.classList.add("on");
       parent.postMessage({type:"meok:select-char",id:c.getAttribute("data-id"),name:c.querySelector(".nm").textContent},"*");});</scr`+`ipt>`; }
   else if(p.id==="market"){ const cs=d.characters||[];
-    body=`<h2>MEOK Marketplace <span class="dim">— adopt a character · verify an MCP</span></h2>
+    body=`<h2>MEOK Marketplace <span class="dim">— own your AI · earn as a creator</span></h2>
       <div class="hub">
         <a class="hubcard" href="/registry" target="_blank" rel="noopener"><div class="em">🛡️</div><div class="nm">Verified MCP Registry</div><div class="ar">browse &amp; certify tools →</div></a>
-        <a class="hubcard" href="https://loopfactory.ai" target="_blank" rel="noopener"><div class="em">✦</div><div class="nm">Sell &amp; resell</div><div class="ar">loopfactory (soon)</div></a>
+        <div class="hubcard"><div class="em">✦</div><div class="nm">Creator economy</div><div class="ar"><b>you keep 70%</b></div></div>
       </div>
-      <h2 style="margin-top:18px">Adopt a character <span class="dim">— tap to make it yours</span></h2>
+      <div style="margin:14px 0;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#0a0a14">
+        <div style="font-weight:600;margin-bottom:6px">💸 Own it. Earn from it.</div>
+        <div class="dim" style="font-size:12.5px;line-height:1.6">Your creations are <b style="color:#fbbf24">yours forever</b> (SBT-ready). Build great characters, skins &amp; tools → <b style="color:#34d399">keep 70%</b> on every sale &amp; resale.<br><span id="econFlow"></span></div>
+        <div id="econYou" style="margin-top:8px;font-size:12px;color:var(--dim)"></div>
+      </div>
+      <h2 style="margin-top:6px">Adopt a character <span class="dim">— tap to make it yours</span></h2>
       <div class="grid">`+cs.map(c=>`<div class="card" data-id="${c.id}" title="${c.archetype||""}">
         <div class="em">${c.emoji||"🧬"}</div><div class="nm">${c.name}</div><div class="ar">${c.archetype||"companion"}</div></div>`).join("")+`</div>`;
-    script=`<scr`+`ipt>document.addEventListener("click",function(e){var c=e.target.closest(".card");if(!c)return;document.querySelectorAll(".card").forEach(function(x){x.classList.remove("on")});c.classList.add("on");parent.postMessage({type:"meok:select-char",id:c.getAttribute("data-id"),name:c.querySelector(".nm").textContent},"*");});</scr`+`ipt>`; }
+    script=`<scr`+`ipt>(async()=>{try{var t=localStorage.getItem("meok_token");var m=await (await fetch("/api/marketplace",{headers:t?{Authorization:"Bearer "+t}:{}})).json();var fl=document.getElementById("econFlow");if(fl&&m.flow)fl.textContent=m.flow.join("  →  ");var y=document.getElementById("econYou");if(y)y.textContent="You own "+((m.you&&m.you.owned)||0)+" character(s) · settled via "+(m.settlement||"Stripe");}catch(_){}})();document.addEventListener("click",function(e){var c=e.target.closest(".card");if(!c)return;document.querySelectorAll(".card").forEach(function(x){x.classList.remove("on")});c.classList.add("on");parent.postMessage({type:"meok:select-char",id:c.getAttribute("data-id"),name:c.querySelector(".nm").textContent},"*");});</scr`+`ipt>`; }
   else if(p.id==="care"){
     body=`<h2>💗 Your wellbeing <span class="dim">— MEOK keeps you safe across every reply</span></h2>
      <div class="row">Mood: ${d.mood_emoji||"🌸"} ${d.mood||"calm"} · Bond 💜${Math.round(d.bond||0)} · ${d.stage_emoji||"🥚"} ${d.stage||"egg"}</div>
