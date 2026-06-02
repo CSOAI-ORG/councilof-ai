@@ -39,6 +39,37 @@ from .voice import voice_reply
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _INDEX = os.path.join(_HERE, "web", "index.html")
 
+
+def _ollama_vision(image_b64: str, model: str = None, timeout: int = 90):
+    """Describe a screen frame with a LOCAL Ollama vision model (sovereign, no API key).
+    Default Gemma-class (gemma3:4b); upgrades to gemma4 when it lands in Ollama, or step3.7 via
+    a cloud provider if MEOK_VISION_MODEL points there. Returns (scene, objects) or (None, [])."""
+    import urllib.request as _u
+    model = model or os.environ.get("MEOK_VISION_MODEL", "gemma3:4b")
+    host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+    prompt = ("Look at this screen capture. Reply in EXACTLY two lines, nothing else:\n"
+              "SCENE: <one short sentence of what the user is doing>\n"
+              "OBJECTS: <comma-separated key UI elements you see>")
+    payload = {"model": model, "prompt": prompt, "images": [image_b64], "stream": False,
+               "options": {"num_predict": 120, "temperature": 0.2}}
+    try:
+        req = _u.Request(host + "/api/generate", data=json.dumps(payload).encode(),
+                         headers={"Content-Type": "application/json"})
+        with _u.urlopen(req, timeout=timeout) as r:
+            txt = json.loads(r.read().decode()).get("response", "") or ""
+        scene, objs = "", []
+        for ln in txt.splitlines():
+            s = ln.strip()
+            if s.upper().startswith("SCENE:"):
+                scene = s[6:].strip()[:200]
+            elif s.upper().startswith("OBJECTS:"):
+                objs = [o.strip()[:40] for o in s[8:].split(",") if o.strip()][:12]
+        if not scene and txt.strip():
+            scene = txt.strip().splitlines()[0][:200]
+        return (scene or None, objs)
+    except Exception:
+        return (None, [])
+
 # Deep-think council default (benchmark 2026-06-01, MEOK_COUNCIL_BENCHMARK):
 #  - code-reconcile NEVER error-corrects (votes but keeps the draft); llm-reconcile DOES (it
 #    synthesizes a corrected answer from the lens critiques — lifted a weak draft to correct).
