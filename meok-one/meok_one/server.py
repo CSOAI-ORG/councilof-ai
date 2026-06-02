@@ -266,7 +266,12 @@ class Handler(BaseHTTPRequestHandler):
             # Full record for one character (detail card): traits, voice, domain, backstory.
             cid = (qs.get("id", [""])[0] or "").strip()
             try:
-                return self._json(200, {"character": reg.get(cid)})
+                c = dict(reg.get(cid))   # copy; don't mutate the registry
+                # consistent contract: every character carries top-level emoji + color
+                # (seeds nest them under visual.*; minted already expose them top-level)
+                c.setdefault("emoji", (c.get("visual") or {}).get("emoji"))
+                c.setdefault("color", (c.get("visual") or {}).get("color_primary"))
+                return self._json(200, {"character": c})
             except KeyError:
                 # minted (gen_*) — rebuild the full record from this user's roster entry,
                 # which keeps (archetype, care_style, name) → re-mint is deterministic (same id).
