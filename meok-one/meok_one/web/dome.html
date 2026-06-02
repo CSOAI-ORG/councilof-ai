@@ -447,6 +447,8 @@ document.getElementById("flyMe").addEventListener("click",()=>{
   function reply(html,isMe){ const r=document.getElementById("chatReply"); if(!r) return;
     r.style.display="block"; r.innerHTML=(isMe?`<div class="me">› ${html}</div>`:html); }
   async function onChat(text){ const q=(text||"").trim(); if(!q) return; const low=q.toLowerCase(); reply(q,true);
+    if(/\b(pricing|upgrade|plans?|go pro|subscribe|price)\b/.test(low)){ reply("→ opening pricing…"); location.href="/pricing"; return; }
+    if(/\b(work with|hire|consult|office hour|services|book a call)\b/.test(low)){ reply("→ opening services…"); location.href="/work"; return; }
     if(/\b(cosmos|space|planets?|universe|zoom out)\b/.test(low)){ enterCosmos(); return reply("🌌 Zooming out to the MEOK universe…"); }
     if(cosmosOn && /\b(earth|back|zoom in|map|home)\b/.test(low)){ exitCosmos(); return reply("🌍 Diving back to Earth…"); }
     if(/\b(activity|happening|council|agents?|doing|live)\b/.test(low)){ openActivity(); return reply("👁 Showing what your council + agents are doing (live)."); }
