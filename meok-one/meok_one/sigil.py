@@ -41,6 +41,13 @@ _OPS = {
           "Handoff from {frm} to {to}: {task}."),
     "S": ("state", [("fields", "kv*")], "State — {fields}."),
     "A": ("alert", [("level", "s"), ("msg", "s")], "ALERT[{level}]: {msg}"),
+    # ---- multimodal: SIGIL as the SEMANTIC layer over media (not a pixel codec). A vision
+    # model (e.g. step3.7) looks at a screen/frame ONCE and emits these compact opcodes; agents
+    # then reason over the SIGIL — tiny, glossable, hash-chained — instead of re-shipping pixels.
+    "F": ("frame", [("scene", "s"), ("objects", "list"), ("ref", "s")],
+          'Frame: {scene} — objects: {objects} [{ref}].'),          # one screen/video frame, summarised
+    "D": ("detect", [("label", "s"), ("bbox", "s"), ("conf", "float")],
+          "Detected {label} at {bbox} (confidence {conf})."),        # one on-screen detection / region
 }
 
 _SAFE = str.maketrans({"|": "/", ":": ";", "\n": " "})   # keep the wire grammar unambiguous
