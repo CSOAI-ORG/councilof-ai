@@ -148,6 +148,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "hatch.html"))
         if path in ("/dome", "/dome.html", "/world", "/map"):
             return self._html(os.path.join(_HERE, "web", "dome.html"))
+        if path in ("/hud", "/hud.html", "/overlay"):
+            return self._html(os.path.join(_HERE, "web", "hud.html"))
         if path in ("/siri", "/siri.html", "/shortcut"):
             return self._html(os.path.join(_HERE, "web", "siri.html"))
         if path in ("/widget", "/widget.html"):

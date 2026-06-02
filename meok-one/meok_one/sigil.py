@@ -100,6 +100,31 @@ def gloss(line: str) -> str:
         return f"{name}: {view}"
 
 
+def parse(line: str) -> dict:
+    """A SIGIL line → its dict (the inverse of encode; encode(parse(x)) == x for valid lines —
+    the lossless guarantee). Unknown opcodes return their raw fields under _raw."""
+    parts = line.strip().split("|")
+    code = parts[0]
+    if code not in _OPS:
+        return {"op": code, "_raw": parts[1:]}
+    name, fields, _ = _OPS[code]
+    out, args, i = {"op": code}, parts[1:], 0
+    for fname, kind in fields:
+        if kind == "kv*":
+            out[fname] = dict(s.split(":", 1) for s in args[i:] if ":" in s)
+            i = len(args)
+        elif kind == "list":
+            out[fname] = args[i].split(",") if (i < len(args) and args[i]) else []
+            i += 1
+        elif kind == "choice":
+            out[fname] = _CHOICE.get(args[i], args[i]) if i < len(args) else ""
+            i += 1
+        else:
+            out[fname] = args[i] if i < len(args) else ""
+            i += 1
+    return out
+
+
 # ---- hash-chained, tamper-evident audit log --------------------------------
 _GENESIS = "MEOK-SIGIL-GENESIS"
 _LOCK = threading.RLock()

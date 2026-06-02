@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>MEOK HUD — your AI, over everything</title>
+<!--
+  MEOK HUD — the gaming overlay skin (Step 1 of the overlay vision).
+  WoW layout: minimap (top-left) · character + chat + TUI (right rail) · action bar (bottom-center).
+  The body is TRANSPARENT so when this loads inside meok-desktop's always-on-top window, the
+  real desktop / app / game shows through and MEOK floats over it. In a plain browser a faint
+  backdrop makes the panels readable. Zero native code — pure web, reuses the live MEOK APIs.
+-->
+<style>
+  :root{--accent:#7c5cff;--accent2:#38bdf8;--gold:#fbbf24;--ink:#eef0ff;--dim:#9a9ab4;
+        --line:rgba(255,255,255,.12);--panel:rgba(12,12,22,.72)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:var(--ink);background:transparent;overflow:hidden;-webkit-user-select:none;user-select:none}
+  /* in-browser preview backdrop only (real overlay = transparent over your desktop) */
+  body::before{content:"";position:fixed;inset:0;z-index:-1;
+    background:radial-gradient(1200px 700px at 70% 10%,rgba(124,92,255,.10),transparent 60%),
+               radial-gradient(900px 600px at 10% 90%,rgba(56,189,248,.08),transparent 60%),#070710}
+  .panel{background:var(--panel);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 44px rgba(0,0,0,.55)}
+  .glow{text-shadow:0 0 10px rgba(124,92,255,.6)}
+
+  /* ---- brand (top-center) ---- */
+  #brand{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:6;font-size:12px;
+    letter-spacing:.16em;color:var(--dim);text-transform:uppercase;display:flex;gap:7px;align-items:center}
+  #brand b{color:var(--ink)} #dot{width:8px;height:8px;border-radius:50%;background:#555;box-shadow:0 0 8px #555}
+  #dot.ok{background:#34d399;box-shadow:0 0 10px #34d399}
+
+  /* ---- minimap (top-left) ---- */
+  #mini{position:fixed;top:16px;left:16px;z-index:5;width:200px;padding:10px}
+  #mini h4{margin:0 0 6px;font-size:11px;color:var(--dim);font-weight:600;letter-spacing:.08em;
+    display:flex;justify-content:space-between}
+  #radar{position:relative;width:180px;height:150px;border-radius:12px;overflow:hidden;
+    background:radial-gradient(circle at 50% 55%,rgba(124,92,255,.14),rgba(8,8,16,.6));border:1px solid var(--line)}
+  #radar .ring{position:absolute;border:1px solid rgba(124,92,255,.18);border-radius:50%;
+    top:50%;left:50%;transform:translate(-50%,-50%)}
+  .blip{position:absolute;width:16px;height:16px;border-radius:50%;transform:translate(-50%,-50%);
+    display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;
+    background:radial-gradient(circle,#171728,#0c0c16);border:1.5px solid var(--accent);
+    box-shadow:0 0 8px rgba(124,92,255,.5);transition:transform .15s}
+  .blip:hover{transform:translate(-50%,-50%) scale(1.35);z-index:3}
+  .blip.you{border-color:#34d399;box-shadow:0 0 12px rgba(52,211,153,.7);cursor:default}
+  .blip.mine{border-color:var(--gold);box-shadow:0 0 10px rgba(251,191,36,.6)}
+  .blip.on{border-color:var(--accent2);box-shadow:0 0 14px var(--accent2);transform:translate(-50%,-50%) scale(1.3)}
+  #mini .legend{margin-top:6px;font-size:9.5px;color:var(--dim);display:flex;gap:9px;flex-wrap:wrap}
+
+  /* ---- right rail: 3 sections (character / chat / TUI) ---- */
+  #rail{position:fixed;top:16px;right:16px;bottom:84px;z-index:5;width:340px;display:flex;flex-direction:column;gap:10px}
+  #charCard{padding:12px;display:flex;align-items:center;gap:12px;flex:0 0 auto}
+  #egg{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:28px;flex:0 0 auto;border:2px solid rgba(255,255,255,.18);box-shadow:0 0 26px rgba(124,58,237,.5);
+    background:radial-gradient(circle at 38% 30%,#7C3AED,#0c0c16)}
+  #cName{font-weight:700;font-size:16px} #cSub{font-size:11px;color:var(--dim);text-transform:capitalize}
+  #cVit{font-size:11.5px;color:var(--dim);margin-top:4px}
+  #chat{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;padding:10px}
+  #msgs{flex:1 1 auto;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding-right:2px}
+  #msgs::-webkit-scrollbar{width:5px} #msgs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
+  .m{max-width:88%;padding:7px 10px;border-radius:12px;font-size:13px;line-height:1.4}
+  .m.you{align-self:flex-end;background:rgba(124,92,255,.22);border:1px solid rgba(124,92,255,.35)}
+  .m.ai{align-self:flex-start;background:rgba(255,255,255,.06);border:1px solid var(--line)}
+  .m.sys{align-self:center;color:var(--dim);font-size:11px;background:none;border:none}
+  #inRow{display:flex;gap:6px;margin-top:8px}
+  #in{flex:1;background:#0a0a14;border:1px solid var(--line);border-radius:10px;padding:9px 11px;color:var(--ink);font-size:13px}
+  #in:focus{outline:none;border-color:var(--accent)}
+  .btn{background:var(--accent);border:0;color:#fff;border-radius:10px;padding:0 13px;cursor:pointer;font-size:14px}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  #tui{flex:0 0 auto;padding:8px 10px;font:11.5px/1.5 ui-monospace,Menlo,monospace;color:#9fe6b8;
+    background:rgba(0,0,0,.35);max-height:64px;overflow-y:auto}
+
+  /* ---- action bar (bottom-center) — WoW hotbar ---- */
+  #bar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:7px;padding:8px 10px}
+  .slot{width:48px;height:48px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;
+    font-size:19px;transition:transform .12s,border-color .12s;position:relative}
+  .slot:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .slot .k{position:absolute;bottom:2px;right:4px;font-size:8px;color:var(--dim)}
+  .slot.on{border-color:var(--accent2);box-shadow:0 0 12px rgba(56,189,248,.5)}
+  @media(max-width:640px){#rail{width:auto;left:12px}#mini{display:none}}
+</style>
+</head>
+<body>
+  <div id="brand"><span id="dot"></span>🐉 <b>MEOK</b> HUD</div>
+
+  <!-- MINIMAP -->
+  <div id="mini" class="panel">
+    <h4><span>🗺️ Region</span><span id="miniCount" style="color:var(--accent2)">…</span></h4>
+    <div id="radar">
+      <div class="ring" style="width:60px;height:60px"></div>
+      <div class="ring" style="width:120px;height:120px"></div>
+      <div class="blip you" id="youBlip" style="left:50%;top:55%" title="You (here)">📍</div>
+    </div>
+    <div class="legend"><span>🟢 you</span><span style="color:var(--gold)">🟡 yours</span><span>🟣 characters</span></div>
+  </div>
+
+  <!-- RIGHT RAIL: character · chat · TUI -->
+  <div id="rail">
+    <div id="charCard" class="panel">
+      <div id="egg">🧬</div>
+      <div style="min-width:0">
+        <div id="cName">…</div>
+        <div id="cSub"></div>
+        <div id="cVit"></div>
+      </div>
+    </div>
+    <div id="chat" class="panel">
+      <div id="msgs"></div>
+      <div id="inRow">
+        <input id="in" placeholder="talk to your AI…" autocomplete="off"/>
+        <button class="btn ghost" id="micB" title="voice">🎙️</button>
+        <button class="btn" id="sendB">➤</button>
+      </div>
+    </div>
+    <div id="tui" class="panel">❯ MEOK HUD ready — your AI floats over everything.</div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div id="bar" class="panel">
+    <div class="slot" data-act="dome" title="DOME — your world map">🏛️<span class="k">1</span></div>
+    <div class="slot" data-act="chars" title="Characters">🧬<span class="k">2</span></div>
+    <div class="slot" data-act="tools" title="Tools">🛠️<span class="k">3</span></div>
+    <div class="slot" data-act="audit" title="Audit trail (SIGIL)">⚖️<span class="k">4</span></div>
+    <div class="slot" data-act="voice" id="voiceSlot" title="Voice mode">🎙️<span class="k">V</span></div>
+    <div class="slot" data-act="os" title="Full MEOK OS">⛶<span class="k">5</span></div>
+  </div>
+
+<script>
+const $=s=>document.querySelector(s), API="";
+let TOKEN=localStorage.getItem("meok_token")||"", CHAR="aria", VOICE={pitch:1,rate:1.03,voice:""}, VOICE_ON=false, CHARS=[];
+function authH(){ return TOKEN?{Authorization:"Bearer "+TOKEN}:{}; }
+function hash(s){let h=2166136261;for(let i=0;i<(s||"x").length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+
+// anonymous-first identity so vitals/chat/creations are yours + persist
+async function boot(){
+  if(!TOKEN){ try{ const d=await (await fetch(API+"/api/auth/anon",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"})).json();
+    if(d.token){TOKEN=d.token;localStorage.setItem("meok_token",TOKEN);} }catch(_){}}
+  try{ const d=await (await fetch(API+"/api/characters",{headers:authH()})).json(); CHARS=d.characters||[]; }catch(_){ CHARS=[]; }
+  $("#dot").classList.add("ok");
+  drawRadar(); selectChar(CHAR);
+}
+
+// minimap: scatter characters around "you" (deterministic), click to focus
+function drawRadar(){
+  const radar=$("#radar"); [...radar.querySelectorAll(".blip:not(.you)")].forEach(b=>b.remove());
+  $("#miniCount").textContent=CHARS.length;
+  const cx=90, cy=82;   // px center of the 180x150 radar (you-blip sits ~55%)
+  CHARS.slice(0,40).forEach(c=>{
+    const h=hash(c.id||c.name), ang=(h%360)*Math.PI/180, r=28+((h>>>9)%52);
+    const x=cx+Math.cos(ang)*r, y=cy+Math.sin(ang)*r*0.74;
+    const mine=String(c.id||"").startsWith("gen_");
+    const b=document.createElement("div");
+    b.className="blip"+(mine?" mine":"")+(c.id===CHAR?" on":"");
+    b.style.left=Math.max(8,Math.min(172,x))+"px"; b.style.top=Math.max(8,Math.min(142,y))+"px";
+    b.textContent=c.emoji||"🧬"; b.title=c.name+(mine?" · yours":"");
+    b.dataset.id=c.id; b.onclick=()=>selectChar(c.id);
+    radar.appendChild(b);
+  });
+}
+
+async function selectChar(id){
+  CHAR=id;
+  [...document.querySelectorAll(".blip")].forEach(b=>b.classList.toggle("on",b.dataset.id===id));
+  try{ const d=await (await fetch(API+"/api/character?id="+encodeURIComponent(id))).json(); const c=d.character||{};
+    const v=c.visual||{}, vo=c.voice||{};
+    $("#egg").style.background=v.gradient||"radial-gradient(circle at 38% 30%,#7C3AED,#0c0c16)";
+    $("#egg").textContent=v.emoji||c.emoji||"🧬";
+    $("#cName").textContent=c.name||id; $("#cSub").textContent=[c.archetype,c.care_style].filter(Boolean).join(" · ");
+    VOICE={pitch:Math.max(0,Math.min(2,+vo.pitch||1)),rate:Math.max(.5,Math.min(2,(+vo.rate||1)*1.03)),voice:vo.recommended_voice||""};
+  }catch(_){}
+  refreshVitals();
+}
+async function refreshVitals(){
+  try{ const v=await (await fetch(API+"/api/vitals?character="+encodeURIComponent(CHAR),{headers:authH()})).json();
+    $("#cVit").innerHTML=`${v.stage_emoji||"🥚"} L${v.level||1} · 💜 ${Math.round(v.bond||0)} · ${v.mood_emoji||"🌸"}`;
+  }catch(_){ $("#cVit").textContent=""; }
+}
+
+// ---- chat (gated server-side) ----
+const _FEM=["rachel","grace","serena","bella","sarah","elli","dorothy","aria","luna","nova","mira","iris","thea","faye"];
+function speak(t){ try{ if(!window.speechSynthesis||!t)return; speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t.replace(/[*_#`>|]/g,"").slice(0,400)); u.rate=VOICE.rate;u.pitch=VOICE.pitch;u.lang="en-GB";
+  const vs=speechSynthesis.getVoices().filter(v=>/en[-_]/i.test(v.lang||"")); if(vs.length){let h=0;for(const c of(VOICE.voice||"x"))h=(h*31+c.charCodeAt(0))>>>0;u.voice=vs[h%vs.length];}
+  speechSynthesis.speak(u); }catch(_){} }
+function add(role,txt){ const m=document.createElement("div"); m.className="m "+role; m.textContent=txt; $("#msgs").appendChild(m); $("#msgs").scrollTop=$("#msgs").scrollHeight; return m; }
+function tui(t){ const e=$("#tui"); e.textContent="❯ "+t; }
+let busy=false;
+async function send(txt){
+  txt=(txt||$("#in").value).trim(); if(!txt||busy)return; busy=true;
+  add("you",txt); $("#in").value=""; const th=add("ai","…"); tui("thinking…");
+  try{ const d=await (await fetch(API+"/api/think",{method:"POST",headers:{"Content-Type":"application/json",...authH()},
+      body:JSON.stringify({character:CHAR,message:txt,brain:"right",tier:"pro"})})).json();
+    const reply=d.reply||"(no reply)"; th.textContent=reply; tui(CHAR+" replied"); if(VOICE_ON)speak(reply); refreshVitals();
+  }catch(e){ th.textContent="(couldn't reach your AI — it's still here.)"; tui("error"); }
+  busy=false;
+}
+$("#sendB").onclick=()=>send(); $("#in").addEventListener("keydown",e=>{if(e.key==="Enter")send();});
+
+// ---- voice (browser STT → chat → speak) ----
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+function toggleVoice(){ VOICE_ON=!VOICE_ON; $("#voiceSlot").classList.toggle("on",VOICE_ON); $("#micB").classList.toggle("on",VOICE_ON);
+  tui(VOICE_ON?"voice on — speak":"voice off");
+  if(VOICE_ON&&SR){ try{ const r=new SR(); r.lang="en-GB"; r.onresult=e=>{const t=e.results[0][0].transcript; $("#in").value=t; send(t);}; r.start(); }catch(_){} } }
+$("#micB").onclick=toggleVoice;
+
+// ---- action bar ----
+document.querySelectorAll(".slot").forEach(s=>s.onclick=()=>{
+  const a=s.dataset.act;
+  if(a==="voice"){ toggleVoice(); return; }
+  if(a==="dome"){ window.open("/dome","_blank"); return; }
+  // characters / tools / audit / full-os → open the full MEOK OS (the rich surface)
+  window.open("/os","_blank");
+});
+// keyboard hotbar 1-5 + V
+addEventListener("keydown",e=>{ if(e.target===$("#in"))return;
+  const map={"1":"dome","2":"chars","3":"tools","4":"audit","5":"os","v":"voice","V":"voice"};
+  const a=map[e.key]; if(a){ const s=[...document.querySelectorAll(".slot")].find(x=>x.dataset.act===a); if(s)s.click(); }});
+
+boot();
+</script>
+</body>
+</html>
