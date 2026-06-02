@@ -206,11 +206,49 @@ async function copilot(goal){
     const d=await (await fetch(API+"/api/copilot/act",{method:"POST",headers:{"Content-Type":"application/json",...authH()},
       body:JSON.stringify({goal,image:c.toDataURL("image/jpeg",0.6),character:CHAR})})).json();
     if(d.refused){ add("ai","⛔ I won't do that — \""+(d.target||"that")+"\" is a prohibited action (money / credentials / delete). Some things only you should do."); tui("refused (prohibited)"); return; }
-    const badge=d.tier==="read"?"✓ safe":"✋ needs your OK";
-    add("ai",`🤝 Next move: ${d.action} → ${d.target||""}  ${d.reason?"("+d.reason+")":""}  [${badge}]`);
-    tui(d.needs_confirm?"approve to run via Open Computer Use (on your device)":"co-pilot ready");
+    d.goal=goal;
+    renderActionCard(d);
   }catch(e){ tui("co-pilot cancelled"); }
 }
+
+// render the gated action as a CARD with an explicit Approve→Run button. The hands run on
+// YOUR device via Open Computer Use — meok-one only decides + gates + audits; it never acts.
+function renderActionCard(d){
+  const safe=d.tier==="read";
+  const card=document.createElement("div"); card.className="m ai";
+  card.innerHTML=`🤝 <b>Next move:</b> ${esc(d.action)} ${d.target?("→ "+esc(d.target)):""} `
+    +`${d.reason?'<span style="opacity:.7">('+esc(d.reason)+')</span>':''} `
+    +`<span style="font-size:11px;color:${safe?'#34d399':'#fbbf24'}">[${safe?'✓ safe (observe)':'✋ needs your OK'}]</span>`;
+  const row=document.createElement("div"); row.style.cssText="margin-top:6px;display:flex;gap:6px";
+  const runB=document.createElement("button"); runB.className="btn"; runB.textContent=safe?"▶ Run":"✅ Approve → Run";
+  runB.onclick=()=>runOCU(d,runB);
+  const skipB=document.createElement("button"); skipB.className="btn ghost"; skipB.textContent="✕"; skipB.title="dismiss"; skipB.onclick=()=>card.remove();
+  row.appendChild(runB); row.appendChild(skipB); card.appendChild(row);
+  $("#msgs").appendChild(card); $("#msgs").scrollTop=$("#msgs").scrollHeight;
+  tui(safe?"co-pilot ready (safe to run)":"approve to run via Open Computer Use (your device)");
+}
+
+// Open Computer Use endpoint — configurable, defaults to a LOCAL bridge on your machine.
+// Set a different one with: localStorage.setItem("meok_ocu_url","http://127.0.0.1:PORT/act")
+function ocuURL(){ return localStorage.getItem("meok_ocu_url") || "http://127.0.0.1:7777/act"; }
+async function runOCU(d,btn){
+  btn.disabled=true; const old=btn.textContent; btn.textContent="running…";
+  tui("Open Computer Use: acting on your device…");
+  try{
+    const r=await fetch(ocuURL(),{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:d.action,target:d.target||"",text:d.text||"",goal:d.goal||""})});
+    if(!r.ok) throw new Error("ocu "+r.status);
+    const j=await r.json().catch(()=>({}));
+    btn.textContent="✅ done"; tui("done"+(j.note?(" — "+esc(j.note)):""));
+  }catch(e){
+    btn.disabled=false; btn.textContent=old;
+    add("ai","🖐️ Open Computer Use isn't reachable on this device yet. One-time enable: install "
+      +"Open Computer Use, grant macOS Accessibility + Screen-Recording, run the local hands-bridge, "
+      +"then it'll execute approved moves. Endpoint: "+ocuURL()+" (see MEOK_OCU_SETUP).");
+    tui("enable Open Computer Use to run actions");
+  }
+}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 let busy=false;
 async function send(txt){
   txt=(txt||$("#in").value).trim(); if(!txt||busy)return;
