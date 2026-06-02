@@ -223,6 +223,26 @@ class Handler(BaseHTTPRequestHandler):
             except KeyError as e:
                 return self._json(400, {"error": str(e)})
             return self._json(200, {"character": char})
+        if path == "/api/sbt/status":
+            from . import sbt as _sbt
+            return self._json(200, _sbt.status())
+        if path == "/api/sbt/mint-intent":
+            # Build the soulbound mint INTENT for a character (off-chain; never mints).
+            from . import sbt as _sbt
+            cid = (qs.get("id", [""])[0] or "").strip()
+            owner = (qs.get("owner", [""])[0] or "").strip() or None
+            char = None
+            try:
+                char = dict(reg.get(cid))
+            except KeyError:
+                _u = self._uid()
+                for r in (auth.list_characters(_u) if auth.user_exists(_u) else []):
+                    if r.get("id") == cid:
+                        char = r
+                        break
+            if not char:
+                return self._json(404, {"error": f"unknown character {cid!r}"})
+            return self._json(200, _sbt.mint_intent(char, owner_pubkey=owner))
         if path == "/api/governance":
             # The HONEST live governance posture — what actually keeps every DOME agent in
             # harmony (the antidote to ungoverned simulated-town chaos). All derived from the

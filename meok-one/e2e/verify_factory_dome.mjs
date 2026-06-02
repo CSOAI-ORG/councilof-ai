@@ -99,6 +99,15 @@ const mkt = await page.evaluate(async () => {
 must(mkt.creator === 70 && mkt.platform === 30 && mkt.flow >= 4,
   `/api/marketplace economy (creator ${mkt.creator}% · ${mkt.flow}-step flow · ${(mkt.settlement || '').slice(0, 14)})`);
 
+// SBT bridge: off-chain intent ONLY — must never mint, must stay non-live by default
+const sbt = await page.evaluate(async () => {
+  const s = await (await fetch('/api/sbt/status')).json();
+  const mi = await (await fetch('/api/sbt/mint-intent?id=aria')).json();
+  return { prog: !!s.program_id, live: s.live, type: mi.sbt_type, minted: mi.minted, charter: mi.charter_reference };
+});
+must(sbt.prog && sbt.live === false && sbt.type === 'CharacterGenesis' && sbt.minted === false && sbt.charter === '6',
+  `SBT bridge intent-only (type ${sbt.type}, charter ${sbt.charter}, minted ${sbt.minted}, live ${sbt.live})`);
+
 // ---------- distinct per-character voices ----------
 // switch across several seeds and confirm the loaded VOICE_SPEC actually varies
 const specs = [];
