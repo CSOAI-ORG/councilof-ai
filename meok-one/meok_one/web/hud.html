@@ -109,6 +109,7 @@
     </div>
     <div id="chat" class="panel">
       <div id="msgs"></div>
+      <div id="ghost" style="display:none;font-size:11px;color:#8a8aa0;padding:1px 6px 4px;line-height:1.35"></div>
       <div id="inRow">
         <input id="in" placeholder="talk to your AI…" autocomplete="off"/>
         <button class="btn ghost" id="micB" title="voice">🎙️</button>
@@ -215,7 +216,7 @@ async function send(txt){
   txt=(txt||$("#in").value).trim(); if(!txt||busy)return;
   if(txt.toLowerCase().startsWith("/do ")){ $("#in").value=""; copilot(txt.slice(4).trim()); return; }
   busy=true;
-  add("you",txt); $("#in").value=""; const th=add("ai","…"); tui("thinking…");
+  add("you",txt); $("#in").value=""; $("#ghost").style.display="none"; const th=add("ai","…"); tui("thinking…");
   try{ const d=await (await fetch(API+"/api/think",{method:"POST",headers:{"Content-Type":"application/json",...authH()},
       body:JSON.stringify({character:CHAR,message:txt,brain:"right",tier:"pro"})})).json();
     const reply=d.reply||"(no reply)"; th.textContent=reply; tui(CHAR+" replied"); if(VOICE_ON)speak(reply); refreshVitals();
@@ -223,6 +224,30 @@ async function send(txt){
   busy=false;
 }
 $("#sendB").onclick=()=>send(); $("#in").addEventListener("keydown",e=>{if(e.key==="Enter")send();});
+
+// ---- predictive small→large: forecast intent AS YOU TYPE (ghost completion + route badge) ----
+// A small/fast model predicts your full intent while you're still typing; trivial asks it can
+// answer alone (small), complex ones it routes to the council (large). Tab accepts the ghost.
+let fcT=null, fcGhost="";
+$("#in").addEventListener("input",()=>{
+  const v=$("#in").value.trim(); clearTimeout(fcT); fcGhost="";
+  if(v.length<6||v.startsWith("/")){ $("#ghost").style.display="none"; return; }
+  fcT=setTimeout(async()=>{
+    try{
+      const d=await (await fetch(API+"/api/forecast?partial="+encodeURIComponent(v)+"&tier=pro",{headers:authH()})).json();
+      if($("#in").value.trim()!==v) return;                  // stale — user kept typing
+      fcGhost=(d.completion||"").trim();
+      const big=d.route==="large";
+      const badge=big?'<span style="color:#fbbf24">⚡LARGE</span>':'<span style="color:#34d399">⚡small</span>';
+      const gc=fcGhost?("“"+fcGhost.replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c])).slice(0,80)+"” "):"";
+      $("#ghost").innerHTML="↳ "+gc+"· "+badge+" · "+(d.intent||"")+' <span style="opacity:.55">(Tab)</span>';
+      $("#ghost").style.display="block";
+    }catch(e){ $("#ghost").style.display="none"; }
+  },450);
+});
+$("#in").addEventListener("keydown",e=>{
+  if(e.key==="Tab"&&fcGhost){ e.preventDefault(); $("#in").value=fcGhost; $("#ghost").style.display="none"; fcGhost=""; }
+});
 
 // ---- voice (browser STT → chat → speak) ----
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;

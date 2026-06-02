@@ -345,6 +345,12 @@ class Handler(BaseHTTPRequestHandler):
             # the tracked registry — every entity registered under MEOK LAW.
             from . import law as _law
             return self._json(200, _law.agents(int(qs.get("limit", ["100"])[0] or 100)))
+        if path == "/api/forecast":
+            # Predictive small→large: forecast intent from a PARTIAL typed input. If the small
+            # model can resolve it (trivial), it answers here; else route='large' = wake council.
+            from . import forecast as _fc
+            return self._json(200, _fc.forecast(qs.get("partial", [""])[0],
+                                                tier=qs.get("tier", ["pro"])[0]))
         if path == "/api/sbt/status":
             from . import sbt as _sbt
             return self._json(200, _sbt.status())
@@ -540,6 +546,11 @@ class Handler(BaseHTTPRequestHandler):
                     "region": b.get("region") or "GLOBAL",
                     "operator": b.get("operator") or "",
                 }))
+            if path == "/api/forecast":
+                # predictive small→large from a partial input (POST form for longer text)
+                from . import forecast as _fc
+                return self._json(200, _fc.forecast(b.get("partial") or b.get("text") or "",
+                                                    tier=b.get("tier") or "pro"))
             if path == "/api/factory/suggest":
                 # "Describe your AI in words" → the openclaw multi-LLM substrate proposes a
                 # {archetype, care_style, name} the user can tweak. LLM-first; ALWAYS falls back
