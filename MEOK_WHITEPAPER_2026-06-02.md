@@ -111,4 +111,50 @@ blips), **character + chat + TUI** (right rail), **action bar** (bottom-center, 
 training once the perception dataset is big enough. 7. amica 3D face into the HUD character slot.
 
 _Companion docs: MEOK_OVERLAY_VISION · MEOK_SIGIL_BENCH · MEOK_ARCH_STACK_DRAGON · MEOK_DUAL_AGENT_PLAN
-· MEOK_EARNINGS_SBT_DESIGN · MEOK_DOME_OPENCLAWWORLD_PLAN. Bleeding-edge-7-day scan: addendum pending._
+· MEOK_EARNINGS_SBT_DESIGN · MEOK_DOME_OPENCLAWWORLD_PLAN._
+
+---
+
+## 12. Bleeding-edge addendum (scan: ~May 26–Jun 2 2026)  **[research]**
+_Honest framing: the literal 7-day window was quiet on model drops (the big ones clustered late-Apr/
+mid-May); the in-window events are protocol/infra. Benchmark numbers below are vendor-reported._
+
+**Protocol (SIGIL's neighbourhood):**
+- **MCP 2026 RC** (stateless core, **MCP Apps**, Tasks, Extensions; final spec ~Jul 28). Stateless =
+  friendly to fanning out across the council; **MCP Apps (sandboxed HTML iframes) could render the
+  overlay's panels** instead of bespoke UI. → **ADOPT** (align MCP layer; prototype MCP Apps for /hud).
+- **"Is MCP dead?" critique (May 30)** — MCP token bloat (e.g. 77 tools ≈ 21k tokens, ~10% of context).
+  This is **external validation of SIGIL's whole thesis** (compact agent comms that don't burn context).
+  Pair it with our −35%-vs-JSON benchmark as the positioning. → **ADOPT (as ammo)** + adopt lazy tool-loading.
+- **A2A v0.3** — signed Agent Cards + skill-scoped auth. Borrow the signed-card pattern for council/BFT
+  identity; position SIGIL as the **lightweight on-device layer beneath A2A**. → **ADOPT/WATCH.**
+
+**Overlay / screen-vision (honest course-corrections):**
+- ⚠️ **Microsoft Gaming Copilot** (Windows public beta) is essentially our overlay — in-game AI, reads
+  your screen on demand, push-to-talk voice, pinnable widget, system-level (full-screen DirectX). **We
+  are NOT first to the in-game-overlay idea.** Differentiate hard on **sovereign/local (no cloud screen
+  upload), character personas, and governance** — and study their Game-Bar full-screen integration (the
+  hard part we'll hit). → **WATCH closely (direct competitor).**
+- 🟢 **Gemma 4 E2B/E4B** (Apache-2.0, on-device, runs on a Pi 5) does **screen/UI understanding + OCR +
+  bounding-box pointing** — i.e. it may be a **better screen-vision brain than step3.7 for the overlay**:
+  sovereign, local, no API key, privacy-first. **Adjusts §4/§11** — benchmark Gemma 4 E4B vs step3.7 for
+  the perceive slot before committing. → **ADOPT-eval.** (Also: Nemotron 3 Nano Omni unifies vision+audio+
+  language at 3B active — could collapse screen-vision + voice into one local model.)
+- **Open Computer Use** (MCP-native desktop control, cross-platform) — a **ready, external, gated execution
+  backend** for screen/mouse actions: the council decides, Open Computer Use executes over MCP, the Tool
+  Gateway gates it. Lets us avoid building (and unilaterally wielding) mouse-control ourselves. → **ADOPT-eval.**
+- **OpenAI Codex desktop agent** — copy its **per-command approve/reject + live session view** UX for our safety-tier overlay. → **WATCH.**
+
+**Sovereign deployment / governance:**
+- **Code with Claude London (May 26): self-hosted sandboxes + MCP Tunnels** — expose MEOK's local
+  Postgres/MCP to a cloud-routed agent **without opening inbound ports** (one outbound, E2E-encrypted). This
+  IS the sovereign + EU-AI-Act-data-residency pattern MEOK sells. → **ADOPT-eval** for the Ollama+cloud hybrid.
+- **Agent Skills now cross-vendor** (Anthropic + OpenAI). Express MEOK character capabilities/council roles
+  as **Agent Skills** for portability across platforms. → **WATCH/ADOPT.**
+
+**Open models worth routing to (cloud/self-host):** DeepSeek V4-Flash (MIT, 13B-active MoE — cheap "smart"
+tier), GLM-5.1 (MIT 754B — heavy reasoner node). Qwen 3.7 Max = API-only, **IGNORE** until weights drop.
+
+**Net adjustment to the plan:** the overlay is now a *race* (MS shipped one) → our edges are sovereign-local
++ characters + governance, and **Gemma 4 may beat step3.7 for on-device screen-vision** (re-evaluate the
+vision brain). SIGIL's wedge is externally validated by the MCP-bloat discourse.
