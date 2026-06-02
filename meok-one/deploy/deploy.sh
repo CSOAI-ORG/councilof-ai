@@ -13,12 +13,15 @@ REMOTE="/opt/meok-one"
 echo "→ MEOK ONE deploy to ${HOST}:${REMOTE}"
 
 # 1. sync the app (package + project metadata). Never ship caches / node_modules / test output.
-rsync -az --delete \
+rsync -az --delete --rsync-path="sudo rsync" \
   --exclude '__pycache__' --exclude '*.pyc' \
   --exclude 'e2e/node_modules' --exclude 'e2e/test-results' --exclude 'e2e/results.json' \
   --exclude '.env' \
+  --exclude 'data/users.json' --exclude 'data/vitals.json' --exclude 'data/*.jsonl' \
   ./meok_one ./pyproject.toml ./README.md \
   "${HOST}:${REMOTE}/"
+# ^ runtime state (accounts, vitals, SIGIL audit chain, perception + law registries) lives ONLY
+#   on the VM — never clobber it from a dev copy. law_bundle.json IS source, so it still ships.
 
 # 2. restart + health-gate (fails loudly if the new code doesn't come up)
 ssh "${HOST}" bash -s <<'REMOTE_EOF'

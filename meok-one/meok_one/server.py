@@ -230,6 +230,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "dome.html"))
         if path in ("/hud", "/hud.html", "/overlay"):
             return self._html(os.path.join(_HERE, "web", "hud.html"))
+        if path in ("/law", "/law.html", "/meoklaw", "/compliance"):
+            return self._html(os.path.join(_HERE, "web", "law.html"))
         if path in ("/siri", "/siri.html", "/shortcut"):
             return self._html(os.path.join(_HERE, "web", "siri.html"))
         if path in ("/widget", "/widget.html"):
@@ -320,6 +322,29 @@ class Handler(BaseHTTPRequestHandler):
             from . import sigil as _sigil
             line = qs.get("line", [""])[0]
             return self._json(200, {"line": line, "gloss": _sigil.gloss(line)})
+        if path == "/api/law":
+            # MEOK LAW — the capability map: frameworks, regions, crosswalk MCPs, honest coverage.
+            from . import law as _law
+            return self._json(200, _law.overview())
+        if path == "/api/law/applicable":
+            # "Which rules apply to me, here?" — region + entity -> binding/advisory + obligations.
+            from . import law as _law
+            return self._json(200, _law.applicable(qs.get("region", ["GLOBAL"])[0],
+                                                    qs.get("entity", ["ai_agent"])[0]))
+        if path == "/api/law/crosswalk":
+            # "What happens when I cross a border?" — re-map charter obligations via the CSOAI pivot.
+            from . import law as _law
+            return self._json(200, _law.crosswalk(qs.get("from", ["EU"])[0],
+                                                   qs.get("to", ["US"])[0]))
+        if path == "/api/law/contract":
+            # the portable 'AI social contract' an agent carries across regions (charter-bound).
+            from . import law as _law
+            return self._json(200, _law.social_contract(qs.get("entity", ["ai_agent"])[0],
+                                                         qs.get("region", ["GLOBAL"])[0]))
+        if path == "/api/law/agents":
+            # the tracked registry — every entity registered under MEOK LAW.
+            from . import law as _law
+            return self._json(200, _law.agents(int(qs.get("limit", ["100"])[0] or 100)))
         if path == "/api/sbt/status":
             from . import sbt as _sbt
             return self._json(200, _sbt.status())
@@ -504,6 +529,17 @@ class Handler(BaseHTTPRequestHandler):
                     return self._json(400, {"error": str(e)})
                 saved = auth.add_character(uid, char) if auth.user_exists(uid) else {"ok": False}
                 return self._json(200, {"character": char, "created": True, "roster": saved.get("count")})
+            if path == "/api/law/register":
+                # MEOK LAW — bind an agent/robot/business to the CSOAI charter + care bond.
+                # Returns a tamper-evident, SIGIL-audited certificate. Registration + tracking
+                # only — it never grants powers or touches money/credentials/deletion.
+                from . import law as _law
+                return self._json(200, _law.register({
+                    "name": b.get("name") or b.get("entity") or "",
+                    "type": b.get("type") or "ai_agent",
+                    "region": b.get("region") or "GLOBAL",
+                    "operator": b.get("operator") or "",
+                }))
             if path == "/api/factory/suggest":
                 # "Describe your AI in words" → the openclaw multi-LLM substrate proposes a
                 # {archetype, care_style, name} the user can tweak. LLM-first; ALWAYS falls back
