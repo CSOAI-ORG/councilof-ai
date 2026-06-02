@@ -42,31 +42,30 @@ _INDEX = os.path.join(_HERE, "web", "index.html")
 
 def _ollama_vision(image_b64: str, model: str = None, timeout: int = 90):
     """Describe a screen frame with a LOCAL Ollama vision model (sovereign, no API key).
-    Default Gemma-class (gemma3:4b); upgrades to gemma4 when it lands in Ollama, or step3.7 via
-    a cloud provider if MEOK_VISION_MODEL points there. Returns (scene, objects) or (None, [])."""
+    Default = moondream (1.8B, ~3s on CPU — verified on the VM; gemma3:4b was ~90s/too slow on CPU).
+    Upgrade per device: gemma3:4b / gemma4 on a GPU box, step3.7 via cloud — set MEOK_VISION_MODEL.
+    Returns (scene, objects) or (None, [])."""
     import urllib.request as _u
-    model = model or os.environ.get("MEOK_VISION_MODEL", "gemma3:4b")
+    model = model or os.environ.get("MEOK_VISION_MODEL", "moondream")
     host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
-    prompt = ("Look at this screen capture. Reply in EXACTLY two lines, nothing else:\n"
-              "SCENE: <one short sentence of what the user is doing>\n"
-              "OBJECTS: <comma-separated key UI elements you see>")
+    # Small vision models ignore rigid formats — ask plainly + take the free text as the scene.
+    prompt = ("Describe what is on this screen in one concise sentence, then a short "
+              "comma-separated list of the key UI elements you can see.")
     payload = {"model": model, "prompt": prompt, "images": [image_b64], "stream": False,
                "options": {"num_predict": 120, "temperature": 0.2}}
     try:
         req = _u.Request(host + "/api/generate", data=json.dumps(payload).encode(),
                          headers={"Content-Type": "application/json"})
         with _u.urlopen(req, timeout=timeout) as r:
-            txt = json.loads(r.read().decode()).get("response", "") or ""
-        scene, objs = "", []
-        for ln in txt.splitlines():
-            s = ln.strip()
-            if s.upper().startswith("SCENE:"):
-                scene = s[6:].strip()[:200]
-            elif s.upper().startswith("OBJECTS:"):
-                objs = [o.strip()[:40] for o in s[8:].split(",") if o.strip()][:12]
-        if not scene and txt.strip():
-            scene = txt.strip().splitlines()[0][:200]
-        return (scene or None, objs)
+            txt = (json.loads(r.read().decode()).get("response", "") or "").strip()
+        if not txt:
+            return (None, [])
+        flat = " ".join(txt.split())
+        scene = flat[:200]                                   # the description IS the scene
+        # objects: grab a comma list if the model gave one (after the first sentence)
+        tail = flat.split(".", 1)[1] if "." in flat else flat
+        objs = [o.strip(" .").lower()[:40] for o in tail.split(",") if 1 < len(o.strip()) < 41][:10]
+        return (scene, objs)
     except Exception:
         return (None, [])
 
