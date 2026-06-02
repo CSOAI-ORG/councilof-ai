@@ -212,14 +212,19 @@ async function perceive(){
   if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia){ tui("screen capture not supported here"); return; }
   tui("requesting screen (you choose what to share)…");
   try{
-    const stream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false});
-    const t=stream.getVideoTracks()[0], s=t.getSettings(); t.stop();   // grab settings, release immediately
-    const scene=`screen captured ${s.width||"?"}×${s.height||"?"} · rich vision via step3.7 pending key`;
-    tui("perceiving → SIGIL → memory…");
+    const stream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:1},audio:false});
+    const v=document.createElement("video"); v.srcObject=stream; await v.play().catch(()=>{});
+    await new Promise(r=>setTimeout(r,350));   // let one frame arrive
+    const W=Math.min(1024, v.videoWidth||1024), H=Math.round((v.videoHeight||768)*(W/(v.videoWidth||1024)));
+    const c=document.createElement("canvas"); c.width=W; c.height=H;
+    c.getContext("2d").drawImage(v,0,0,W,H);
+    stream.getTracks().forEach(t=>t.stop());           // release the capture immediately
+    const img=c.toDataURL("image/jpeg",0.6);           // downscaled frame → your sovereign VM's local vision model
+    tui("seeing → SIGIL → memory…");
     const d=await (await fetch(API+"/api/perceive",{method:"POST",headers:{"Content-Type":"application/json",...authH()},
-      body:JSON.stringify({scene,objects:["active-window"],care_weight:0.6})})).json();
+      body:JSON.stringify({image:img,care_weight:0.6})})).json();
     add("ai","👁️ "+(d.gloss||"perceived")+(d.remembered?"  · remembered ✓":""));
-    tui("remembered ["+(d.receipt||"")+"] — SIGIL in the audit trail");
+    tui((d.saw?"saw ("+(d.vision_model||"")+") + ":"")+"remembered ["+(d.receipt||"")+"]");
   }catch(e){ tui("screen share cancelled"); }
 }
 // ---- action bar ----
