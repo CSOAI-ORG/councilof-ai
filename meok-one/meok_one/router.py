@@ -277,7 +277,7 @@ def ask(prompt: str, model: str = "auto", tier: str = "free", max_tokens: "int |
     # resolve which (backend, id) to try
     if model == "auto":
         order = []
-        if "local" in allowed: order.append(("local", "qwen3:8b"))
+        if "local" in allowed: order.append(("local", "qwen2.5:3b"))   # present on the GCP VM (qwen3:8b is not)
         if "sov3" in allowed:  order.append(("sov3", "hermes_ask"))
         if "cloud" in allowed:
             # prefer direct Gemini when its key is present (Nick's credit); else OpenRouter
