@@ -26,6 +26,9 @@ rsync -az --delete --rsync-path="sudo rsync" \
 # 2. restart + health-gate (fails loudly if the new code doesn't come up)
 ssh "${HOST}" bash -s <<'REMOTE_EOF'
 set -euo pipefail
+# `sudo rsync` writes files as root; the service runs as `meok`. Restore ownership so the app
+# can write its runtime state (users.json, audit/perception logs) — else /api/auth/anon 500s.
+sudo chown -R meok:meok /opt/meok-one
 sudo systemctl restart meok-one
 sleep 2
 systemctl is-active --quiet meok-one || { echo "✗ service not active"; sudo journalctl -u meok-one -n 30 --no-pager; exit 1; }
