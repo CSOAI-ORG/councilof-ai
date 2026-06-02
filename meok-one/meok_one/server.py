@@ -234,6 +234,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "law.html"))
         if path in ("/pricing", "/pricing.html", "/plans", "/upgrade"):
             return self._html(os.path.join(_HERE, "web", "pricing.html"))
+        if path in ("/work", "/work.html", "/services", "/hire", "/consulting"):
+            return self._html(os.path.join(_HERE, "web", "work.html"))
         if path in ("/siri", "/siri.html", "/shortcut"):
             return self._html(os.path.join(_HERE, "web", "siri.html"))
         if path in ("/widget", "/widget.html"):
