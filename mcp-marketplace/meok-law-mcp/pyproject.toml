@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "meok-law-mcp"
+version = "1.0.0"
+readme = "README.md"
+description = "MEOK LAW MCP — region-aware AI governance on the real CSOAI crosswalks. Tools: applicable rules by region/entity, cross-border crosswalk handoff, AI social contract, register + track agents. Built by MEOK AI Labs."
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "nicholas@meok.ai"}]
+keywords = ["mcp", "ai-governance", "compliance", "eu-ai-act", "nist-ai-rmf", "robotics", "crosswalk", "meok"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = ["mcp>=1.0.0"]
+
+[project.urls]
+Homepage = "https://meok.ai/law"
+Repository = "https://github.com/CSOAI-ORG/meok-law-mcp"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["server.py", "law_core.py", "law_bundle.json"]
+
+[project.scripts]
+meok_law_mcp = "server:main"

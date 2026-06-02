@@ -307,7 +307,8 @@ document.getElementById("flyMe").addEventListener("click",()=>{
         row(`🧰 Tool Gateway`,
             `${tl.read_auto} read (auto) · ${tl.write_confirm} write (human-confirm) · <b style="color:#f87171">prohibited refused on sight</b> <span style="font-size:10px">(money/creds/access/delete)</span>`)+
         row(`💜 Care bond`, `${cb.source} — ${cb.behavior}`)+
-        row(`📜 ${ch.name}`, `${ch.articles} articles, anchored by ${ch.anchor}`);
+        row(`📜 ${ch.name}`, `${ch.articles} articles, anchored by ${ch.anchor}`)+
+        `<div style="margin-top:9px;text-align:center"><a href="/law" style="color:#fbbf24;font-size:12px;font-weight:600;text-decoration:none">⚖️ Open MEOK LAW — which rules apply to any agent, anywhere →</a></div>`;
     }catch(_){ p.innerHTML='<div style="color:#f87171">governance unavailable</div>'; }
   }
   btn.addEventListener("click",()=>{ const open=(p.style.display==="none"||!p.style.display);
