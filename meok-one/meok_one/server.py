@@ -44,19 +44,21 @@ _VISION_PROMPT = ("Reply with ONLY this, no preamble or thinking: one short sent
                   "screen, then ' — ' and a comma-separated list of the key UI elements.")
 
 
-def _classify_action(action: str, target: str = "", text: str = "") -> str:
-    """Gate a co-pilot desktop action through the Tool Gateway tiers: read (auto) / write
-    (confirm) / prohibited (refused). Observe-type = read; click/type/scroll/key = write;
-    anything touching money / credentials / purchases / account-deletion = prohibited."""
-    from . import tool_gateway as _gw
-    blob = f"{action} {target} {text}".lower()
-    if (_gw.classify(blob.replace(" ", "_")) == "prohibited"
-            or any(k in blob for k in ("password", "credential", "payment", "credit card", "bank",
-                                       "delete account", "buy now", "purchase", "checkout",
-                                       "wire ", "transfer fund", "ssn", "card number"))):
-        return "prohibited"
+def _classify_action(action: str, target: str = "", text: str = "", context: str = "") -> str:
+    """Gate a co-pilot desktop action: read (auto) / write (confirm) / prohibited (refused).
+    Observing is always safe. For ACTING (click/type/key), the danger is in the INTENT, not the
+    bare verb ("click Confirm" can be a money transfer) — so prohibited is checked over the action
+    AND the goal+scene context (anything touching money / credentials / purchases / account deletion)."""
     if action.lower() in ("observe", "read", "screenshot", "look", "wait", "none", "done"):
         return "read"
+    from . import tool_gateway as _gw
+    blob = f"{action} {target} {text} {context}".lower()
+    if (_gw.classify(blob.replace(" ", "_")) == "prohibited"
+            or any(k in blob for k in ("password", "credential", "payment", "credit card", "bank",
+                                       "delete account", "buy now", "purchase", "checkout", "pay ",
+                                       "wire", "transfer", "send money", "account number", "ssn",
+                                       "card number", "withdraw", "deposit", "invoice", "crypto", "wallet"))):
+        return "prohibited"
     return "write"   # click / type / scroll / key / drag — needs explicit human confirm
 
 
