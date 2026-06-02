@@ -40,8 +40,24 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 _INDEX = os.path.join(_HERE, "web", "index.html")
 
 
-_VISION_PROMPT = ("Describe what is on this screen in one concise sentence, then a short "
-                  "comma-separated list of the key UI elements you can see.")
+_VISION_PROMPT = ("Reply with ONLY this, no preamble or thinking: one short sentence describing the "
+                  "screen, then ' — ' and a comma-separated list of the key UI elements.")
+
+
+def _classify_action(action: str, target: str = "", text: str = "") -> str:
+    """Gate a co-pilot desktop action through the Tool Gateway tiers: read (auto) / write
+    (confirm) / prohibited (refused). Observe-type = read; click/type/scroll/key = write;
+    anything touching money / credentials / purchases / account-deletion = prohibited."""
+    from . import tool_gateway as _gw
+    blob = f"{action} {target} {text}".lower()
+    if (_gw.classify(blob.replace(" ", "_")) == "prohibited"
+            or any(k in blob for k in ("password", "credential", "payment", "credit card", "bank",
+                                       "delete account", "buy now", "purchase", "checkout",
+                                       "wire ", "transfer fund", "ssn", "card number"))):
+        return "prohibited"
+    if action.lower() in ("observe", "read", "screenshot", "look", "wait", "none", "done"):
+        return "read"
+    return "write"   # click / type / scroll / key / drag — needs explicit human confirm
 
 
 def _parse_vision(txt: str):
