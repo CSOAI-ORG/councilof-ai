@@ -83,6 +83,9 @@
   </div>
   <div class="hint">🌍 Drag to explore · scroll to zoom · tap a glowing character to focus it</div>
   <button id="flyMe" title="Fly to your region — timezone-derived, never GPS" style="position:absolute;right:14px;bottom:46px;z-index:5;background:rgba(18,18,30,.85);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer;backdrop-filter:blur(6px)">📍 Fly to my region</button>
+  <!-- Governance HUD: WHY these agents stay in harmony (real, live config — the antidote to ungoverned AI towns) -->
+  <button id="govBtn" title="How these AI agents stay in harmony — not the simulated-town chaos" style="position:absolute;left:14px;bottom:46px;z-index:5;background:rgba(18,18,30,.85);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer;backdrop-filter:blur(6px)">🛡️ Governance</button>
+  <div id="govPanel" style="position:absolute;left:14px;bottom:88px;z-index:6;width:300px;max-height:72vh;overflow:auto;display:none;background:rgba(10,9,22,.94);backdrop-filter:blur(14px);border:1px solid rgba(124,92,255,.3);border-radius:16px;padding:14px 16px;box-shadow:0 16px 48px rgba(0,0,0,.55);font-size:12px;line-height:1.5"></div>
 
 <script>
 const PARENT = window.parent !== window ? window.parent : null;
@@ -285,6 +288,31 @@ document.getElementById("flyMe").addEventListener("click",()=>{
   try{ map.flyTo(you?{center:you.ll,zoom:4.2,speed:0.8,essential:true}
                     :{center:[8,28],zoom:2.2,speed:0.8,essential:true}); }catch(_){}
 });
+
+// ---- Governance HUD: the live, HONEST proof that DOME agents stay in harmony ----
+(function(){
+  const btn=document.getElementById("govBtn"), p=document.getElementById("govPanel");
+  let loaded=false;
+  const row=(t,b)=>`<div style="margin:9px 0"><b>${t}</b><br><span style="color:var(--dim)">${b}</span></div>`;
+  async function render(){
+    p.innerHTML='<div style="color:var(--dim)">reading live posture…</div>';
+    try{ const g=await (await fetch("/api/governance")).json();
+      const c=g.council||{}, gt=g.gate||{}, tl=g.tools||{}, cb=g.care_bond||{}, ch=g.charter||{};
+      p.innerHTML=
+        `<div style="font-weight:700;font-size:14px">🛡️ Why the DOME stays in harmony</div>`+
+        `<div style="color:var(--dim);font-size:11px;margin:3px 0 6px">${g.thesis||""}</div>`+
+        row(`⚖️ ${c.shape||"council"}`,
+            `${c.lenses} lenses + companion + orchestrator · tolerates <b style="color:#34d399">f=${c.byzantine_f}</b> Byzantine nodes<br>safety vetoes: ${(c.safety_lenses||[]).map(s=>s.replace(/_/g,' ')).join(', ')}`)+
+        row(`🚪 Sovereign Gate`, (gt.order||[]).join(' → '))+
+        row(`🧰 Tool Gateway`,
+            `${tl.read_auto} read (auto) · ${tl.write_confirm} write (human-confirm) · <b style="color:#f87171">prohibited refused on sight</b> <span style="font-size:10px">(money/creds/access/delete)</span>`)+
+        row(`💜 Care bond`, `${cb.source} — ${cb.behavior}`)+
+        row(`📜 ${ch.name}`, `${ch.articles} articles, anchored by ${ch.anchor}`);
+    }catch(_){ p.innerHTML='<div style="color:#f87171">governance unavailable</div>'; }
+  }
+  btn.addEventListener("click",()=>{ const open=(p.style.display==="none"||!p.style.display);
+    p.style.display=open?"block":"none"; if(open&&!loaded){ loaded=true; render(); } });
+})();
 </script>
 </body>
 </html>

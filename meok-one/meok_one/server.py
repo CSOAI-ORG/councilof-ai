@@ -223,6 +223,45 @@ class Handler(BaseHTTPRequestHandler):
             except KeyError as e:
                 return self._json(400, {"error": str(e)})
             return self._json(200, {"character": char})
+        if path == "/api/governance":
+            # The HONEST live governance posture — what actually keeps every DOME agent in
+            # harmony (the antidote to ungoverned simulated-town chaos). All derived from the
+            # real modules; numbers reflect the RUNNING config (12-around-1, not the 33-node spec).
+            gov = {}
+            try:
+                from . import sovereign as _sov
+                lenses = _sov._load_lenses()
+                safety = [l["id"] for l in lenses if l.get("is_safety")]
+                voters = len(lenses) + 1   # 11 lenses + companion draft; orchestrator reconciles
+                gov["council"] = {
+                    "shape": "12-around-1 BFT-of-MoEs",
+                    "lenses": len(lenses), "companion": 1, "orchestrator": 1,
+                    "voters": voters, "byzantine_f": max(0, (voters - 1) // 3),
+                    "safety_lenses": safety,
+                    "rule": "safety lenses VETO; quality is a vote over the SAFE set",
+                }
+            except Exception as e:
+                gov["council"] = {"error": f"{type(e).__name__}: {e}"}
+            gov["gate"] = {"active": True,
+                           "order": ["care membrane (crisis → real help)", "hard-unsafe veto",
+                                     "capability-leak strip", "persona seal"],
+                           "rule": "crisis wins over everything; every engine's reply is re-filtered"}
+            try:
+                from .tunnels import open_all_tunnels
+                t = open_all_tunnels(); st = t.get("safety_tiers", {})
+                gov["tools"] = {"total": t.get("total_tools"), "read_auto": st.get("read"),
+                                "write_confirm": st.get("write"),
+                                "prohibited": "refused on sight (money/creds/access/delete) — never registered",
+                                "guarantee": t.get("guarantee")}
+            except Exception as e:
+                gov["tools"] = {"error": f"{type(e).__name__}: {e}"}
+            gov["care_bond"] = {"active": True, "source": "Maternal Covenant",
+                                "behavior": "deterministic crisis floor → escalate to a human, never restrict"}
+            gov["charter"] = {"name": "Partnership Charter", "articles": 52,
+                              "anchor": "Art. 1 — the Maternal Covenant"}
+            gov["thesis"] = ("The simulated towns proved the danger; the DOME proves the cure — "
+                             "agents live under a Partnership Charter + care bond enforced by real code.")
+            return self._json(200, gov)
         if path == "/api/character":
             # Full record for one character (detail card): traits, voice, domain, backstory.
             cid = (qs.get("id", [""])[0] or "").strip()

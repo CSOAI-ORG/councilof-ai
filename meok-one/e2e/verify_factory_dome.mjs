@@ -148,6 +148,19 @@ const life = await page.evaluate(async () => {
 must(life.moved, 'Living DOME: agents gently wander (marker LngLat changes)');
 must(life.sayOn, 'Living DOME: agents show ambient speech bubbles');
 
+// Governance HUD: the live AI-harmony antidote (honest config)
+const govApi = await page.evaluate(async () => {
+  const g = await (await fetch('/api/governance')).json();
+  return { f: g.council?.byzantine_f, lenses: g.council?.lenses, safety: (g.council?.safety_lenses || []).length, articles: g.charter?.articles };
+});
+must(govApi.f === 3 && govApi.lenses === 11 && govApi.safety === 5 && govApi.articles === 52,
+  `/api/governance honest (f=${govApi.f}, lenses=${govApi.lenses}, safety=${govApi.safety}, charter=${govApi.articles})`);
+await page.click('#govBtn');
+await page.waitForFunction(() => /Byzantine|Sovereign Gate|harmony/.test(document.querySelector('#govPanel')?.textContent || ''), { timeout: 3000 }).catch(() => {});
+const govText = (await page.textContent('#govPanel')) || '';
+must(/12-around-1|Byzantine/.test(govText) && /Sovereign Gate/.test(govText) && /Care bond/.test(govText),
+  'Governance HUD panel renders the live posture');
+
 ok(errs.length === 0, `Console errors: ${errs.length}${errs.length ? ' → ' + errs.slice(0, 3).join(' | ') : ''}`);
 if (errs.length) fails++;
 
