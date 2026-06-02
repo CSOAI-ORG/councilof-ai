@@ -37,8 +37,15 @@ meok_law_mcp          # runs the MCP over stdio
 Or point your MCP client at the `meok_law_mcp` entrypoint.
 
 ## Honest scope
-- Coverage today: **12 framework crosswalks + 4 domain crosswalk MCPs** (DORA↔NIS2, DRCF-agent,
-  ASC↔RSPCA, CSOAI-governance) — growing, not "every law on Earth."
+- Coverage today: **23 framework crosswalks across 9 regions + 4 domain crosswalk MCPs**
+  (DORA↔NIS2, DRCF-agent, ASC↔RSPCA, CSOAI-governance) — growing, not "every law on Earth."
+  Frameworks: EU AI Act, GDPR, NIST AI RMF, UK AISI, ISO/IEC 42001, ISO/IEC 27001, SOC 2,
+  HIPAA, FDA AI/ML SaMD, Basel III (AI overlay), Canada AIDA, Brazil LGPD, India DPDPA,
+  Australia AI Ethics, Singapore Agentic-AI, OECD, UNESCO, G7/G20, IEEE, Montreal, Asilomar,
+  Anthropic Constitutional AI, OpenAI Model Spec.
+- The 11 newest crosswalks are **AI-generated structural mappings to each framework's real
+  architecture, then AI peer-reviewed** — accurate and citable, but flagged "pending human
+  counsel sign-off." (2 defence crosswalks are held in a private namespace.)
 - `law_register` here is **self-attested** (sha256 cert). For a tamper-evident, hash-chained,
   tracked registration, use the live MEOK LAW service.
 - Registration **never grants powers** and never touches money, credentials, or deletion — the
