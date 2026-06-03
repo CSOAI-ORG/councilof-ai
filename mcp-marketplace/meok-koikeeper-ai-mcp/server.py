@@ -321,7 +321,7 @@ def identify_koi(variety: Optional[str] = None, description: Optional[str] = Non
     """Identify a koi variety by name or description."""
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     if not _rate_limit(tier):
         return {"error": "Rate limit exceeded."}
 
@@ -361,7 +361,7 @@ def pond_stocking(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     if not _rate_limit(tier):
         return {"error": "Rate limit exceeded."}
 
@@ -411,7 +411,7 @@ def seasonal_feeding(water_temp_c: float, api_key: str = "") -> dict:
     """Return temperature-gated koi feeding schedule for current pond conditions."""
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     if not _rate_limit(tier):
         return {"error": "Rate limit exceeded."}
 
@@ -436,7 +436,7 @@ def diagnose_koi_disease(
     """Diagnose koi disease from symptoms, gated on temperature window."""
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     if not _rate_limit(tier):
         return {"error": "Rate limit exceeded."}
 
@@ -489,7 +489,7 @@ def winter_prep_checklist(pond_litres: float, location: str = "UK", api_key: str
     """Pre-winter koi pond preparation checklist (UK climate)."""
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     if not _rate_limit(tier):
         return {"error": "Rate limit exceeded."}
     return {
@@ -534,7 +534,7 @@ def list_varieties(group: Optional[str] = None, api_key: str = "") -> dict:
     """List supported koi varieties, optionally filtered by classification group."""
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     results = [{"variety_id": vid, **v} for vid, v in KOI_VARIETIES.items() if not group or v["group"].lower() == group.lower()]
     return {
         "count": len(results),

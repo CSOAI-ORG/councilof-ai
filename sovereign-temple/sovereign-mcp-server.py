@@ -2952,6 +2952,7 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         elif name == "delegate_task":
             if not task_delegator:
                 return {"error": "Task delegator not available"}
+            from agent_registry import AgentCapability  # bind locally — a conditional re-import elsewhere in this function shadowed the module-level name (UnboundLocalError)
             task = await task_delegator.delegate_task(
                 description=arguments["description"],
                 required_capabilities=[
