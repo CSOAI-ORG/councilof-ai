@@ -2509,6 +2509,44 @@ async def _probe_db(pool) -> str:
         return f"disconnected: {e}"
 
 
+# ============================================================================
+# SOVEREIGN TUNNEL AUTH — SOV3 is exposed publicly via Cloudflare
+# (sov3.meok.ai / sovereign.templeman-opticians.com). Without auth its 100+
+# tools are open to the internet. Require a bearer token on everything except
+# health/liveness/discovery. Token from env SOV3_MCP_TOKEN, else the
+# .sov3_mcp_token file beside this server. (If neither is set, auth is OFF so a
+# misconfig can't lock you out — keep the token configured.)
+# ============================================================================
+def _load_sov3_token():
+    t = (os.environ.get("SOV3_MCP_TOKEN") or "").strip()
+    if t:
+        return t
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".sov3_mcp_token")) as _f:
+            return _f.read().strip()
+    except Exception:
+        return ""
+
+
+_SOV3_TOKEN = _load_sov3_token()
+_AUTH_OPEN_PATHS = {"/health", "/health/db", "/healthz/deep", "/livez", "/readyz",
+                    "/", "/.well-known/security.txt", "/security"}
+
+
+@app.middleware("http")
+async def _sovereign_tunnel_auth(request, call_next):
+    if _SOV3_TOKEN and request.url.path not in _AUTH_OPEN_PATHS:
+        hdr = request.headers.get("authorization", "")
+        tok = (hdr[7:].strip() if hdr[:7].lower() == "bearer "
+               else request.headers.get("x-mcp-token", "").strip())
+        if tok != _SOV3_TOKEN:
+            from starlette.responses import JSONResponse
+            return JSONResponse(
+                {"error": "unauthorized", "detail": "SOV3 requires a valid bearer token"},
+                status_code=401)
+    return await call_next(request)
+
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint — uses real DB probe, not object truthiness."""

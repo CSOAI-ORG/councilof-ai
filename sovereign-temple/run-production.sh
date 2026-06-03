@@ -19,7 +19,9 @@ if [[ -f .env ]]; then
 fi
 
 export PORT=${PORT:-3101}
-export HOST=${HOST:-0.0.0.0}
+# #59 fix (2026-06-02): default to localhost so the Mac dev process is not LAN-exposed
+# and so the bind is deterministic. VM/prod deploys pass HOST=0.0.0.0 explicitly.
+export HOST=${HOST:-127.0.0.1}
 export PYTHONUNBUFFERED=1
 
 # Prefer project venv, fall back to system python
