@@ -207,3 +207,11 @@ cd ~/workspace_for_ai/clawd-workspace && git add -A && git commit -m "Agent: mes
 
 *This is the LIVING TOPOLOGY. Every agent updates this as the ecosystem evolves.*
 *commit: `git add -A && git commit -m "Agent: <what changed>" && git push`*
+
+## LIVE CHECKOUT (ACCEPTING PAYMENTS)
+
+**Main checkout:** https://www.csoai.org/checkout — £79/mo Pro, £299/mo Enterprise
+**Backup URL:** https://checkout-deploy-three.vercel.app
+**Stripe:** LIVE, verified, ready to charge
+
+**Revenue:** £0. First sale = £79/mo. Send traffic to the checkout URL.
