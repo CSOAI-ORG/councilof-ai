@@ -138,7 +138,7 @@ pip install -U eu-ai-act-compliance-mcp nis2-compliance-mcp dora-compliance-mcp
       <li>Balance never expires</li>
       <li>Top up any time</li>
     </ul>
-    <a class="btn alt" href="mailto:nicholas@meok.ai?subject=PAYG%20top-up%20%C2%A310&body=I%27d%20like%20to%20top%20up%20%C2%A310%20on%20PAYG.%20Send%20me%20the%20Stripe%20link%20%2B%20MEOK_PAYG_KEY.">Top up £10 →</a>
+    <a class="btn alt" href="STRIPE_LINK_10_PLACEHOLDER" data-fallback-mailto="mailto:nicholas@meok.ai?subject=PAYG%20top-up%20%C2%A310">Top up £10 →</a>
   </div>
 
   <div class="tier featured">
@@ -152,7 +152,7 @@ pip install -U eu-ai-act-compliance-mcp nis2-compliance-mcp dora-compliance-mcp
       <li>Signed attestations included</li>
       <li>Roll over month-to-month</li>
     </ul>
-    <a class="btn" href="mailto:nicholas@meok.ai?subject=PAYG%20top-up%20%C2%A350&body=I%27d%20like%20to%20top%20up%20%C2%A350%20on%20PAYG.%20Send%20me%20the%20Stripe%20link%20%2B%20MEOK_PAYG_KEY.">Top up £50 →</a>
+    <a class="btn" href="STRIPE_LINK_50_PLACEHOLDER" data-fallback-mailto="mailto:nicholas@meok.ai?subject=PAYG%20top-up%20%C2%A350">Top up £50 →</a>
   </div>
 
   <div class="tier">
@@ -166,7 +166,7 @@ pip install -U eu-ai-act-compliance-mcp nis2-compliance-mcp dora-compliance-mcp
       <li>Bring-your-own rate (haggle below £0.05)</li>
       <li>Priority email support</li>
     </ul>
-    <a class="btn alt" href="mailto:nicholas@meok.ai?subject=PAYG%20top-up%20%C2%A3200&body=I%27d%20like%20to%20top%20up%20%C2%A3200%20on%20PAYG.%20Send%20me%20the%20Stripe%20link%20%2B%20MEOK_PAYG_KEY.%20Also%20interested%20in%20bulk%20pricing.">Top up £200 →</a>
+    <a class="btn alt" href="STRIPE_LINK_200_PLACEHOLDER" data-fallback-mailto="mailto:nicholas@meok.ai?subject=PAYG%20top-up%20%C2%A3200">Top up £200 →</a>
   </div>
 
 </div>
@@ -196,5 +196,19 @@ pip install -U eu-ai-act-compliance-mcp nis2-compliance-mcp dora-compliance-mcp
   <p style="margin-top:.5rem;color:#999;">PAYG balance never expires. Top up any time. Not legal advice — confirm scope with your auditor.</p>
 </div></footer>
 
+<script>
+// Auto-fallback: until Nick runs tools/create_payg_stripe_products.sh and
+// pastes the 3 Stripe URLs in for STRIPE_LINK_{10,50,200}_PLACEHOLDER, the
+// buttons gracefully fall back to the data-fallback-mailto so visitors can
+// still email and Nick fulfils manually. Once the placeholders are real URLs
+// this script becomes a no-op.
+document.querySelectorAll('a[data-fallback-mailto]').forEach(function (a) {
+  var href = a.getAttribute('href') || '';
+  if (href.indexOf('STRIPE_LINK_') === 0) {
+    a.setAttribute('href', a.getAttribute('data-fallback-mailto'));
+    a.setAttribute('title', 'Self-serve Stripe link coming soon — emails Nicholas for now');
+  }
+});
+</script>
 </body>
 </html>
