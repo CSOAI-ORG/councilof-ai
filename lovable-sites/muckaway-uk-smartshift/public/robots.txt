@@ -1,0 +1,122 @@
+User-agent: *
+Allow: /
+
+# SEO Landing Pages - Fully Crawlable
+Allow: /muck-away-*
+Allow: /grab-*
+Allow: /waste-*
+Allow: /how-to-*
+Allow: /spoil-*
+Allow: /ewc-*
+Allow: /landfill-*
+Allow: /skip-*
+Allow: /construction-*
+Allow: /contaminated-*
+Allow: /hazardous-*
+Allow: /inert-*
+Allow: /rubble-*
+Allow: /same-day-*
+Allow: /soil-*
+Allow: /tipper-*
+Allow: /site-*
+Allow: /duty-*
+Allow: /consignment-*
+Allow: /environment-*
+
+# Near-Me Pages
+Allow: /*-near-me
+
+# Comparison Pages
+Allow: /*-vs-*
+Allow: /*-comparison
+
+# Seasonal Pages
+Allow: /winter-*
+Allow: /spring-*
+Allow: /summer-*
+Allow: /autumn-*
+Allow: /year-end-*
+
+# Material-Specific Pages
+Allow: /clay-*
+Allow: /chalk-*
+Allow: /sand-*
+Allow: /gravel-*
+Allow: /topsoil-*
+Allow: /subsoil-*
+Allow: /mixed-*
+Allow: /green-*
+Allow: /asbestos-*
+Allow: /concrete-*
+
+# Problem/Solution Pages
+Allow: /emergency-*
+Allow: /bulk-*
+Allow: /restricted-*
+Allow: /weekend-*
+Allow: /late-*
+Allow: /fly-tipping-*
+Allow: /reduce-*
+
+# Tool/Calculator Pages
+Allow: /volume-*
+Allow: /carbon-*
+Allow: /recycling-*
+Allow: /disposal-*
+Allow: /*-calculator
+Allow: /*-estimator
+Allow: /*-tool
+Allow: /*-lookup
+Allow: /*-optimizer
+
+# Public Pages
+Allow: /pricing
+Allow: /about
+Allow: /contact
+Allow: /faq
+Allow: /how-to-use
+Allow: /terms
+Allow: /privacy
+Allow: /cookie-policy
+Allow: /demo
+Allow: /software
+Allow: /ai-tools
+Allow: /use-cases
+Allow: /install
+Allow: /download
+Allow: /integration
+Allow: /smart-integrations
+Allow: /global
+Allow: /subscribe
+Allow: /portal
+
+# Protected routes - Do not crawl
+Disallow: /dashboard
+Disallow: /fleet
+Disallow: /hazardous
+Disallow: /driver-checks
+Disallow: /weighbridge
+Disallow: /customer-portal
+Disallow: /ai-classification
+Disallow: /ai-insights
+Disallow: /ai-chatbot
+Disallow: /maintenance-alerts
+Disallow: /profile
+Disallow: /payment-success
+Disallow: /admin
+Disallow: /reports
+Disallow: /schedule
+Disallow: /live-tracking
+Disallow: /notifications
+Disallow: /data-request
+Disallow: /data-processing
+
+# API and authentication routes
+Disallow: /auth
+Disallow: /api/
+
+# Crawl-delay for responsible crawling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://muckaway.ai/sitemap.xml

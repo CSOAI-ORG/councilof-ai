@@ -1,0 +1,123 @@
+# GitLab CI Configuration for Visual Regression Testing
+
+stages:
+  - build
+  - test
+  - report
+
+variables:
+  CI: "true"
+  BASE_URL: "http://localhost:8080"
+  NODE_VERSION: "20"
+
+# Cache node_modules between jobs
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .npm/
+
+# Build job
+build:
+  stage: build
+  image: node:${NODE_VERSION}
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 hour
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Visual regression tests
+visual-tests:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.40.0-jammy
+  needs:
+    - build
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+  script:
+    # Start preview server in background
+    - npx serve -s dist -l 8080 &
+    - sleep 5
+    - curl -f http://localhost:8080 || exit 1
+    
+    # Run visual regression tests
+    - npx playwright test --project=desktop-chrome
+  artifacts:
+    when: always
+    paths:
+      - playwright-report/
+      - test-results/
+    reports:
+      junit: test-results/junit.xml
+    expire_in: 30 days
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  allow_failure: false
+
+# Update baselines (manual job)
+update-baselines:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.40.0-jammy
+  needs:
+    - build
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+  script:
+    - npx serve -s dist -l 8080 &
+    - sleep 5
+    - npx playwright test --update-snapshots --project=desktop-chrome
+  artifacts:
+    paths:
+      - e2e/__snapshots__/
+    expire_in: 7 days
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      when: manual
+  allow_failure: true
+
+# Post MR comment with results
+report-results:
+  stage: report
+  image: node:${NODE_VERSION}
+  needs:
+    - visual-tests
+  script:
+    - node scripts/gitlab-mr-comment.js
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      when: always
+  allow_failure: true
+  variables:
+    GITLAB_TOKEN: ${GITLAB_TOKEN}
+
+# Multi-viewport tests (optional extended testing)
+visual-tests-multiviewport:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.40.0-jammy
+  needs:
+    - build
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+  script:
+    - npx serve -s dist -l 8080 &
+    - sleep 5
+    - npx playwright test
+  artifacts:
+    when: always
+    paths:
+      - playwright-report/
+      - test-results/
+    expire_in: 30 days
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      when: manual
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+  allow_failure: true
