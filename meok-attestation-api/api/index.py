@@ -86,6 +86,14 @@ _STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 # Without this, /provision falls back to master-key-only mode (no self-serve).
 _STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
 
+# ── PAYG (pay-per-call) configuration ────────────────────────────────────
+# Pay-per-call billing via MEOK_PAYG_KEY. Stripe is the database: customer
+# metadata holds the token + balance. See _payg_* helpers below.
+_PAYG_RATE_GBP = float(os.environ.get("MEOK_PAYG_RATE_GBP", "0.05"))
+_PAYG_TOPUP_URL = os.environ.get("MEOK_PAYG_TOPUP_URL", "https://councilof.ai/payg")
+_PAYG_NOTIFY_EMAIL = os.environ.get("MEOK_NOTIFY_EMAIL", "nicholas@meok.ai")
+_RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+
 # V-03 FIX: gate self-serve /provision on real Stripe session verification.
 # ALWAYS REQUIRED. The legacy email-only fallback (Path 2) has been removed.
 # _PROVISION_REQUIRE_SESSION is always True; env var MEOK_PROVISION_REQUIRE_SESSION_ID ignored.
@@ -351,6 +359,102 @@ _PRODUCT_NAME_TIER_MAP = {
     "Premium Enterprise Assessment": "enterprise",
     "EU AI Act Compliance Kit": "pro",
 }
+
+
+# ── PAYG (pay-per-call) helpers ─────────────────────────────────────────
+# Storage = Stripe customer metadata. No external DB. Idempotent.
+# metadata[meok_payg_token]   — UUID-shaped token (lives in env as MEOK_PAYG_KEY on the client)
+# metadata[meok_payg_balance] — GBP remaining, as string
+# metadata[meok_payg_last_*]  — audit fields
+
+def _stripe_api_request(method: str, path: str, params: Optional[dict] = None) -> dict:
+    """Stdlib-only Stripe REST client. Same shape as the helper in api/payg.py
+    but inlined so this file doesn't depend on Vercel routing reaching payg.py."""
+    if not _STRIPE_SECRET_KEY:
+        raise RuntimeError("STRIPE_SECRET_KEY not set")
+    url = f"https://api.stripe.com/v1{path}"
+    data = urllib.parse.urlencode(params or {}).encode("utf-8") if params else None
+    auth_header = "Basic " + base64.b64encode((_STRIPE_SECRET_KEY + ":").encode()).decode()
+    req = urllib.request.Request(
+        url,
+        data=data,
+        method=method.upper(),
+        headers={
+            "Authorization": auth_header,
+            "Content-Type": "application/x-www-form-urlencoded" if data else "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        try:
+            err = json.loads(e.read())
+        except Exception:
+            err = {"error": {"message": f"HTTP {e.code}"}}
+        raise RuntimeError(f"Stripe {method} {path}: {err}")
+
+
+def _payg_calls_included(amount_gbp: float, rate: float = None) -> int:
+    rate = rate or _PAYG_RATE_GBP
+    return int(amount_gbp / rate) if rate > 0 else 0
+
+
+def _payg_generate_token() -> str:
+    return "payg_" + secrets.token_urlsafe(24)
+
+
+def _payg_send_welcome(to_email: str, token: str, amount_gbp: float, balance_gbp: float) -> bool:
+    """Best-effort welcome via Resend. Webhook still succeeds if this fails."""
+    if not _RESEND_API_KEY or not to_email:
+        return False
+    body = (
+        f"Thanks for your £{amount_gbp:.2f} top-up to MEOK PAYG.\n\n"
+        f"Your token (treat like a password):\n\n"
+        f"  MEOK_PAYG_KEY={token}\n\n"
+        f"Set it in your environment and every call across the 7 MEOK compliance MCPs "
+        f"will deduct from your balance:\n\n"
+        f"  export MEOK_PAYG_KEY={token}\n"
+        f"  export MEOK_PAYG_SERVER_URL=https://meok-attestation-api.vercel.app/payg\n"
+        f"  pip install -U eu-ai-act-compliance-mcp\n\n"
+        f"Balance now: £{balance_gbp:.2f} ({_payg_calls_included(balance_gbp)} calls).\n"
+        f"Check anytime: GET https://meok-attestation-api.vercel.app/payg/balance?token={token}\n\n"
+        f"Questions: reply to this email.\n— MEOK AI Labs"
+    )
+    try:
+        urllib.request.urlopen(
+            urllib.request.Request(
+                "https://api.resend.com/emails",
+                data=json.dumps({
+                    "from": "MEOK AI Labs <payg@meok.ai>",
+                    "to": [to_email, _PAYG_NOTIFY_EMAIL],
+                    "subject": f"Your MEOK PAYG token — £{balance_gbp:.2f} balance",
+                    "text": body,
+                }).encode("utf-8"),
+                headers={
+                    "Authorization": f"Bearer {_RESEND_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+            ),
+            timeout=10,
+        )
+        return True
+    except Exception:
+        return False
+
+
+def _payg_lookup_customer_by_token(token: str) -> Optional[dict]:
+    if not token:
+        return None
+    try:
+        resp = _stripe_api_request(
+            "GET",
+            f"/customers/search?query=metadata['meok_payg_token']:'{token}'",
+        )
+        customers = resp.get("data", [])
+        return customers[0] if customers else None
+    except Exception:
+        return None
 
 
 def _extract_tier_from_checkout(session: dict) -> str:
@@ -895,6 +999,34 @@ class handler(BaseHTTPRequestHandler):
         if path.startswith("/verify/") or path.startswith("/v/"):
             cert_id = path.split("/", 2)[-1] or ""
             return self._html(200, _verify_html(cert_id))
+
+        # ── PAYG GET endpoints ──
+        if path in ("/payg/health", "/api/payg/health"):
+            return self._json(200, {
+                "ok": True,
+                "service": "meok-payg",
+                "stripe_configured": bool(_STRIPE_SECRET_KEY),
+                "webhook_configured": bool(_STRIPE_WEBHOOK_SECRET),
+                "rate_gbp_per_call": _PAYG_RATE_GBP,
+                "topup_url": _PAYG_TOPUP_URL,
+            })
+        if path in ("/payg/balance", "/api/payg/balance"):
+            qs = dict(urllib.parse.parse_qsl(self.path.split("?", 1)[1] if "?" in self.path else ""))
+            token = qs.get("token", "")
+            if not token:
+                return self._json(400, {"error": "Missing 'token' query param"})
+            customer = _payg_lookup_customer_by_token(token)
+            if not customer:
+                return self._json(404, {"error": "Token not found", "topup_url": _PAYG_TOPUP_URL})
+            balance = float((customer.get("metadata") or {}).get("meok_payg_balance", "0"))
+            return self._json(200, {
+                "token_prefix": token[:12] + "…",
+                "balance_gbp": round(balance, 4),
+                "calls_remaining": _payg_calls_included(balance),
+                "rate_gbp_per_call": _PAYG_RATE_GBP,
+                "topup_url": _PAYG_TOPUP_URL,
+            })
+
         return self._json(404, {"error": "Not found", "path": path})
 
     def do_POST(self) -> None:
@@ -1087,6 +1219,101 @@ class handler(BaseHTTPRequestHandler):
                 "message": msg,
                 "cert_id": cert.get("cert_id"),
                 "verify_url": cert.get("verify_url"),
+            })
+
+        # ── PAYG POST endpoints ──
+        if path in ("/payg/webhook", "/api/payg/webhook"):
+            sig_header = self.headers.get("Stripe-Signature", "")
+            if not _verify_stripe_signature(raw, sig_header, _STRIPE_WEBHOOK_SECRET):
+                return self._json(400, {"error": "Invalid Stripe signature"})
+            try:
+                event = json.loads(raw) if raw else {}
+            except json.JSONDecodeError:
+                return self._json(400, {"error": "Invalid JSON"})
+
+            if event.get("type") != "checkout.session.completed":
+                return self._json(200, {"ignored": event.get("type", "")})
+
+            session = (event.get("data") or {}).get("object", {}) or {}
+            meta = session.get("metadata") or {}
+            if meta.get("product_line") != "meok_payg":
+                return self._json(200, {"ignored": "not a meok_payg product"})
+
+            amount_total = int(session.get("amount_total", 0))
+            amount_gbp = amount_total / 100.0
+            customer_id = session.get("customer")
+            customer_email = session.get("customer_email") or (session.get("customer_details") or {}).get("email", "")
+
+            if not customer_id:
+                return self._json(200, {"error": "No customer on session — Stripe will retry"})
+
+            try:
+                customer = _stripe_api_request("GET", f"/customers/{customer_id}")
+            except Exception as e:
+                return self._json(500, {"error": f"Stripe lookup failed: {e}"})
+
+            existing_token = (customer.get("metadata") or {}).get("meok_payg_token", "")
+            existing_balance = float((customer.get("metadata") or {}).get("meok_payg_balance", "0"))
+            token = existing_token or _payg_generate_token()
+            new_balance = round(existing_balance + amount_gbp, 4)
+
+            try:
+                _stripe_api_request("POST", f"/customers/{customer_id}", {
+                    "metadata[meok_payg_token]": token,
+                    "metadata[meok_payg_balance]": str(new_balance),
+                    "metadata[meok_payg_last_topup_at]": datetime.now(timezone.utc).isoformat(),
+                    "metadata[meok_payg_last_topup_gbp]": str(amount_gbp),
+                })
+            except Exception as e:
+                return self._json(500, {"error": f"Could not update Stripe metadata: {e}"})
+
+            sent = _payg_send_welcome(customer_email, token, amount_gbp, new_balance)
+            return self._json(200, {
+                "ok": True,
+                "token_issued": True,
+                "balance_gbp": new_balance,
+                "calls_included_running_total": _payg_calls_included(new_balance),
+                "email_sent": sent,
+            })
+
+        if path in ("/payg/deduct", "/api/payg/deduct"):
+            try:
+                payload = json.loads(raw) if raw else {}
+            except json.JSONDecodeError:
+                return self._json(400, {"error": "Invalid JSON"})
+
+            token = payload.get("token", "")
+            amount = float(payload.get("amount_gbp", _PAYG_RATE_GBP))
+            if not token or amount <= 0:
+                return self._json(400, {"error": "token + amount_gbp required"})
+
+            customer = _payg_lookup_customer_by_token(token)
+            if not customer:
+                return self._json(404, {"error": "Token not found", "topup_url": _PAYG_TOPUP_URL})
+
+            balance = float((customer.get("metadata") or {}).get("meok_payg_balance", "0"))
+            if balance < amount:
+                return self._json(402, {
+                    "error": "Insufficient balance",
+                    "balance_gbp": balance,
+                    "needed_gbp": amount,
+                    "topup_url": _PAYG_TOPUP_URL,
+                })
+
+            new_balance = round(balance - amount, 4)
+            try:
+                _stripe_api_request("POST", f"/customers/{customer['id']}", {
+                    "metadata[meok_payg_balance]": str(new_balance),
+                    "metadata[meok_payg_last_used_at]": datetime.now(timezone.utc).isoformat(),
+                })
+            except Exception as e:
+                return self._json(500, {"error": f"Stripe update failed: {e}"})
+
+            return self._json(200, {
+                "ok": True,
+                "deducted_gbp": amount,
+                "balance_gbp": new_balance,
+                "calls_remaining": _payg_calls_included(new_balance),
             })
 
         return self._json(404, {"error": "Not found", "path": path})
