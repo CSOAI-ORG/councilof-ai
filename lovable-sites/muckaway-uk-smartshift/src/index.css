@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* MuckAway.ai Design System - Black, White, Yellow theme
+Professional construction-grade aesthetic with bold yellow accents
+*/
+
+@layer base {
+  :root {
+    /* MuckAway Brand Colors - Black, White, Yellow */
+    --background: 0 0% 7%;           /* Black #111111 */
+    --foreground: 0 0% 98%;          /* White text */
+    --card: 0 0% 12%;                /* Dark charcoal cards */
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 98%;
+    
+    /* Brand Yellow #FFD700 as Primary */
+    --primary: 51 100% 50%;         
+    --primary-foreground: 0 0% 10%;  /* Dark text on yellow */
+    
+    --secondary: 0 0% 18%;        
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;           
+    --muted-foreground: 0 0% 70%;   
+    
+    /* Accent - Slightly lighter yellow for highlights */
+    --accent: 45 100% 55%;          
+    --accent-foreground: 0 0% 10%;  
+    
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%;          
+    --input: 0 0% 18%;           
+    --ring: 51 100% 50%;           
+    --radius: 0.5rem;
+    
+    /* MuckAway Gradients - Yellow Theme */
+    --gradient-hero: linear-gradient(135deg, hsl(51 100% 50%), hsl(45 100% 55%));
+    --gradient-action: linear-gradient(135deg, hsl(51 100% 50%), hsl(45 100% 60%));
+    --gradient-surface: linear-gradient(180deg, hsl(0 0% 12%), hsl(0 0% 8%));
+    
+    /* Professional shadows - Yellow glow */
+    --shadow-construction: 0 20px 40px -15px hsl(51 100% 50% / 0.3);
+    --shadow-action: 0 10px 30px -10px hsl(51 100% 50% / 0.4);
+    --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.6);
+    --shadow-glow: 0 0 30px hsl(51 100% 50% / 0.4);
+    
+    /* Smooth transitions */
+    --transition-construction: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Sidebar - Light theme */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 51 100% 45%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 0 0% 95%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 51 100% 50%;
+  }
+
+  .dark {
+    --background: 0 0% 5%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 51 100% 50%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 45 100% 55%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%;
+    --input: 0 0% 15%;
+    --ring: 51 100% 50%;
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 51 100% 50%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 51 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

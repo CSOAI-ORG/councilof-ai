@@ -1,0 +1,51 @@
+{
+  "name": "MuckAway.ai - Global AI Waste Management",
+  "short_name": "MuckAway",
+  "description": "World's leading AI-powered waste management platform. Operating in 11 countries with instant quotes, automated compliance, and intelligent waste classification.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#FFD700",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Voice AI Quote",
+      "short_name": "Voice Quote",
+      "description": "Get instant quote using voice commands",
+      "url": "/ai-tools?tab=voice",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Image Analysis",
+      "short_name": "AI Analysis", 
+      "description": "Upload images for AI spoil classification",
+      "url": "/ai-tools?tab=analyzer",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View jobs and fleet management",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

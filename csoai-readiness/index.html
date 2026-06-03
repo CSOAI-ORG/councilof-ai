@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EU AI Act Article 50 Readiness Check — CSOAI</title>
+<meta name="description" content="Free 60-second EU AI Act Article 50 readiness check for generative AI providers. Find your exposure before the 2 Aug 2026 deadline.">
+<style>
+:root{--navy:#0a1628;--gold:#c9a84c;--bg:#f8fafc;--ok:#16a34a;--warn:#dc2626}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{background:var(--navy);color:#fff;line-height:1.5;padding:24px}
+.wrap{max-width:640px;margin:0 auto}
+.tag{display:inline-block;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.4);color:#fda4af;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:5px 12px;border-radius:999px;margin-bottom:16px}
+h1{font-size:2rem;font-weight:900;margin-bottom:6px}
+.sub{color:#94a3b8;margin-bottom:28px}
+.q{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.q span{font-size:14px}
+.toggle{display:flex;gap:6px;flex-shrink:0}
+.toggle button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#cbd5e1;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer}
+.toggle button.yes.active{background:var(--ok);color:#fff;border-color:var(--ok)}
+.toggle button.no.active{background:var(--warn);color:#fff;border-color:var(--warn)}
+#result{display:none;background:rgba(201,168,76,.08);border:1px solid var(--gold);border-radius:16px;padding:24px;margin-top:20px}
+#result h2{font-size:1.5rem;margin-bottom:8px}
+.score{font-size:3rem;font-weight:900;color:var(--gold)}
+.cta{display:block;text-align:center;background:var(--gold);color:var(--navy);font-weight:800;font-size:1.05rem;padding:15px;border-radius:12px;text-decoration:none;margin-top:18px}
+.cta2{display:block;text-align:center;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);font-weight:700;padding:13px;border-radius:12px;text-decoration:none;margin-top:10px}
+.foot{color:#64748b;font-size:12px;margin-top:24px;line-height:1.6}
+</style></head><body><div class="wrap">
+<span class="tag">⏰ Article 50 — 2 Aug 2026</span>
+<h1>EU AI Act Article 50 Readiness Check</h1>
+<p class="sub">60 seconds. For generative-AI providers serving EU users. Toggle Yes/No.</p>
+<div id="qs"></div>
+<button onclick="score()" style="width:100%;background:var(--gold);color:var(--navy);font-weight:800;font-size:1.1rem;padding:16px;border:none;border-radius:12px;cursor:pointer;margin-top:8px">See my readiness score →</button>
+<div id="result"></div>
+<p class="foot">CSOAI — AI Safety Certification &amp; Compliance Platform (CSOAI LTD, UK CH 16939677). Not legal advice. Article 50 transparency obligations apply from 2 Aug 2026; machine-readable marking grace to 2 Dec 2026 for existing systems.</p>
+</div>
+<script>
+const Q=["Does your product generate content (text/image/audio/video) for EU users?","Do users interact with an AI that could be mistaken for a human?","Do you clearly tell users at first interaction that it's an AI? (Art 50.1)","Is your AI output marked machine-readably (C2PA/metadata)? (Art 50.2)","Does that marking survive editing/compression (robust watermark)?","Do you have a detection/fingerprinting layer?","If you generate realistic media of real people, is it visibly labelled? (Art 50.4)","Could you produce signed, verifiable compliance evidence for an auditor today?","Is any of this in a technical file?","Do you know if pre-2 Aug 2026 systems qualify for the 2 Dec 2026 grace?"];
+const ans={};
+const qs=document.getElementById('qs');
+Q.forEach((t,i)=>{qs.innerHTML+=`<div class="q"><span>${i+1}. ${t}</span><div class="toggle"><button class="yes" onclick="set(${i},1,this)">Yes</button><button class="no" onclick="set(${i},0,this)">No</button></div></div>`;});
+function set(i,v,btn){ans[i]=v;const p=btn.parentElement;p.querySelectorAll('button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function score(){let s=0;for(let i=0;i<10;i++)s+=(ans[i]||0);let band,msg;if(s>=8){band='Ahead';msg='Good shape — the usual gap is signed evidence (Q8). We turn \"we comply\" into cryptographically-signed proof in 2 days.';}else if(s>=4){band='Exposed';msg='Real gaps on marking and/or evidence. This is exactly the 2-day audit-prep sweet spot.';}else{band='High risk';msg='Material exposure before 2 Aug 2026 — fines reach €15M or 3% of turnover and enterprise deals stall at procurement. Priority audit-prep.';}
+const r=document.getElementById('result');r.style.display='block';
+const body=encodeURIComponent('Hi CSOAI, my Article 50 readiness score was '+s+'/10 ('+band+'). I\\'d like the free 1-page breakdown + a chat about the audit-prep.');
+r.innerHTML=`<h2>Your readiness: <span class="score">${s}/10</span></h2><p style="font-size:1.1rem;font-weight:700;margin:4px 0 10px">${band}</p><p style="color:#cbd5e1">${msg}</p><a class="cta" href="https://meok.ai/audit-prep-bundle">Get audit-ready — 2-day audit-prep (£4,950) →</a><a class="cta2" href="mailto:nicholas@csoai.org?subject=Article%2050%20readiness%20${s}/10&body=${body}">Email me my full breakdown</a>`;
+r.scrollIntoView({behavior:'smooth'});}
+</script></body></html>
