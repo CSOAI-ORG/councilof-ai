@@ -79,7 +79,6 @@ for p in data:
     -d "metadata[calls_included]=$calls_count" \
     -d "allow_promotion_codes=true" \
     -d "billing_address_collection=auto" \
-    -d "automatic_tax[enabled]=true" \
     | python3 -c "import json,sys; print(json.load(sys.stdin)['url'])")
   echo "  payment_link: $link"
   echo "$link" > "/tmp/payg_link_${amount_pence}.txt"
