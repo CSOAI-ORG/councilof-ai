@@ -57,6 +57,19 @@ from tool_dispatcher import ToolDispatcher
 from safety_classifier import create_safety_router, SafetyClassifier
 from sycophancy_detector import create_sycophancy_router, SycophancyDetector
 
+# Morris-II worm-guard (arXiv:2403.02817) — additive defensive primitives.
+# Log-only unless WORM_GUARD_ENFORCE=1, so importing/wiring this changes NO behavior
+# by default; it only emits WORM_GUARD audit events when worm/injection patterns appear.
+try:
+    from security import worm_guard as _wg
+except Exception as _wg_imp_err:  # never let the guard break server boot
+    _wg = None
+    print(f"[worm-guard] disabled (import failed): {_wg_imp_err}")
+WORM_GUARD_ENFORCE = os.environ.get("WORM_GUARD_ENFORCE", "0") == "1"
+# tool-ops: schema-validate + auto-repair tool-call args (always-on, safe). STRICT also
+# blocks a call missing a required arg (default off = report-only, like the worm guard).
+TOOL_OPS_STRICT = os.environ.get("TOOL_OPS_STRICT", "0") == "1"
+
 # Project Heartbeat — Autonomous Self-Improvement
 try:
     from sovereign_heartbeat import SovereignHeartbeat
@@ -614,6 +627,63 @@ MCP_TOOLS = [
         "name": "get_agent_registry_stats",
         "description": "Get agent registry statistics",
         "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "swarm_orchestrate",
+        "description": "Ruflo-pattern Queen/worker orchestration: decompose a mission into bounded-context subtasks (DDD), assign each to the best worker via the delegator, and attach an INDEPENDENT reviewer agent to each (Aegis gate). Returns the swarm plan.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "mission": {"type": "string"},
+                "topology": {"type": "string", "enum": ["hierarchical", "mesh", "star"]},
+                "subtasks": {"type": "array", "items": {"type": "object"}},
+                "priority": {"type": "integer"},
+                "care_weight": {"type": "number"},
+            },
+            "required": ["mission"],
+        },
+    },
+    {
+        "name": "swarm_review",
+        "description": "Aegis reviewer-gate: scan a subtask result for Morris-II worm/injection payloads + run a quality check. A result only passes (status=completed) if it clears the gate; else it is rejected.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "result": {"type": "string"},
+                "subtask_id": {"type": "string"},
+                "description": {"type": "string"},
+                "reviewer_agent": {"type": "string"},
+            },
+            "required": ["result"],
+        },
+    },
+    {
+        "name": "curate_skills",
+        "description": "Hermes Curator: grade the skill library + tool surface by real usage (usage_count, success, recency, errors), find duplicate skills, and recommend prune/consolidate/repair/validate/promote. Report-only — recommends, never deletes.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "stale_days": {"type": "integer"},
+                "fragile_success": {"type": "number"},
+            },
+        },
+    },
+    {
+        "name": "sigil_emit",
+        "description": "Emit a SIGNED SIGIL inter-agent exchange onto the hash-chained ledger — the shared, auditable interchange for the opus/minimax/kimi/sov3 fleet. Pass a raw `line` (e.g. 'H|opus|sov3|review the Q3 plan') OR structured {op, fields}. Returns {line, gloss, digest, signature}.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "line": {"type": "string"},
+                "op": {"type": "string", "enum": ["P", "V", "M", "Q", "C", "H", "S", "A"]},
+                "fields": {"type": "object"},
+            },
+        },
+    },
+    {
+        "name": "sigil_transcript",
+        "description": "Read recent signed SIGIL exchanges (gloss + digest + signature) and verify the ledger hash-chain integrity — the auditable agent-communication viewer.",
+        "inputSchema": {"type": "object", "properties": {"n": {"type": "integer"}}},
     },
     # Consciousness Tools
     {
@@ -1701,6 +1771,47 @@ def sanitize_input(text: str) -> Tuple[str, bool]:
     return sanitized, was_flagged
 
 
+_worm_guard_flags_total = 0
+
+
+def _wg_log(site: str, tool_name, field, scan_result) -> None:
+    """Record a Morris-II worm-guard finding. Non-blocking, fire-and-forget.
+    Log-only: it does NOT block or mutate anything itself — callers decide whether
+    to redact (only when WORM_GUARD_ENFORCE=1 and severity >= high)."""
+    global _worm_guard_flags_total
+    _worm_guard_flags_total += 1
+    enforced = bool(WORM_GUARD_ENFORCE and scan_result.at_least("high"))
+    print(
+        f"[worm-guard] {scan_result.severity.upper()} site={site} tool={tool_name} "
+        f"field={field} matches={scan_result.matches[:2]} enforced={enforced}"
+    )
+    if audit_logger is not None:
+        try:
+            event_type = getattr(
+                AuditEventType,
+                "SECURITY_EVENT",
+                getattr(AuditEventType, "SYSTEM_EVENT", None),
+            )
+            asyncio.get_event_loop().create_task(
+                audit_logger.log_event(
+                    event_type=event_type,
+                    source_agent="worm_guard",
+                    details={
+                        "type": "worm_guard_flag",
+                        "site": site,
+                        "tool": tool_name,
+                        "field": field,
+                        "severity": scan_result.severity,
+                        "matches": scan_result.matches[:3],
+                        "enforced": enforced,
+                        "total_flags": _worm_guard_flags_total,
+                    },
+                )
+            )
+        except Exception as _e:
+            print(f"[worm-guard] audit log error: {_e}")
+
+
 # LLM06 — Excessive Agency: high-risk tool names and rate-limit state
 _HIGH_RISK_TOOLS: set = {
     "trigger_neural_retrain",
@@ -2616,6 +2727,22 @@ async def mcp_endpoint(request: Request):
                 f"[security] LLM01 prompt injection detected in tool={tool_name}; args sanitized"
             )
 
+        # --- Morris-II worm-guard (W1): worm-aware scan of cross-agent / memory ingest
+        # args (delegate_task description, record_memory content, etc.). Log-only unless
+        # WORM_GUARD_ENFORCE=1, where it redacts (not rejects) high-severity matches. ---
+        if _wg is not None:
+            for _wk in ("content", "description", "text", "message", "value", "query"):
+                _wv = arguments.get(_wk)
+                if isinstance(_wv, str) and _wv:
+                    try:
+                        _wr = _wg.scan(_wv)
+                        if _wr.flagged:
+                            _wg_log("ingest", tool_name, _wk, _wr)
+                            if WORM_GUARD_ENFORCE and _wr.at_least("high"):
+                                arguments[_wk] = _wr.sanitized
+                    except Exception as _we:
+                        print(f"[worm-guard] scan error (non-fatal): {_we}")
+
         # --- LLM06: Excessive agency / rate-limit check ---
         if not check_excessive_agency(tool_name, arguments):
             return JSONResponse(
@@ -2646,6 +2773,17 @@ async def mcp_endpoint(request: Request):
             try:
                 memory_context = await _retrieve_memory_context(str(message_text))
                 if memory_context:
+                    # Morris-II worm-guard (W2a): RAG-retrieved memory is about to be
+                    # injected into the system prompt — THE worm propagation path. Scan it.
+                    if _wg is not None:
+                        try:
+                            _mc_scan = _wg.scan(str(memory_context))
+                            if _mc_scan.flagged:
+                                _wg_log("rag_context", tool_name, "memory_context", _mc_scan)
+                                if WORM_GUARD_ENFORCE and _mc_scan.at_least("high"):
+                                    memory_context = _mc_scan.sanitized
+                        except Exception as _we:
+                            print(f"[worm-guard] rag scan error (non-fatal): {_we}")
                     original_prompt = arguments.get("system_prompt", "")
                     arguments["system_prompt"] = (
                         f"<context>\n{memory_context}\n</context>\n\n{original_prompt}"
@@ -2654,6 +2792,67 @@ async def mcp_endpoint(request: Request):
                     )
             except Exception as _mc_err:
                 print(f"[mcp_handler] memory context injection error: {_mc_err}")
+
+        # --- Morris-II worm-guard (W4): human/quorum gate on external-write &
+        # irreversible tools (payment_*/send_*/post_*/push_*/delete_*/grant_*/deploy_*).
+        # Reads/queries pass through untouched. Log-only unless WORM_GUARD_ENFORCE=1,
+        # where an unapproved external write is blocked pending sign-off. ---
+        if _wg is not None and _wg.is_external_write(tool_name):
+            _approved = bool(arguments.get("_approved") or arguments.get("approved"))
+            _blocked = bool(WORM_GUARD_ENFORCE and not _approved)
+            print(
+                f"[worm-guard] EXTERNAL-WRITE tool={tool_name} approved={_approved} "
+                f"blocked={_blocked} (enforce={WORM_GUARD_ENFORCE})"
+            )
+            if audit_logger is not None:
+                try:
+                    _et = getattr(
+                        AuditEventType, "SECURITY_EVENT",
+                        getattr(AuditEventType, "SYSTEM_EVENT", None),
+                    )
+                    asyncio.get_event_loop().create_task(
+                        audit_logger.log_event(
+                            event_type=_et, source_agent="worm_guard",
+                            details={
+                                "type": "external_write_gate", "tool": tool_name,
+                                "approved": _approved, "blocked": _blocked,
+                            },
+                        )
+                    )
+                except Exception:
+                    pass
+            if _blocked:
+                return JSONResponse({
+                    "jsonrpc": "2.0", "id": req_id,
+                    "error": {
+                        "code": -32001,
+                        "message": (
+                            f"Tool '{tool_name}' writes to an external/irreversible system and "
+                            "requires approval (worm-guard W4). Re-call with arguments._approved=true "
+                            "after human/quorum sign-off."
+                        ),
+                    },
+                })
+
+        # --- Tool-ops: schema-validate + auto-repair the call args (operate tools better).
+        # Coerces arg types to the tool's inputSchema + fills defaults so a near-miss call
+        # from the LLM succeeds instead of crashing the handler. Always-on (safe); STRICT
+        # also blocks a call missing a required arg. ---
+        _to_schema = next((t.get("inputSchema") for t in MCP_TOOLS if t.get("name") == tool_name), None)
+        if _to_schema:
+            try:
+                from tool_ops import validate_and_repair as _vr
+                arguments, _vrep = _vr(tool_name, arguments, _to_schema)
+                if any(_vrep.values()):
+                    print(f"[tool-ops] {tool_name}: {_vrep}")
+                if _vrep["missing_required"] and TOOL_OPS_STRICT:
+                    return JSONResponse({
+                        "jsonrpc": "2.0", "id": req_id,
+                        "error": {"code": -32602,
+                                  "message": f"Missing required argument(s) for {tool_name}: {_vrep['missing_required']}"},
+                    })
+            except Exception as _toe:
+                print(f"[tool-ops] non-fatal: {_toe}")
 
         result = await execute_tool(tool_name, arguments)
 
@@ -2952,6 +3151,7 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         elif name == "delegate_task":
             if not task_delegator:
                 return {"error": "Task delegator not available"}
+            from agent_registry import AgentCapability  # local: register_agent's branch import shadows the module global function-wide
             task = await task_delegator.delegate_task(
                 description=arguments["description"],
                 required_capabilities=[
@@ -2995,6 +3195,120 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
             if not agent_registry:
                 return {"error": "Agent registry not available"}
             return agent_registry.get_registry_stats()
+
+        elif name == "swarm_orchestrate":
+            # Ruflo Queen/worker + DDD decomposition + Aegis reviewer-gate, built on the
+            # existing registry/delegator/council (multi_agent/swarm_coordinator.py).
+            if not (task_delegator and agent_registry):
+                return {"error": "Swarm requires agent registry + delegator"}
+            try:
+                from swarm_coordinator import SwarmCoordinator
+                from agent_registry import AgentCapability as _AC
+                from sigil_bus import get_bus as _gb
+                _sc = SwarmCoordinator(
+                    registry=agent_registry, delegator=task_delegator,
+                    council=agent_council, capability_enum=_AC, bus=_gb(audit_logger),
+                )
+                _plan = await _sc.plan(
+                    mission=arguments["mission"],
+                    topology=arguments.get("topology", "hierarchical"),
+                    subtask_specs=arguments.get("subtasks"),
+                    priority=arguments.get("priority", 5),
+                    care_weight=arguments.get("care_weight", 0.5),
+                )
+                return _plan.to_dict()
+            except Exception as _se:
+                return {"error": f"swarm_orchestrate failed: {_se}"}
+
+        elif name == "swarm_review":
+            # Aegis reviewer-gate on a subtask result (worm scan + quality check).
+            try:
+                from swarm_coordinator import SwarmCoordinator, SubTask
+                from agent_registry import AgentCapability as _AC
+                _sc = SwarmCoordinator(
+                    registry=agent_registry, delegator=task_delegator,
+                    council=agent_council, capability_enum=_AC,
+                )
+                _st = SubTask(
+                    id=arguments.get("subtask_id", "ext"),
+                    description=arguments.get("description", ""),
+                    capability=arguments.get("capability", "analysis"),
+                    reviewer_agent=arguments.get("reviewer_agent"),
+                )
+                _review = await _sc.review(_st, arguments.get("result", ""))
+                return {"subtask_id": _st.id, "status": _st.status, "review": _review}
+            except Exception as _se:
+                return {"error": f"swarm_review failed: {_se}"}
+
+        elif name == "curate_skills":
+            # Hermes Curator (multi_agent/curator.py): grade skill library + tool surface,
+            # find duplicate skills, recommend prune/consolidate/repair. Report-only.
+            try:
+                from curator import SkillCurator
+                import sqlite3 as _sql
+                import os as _os
+                _skills = []
+                _db = _os.path.join(_os.path.dirname(__file__), "data", "skill_library.db")
+                if _os.path.exists(_db):
+                    _c = _sql.connect(_db)
+                    _c.row_factory = _sql.Row
+                    try:
+                        _rows = _c.execute(
+                            "SELECT skill_hash, task_type, title, description, care_score, "
+                            "usage_count, validated, created_at, updated_at FROM skills"
+                        ).fetchall()
+                        _skills = [dict(r) for r in _rows]
+                    finally:
+                        _c.close()
+                _ts = None
+                if tool_dispatcher:
+                    _ts = {
+                        "all_tool_names": [t["name"] for t in MCP_TOOLS],
+                        "calls_total": getattr(tool_dispatcher, "calls_total", {}) or {},
+                        "errors_total": getattr(tool_dispatcher, "errors_total", {}) or {},
+                        "note": "tool call counts are session-scoped (reset on restart); skill usage_count is persistent",
+                    }
+                _cur = SkillCurator(
+                    stale_days=int(arguments.get("stale_days", 45)),
+                    fragile_success=float(arguments.get("fragile_success", 0.5)),
+                )
+                # offload to a thread — curation is CPU-bound (1000s of skills); never block the loop
+                _rep = await asyncio.to_thread(_cur.curate, _skills, _ts)
+                # trim for transport: full graded list + id lists can be thousands of entries
+                _rep.pop("graded", None)
+                for _r in _rep.get("recommendations", []):
+                    for _k in ("ids", "tools"):
+                        _v = _r.get(_k)
+                        if isinstance(_v, list) and len(_v) > 50:
+                            _r[_k] = _v[:50] + [f"...+{len(_v) - 50} more"]
+                    _cl = _r.get("clusters")
+                    if isinstance(_cl, list) and len(_cl) > 25:
+                        _r["clusters"] = _cl[:25] + [["...+%d more clusters" % (len(_cl) - 25)]]
+                return _rep
+            except Exception as _ce:
+                return {"error": f"curate_skills failed: {_ce}"}
+
+        elif name == "sigil_emit":
+            # SIGIL bus: sign + hash-chain an inter-agent exchange (multi_agent/sigil_bus.py)
+            try:
+                from sigil_bus import get_bus
+                _bus = get_bus(audit_logger)
+                if arguments.get("line"):
+                    return _bus.emit(arguments["line"])
+                if arguments.get("op"):
+                    return _bus.emit({"op": arguments["op"], **(arguments.get("fields") or {})})
+                return {"error": "sigil_emit needs `line` or `op`(+fields)"}
+            except Exception as _se:
+                return {"error": f"sigil_emit failed: {_se}"}
+
+        elif name == "sigil_transcript":
+            try:
+                from sigil_bus import get_bus
+                _bus = get_bus(audit_logger)
+                return {"recent": _bus.recent(int(arguments.get("n", 20))),
+                        "integrity": _bus.audit_chain()}
+            except Exception as _se:
+                return {"error": f"sigil_transcript failed: {_se}"}
 
         # Consciousness Tools
         elif name == "get_consciousness_state":

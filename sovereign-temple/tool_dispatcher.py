@@ -70,7 +70,12 @@ class ToolDispatcher:
     def get_relevant_tools(self, query: str, top_k: int = 8) -> List[Dict]:
         """Return top-k most relevant tools for this query."""
         if self._embeddings is None or self._get_embedder() is None:
-            return self.tools  # fallback: all tools
+            # fallback: keyword-rank instead of returning ALL tools (token bloat + worse selection)
+            try:
+                from tool_ops import keyword_rank
+                return keyword_rank(query, self.tools, top_k)
+            except Exception:
+                return self.tools
         try:
             query_emb = self._get_embedder().encode([query])[0]
             # Cosine similarity

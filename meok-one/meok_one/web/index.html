@@ -127,31 +127,32 @@
   footer{ color:#55556a; font-size:.68rem; text-align:center; padding:.6rem 0 1rem; }
   .shield{ color:var(--ok); }
 </style>
+<script src="/i18n.js" defer></script>
 </head>
 <body>
 <div class="app">
-  <div class="topbar"><span class="logo">MEOK&nbsp;<b>ONE</b></span></div>
+  <div class="topbar"><span class="logo">MEOK&nbsp;<b>ONE</b></span><select id="langSel" aria-label="Language" onchange="setLang(this.value)" style="margin-left:auto;background:var(--panel);color:var(--dim);border:1px solid var(--line);border-radius:8px;padding:.18rem .4rem;font-size:.7rem;cursor:pointer"><option value="en">EN</option><option value="es">ES</option><option value="fr">FR</option><option value="de">DE</option></select></div>
 
   <!-- HATCH -->
   <div class="scene" id="hatch">
     <div class="hero">
-      <h1>Hatch your<br>care-director</h1>
-      <p>One character. The whole sovereign OS behind it.</p>
+      <h1 data-i18n-html="hero_h1">Hatch your<br>care-director</h1>
+      <p data-i18n="hero_p">One character. The whole sovereign OS behind it.</p>
     </div>
     <div class="egg-wrap"><div class="egg" id="egg">🥚</div></div>
-    <div class="label">① choose their nature</div>
+    <div class="label" data-i18n="label_nature">① choose their nature</div>
     <div class="arch-grid" id="archGrid"></div>
-    <div class="label">② choose a care style</div>
+    <div class="label" data-i18n="label_style">② choose a care style</div>
     <div class="chips" id="styleChips"></div>
-    <div class="label">③ give them a name</div>
-    <input class="field" type="text" id="nameInput" placeholder="e.g. Bramble, Atlas, Vega…" autocomplete="off" maxlength="24">
+    <div class="label" data-i18n="label_name">③ give them a name</div>
+    <input class="field" type="text" id="nameInput" data-i18n-ph="name_ph" placeholder="e.g. Bramble, Atlas, Vega…" autocomplete="off" maxlength="24">
     <button class="cta" id="hatchBtn" disabled>Choose a nature & style to hatch</button>
-    <footer>Free · runs on your machine · <span class="shield">Sovereign-safe</span></footer>
+    <footer><span data-i18n="footer">Free · runs on your machine ·</span> <span class="shield" data-i18n="sovereign_safe">Sovereign-safe</span></footer>
   </div>
 
   <!-- CHAT -->
   <div class="scene chat hidden" id="chat">
-    <button class="back" id="backBtn">← hatch another</button>
+    <button class="back" id="backBtn" data-i18n="back">← hatch another</button>
     <div class="presence">
       <div class="avatar calm" id="avatar">
         <div class="aura"></div>
@@ -166,14 +167,14 @@
     </div>
     <div class="brainpill" id="brainToggle">
       <span class="glider" id="glider"></span>
-      <button data-brain="left" class="on"><span class="ico">🧠</span>Left</button>
-      <button data-brain="right"><span class="ico">☁️</span>Right</button>
-      <button data-brain="both"><span class="ico">⚖️</span>Council</button>
+      <button data-brain="left" class="on"><span class="ico">🧠</span><span data-i18n="brain_left">Left</span></button>
+      <button data-brain="right"><span class="ico">☁️</span><span data-i18n="brain_right">Right</span></button>
+      <button data-brain="both"><span class="ico">⚖️</span><span data-i18n="brain_council">Council</span></button>
     </div>
     <div class="brainhint" id="brainhint">🧠 Left Brain · runs on your device · private &amp; free</div>
     <div class="msgs" id="msgs"></div>
     <div class="composer">
-      <input class="field" type="text" id="msgInput" placeholder="talk to your sovereign…" autocomplete="off">
+      <input class="field" type="text" id="msgInput" data-i18n-ph="msg_ph" placeholder="talk to your sovereign…" autocomplete="off">
       <button id="sendBtn">↑</button>
     </div>
   </div>

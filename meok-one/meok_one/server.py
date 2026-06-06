@@ -309,6 +309,9 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         qs = parse_qs(urlparse(self.path).query)
         reg = default()
+        if path == "/api/mcp/tools":
+            from . import mcp_bridge as _mb
+            return self._json(200, _mb.list_tools())
         if path in ("/", "/index.html"):
             return self._html(_INDEX)
         if path in ("/avatar", "/avatar.html", "/3d"):
@@ -327,6 +330,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "pricing.html"))
         if path in ("/work", "/work.html", "/services", "/hire", "/consulting"):
             return self._html(os.path.join(_HERE, "web", "work.html"))
+        if path in ("/tools", "/tools.html", "/ecosystem"):
+            return self._html(os.path.join(_HERE, "web", "tools.html"))
         if path in ("/siri", "/siri.html", "/shortcut"):
             return self._html(os.path.join(_HERE, "web", "siri.html"))
         if path in ("/widget", "/widget.html"):
@@ -353,6 +358,30 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Content-Length", str(len(body)))
                 self.end_headers(); self.wfile.write(body); return
             return self._json(404, {"error": "not found", "path": path})
+        # i18n layer (zero-dep): the loader + locale JSON (path-traversal safe)
+        if path == "/i18n.js":
+            fp = os.path.join(_HERE, "web", "i18n.js")
+            if os.path.isfile(fp):
+                with open(fp, "rb") as f:
+                    body = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/javascript; charset=utf-8")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers(); self.wfile.write(body); return
+            return self._json(404, {"error": "i18n.js not found"})
+        if path.startswith("/locales/") and path.endswith(".json"):
+            base = os.path.join(_HERE, "web", "locales")
+            fp = os.path.normpath(os.path.join(base, os.path.basename(path)))
+            if fp.startswith(base) and os.path.isfile(fp):
+                with open(fp, "rb") as f:
+                    body = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers(); self.wfile.write(body); return
+            return self._json(404, {"error": "locale not found", "path": path})
         if path.endswith((".vrm", ".vrma")):
             # serve any VRM model / VRMA animation under web/ (path-traversal safe)
             base = os.path.join(_HERE, "web")
@@ -640,6 +669,10 @@ class Handler(BaseHTTPRequestHandler):
         b = self._body()
         uid = self._uid(b)   # cross-device identity (Bearer token → user_id; else 'web')
         try:
+            # ---- MCP bridge: OS/DOME/LAW/MAP + characters → SOV3 tools + compliance MCP catalogue ----
+            if path == "/api/mcp/call":
+                from . import mcp_bridge as _mb
+                return self._json(200, _mb.call(b))
             # ---- passwordless cross-device identity ----
             if path == "/api/auth/anon":
                 return self._json(200, auth.create_anon())           # just-start: durable account

@@ -190,3 +190,26 @@ This is genuinely confusing for buyers. **Action for Nick:** decide on ONE model
 - **GBP Available:** £0
 - **GBP Pending:** £0
 - **Live Key Location:** `~/.secrets/stripe_live.env` (exports `STRIPE_LIVE_KEY`)
+
+---
+
+## ✅ CANONICAL LIVE BUY LINKS — 2026-06-06 (SUPERSEDES every `00wfZjcg…90K`-as-everything reference above)
+All verified active on live Stripe this date. **Use ONLY these** across pages, READMEs, storefront.
+
+| Product | Price | buy.stripe.com/… |
+|---|---|---|
+| Pro (per-MCP / Compliance) **+ LAUNCH50** | £79/mo → £39.50 (50% off 6mo) | `4gMfZja8seUWbEx1Uc8k915?prefilled_promo_code=LAUNCH50` |
+| Pro (plain) | £79/mo | `00wfZjcgAeUW4c5cyQ8k90K` |
+| Enterprise | £1,499/mo | `7sY5kF3K4cMObEx2Yg8k917` |
+| NIS2-DE Self-Serve | £99 once | `9B6eVf6WgeUWfUN2Yg8k91e` |
+| NIS2-DE Done-For-You | £499 once | `00waEZ80kaEG0ZTdCU8k91f` |
+| Article-50 Watermarking Kit | £999 once | `aFa14pfsMcMOdMF0Q88k91g` |
+| Audit-Prep Bundle (2-day) | £4,950 once | `eVq9AV94o6oq23XdCU8k91h` |
+| Smoke Test | £1 once | `fZubJ36Wg8wy5g98iA8k91d` |
+| Care Home Pack | £150/mo | `3cIaEZfsMcMO9wp7ew8k83F` |
+| PAYG top-up £10 / £50 / £200 | once | `dRmbJ33K4bIK9wp6as8k91a` / `4gM9AVbcw14638156o8k91b` / `fZu9AV4O8fZ0gYRgP68k91c` |
+
+**☠️ DEAD — NEVER USE (caused the £0 / mischarges):**
+- `7sY00l6WgbIK0ZTfL28k90Q` → £999/mo COBOL (was mislabeled as £49–£1,499 across 5 pages)
+- `eVq7sN6Wg9AC3812Yg8k90R` → £4,990/mo COBOL Defence (was mislabeled £399)
+- `dRmcN75Sc…90U` → old £1 smoke (deactivated; replaced by `…91d`)
