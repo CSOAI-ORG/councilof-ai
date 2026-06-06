@@ -72,16 +72,13 @@ MIT © MEOK AI Labs
 
 <!-- BUY-LADDER:START -->
 
-## 💸 Try MEOK in 30 seconds — instant buy ladder
+## Get started (consumer)
 
-| Tier | Price | What you get | Stripe |
-|---|---|---|---|
-| Smoke test | **£1** | Signed sample MCP-Hardening report + Article 50 PDF | <https://buy.stripe.com/dRmcN75ScdQS7oh1Uc8k90U> |
-| Quick Kit | **£9** | EU AI Act Article 50 implementation guide (C2PA + EU-Icon) | <https://buy.stripe.com/cNi00la8s1460ZT0Q88k90V> |
-| Founder Call | **£29** | 30-min 1-on-1 with the founder | <https://buy.stripe.com/8x228ta8s6oqbExaqI8k90W> |
+- Try free at **[koikeeper.ai](https://koikeeper.ai)** — 3 AI consultations, no signup.
+- **KoiKeeper Pro £7.99/mo** — unlimited variety/disease lookups + seasonal feeding + winter prep.
+- **KoiKeeper Premium £19.99/mo** — multi-pond profiles + KHV early-warning + vet referral.
 
-> Refundable. UK Stripe — VAT-clean. Builds on the 81-MCP MEOK fleet.
-> Verify any signed report at <https://meok.ai/verify>.
+For koi-dealer / breeder compliance, see meok-laia-aquatic-mcp (£29/mo) + meok-uk-fhi-mcp (£79/mo).
 
 <!-- BUY-LADDER:END -->
 

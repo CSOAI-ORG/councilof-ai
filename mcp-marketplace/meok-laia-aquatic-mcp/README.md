@@ -32,7 +32,7 @@ This MCP turns the spec into one programmable surface: list the activities, run 
 | Free | £0 | 30 calls/hour. List + checklist only. |
 | Pro | £29/mo | Unlimited. Full gap analysis + inspector pack + reminder webhooks. |
 
-[Sign up at meok.ai/pricing](https://meok.ai/pricing)
+[Subscribe — £29/mo](https://buy.stripe.com/8x2aEZeoI5km7ohdCU8k90I)
 
 ## License
 
@@ -53,16 +53,13 @@ Distributed via OATA + fishkeeper.ai + koikeeper.ai consumer funnels.
 
 <!-- BUY-LADDER:START -->
 
-## 💸 Try MEOK in 30 seconds — instant buy ladder
+## Get started
 
-| Tier | Price | What you get | Stripe |
-|---|---|---|---|
-| Smoke test | **£1** | Signed sample MCP-Hardening report + Article 50 PDF | <https://buy.stripe.com/dRmcN75ScdQS7oh1Uc8k90U> |
-| Quick Kit | **£9** | EU AI Act Article 50 implementation guide (C2PA + EU-Icon) | <https://buy.stripe.com/cNi00la8s1460ZT0Q88k90V> |
-| Founder Call | **£29** | 30-min 1-on-1 with the founder | <https://buy.stripe.com/8x228ta8s6oqbExaqI8k90W> |
+- **Free** — 30 calls/hour, no card. Activities list + 7-point welfare checklist.
+- **Pro £29/mo** — full LAIA gap analysis + indicative star rating + inspector-ready pack → **[Subscribe](https://buy.stripe.com/8x2aEZeoI5km7ohdCU8k90I)**
+- **Not ready to subscribe?** 30-min review of your LAIA licence readiness — [book a call](mailto:nicholas@meok.ai?subject=LAIA%20aquatic%20licence%20review)
 
-> Refundable. UK Stripe — VAT-clean. Builds on the 81-MCP MEOK fleet.
-> Verify any signed report at <https://meok.ai/verify>.
+Verify any signed inspector pack at <https://meok.ai/verify>.
 
 <!-- BUY-LADDER:END -->
 

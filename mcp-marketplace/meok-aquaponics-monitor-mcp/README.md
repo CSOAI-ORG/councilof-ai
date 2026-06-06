@@ -57,7 +57,7 @@ Baseboard fork: [Whitebox Labs Tentacle T1 MkII](https://github.com/whitebox-lab
 | Pro | £79/mo | Unlimited. Multi-rig. Dose actuator hook + welfare-alert webhooks. |
 | Enterprise | Custom | Pro + private SOV3 deployment + fleet management. |
 
-[Sign up at meok.ai/pricing](https://meok.ai/pricing)
+[Subscribe — £29/mo Hobby](https://buy.stripe.com/aFa28t80k9ACdMF1Uc8k90D)
 
 ## License
 
@@ -78,16 +78,13 @@ MIT © MEOK AI Labs
 
 <!-- BUY-LADDER:START -->
 
-## 💸 Try MEOK in 30 seconds — instant buy ladder
+## Get started
 
-| Tier | Price | What you get | Stripe |
-|---|---|---|---|
-| Smoke test | **£1** | Signed sample MCP-Hardening report + Article 50 PDF | <https://buy.stripe.com/dRmcN75ScdQS7oh1Uc8k90U> |
-| Quick Kit | **£9** | EU AI Act Article 50 implementation guide (C2PA + EU-Icon) | <https://buy.stripe.com/cNi00la8s1460ZT0Q88k90V> |
-| Founder Call | **£29** | 30-min 1-on-1 with the founder | <https://buy.stripe.com/8x228ta8s6oqbExaqI8k90W> |
+- **Free** — 60 calls/hour, no card. Safe-range checks + intent attestation.
+- **Hobby £29/mo** → **[Subscribe](https://buy.stripe.com/aFa28t80k9ACdMF1Uc8k90D)** · **Pro £79/mo** (multi-rig + care-gated actuation) → **[Subscribe](https://buy.stripe.com/00w28tgwQ6oq9wpcyQ8k90E)**
+- **Not ready to subscribe?** 30-min review of your sensor/welfare setup — [book a call](mailto:nicholas@meok.ai?subject=Aquaponics%20monitor%20review)
 
-> Refundable. UK Stripe — VAT-clean. Builds on the 81-MCP MEOK fleet.
-> Verify any signed report at <https://meok.ai/verify>.
+Verify any signed attestation at <https://meok.ai/verify>.
 
 <!-- BUY-LADDER:END -->
 

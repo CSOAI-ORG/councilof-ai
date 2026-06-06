@@ -83,7 +83,7 @@ Returns: severity-weighted score, list of failing clauses, top-5 remediation pri
 | Pro | £499/mo | Unlimited. Full gap analysis + audit pack + signed welfare attestations + attestation-api integration. |
 | Enterprise | Custom | Pro + multi-site dashboard + RSPCA refresh-notification webhooks + dedicated assessor onboarding pack. |
 
-Sign up: [meok.ai/pricing](https://meok.ai/pricing)
+Subscribe — £499/mo: [buy.stripe.com](https://buy.stripe.com/8x28wR0xS7su23X7ew8k90z)
 
 ## License
 
@@ -112,16 +112,13 @@ npx meok-setup --pack aquaculture
 
 <!-- BUY-LADDER:START -->
 
-## 💸 Try MEOK in 30 seconds — instant buy ladder
+## Get started
 
-| Tier | Price | What you get | Stripe |
-|---|---|---|---|
-| Smoke test | **£1** | Signed sample MCP-Hardening report + Article 50 PDF | <https://buy.stripe.com/dRmcN75ScdQS7oh1Uc8k90U> |
-| Quick Kit | **£9** | EU AI Act Article 50 implementation guide (C2PA + EU-Icon) | <https://buy.stripe.com/cNi00la8s1460ZT0Q88k90V> |
-| Founder Call | **£29** | 30-min 1-on-1 with the founder | <https://buy.stripe.com/8x228ta8s6oqbExaqI8k90W> |
+- **Free** — 30 calls/hour, no card. List standards, lookup clauses, headline score.
+- **Pro £499/mo** — full gap analysis + audit-ready RSPCA evidence pack + signed welfare attestations → **[Subscribe](https://buy.stripe.com/8x28wR0xS7su23X7ew8k90z)**
+- **Not ready to subscribe?** 30-min review of your RSPCA Assured setup — [book a call](mailto:nicholas@meok.ai?subject=RSPCA%20Aquaculture%20compliance%20review)
 
-> Refundable. UK Stripe — VAT-clean. Builds on the 81-MCP MEOK fleet.
-> Verify any signed report at <https://meok.ai/verify>.
+Verify any signed welfare attestation at <https://meok.ai/verify>.
 
 <!-- BUY-LADDER:END -->
 

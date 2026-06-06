@@ -63,7 +63,7 @@ pip install meok-uk-fhi-mcp
 | Pro | £79/mo | Unlimited. Full AW1 / IPAFFS / movement-doc generation + compliance calendar + signed audit fingerprints. |
 | Enterprise | Custom | Pro + multi-site dashboard + auto-submission webhooks. |
 
-[Sign up at meok.ai/pricing](https://meok.ai/pricing)
+[Subscribe — £79/mo](https://buy.stripe.com/aFa5kF3K41465g9fL28k90B)
 
 ## License
 
@@ -85,16 +85,13 @@ MIT © MEOK AI Labs
 
 <!-- BUY-LADDER:START -->
 
-## 💸 Try MEOK in 30 seconds — instant buy ladder
+## Get started
 
-| Tier | Price | What you get | Stripe |
-|---|---|---|---|
-| Smoke test | **£1** | Signed sample MCP-Hardening report + Article 50 PDF | <https://buy.stripe.com/dRmcN75ScdQS7oh1Uc8k90U> |
-| Quick Kit | **£9** | EU AI Act Article 50 implementation guide (C2PA + EU-Icon) | <https://buy.stripe.com/cNi00la8s1460ZT0Q88k90V> |
-| Founder Call | **£29** | 30-min 1-on-1 with the founder | <https://buy.stripe.com/8x228ta8s6oqbExaqI8k90W> |
+- **Free** — 30 calls/hour, no card. Permit lookup + listed-disease register.
+- **Pro £79/mo** — AW1 / IPAFFS / movement-doc generation + 12-month compliance calendar + signed audit fingerprints → **[Subscribe](https://buy.stripe.com/aFa5kF3K41465g9fL28k90B)**
+- **Not ready to subscribe?** 30-min review of your CEFAS / EA / APHA setup — [book a call](mailto:nicholas@meok.ai?subject=UK%20FHI%20compliance%20review)
 
-> Refundable. UK Stripe — VAT-clean. Builds on the 81-MCP MEOK fleet.
-> Verify any signed report at <https://meok.ai/verify>.
+Verify any signed audit fingerprint at <https://meok.ai/verify>.
 
 <!-- BUY-LADDER:END -->
 
