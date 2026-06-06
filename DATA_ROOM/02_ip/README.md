@@ -11,6 +11,7 @@ The "what is actually defensible?" folder. This is where MEOK is strongest. The 
 | 02.5 | Trademark filings (MEOK, CSOAI) | Protects the brand; investors expect it before a round. | **NEED** | ~£1.5K UK+EU+US. File and place the application receipts here. Until granted, say "applied for", not "registered". |
 | 02.6 | Open-source licensing + CLA | The MCPs are MIT-licensed; a Contributor Licence Agreement protects against license fragility if external contributors appear. | **IN-PROGRESS** | Confirm MIT across the catalogue; add a CLA template for any external contributor. |
 | 02.7 | SOV3 architecture / care-membrane design | The novel R&D asset (110 tools, 6 NNs, care-gated actions). Differentiation, not yet a revenue product. | **HAVE** (design) | Code in `sovereign-temple/`; NN metadata files. See also `03_product/`. |
+| 02.8 | **CC0 crosswalk moat argument** | The crisp answer to "what stops a competitor cloning this?" — the Westlaw precedent: public inputs, proprietary structure. The defensibility narrative behind 02.1. | **HAVE** | `IP_MOAT_CC0_CROSSWALK.md` (this folder). Sourced from the Jan–Feb 2026 archive extract; severed framing stripped. |
 
 **Honesty flags (carried, do not let these slip into "we have a patent"):**
 - The attestation mechanism is **live** but **not yet patented** — 02.4 is a `NEED`. Pitch it as "patentable process", never "patented".

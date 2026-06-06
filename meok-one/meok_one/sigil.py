@@ -133,6 +133,21 @@ _STORE = os.environ.get("MEOK_SIGIL_LOG",
                         str(os.path.join(os.path.dirname(__file__), "data", "sigil_audit.jsonl")))
 
 
+def _load_existing() -> None:
+    """Reload the durable hash-chained log into memory on startup, so the audit trail
+    SURVIVES restarts (an audit trail that vanishes on restart is no audit trail)."""
+    try:
+        if os.path.isfile(_STORE):
+            with open(_STORE) as f:
+                tail = f.readlines()[-_LOG.maxlen:]
+            for ln in tail:
+                ln = ln.strip()
+                if ln:
+                    _LOG.append(json.loads(ln))
+    except Exception:
+        pass
+
+
 def _head() -> str:
     return _LOG[-1]["receipt"] if _LOG else _GENESIS
 
@@ -163,7 +178,7 @@ def recent(n: int = 50) -> list:
 def verify_chain() -> dict:
     """Recompute the hash chain — proves the log hasn't been tampered with."""
     with _LOCK:
-        prev, ok, bad = _GENESIS, 0, None
+        prev, ok, bad = (_LOG[0]["prev"] if _LOG else _GENESIS), 0, None
         for r in _LOG:
             calc = hashlib.sha256(f"{prev}{r['line']}".encode()).hexdigest()[:16]
             if calc != r["receipt"]:
@@ -200,6 +215,10 @@ def emit_council(character: str, message: str, council: dict) -> list:
         "nodes": council.get("available_nodes", 0),
         "f": council.get("byzantine_tolerance_f", 0), "vetoes": len(vetoes)}}))
     return out
+
+
+# populate the in-memory log from the durable store on import (audit trail persists across restarts)
+_load_existing()
 
 
 if __name__ == "__main__":

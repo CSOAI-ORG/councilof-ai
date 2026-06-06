@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0a0f">
+<title>MEOK ONE — Tool Ecosystem</title>
+<script src="/i18n.js" defer></script>
+<style>
+  :root{ --bg:#0a0a0f; --panel:#16161f; --panel2:#1c1c28; --line:#26263a; --txt:#edeef5;
+    --dim:#8b8ba0; --accent:#7C3AED; --accent2:#a855f7; --ok:#34d399; --r:14px; --ease:cubic-bezier(.22,1,.36,1); }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  body{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%, #18122b 0%, var(--bg) 55%); color:var(--txt);
+    min-height:100dvh; }
+  .wrap{ max-width:760px; margin:0 auto; padding:1.1rem 1rem 3rem; }
+  .topbar{ display:flex; align-items:center; gap:.6rem; padding:.2rem 0 1rem; }
+  .logo{ font-weight:800; letter-spacing:.14em; font-size:.8rem; color:var(--dim); }
+  .logo b{ color:var(--txt); }
+  .back{ margin-left:auto; color:var(--dim); text-decoration:none; font-size:.8rem; border:1px solid var(--line);
+    padding:.35rem .75rem; border-radius:99px; transition:.18s var(--ease); }
+  .back:hover{ color:var(--txt); border-color:#3a3a55; }
+  h1{ font-size:1.5rem; font-weight:800; letter-spacing:-.02em;
+    background:linear-gradient(90deg,#fff,#c4b5fd); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .sub{ color:var(--dim); font-size:.9rem; margin-top:.35rem; }
+  .count{ display:inline-flex; align-items:center; gap:.45rem; background:var(--panel); border:1px solid var(--line);
+    border-radius:99px; padding:.4rem .9rem; font-size:.82rem; margin-top:.8rem; }
+  .count b{ color:var(--accent2); font-size:1.05rem; }
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px var(--ok); }
+  .search{ width:100%; background:var(--panel); border:1px solid var(--line); border-radius:var(--r);
+    padding:.8rem 1rem; color:var(--txt); font-size:.95rem; margin:1.1rem 0 .4rem; }
+  .search:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(124,58,237,.18); }
+  .seclabel{ color:var(--dim); font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; font-weight:600; margin:1.2rem 0 .5rem; }
+  .grid{ display:grid; gap:.55rem; }
+  .tool{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:.8rem .95rem; transition:.16s var(--ease); }
+  .tool:hover{ border-color:#3a3a55; transform:translateY(-1px); }
+  .tool.new{ border-color:rgba(124,58,237,.5); box-shadow:0 0 0 1px rgba(124,58,237,.25); }
+  .tool .nm{ font-family:'SF Mono',ui-monospace,Menlo,monospace; font-size:.86rem; font-weight:600; color:#d7c9ff; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+  .badge{ font-size:.58rem; font-weight:700; letter-spacing:.08em; background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff; padding:.12rem .42rem; border-radius:99px; text-transform:uppercase; }
+  .tool .ds{ color:var(--dim); font-size:.82rem; line-height:1.45; margin-top:.3rem; }
+  .empty{ color:var(--dim); text-align:center; padding:2rem 0; font-size:.9rem; }
+  footer{ color:#55556a; font-size:.68rem; text-align:center; padding:2rem 0 .5rem; }
+  .shield{ color:var(--ok); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <span class="logo">MEOK&nbsp;<b>ONE</b></span>
+    <a class="back" href="/os" target="_top">← OS</a>
+  </div>
+  <h1 data-i18n="tools_title">Tool Ecosystem</h1>
+  <p class="sub" data-i18n="tools_sub">Every tool your characters can call — live, through the sovereign bridge.</p>
+  <div class="count"><span class="dot"></span><b id="count">…</b>&nbsp;<span data-i18n="tools_live">live tools</span> <span id="via" style="color:var(--dim)"></span></div>
+
+  <input class="search" id="q" type="text" placeholder="Search tools…" data-i18n-ph="tools_search" autocomplete="off">
+
+  <div id="newWrap" class="hidden">
+    <div class="seclabel" data-i18n="tools_fabric">✦ Sovereign fabric (new)</div>
+    <div class="grid" id="newGrid"></div>
+  </div>
+  <div class="seclabel" id="allLabel" data-i18n="tools_all">All tools</div>
+  <div class="grid" id="grid"></div>
+  <div class="empty hidden" id="empty" data-i18n="tools_none">No tools match.</div>
+
+  <footer>MEOK ONE · tools bridged from SOV3 · <span class="shield" data-i18n="sovereign_safe">Sovereign-safe</span></footer>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const NEW=new Set(["swarm_orchestrate","swarm_review","curate_skills","sigil_emit","sigil_transcript"]);
+let ALL=[];
+function card(t){
+  const isNew=NEW.has(t.name);
+  const el=document.createElement("div"); el.className="tool"+(isNew?" new":"");
+  el.innerHTML=`<div class="nm">${t.name}${isNew?'<span class="badge">new</span>':''}</div>`+
+    (t.description?`<div class="ds">${(t.description||"").replace(/</g,"&lt;")}</div>`:"");
+  return el;
+}
+function render(filter){
+  const f=(filter||"").toLowerCase().trim();
+  const match=t=>!f||t.name.toLowerCase().includes(f)||(t.description||"").toLowerCase().includes(f);
+  const news=ALL.filter(t=>NEW.has(t.name)&&match(t));
+  const rest=ALL.filter(t=>!NEW.has(t.name)&&match(t));
+  const ng=$("#newGrid"); ng.innerHTML=""; news.forEach(t=>ng.appendChild(card(t)));
+  $("#newWrap").classList.toggle("hidden", news.length===0);
+  const g=$("#grid"); g.innerHTML=""; rest.forEach(t=>g.appendChild(card(t)));
+  const none=news.length===0&&rest.length===0;
+  $("#empty").classList.toggle("hidden", !none);
+  $("#allLabel").classList.toggle("hidden", rest.length===0);
+}
+(async function(){
+  try{
+    const r=await fetch("/api/mcp/tools"); const d=await r.json();
+    ALL=(d.tools||[]).sort((a,b)=>a.name.localeCompare(b.name));
+    $("#count").textContent=d.count!=null?d.count:ALL.length;
+    if(d.via) $("#via").textContent="· via "+d.via;
+    render("");
+  }catch(e){ $("#count").textContent="—"; $("#empty").classList.remove("hidden"); $("#empty").textContent="Bridge unreachable."; }
+})();
+$("#q").addEventListener("input",e=>render(e.target.value));
+</script>
+</body>
+</html>

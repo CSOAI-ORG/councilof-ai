@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenSIGIL — the signed language for AI agents to communicate</title>
+<meta name="description" content="OpenSIGIL is the provenance + audit layer for AI agent communication: a compact, human-readable language where every exchange is signed and hash-chained. The flight recorder for multi-agent systems.">
+<meta property="og:title" content="OpenSIGIL — signed, auditable agent communication">
+<meta property="og:description" content="A free + paid language for AI agents to talk — with a tamper-evident, human-readable transcript an auditor can read. EU AI Act Art 12/14 ready.">
+<style>
+  :root{--bg:#0a0b10;--panel:#12141d;--ink:#e8eaf2;--mut:#8b90a6;--acc:#7c5cff;--acc2:#16d1a8;--line:#222536;--warn:#f5a623}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  code,pre,.mono{font-family:'SF Mono',ui-monospace,'Cascadia Code',Menlo,monospace}
+  a{color:var(--acc2);text-decoration:none}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  .glow{position:fixed;inset:0;background:radial-gradient(60% 40% at 50% 0%,rgba(124,92,255,.18),transparent 70%);pointer-events:none;z-index:0}
+  header{position:relative;z-index:1;padding:22px 0;display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
+  .marble{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff,#cdbcff 30%,#7c5cff 62%,#2a1d6b);box-shadow:0 0 18px rgba(124,92,255,.6)}
+  .nav a{color:var(--mut);margin-left:22px;font-size:14px}
+  .nav a:hover{color:var(--ink)}
+  section{position:relative;z-index:1;padding:64px 0;border-bottom:1px solid var(--line)}
+  .hero{text-align:center;padding:90px 0 70px}
+  .pill{display:inline-block;font-size:12px;color:var(--acc2);border:1px solid var(--line);border-radius:99px;padding:6px 14px;margin-bottom:22px;letter-spacing:.4px}
+  h1{font-size:clamp(34px,6vw,58px);line-height:1.05;letter-spacing:-1px;font-weight:800;margin-bottom:18px}
+  h1 .g{background:linear-gradient(90deg,#a98bff,#16d1a8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{font-size:clamp(17px,2.4vw,21px);color:var(--mut);max-width:680px;margin:0 auto 30px}
+  .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;padding:13px 24px;border-radius:11px;font-weight:600;font-size:15px}
+  .btn.p{background:linear-gradient(90deg,#7c5cff,#9a7dff);color:#fff;box-shadow:0 8px 30px rgba(124,92,255,.35)}
+  .btn.s{border:1px solid var(--line);color:var(--ink)}
+  h2{font-size:clamp(24px,3.5vw,34px);letter-spacing:-.5px;margin-bottom:10px}
+  .lede{color:var(--mut);max-width:720px;margin-bottom:28px}
+  .term{background:#06070b;border:1px solid var(--line);border-radius:14px;overflow:hidden;text-align:left;max-width:860px;margin:32px auto 0;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  .term .bar{display:flex;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line);background:#0d0f16}
+  .dot{width:11px;height:11px;border-radius:50%}.r{background:#ff5f57}.y{background:#febc2e}.gd{background:#28c840}
+  .term .body{padding:18px 18px 20px;font-size:13px;overflow-x:auto}
+  .row{padding:9px 0;border-bottom:1px dashed #1a1d2b}
+  .row:last-child{border:0}
+  .sig{color:#5cffd0}.eng{color:var(--mut)}.dg{color:#6f76a0;font-size:11px}
+  .tag{display:inline-block;min-width:62px;color:var(--acc);font-size:11px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:26px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h3{font-size:17px;margin-bottom:8px}.card p{color:var(--mut);font-size:14.5px}
+  .price{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:26px}
+  .tier{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;position:relative}
+  .tier.feat{border-color:var(--acc);box-shadow:0 0 40px rgba(124,92,255,.18)}
+  .tier .nm{font-size:13px;color:var(--mut);letter-spacing:.5px;text-transform:uppercase}
+  .tier .amt{font-size:30px;font-weight:800;margin:8px 0 4px}.tier .amt span{font-size:14px;color:var(--mut);font-weight:500}
+  .tier ul{list-style:none;margin-top:14px}.tier li{padding:7px 0;font-size:14px;color:#c7cbe0;border-top:1px solid var(--line)}
+  .tier li::before{content:"✓ ";color:var(--acc2)}
+  .note{background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.3);border-radius:12px;padding:16px;color:#e9d6b0;font-size:14px;margin-top:24px}
+  .center{text-align:center}
+  footer{position:relative;z-index:1;padding:40px 0;color:var(--mut);font-size:13px;text-align:center}
+  .inst{background:#06070b;border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:inline-block;margin-top:8px}
+  .inst code{color:#5cffd0}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+  <header>
+    <div class="logo"><div class="marble"></div> OpenSIGIL</div>
+    <nav class="nav"><a href="#how">How</a><a href="#why">Why</a><a href="#pricing">Pricing</a><a href="#start">Start</a></nav>
+  </header>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="pill">SOVEREIGN INTER-AGENT INTERCHANGE LANGUAGE</span>
+    <h1>The <span class="g">signed</span> language for AI agents<br>to communicate.</h1>
+    <p class="sub">A compact, deterministic, <b>human-readable</b> language where every agent exchange is <b>signed and hash-chained</b> — so your multi-agent system produces a replayable, tamper-evident transcript an auditor can actually read. The flight recorder for agent fleets.</p>
+    <div class="cta">
+      <a class="btn p" href="#start">Get the free library</a>
+      <a class="btn s" href="#pricing">See pricing</a>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>Three brains talking — in one signed line each</h2>
+    <p class="lede">Every message is a dense SIGIL line, glossable to plain English on demand, with a stable digest you can sign. Below: a real agent council vote, exactly as it appears on the ledger.</p>
+    <div class="term">
+      <div class="bar"><i class="dot r"></i><i class="dot y"></i><i class="dot gd"></i></div>
+      <div class="body mono">
+        <div class="row"><span class="tag">PROPOSE</span><span class="sig">P|ad6d|Prioritise Q3: apex vs distribution vs partnership|A,B,C</span><br><span class="eng">↳ Proposal ad6d: "Prioritise Q3…" — options A, B, C.</span> <span class="dg">⌗ 9f2a…</span></div>
+        <div class="row"><span class="tag">VOTE</span><span class="sig">V|opus|ad6d|+|0.82</span> &nbsp;<span class="eng">↳ opus votes APPROVE (conf 0.82).</span> <span class="dg">⌗ 4c11…</span></div>
+        <div class="row"><span class="tag">VOTE</span><span class="sig">V|minimax-m3|ad6d|~|0.41</span> &nbsp;<span class="eng">↳ minimax-m3 ABSTAINS (conf 0.41).</span> <span class="dg">⌗ a780…</span></div>
+        <div class="row"><span class="tag">HANDOFF</span><span class="sig">H|queen|kimi-2.6|draft the Q3 plan</span> &nbsp;<span class="eng">↳ Handoff queen → kimi-2.6.</span> <span class="dg">⌗ 1d93…</span></div>
+        <div class="row"><span class="tag">ALERT</span><span class="sig">A|info|2/3 supermajority — ad6d ADOPTED</span> &nbsp;<span class="eng">↳ supermajority reached, adopted.</span> <span class="dg">⌗ e55f…</span></div>
+        <div class="row" style="color:#16d1a8">✓ chain intact · 5 records signed · ~3.4× fewer tokens than English</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <h2>Not another agent protocol — the layer that proves what they did</h2>
+    <p class="lede">MCP, A2A, ACP are the <i>transports</i> — how agents call tools and hand off. OpenSIGIL is the thin <b>signed-audit layer that rides on top of any of them</b>. Whatever your agents use to talk, OpenSIGIL gives you the notarized record of what they decided.</p>
+    <div class="grid">
+      <div class="card"><h3>🖋 Signed</h3><p>Every exchange is HMAC-signed (free) or Ed25519 + RFC-3161 timestamped (paid) and hash-chained — tamper-evident by construction.</p></div>
+      <div class="card"><h3>👁 Human-readable</h3><p><code>gloss()</code> turns any line back into plain English on demand. Dense for machines, legible for humans and auditors.</p></div>
+      <div class="card"><h3>⚖️ Compliance-ready</h3><p>A replayable transcript of automated decisions — exactly the evidence EU AI Act Art 12 (logging) + Art 14 (oversight) and ISO 42001 ask for.</p></div>
+      <div class="card"><h3>🔌 Transport-agnostic</h3><p>Drop it alongside MCP / A2A / your own stack. One line per decision, one ledger for the fleet.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <h2>Free to speak it. Paid to prove it.</h2>
+    <p class="lede">The language is open. The third-party-verifiable trust layer is the product.</p>
+    <div class="price">
+      <div class="tier">
+        <div class="nm">Open</div><div class="amt">£0</div>
+        <ul><li>The spec + <code>opensigil</code> library (MIT)</li><li>HMAC self-signing</li><li>Local hash-chained ledger</li><li>Public verifier (100/mo)</li></ul>
+      </div>
+      <div class="tier feat">
+        <div class="nm">Pro</div><div class="amt">£19<span>/mo</span></div>
+        <ul><li>Ed25519 + RFC-3161 timestamps</li><li>Hosted signed ledger</li><li>Audit dashboard (search + gloss)</li><li>Unlimited verifies</li></ul>
+      </div>
+      <div class="tier">
+        <div class="nm">Team</div><div class="amt">£99<span>/mo</span></div>
+        <ul><li>Multi-agent fleets</li><li>EU AI Act Art 12/14 evidence export</li><li>SSO + retention controls</li><li>Conformance badge</li></ul>
+      </div>
+    </div>
+    <div class="note"><b>Honest note:</b> the free tier’s HMAC signing is <i>internal</i> tamper-evidence (you verify with your own key). Paid adds <b>asymmetric Ed25519 + trusted timestamps</b> so <i>anyone</i> can verify your agents’ transcript without your secret — that’s the audit-grade claim.</div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap center">
+    <h2>Add signed agent logs in 30 seconds</h2>
+    <p class="lede" style="margin:0 auto 14px">Open-source first. The paid trust layer when you need to prove it.</p>
+    <div class="inst mono"><code>pip install opensigil</code></div>
+    <p style="color:var(--mut);font-size:13px;margin-top:18px">Stewarded by <a href="https://csoai.org">CSOAI</a> — the Council for Sovereign & Open AI.</p>
+    <div class="cta" style="margin-top:18px"><a class="btn p" href="mailto:hello@opensigil.ai?subject=OpenSIGIL%20early%20access">Request early access</a></div>
+  </div>
+</section>
+
+<footer><div class="wrap">OpenSIGIL · the signed language for AI agents · © 2026 MEOK AI LTD · a CSOAI open standard</div></footer>
+</body>
+</html>

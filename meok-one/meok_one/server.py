@@ -662,6 +662,13 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(200, d)
             except Exception as e:
                 return self._json(200, {"error": f"{type(e).__name__}: {e}"})
+        if path == "/api/export":
+            # Free→Local seam: a signed, GDPR-Art-20 portable bundle — take your AI local.
+            try:
+                from . import portability
+                return self._json(200, portability.export_bundle(self._uid()))
+            except Exception as e:
+                return self._json(200, {"error": f"{type(e).__name__}: {e}"})
         return self._json(404, {"error": "not found", "path": path})
 
     def do_POST(self):
@@ -895,6 +902,19 @@ class Handler(BaseHTTPRequestHandler):
                            user_message=b.get("message", ""), tier=b.get("tier", "pro"))
                 out["reply"] = _g["reply"]
                 out["sovereign_gate"] = {k: _g[k] for k in ("gate", "care_flagged", "held", "swappable_engine")}
+                try:   # SIGIL: record this decision on the tamper-evident ledger (the moat, made visible)
+                    from . import sigil as _sigil
+                    _gst = out.get("sovereign_gate", {})
+                    _rec = _sigil.record({"op": "S", "fields": {
+                        "char": cid, "brain": str(out.get("brain", b.get("brain", "left"))),
+                        "engine": str(out.get("engine", out.get("backend", "?"))),
+                        "care": "flagged" if _gst.get("care_flagged") else "ok",
+                        "held": _gst.get("held", False)}})
+                    if _gst.get("held"):
+                        _sigil.record({"op": "A", "level": "safety", "msg": f"{cid} reply held by the sovereign gate"})
+                    out["sigil"] = {"line": _rec["line"], "gloss": _rec["gloss"], "receipt": _rec["receipt"]}
+                except Exception:
+                    pass
                 # Stage 1 Tamagotchi: grow the bond + update mood from this interaction (per user)
                 try:
                     from . import vitals as _v
