@@ -1,8 +1,10 @@
 {
   "routes": [
+    { "src": "^/openapi\\.json$", "dest": "/openapi.json" },
+    { "src": "^/docs$", "dest": "/docs.html" },
+    { "src": "^/docs\\.html$", "dest": "/docs.html" },
     { "src": "^/api/payg(?:/.*)?$", "dest": "/api/payg.py" },
     { "src": "^/payg(?:/.*)?$", "dest": "/api/payg.py" },
     { "src": "/(.*)", "dest": "/api/index.py" }
   ]
 }
-

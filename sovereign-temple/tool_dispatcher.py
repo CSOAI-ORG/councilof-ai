@@ -22,6 +22,9 @@ class ToolDispatcher:
         ]
         self.calls_total: Dict[str, int] = {}
         self.errors_total: Dict[str, int] = {}
+        # persistent telemetry — survives restarts so the curator's prune list is trustworthy
+        self._telemetry_path = Path(__file__).resolve().parent / "data" / "tool_telemetry.json"
+        self._load_telemetry()
 
     def _get_embedder(self):
         if self._embedder is None:
@@ -88,10 +91,28 @@ class ToolDispatcher:
             print(f"[ToolDispatcher] get_relevant_tools error: {e}")
             return self.tools
 
+    def _load_telemetry(self):
+        try:
+            if self._telemetry_path.exists():
+                d = json.loads(self._telemetry_path.read_text())
+                self.calls_total = {k: int(v) for k, v in d.get("calls_total", {}).items()}
+                self.errors_total = {k: int(v) for k, v in d.get("errors_total", {}).items()}
+        except Exception:
+            pass
+
+    def _save_telemetry(self):
+        try:
+            self._telemetry_path.parent.mkdir(parents=True, exist_ok=True)
+            self._telemetry_path.write_text(json.dumps(
+                {"calls_total": self.calls_total, "errors_total": self.errors_total}))
+        except Exception:
+            pass
+
     def record_call(self, tool_name: str, success: bool):
         self.calls_total[tool_name] = self.calls_total.get(tool_name, 0) + 1
         if not success:
             self.errors_total[tool_name] = self.errors_total.get(tool_name, 0) + 1
+        self._save_telemetry()   # write-through so counts survive restarts
 
     def get_stats(self) -> Dict:
         total_calls = sum(self.calls_total.values())

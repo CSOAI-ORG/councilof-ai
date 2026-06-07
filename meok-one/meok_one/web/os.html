@@ -687,6 +687,14 @@ async function sendChat(text, voice=false){
   const t0=Date.now();
   try{
     const d=await fetchJSON(ep,body,ms);
+    if(d.cap_reached){   // free daily limit hit → the upgrade moment
+      typing.classList.remove("think");
+      typing.querySelector(".who").textContent=`${CHAR} · daily free limit`;
+      const up=d.upgrade||{}, href=up.url||"/pricing";
+      twEl.innerHTML=(d.reply||"You've reached today's free limit.")+
+        `<div style="margin-top:10px"><a href="${href}" target="_blank" rel="noopener" style="display:inline-block;background:linear-gradient(135deg,#7c5cff,#a855f7);color:#fff;padding:9px 16px;border-radius:10px;font-weight:700;text-decoration:none">⚡ Upgrade to Pro — ${up.price||"£9/mo"}</a></div>`;
+      return;
+    }
     const secs=((Date.now()-t0)/1000).toFixed(1);
     typing.classList.remove("think");
     typing.querySelector(".who").textContent=`${d.character||CHAR} · ${d.engine||brain} · ${secs}s`;

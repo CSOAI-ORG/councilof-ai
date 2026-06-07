@@ -97,6 +97,59 @@ def user_exists(uid: str) -> bool:
     return uid in _load().get("users", {})
 
 
+# ---------- tier + daily usage (the free→paid funnel) ----------
+FREE_DAILY_CAP = int(os.environ.get("MEOK_FREE_DAILY_CAP", "50"))   # env-tunable (A/B the free limit)
+PRO_DAILY_CAP = int(os.environ.get("MEOK_PRO_DAILY_CAP", "2000"))
+
+
+def _today() -> str:
+    return time.strftime("%Y-%m-%d")
+
+
+def get_tier(uid: str) -> str:
+    return (_load().get("users", {}).get(uid) or {}).get("tier", "free")
+
+
+def set_tier(uid: str, tier: str) -> dict:
+    """Flip a user's plan — called by the Stripe webhook on payment."""
+    with _LOCK:
+        d = _load()
+        u = d.get("users", {}).get(uid)
+        if u is None:
+            return {"ok": False, "error": "unknown user"}
+        u["tier"] = tier
+        _save(d)
+    return {"ok": True, "user_id": uid, "tier": tier}
+
+
+def daily_cap(uid: str) -> int:
+    return PRO_DAILY_CAP if get_tier(uid) in ("pro", "enterprise") else FREE_DAILY_CAP
+
+
+def usage_today(uid: str) -> int:
+    us = (_load().get("users", {}).get(uid) or {}).get("usage", {})
+    return int(us.get("count", 0)) if us.get("date") == _today() else 0
+
+
+def check_and_bump(uid: str) -> dict:
+    """Atomically enforce the daily message cap (Free=50/day, Pro=2000/day). This is the
+    trigger that fires the upgrade prompt. Returns allowed + count/cap/tier/remaining."""
+    with _LOCK:
+        d = _load()
+        u = d.setdefault("users", {}).setdefault(
+            uid, {"created": int(time.time()), "devices": 1, "email": None})
+        tier = u.get("tier", "free")
+        cap = PRO_DAILY_CAP if tier in ("pro", "enterprise") else FREE_DAILY_CAP
+        us = u.get("usage", {})
+        count = int(us.get("count", 0)) if us.get("date") == _today() else 0
+        if count >= cap:
+            return {"allowed": False, "count": count, "cap": cap, "tier": tier, "remaining": 0}
+        u["usage"] = {"date": _today(), "count": count + 1}
+        _save(d)
+        return {"allowed": True, "count": count + 1, "cap": cap, "tier": tier,
+                "remaining": cap - (count + 1)}
+
+
 def start_pair(uid: str) -> dict:
     """Logged-in device mints a short-lived, single-use code to link another device."""
     d = _load()
@@ -139,9 +192,14 @@ def me(uid: str) -> dict:
     u = _load().get("users", {}).get(uid)
     if not u:
         return {"error": "unknown user"}
+    _us = u.get("usage", {})
+    _today_count = int(_us.get("count", 0)) if _us.get("date") == _today() else 0
+    _tier = u.get("tier", "free")
     return {"user_id": uid, "created": u["created"],
             "devices": u.get("devices", 1), "email": u.get("email"),
-            "characters": len(u.get("characters", []))}
+            "characters": len(u.get("characters", [])),
+            "tier": _tier, "usage_today": _today_count,
+            "daily_cap": PRO_DAILY_CAP if _tier in ("pro", "enterprise") else FREE_DAILY_CAP}
 
 
 # ---------- per-user character roster (the Character Factory persists creations here) ----------

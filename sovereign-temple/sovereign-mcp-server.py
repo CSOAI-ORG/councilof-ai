@@ -2142,11 +2142,12 @@ async def initialize_system():
     # Initialize Kimi Agent
     global kimi_agent
     kimi_key = os.environ.get("KIMI_API_KEY", "")
-    if kimi_key and KIMI_AVAILABLE:
+    if KIMI_AVAILABLE:   # instantiate even without a key — the agent falls back to local Ollama
         print("  🤖 Initializing Kimi Agent...")
         try:
             kimi_agent = KimiAgent(api_key=kimi_key)
-            print(f"    Kimi connected (model: {kimi_agent.default_model})")
+            print(f"    Kimi connected (model: {kimi_agent.default_model})" if kimi_key
+                  else f"    Kimi key absent → local fallback ({kimi_agent.fallback_model})")
             # Register in agent registry if available
             if agent_registry:
                 try:

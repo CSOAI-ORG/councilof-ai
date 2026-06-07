@@ -296,9 +296,13 @@ class Handler(BaseHTTPRequestHandler):
         return None
 
     def _body(self):
+        self._raw_body = b""                            # raw bytes kept for webhook sig verification
         try:
             n = int(self.headers.get("Content-Length", 0) or 0)
-            return json.loads(self.rfile.read(n).decode() or "{}") if n else {}
+            if not n:
+                return {}
+            self._raw_body = self.rfile.read(n)
+            return json.loads(self._raw_body.decode() or "{}")
         except (ValueError, json.JSONDecodeError):
             return {}
 
@@ -330,6 +334,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._html(os.path.join(_HERE, "web", "pricing.html"))
         if path in ("/work", "/work.html", "/services", "/hire", "/consulting"):
             return self._html(os.path.join(_HERE, "web", "work.html"))
+        if path in ("/help", "/help.html", "/faq", "/guide", "/docs", "/support"):
+            return self._html(os.path.join(_HERE, "web", "help.html"))
         if path in ("/tools", "/tools.html", "/ecosystem"):
             return self._html(os.path.join(_HERE, "web", "tools.html"))
         if path in ("/siri", "/siri.html", "/shortcut"):
@@ -484,6 +490,9 @@ class Handler(BaseHTTPRequestHandler):
             tier = (qs.get("tier", ["pro"])[0] or "pro").strip()
             env_key = {"pro": "MEOK_PRO_CHECKOUT_URL", "enterprise": "MEOK_ENTERPRISE_CHECKOUT_URL"}.get(tier, "")
             url = (os.environ.get(env_key, "").strip() if env_key else "")
+            if url:   # tag with the user so the webhook can flip the right account to Pro on payment
+                _ref = self._uid()
+                url = url + ("&" if "?" in url else "?") + "client_reference_id=" + _ref
             return self._json(200, {"tier": tier, "url": url or None, "configured": bool(url)})
         if path == "/api/law":
             # MEOK LAW — the capability map: frameworks, regions, crosswalk MCPs, honest coverage.
@@ -676,6 +685,29 @@ class Handler(BaseHTTPRequestHandler):
         b = self._body()
         uid = self._uid(b)   # cross-device identity (Bearer token → user_id; else 'web')
         try:
+            # ---- Stripe → Pro: signature-verified webhook flips the paying user to Pro ----
+            if path == "/api/stripe/webhook":
+                import hmac as _hmac, hashlib as _hl
+                secret = os.environ.get("STRIPE_WEBHOOK_SECRET", "").strip()
+                if not secret:
+                    return self._json(400, {"error": "STRIPE_WEBHOOK_SECRET not configured"})
+                raw = getattr(self, "_raw_body", b"") or b""
+                parts = dict(p.split("=", 1) for p in self.headers.get("Stripe-Signature", "").split(",") if "=" in p)
+                expected = _hmac.new(secret.encode(), f"{parts.get('t','')}.{raw.decode('utf-8','replace')}".encode(), _hl.sha256).hexdigest()
+                if not _hmac.compare_digest(expected, parts.get("v1", "")):
+                    return self._json(400, {"error": "bad signature"})
+                if b.get("type") == "checkout.session.completed":
+                    sess = (b.get("data") or {}).get("object") or {}
+                    puid = sess.get("client_reference_id")
+                    if puid:
+                        auth.set_tier(puid, "pro")
+                        try:
+                            from . import sigil as _sigil
+                            _sigil.record({"op": "S", "fields": {"event": "stripe_paid", "user": puid, "tier": "pro"}})
+                        except Exception:
+                            pass
+                        return self._json(200, {"ok": True, "user": puid, "tier": "pro"})
+                return self._json(200, {"ok": True, "ignored": b.get("type")})
             # ---- MCP bridge: OS/DOME/LAW/MAP + characters → SOV3 tools + compliance MCP catalogue ----
             if path == "/api/mcp/call":
                 from . import mcp_bridge as _mb
@@ -891,6 +923,15 @@ class Handler(BaseHTTPRequestHandler):
                 })
             if path == "/api/think":
                 cid = b.get("character", "aria")
+                _cap = auth.check_and_bump(uid)   # daily message cap — the free→Pro upgrade trigger
+                if not _cap["allowed"]:
+                    _u = os.environ.get("MEOK_PRO_CHECKOUT_URL", "").strip()
+                    _u = (_u + ("&" if "?" in _u else "?") + "client_reference_id=" + uid) if _u else None
+                    return self._json(200, {
+                        "cap_reached": True, "tier": _cap["tier"], "count": _cap["count"], "cap": _cap["cap"],
+                        "reply": (f"You've hit today's free limit of {_cap['cap']} messages 🌙 "
+                                  f"Upgrade to Pro (£9/mo) for {auth.PRO_DAILY_CAP}/day + all 27 characters."),
+                        "upgrade": {"tier": "pro", "price": "£9/mo", "url": _u, "configured": bool(_u)}})
                 out = think(cid, b.get("message", ""),
                             brain=b.get("brain", "left"), tier=b.get("tier", "pro"),
                             user_id=uid)
@@ -927,6 +968,14 @@ class Handler(BaseHTTPRequestHandler):
                 # DEADLINE so chat never hangs: reviews that miss it are dropped, Sovereign
                 # reconciles whatever returned. Smaller council for snappy interactive chat.
                 cid = b.get("character", "aria")
+                _cap = auth.check_and_bump(uid)   # daily cap also applies to the council brain
+                if not _cap["allowed"]:
+                    _u = os.environ.get("MEOK_PRO_CHECKOUT_URL", "").strip()
+                    _u = (_u + ("&" if "?" in _u else "?") + "client_reference_id=" + uid) if _u else None
+                    return self._json(200, {"cap_reached": True, "tier": _cap["tier"], "count": _cap["count"], "cap": _cap["cap"],
+                        "reply": (f"You've hit today's free limit of {_cap['cap']} messages 🌙 "
+                                  f"Upgrade to Pro (£9/mo) for {auth.PRO_DAILY_CAP}/day + all 27 characters."),
+                        "upgrade": {"tier": "pro", "price": "£9/mo", "url": _u, "configured": bool(_u)}})
                 from .sovereign import sovereign_council
                 _roster = b.get("roster") or _COUNCIL_ROSTER
                 out = sovereign_council(cid, b.get("message", ""),
@@ -1025,10 +1074,45 @@ def _voiceify(text, limit=600):
     return t or "I'm here."
 
 
+def _load_dotenv():
+    """Load a gitignored .env (KEY=VALUE per line) so the owner can drop in the Stripe link +
+    webhook secret without code changes. Real env always wins. Looks at $MEOK_ENV_FILE else data/.env."""
+    path = os.environ.get("MEOK_ENV_FILE") or os.path.join(os.path.dirname(__file__), "data", ".env")
+    try:
+        with open(path) as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                k, v = line.split("=", 1)
+                k, v = k.strip(), v.strip().strip('"').strip("'")
+                if k and k not in os.environ:        # never override a real env var
+                    os.environ[k] = v
+    except FileNotFoundError:
+        pass
+    except Exception:
+        pass
+
+
+def _warmup(port: int):
+    """Pre-warm the slow first-call paths (heavy imports + SOV3 lenses) so the first real user
+    load isn't ~6s. Fires localhost GETs once after the server binds. Best-effort, never fatal."""
+    import time as _t, urllib.request as _u
+    _t.sleep(2)
+    for path in ("/api/agents", "/api/characters", "/dome", "/api/mcp/tools", "/api/sigil/recent?n=1"):
+        try:
+            _u.urlopen(f"http://127.0.0.1:{port}{path}", timeout=45).read()
+        except Exception:
+            pass
+
+
 def main(port: int = 4173):
+    _load_dotenv()                 # pick up MEOK_PRO_CHECKOUT_URL / STRIPE_WEBHOOK_SECRET from data/.env
+    import threading as _th
     srv = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     print(f"=== MEOK ONE is live: http://localhost:{port} ===")
     print(f"    {default().total} characters · v{__version__} · open the URL to hatch + talk")
+    _th.Thread(target=_warmup, args=(port,), daemon=True).start()   # warm slow paths in background
     try:
         srv.serve_forever()
     except KeyboardInterrupt:
