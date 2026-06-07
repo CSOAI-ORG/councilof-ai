@@ -1010,6 +1010,47 @@ class handler(BaseHTTPRequestHandler):
                 "rate_gbp_per_call": _PAYG_RATE_GBP,
                 "topup_url": _PAYG_TOPUP_URL,
             })
+        if path in ("/payg/admin", "/api/payg/admin"):
+            qs = dict(urllib.parse.parse_qsl(self.path.split("?", 1)[1] if "?" in self.path else ""))
+            admin_key = qs.get("admin_key", "") or self.headers.get("X-Admin-Key", "")
+            expected = os.environ.get("MEOK_PAYG_ADMIN_KEY", "")
+            if not expected:
+                return self._json(503, {"error": "MEOK_PAYG_ADMIN_KEY env var not set on the server"})
+            if not hmac.compare_digest(admin_key, expected):
+                return self._json(401, {"error": "Bad admin key"})
+            # Aggregate stats via Stripe customer search.
+            try:
+                resp = _stripe_api_request(
+                    "GET",
+                    "/customers/search?query=metadata['meok_payg_token']:'payg_*'&limit=100",
+                )
+            except Exception as e:
+                # Stripe's search query syntax doesn't support wildcards inside
+                # the value; fall back to listing recent customers and filtering.
+                try:
+                    resp = _stripe_api_request("GET", "/customers?limit=100")
+                except Exception as e2:
+                    return self._json(500, {"error": f"Stripe list failed: {e2}"})
+            customers = resp.get("data", [])
+            total_balance = 0.0
+            active_tokens = 0
+            for c in customers:
+                md = c.get("metadata") or {}
+                if md.get("meok_payg_token"):
+                    active_tokens += 1
+                    try:
+                        total_balance += float(md.get("meok_payg_balance", "0"))
+                    except (TypeError, ValueError):
+                        pass
+            return self._json(200, {
+                "ok": True,
+                "active_payg_tokens": active_tokens,
+                "total_outstanding_balance_gbp": round(total_balance, 4),
+                "calls_remaining_total": _payg_calls_included(total_balance),
+                "rate_gbp_per_call": _PAYG_RATE_GBP,
+                "topup_url": _PAYG_TOPUP_URL,
+                "note": "Stats restricted to the first 100 customers returned by Stripe — paginate via Stripe API for full picture.",
+            })
         if path in ("/payg/balance", "/api/payg/balance"):
             qs = dict(urllib.parse.parse_qsl(self.path.split("?", 1)[1] if "?" in self.path else ""))
             token = qs.get("token", "")
@@ -1274,6 +1315,86 @@ class handler(BaseHTTPRequestHandler):
                 "balance_gbp": new_balance,
                 "calls_included_running_total": _payg_calls_included(new_balance),
                 "email_sent": sent,
+            })
+
+        if path in ("/payg/trial", "/api/payg/trial"):
+            # Free £0.50 trial credit. One per email — dedupe via Stripe Customer.
+            try:
+                payload = json.loads(raw) if raw else {}
+            except json.JSONDecodeError:
+                return self._json(400, {"error": "Invalid JSON"})
+
+            email = (payload.get("email") or "").strip().lower()
+            if not email or "@" not in email or "." not in email.split("@")[-1]:
+                return self._json(400, {"error": "Valid 'email' required"})
+
+            trial_amount = float(os.environ.get("MEOK_PAYG_TRIAL_GBP", "0.50"))
+
+            # Look up existing customer by email (Stripe stores it on Customer)
+            try:
+                resp = _stripe_api_request(
+                    "GET",
+                    f"/customers/search?query=email:'{email}'",
+                )
+            except Exception as e:
+                return self._json(500, {"error": f"Stripe lookup failed: {e}"})
+
+            customers = resp.get("data", [])
+            existing = customers[0] if customers else None
+
+            if existing:
+                meta = existing.get("metadata") or {}
+                if meta.get("meok_payg_trial_claimed") == "true":
+                    # Already claimed — return their existing token but no credit
+                    return self._json(409, {
+                        "error": "Trial already claimed for this email",
+                        "existing_token_prefix": (meta.get("meok_payg_token", "") or "")[:12] + "…",
+                        "topup_url": _PAYG_TOPUP_URL,
+                    })
+                customer_id = existing["id"]
+                token = meta.get("meok_payg_token") or _payg_generate_token()
+                new_balance = round(
+                    float(meta.get("meok_payg_balance", "0")) + trial_amount, 4
+                )
+            else:
+                # New Stripe Customer — create one
+                try:
+                    customer = _stripe_api_request(
+                        "POST", "/customers", {"email": email}
+                    )
+                except Exception as e:
+                    return self._json(500, {"error": f"Could not create Stripe customer: {e}"})
+                customer_id = customer["id"]
+                token = _payg_generate_token()
+                new_balance = round(trial_amount, 4)
+
+            try:
+                _stripe_api_request("POST", f"/customers/{customer_id}", {
+                    "metadata[meok_payg_token]": token,
+                    "metadata[meok_payg_balance]": str(new_balance),
+                    "metadata[meok_payg_trial_claimed]": "true",
+                    "metadata[meok_payg_trial_at]": datetime.now(timezone.utc).isoformat(),
+                    "metadata[meok_payg_trial_gbp]": str(trial_amount),
+                })
+            except Exception as e:
+                return self._json(500, {"error": f"Could not update Stripe metadata: {e}"})
+
+            # Best-effort welcome email
+            sent = _payg_send_welcome(email, token, trial_amount, new_balance)
+            return self._json(200, {
+                "ok": True,
+                "trial_issued": True,
+                "trial_amount_gbp": trial_amount,
+                "balance_gbp": new_balance,
+                "calls_included": _payg_calls_included(new_balance),
+                "token": token,  # included in response since trial flow needs it returned
+                "email": email,
+                "email_sent": sent,
+                "next_step": (
+                    f"export MEOK_PAYG_KEY={token} && "
+                    f"export MEOK_PAYG_SERVER_URL=https://meok-attestation-api.vercel.app/payg && "
+                    f"pip install -U eu-ai-act-compliance-mcp"
+                ),
             })
 
         if path in ("/payg/deduct", "/api/payg/deduct"):
