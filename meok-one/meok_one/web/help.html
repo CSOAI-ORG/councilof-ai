@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEOK ONE — Help, Guide & FAQ</title>
+<meta name="description" content="How MEOK ONE works: hatch a character, the governance moat (signed, human-gated AI), free/local/paid, take-it-local export, privacy & safety, and FAQ.">
+<meta name="theme-color" content="#0a0a14">
+<style>
+:root{--bg:#0a0a14;--card:#12121f;--line:#26263a;--ink:#e8e8f0;--dim:#9aa;--brand:#7c5cff;--good:#34d399}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:32px 20px 80px}
+a{color:var(--brand);text-decoration:none}a:hover{text-decoration:underline}
+h1{font-size:30px;margin:.2em 0}.sub{color:var(--dim);margin:0 0 28px}
+h2{font-size:21px;margin:34px 0 10px;border-top:1px solid var(--line);padding-top:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:12px 0}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:10px 0 10px 42px;border-bottom:1px solid var(--line)}
+.steps li:last-child{border-bottom:0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:2px 16px;margin:8px 0}
+summary{cursor:pointer;font-weight:600;padding:12px 0;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+ ";color:var(--brand);font-weight:800}
+details[open] summary::before{content:"– "}
+details .a{color:var(--dim);padding:0 0 12px}
+.pill{display:inline-block;background:#1a1a2e;border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:12.5px;margin:3px 4px 0 0;color:var(--dim)}
+.cta{display:inline-block;background:linear-gradient(135deg,#7c5cff,#a855f7);color:#fff;font-weight:700;padding:11px 20px;border-radius:12px;margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+code{background:#0e0e1a;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+.top{display:flex;gap:14px;align-items:center;margin-bottom:6px}.top a{font-size:14px}
+</style></head>
+<body><div class="wrap">
+<div class="top"><a href="/os">← Back to the OS</a><a href="/pricing">Pricing</a><a href="/dome">DOME</a></div>
+<h1>MEOK ONE — Help &amp; Guide</h1>
+<p class="sub">An AI OS where every decision is <b>signed, auditable, and human-gated</b>. Here's how it works.</p>
+
+<h2>Getting started in 60 seconds</h2>
+<ol class="steps card">
+  <li><b>Open the OS</b> at <a href="/os">/os</a> — no signup needed. You get a durable account instantly.</li>
+  <li><b>Hatch a character</b> — pick one of 27, or make your own in the <b>Character Factory</b>.</li>
+  <li><b>Chat.</b> Every reply passes the Sovereign care-gate and is written to your tamper-evident ledger.</li>
+  <li><b>Go cross-device</b> — pair your phone; your character, memory and bond follow you.</li>
+  <li><b>Own it</b> — "Take it local" exports a signed bundle you can self-host. Your AI is genuinely yours.</li>
+</ol>
+
+<h2>The moat — why MEOK is different</h2>
+<div class="card">MEOK governs AI the way the law governs people:
+<div style="margin-top:8px">
+<span class="pill">🔐 Scoped — tiers &amp; caps</span><span class="pill">📜 Signed — SIGIL hash-chain</span>
+<span class="pill">🛡️ Reviewed — council can veto</span><span class="pill">💜 Human-gated — care-gate</span>
+<span class="pill">🐛 Worm-guarded — blocks injection</span></div>
+<p style="margin:10px 0 0;color:var(--dim)">Open the <a href="/os">Compliance tab</a> in the OS to read your live audit trail — every AI decision, glossed in plain English and independently verifiable (EU AI Act Art-12 tamper-evident logging).</p></div>
+
+<h2>DOME vs WORLD vs Characters</h2>
+<div class="grid">
+<div class="card"><b>🏛️ DOME</b><br><span class="dim">Governance: the council, MEOK LAW, and the live map of where AI agents act in the real world — watched &amp; audited.</span></div>
+<div class="card"><b>🌱 WORLD</b><br><span class="dim">Where your character lives &amp; grows — a generated home, not a real-world map.</span></div>
+<div class="card"><b>🧬 Characters</b><br><span class="dim">Your AI companions. They <i>act</i> in DOME (governed) and <i>live</i> in WORLD.</span></div>
+</div>
+
+<h2>Plans — Free · Local · Pro</h2>
+<div class="card">
+<b>Local (£0, open source)</b> — self-host, your own Ollama, all 27 characters, fully private.<br>
+<b>Free (£0, hosted)</b> — 1 character, 50 messages/day, cross-device memory.<br>
+<b>Pro (£9/mo)</b> — all 27 characters, 2,000 messages/day, signed-attestation export.<br>
+<a class="cta" href="/pricing">See plans →</a></div>
+
+<h2>FAQ</h2>
+<details><summary>Is my data private?</summary><div class="a">Yes. Run fully local with your own model, or use hosted with cross-device memory. "Take it local" gives you a signed export (GDPR Art-20 portability) any time — your characters and memory walk with you.</div></details>
+<details><summary>What does "signed &amp; auditable" actually mean?</summary><div class="a">Every AI decision writes a receipt to a hash-chained ledger (SIGIL). You can recompute the chain yourself to prove nothing was tampered with. It's in the OS Compliance tab.</div></details>
+<details><summary>How is distress handled?</summary><div class="a">A care-gate sits on every reply. Signs of distress are always met with real human-support signposting (e.g. Samaritans 116 123 in the UK) — never ignored or amplified.</div></details>
+<details><summary>Can I make my own character?</summary><div class="a">Yes — the Character Factory lets you design one (archetype, care-style, voice). It persists to your roster across all your devices.</div></details>
+<details><summary>What happens at the free daily limit?</summary><div class="a">At 50 messages/day you're prompted to upgrade to Pro (£9/mo) for 2,000/day + all characters. Nothing is lost; pick up the next day or upgrade in one tap.</div></details>
+<details><summary>Do you protect against prompt injection?</summary><div class="a">Yes — a Morris-II-class worm-guard scans agent inputs/outputs and an independent reviewer can reject malicious or self-replicating content before it spreads.</div></details>
+<details><summary>Is there an app?</summary><div class="a">MEOK ONE is an installable PWA (add to home screen) and a desktop build. A native app-store listing isn't live yet.</div></details>
+
+<h2>Need a human?</h2>
+<div class="card">🆘 <b>Samaritans</b> 116 123 (UK, free, 24/7) · 💬 <b>SHOUT</b> text 85258 · 🚑 999 (UK) / 112 (EU)<br>
+<span class="dim">Product questions: open the OS and ask your character, or see <a href="/pricing">pricing</a>.</span></div>
+</div></body></html>
