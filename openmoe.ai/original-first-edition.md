@@ -1,4 +1,4 @@
-# Openmore.ai: Diamonds, Breakthroughs & Open-Source Arsenal
+# openmoe.ai: Diamonds, Breakthroughs & Open-Source Arsenal
 ## A Comprehensive Intelligence Report for Building the Next Generation of Sovereign AI
 
 ---
@@ -99,7 +99,7 @@ If Sov3 follows the pattern of other sovereign AI initiatives (Red Hat's soverei
 
 ### 2.1 Model Architecture Breakthroughs
 
-The open-source model landscape in mid-2026 is experiencing a Cambrian explosion. Four architectures deserve immediate attention for the openmore.ai stack: **Mixture-of-Experts (MoE)** for efficiency, **Mamba/State Space Models** for long-context scaling, **hybrid architectures** for best-of-both-worlds, and **diffusion language models** for novel generation paradigms.
+The open-source model landscape in mid-2026 is experiencing a Cambrian explosion. Four architectures deserve immediate attention for the openmoe.ai stack: **Mixture-of-Experts (MoE)** for efficiency, **Mamba/State Space Models** for long-context scaling, **hybrid architectures** for best-of-both-worlds, and **diffusion language models** for novel generation paradigms.
 
 ![Model Architecture Comparison](model_comparison.png)
 
@@ -404,11 +404,11 @@ The March 2026 addition of **autoresearch** — where AI agents autonomously run
 
 ---
 
-## 5. Integration Architecture for openmore.ai
+## 5. Integration Architecture for openmoe.ai
 
 ### 5.1 Recommended Stack
 
-Based on the research, here is the recommended architecture for openmore.ai as a sovereign AI platform:
+Based on the research, here is the recommended architecture for openmoe.ai as a sovereign AI platform:
 
 | Layer | Technology | Role |
 |---|---|---|
@@ -429,7 +429,7 @@ Based on the research, here is the recommended architecture for openmore.ai as a
 ```python
 #!/usr/bin/env python3
 """
-openmore.ai - EU AI Act Article 50 Compliance Agent
+openmoe.ai - EU AI Act Article 50 Compliance Agent
 Integrates CSOAI MCP servers, The Hives runtime, and RAGFlow knowledge layer.
 """
 

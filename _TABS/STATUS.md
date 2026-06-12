@@ -2,6 +2,18 @@
 *Every tab appends 3 lines here when it finishes a chunk: what changed · what's live · what's blocked.*
 *Newest at top. This is how all tabs + Nick stay in sync.*
 
+## 2026-06-12 (PM14) — 🐝 CANONICAL FACTS INJECTED INTO ALL 28 HIVE STACK.YML — Mavis root orchestrator
+**Mavis root** · hive-staging/*
+- **What changed:** Wrote `_TABS/TOP_HIVE_ALIGNMENT_2026-06-12.md` (unified 4-arm alignment) + pushed the §1 canonical facts block into all **28** hive `stack.yml` files (right under the schema line, preserving each hive's domain-specific scope). Idempotent python injector (`/tmp/inject_canon.py`); marker "MEOK CANONICAL FACTS" now present in 28/28 hives.
+- **What's live:** 28/28 hives now carry the ratified canon: fleet 381/295/46, downloads 186,208/30d, scorecard 84.6/100, registry 294, King :8077, SOV3 :3101, £199/£1,499/£4,950 pricing, Art 50 deadline, never-CSGA rule, standing rules. Queens ingesting the stack will see the canon BEFORE their domain scope text.
+- **What's blocked:** none — but for the canon to *reach* the queens in production, the King ingest pipeline needs to re-read the updated stack.yml files on next boot. If you want that to happen automatically, I can wire a 1-line watcher into systemd meok-king; otherwise next deploy/restart picks it up.
+
+## 2026-06-12 (PM15) — 👁️ CANON WATCHER WIRED + KING RESTARTED — Mavis root orchestrator
+**Mavis root** · meok-king (VM meok-backend)
+- **What changed:** Built `meok_one/canon_watcher.py` (stdlib-only, 5s scan, hash-chained audit log). Patched `server.py`: watcher starts in `main()` daemon thread, new `GET /api/king/canon_status` route. Bounced `systemctl restart meok-king`.
+- **What's live:** `/api/king/canon_status` → 200 `{hives_known: 28, running: true, last_chain_hash: …7edd, audit_log: ~/meok-king/canon_audit.log, audit_jsonl: …/canon_audit.jsonl}`. `/api/health` 200. Watcher smoke-tested: `touch proofof-hive/stack.yml` → event detected within 6s, chain hash advanced genesis→673d. Queens now pick up canon changes within 5s of file mtime change, no restart needed.
+- **What's blocked:** watcher is local (single process). If we ever run multiple king instances, need a lock or leader election. Not blocking today.
+
 ## 2026-06-10 (PM13) — 🔍 E2E AUDIT: 3 REAL BUGS FOUND + FIXED — M5 auditor role
 **M5 auditor session** · meok-attestation-api + meok/ui
 - **Bug 1 (CRITICAL):** `v1_sdk_pro.py` was broken pseudocode (referenced `self.*` on module functions, no class handler). Refactored to proper `class handler(BaseHTTPRequestHandler)` with 5 routes. E2E tested locally: 6/6 health matrix, 5/5 sign matrix, 3/3 usage, 3/3 webhooks, signature round-trip ✓. Commit `meok-attestation-api` 93081b6.

@@ -109,6 +109,12 @@ FW_META = {
                                 kind="intl-principles", binding=False,
                                 cite="AU AI Ethics Principles (2019) + Voluntary AI Safety Standard (2024)",
                                 note="Voluntary AU principles (8) + 10 safety guardrails."),
+    "RSPCA-AQUACULTURE": dict(name="RSPCA Welfare (Aquatic)", short="rspca_aqua", region="UK",
+                              kind="industry-standard", binding=False, cite="RSPCA Welfare Standards",
+                              note="UK industry standard for aquatic animal welfare; AI overlay for automated health monitoring."),
+    "ASC-AQUACULTURE": dict(name="ASC Standard (Aquatic)", short="asc_aqua", region="GLOBAL",
+                            kind="intl-principles", binding=False, cite="ASC Salmon Standard v1.4",
+                            note="Global responsible aquaculture standard; covers transparency and legal compliance."),
 }
 
 # Region -> which of OUR frameworks are binding vs advisory there (curated, honest).
@@ -121,7 +127,7 @@ REGIONS = {
                     "(sector law — not yet crosswalked)."),
     "UK": dict(label="United Kingdom", binding=[],
                advisory=["UK-AISI", "ISO-42001", "ISO-27001", "OECD-AI-PRINCIPLES",
-                         "G7-G20-AI-PRINCIPLES", "UNESCO-AI-ETHICS"],
+                         "G7-G20-AI-PRINCIPLES", "UNESCO-AI-ETHICS", "RSPCA-AQUACULTURE"],
                also="No horizontal AI Act yet — pro-innovation, regulator-led (ICO/CMA/MHRA/HSE). "
                     "UK GDPR + DPA 2018 still bind."),
     "US": dict(label="United States", binding=[],
@@ -151,7 +157,7 @@ REGIONS = {
                    advisory=["ISO-42001", "ISO-27001", "BASEL-III-AI", "UNESCO-AI-ETHICS",
                              "OECD-AI-PRINCIPLES", "IEEE-ETHICALLY-ALIGNED-DESIGN",
                              "G7-G20-AI-PRINCIPLES", "ASILOMAR-AI-PRINCIPLES",
-                             "ANTHROPIC-CONSTITUTIONAL-AI", "OPENAI-MODEL-SPEC"],
+                             "ANTHROPIC-CONSTITUTIONAL-AI", "OPENAI-MODEL-SPEC", "ASC-AQUACULTURE"],
                    also="When an agent has no single home jurisdiction, govern to the union via the "
                         "CSOAI charter and crosswalk down to whichever region it enters."),
 }

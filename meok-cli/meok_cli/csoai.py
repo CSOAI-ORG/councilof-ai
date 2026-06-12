@@ -20,7 +20,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-CSOAI_API_BASE = os.environ.get("CSOAI_API_BASE", "https://csoai.org/api").rstrip("/")
+CSOAI_API_BASE = os.environ.get("CSOAI_API_BASE", "https://csoai-org.vercel.app/api").rstrip("/")
 USER_AGENT = "meok-cli/csoai"
 
 

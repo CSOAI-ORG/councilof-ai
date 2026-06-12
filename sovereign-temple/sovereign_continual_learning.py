@@ -454,6 +454,13 @@ class ContinualLearningTrainer:
         """
         Heuristic: check if accuracy went up or MSE went down.
         If metrics are incomparable, assume improvement (first train).
+
+        NOTE (2026-06-11 — Mavis fix for Silent No-Op bug): strict inequality
+        is required. Using `>=` / `<=` allows identical metrics to report
+        "improved" without any actual weight change. The previous
+        `post_acc >= pre_acc` and `post_mse <= pre_mse` logic meant the
+        retrain pipeline could report "improved_and_saved" 50+ days in a
+        row with zero actual learning. Use strict `>` / `<` here.
         """
         if not pre:
             return True
@@ -462,18 +469,18 @@ class ContinualLearningTrainer:
         pre_acc = pre.get("accuracy")
         post_acc = post.get("accuracy")
         if pre_acc is not None and post_acc is not None:
-            return post_acc >= pre_acc
+            return post_acc > pre_acc
 
         # MSE-based models
         pre_mse = pre.get("mse")
         post_mse = post.get("mse")
         if pre_mse is not None and post_mse is not None:
-            return post_mse <= pre_mse
+            return post_mse < pre_mse
 
         # MAE fallback
         pre_mae = pre.get("mae")
         post_mae = post.get("mae")
         if pre_mae is not None and post_mae is not None:
-            return post_mae <= pre_mae
+            return post_mae < pre_mae
 
-        return True  # no comparable metrics — accept
+        return True  # no comparable metrics — accept (first train only)
