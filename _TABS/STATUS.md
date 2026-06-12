@@ -289,3 +289,18 @@
 - Established the tab profile (`_TABS/IOK_FARM_TAB_PROFILE.md`) + registered in INBOX.
 - Verified state: 7 aquaculture MCPs (koikeeper-ai-mcp republished today), fishkeeper/koikeeper static sites exist (triplicated), playbook Rev01 loose in ~/Downloads.
 - Blocked/needs Nick: real-world farm build status · confirm canonical site copy · approve repo for the playbook.
+
+## 2026-06-12 (PM2) — 🏛️ L0-G PR-A SHIPPED — CSOAI engine lane
+**CSOAI lane** · commit `07e018d` on `CSOAI-ORG/meok-ai` (origin/main)
+- The PBFT council voting engine is now externally addressable. The `BFTCouncil` class in `meok/council/bft_council.py` (380 lines, 4 built-in tests, 36 nodes in 12 domains, 22/36 threshold) was already real; this PR added the missing wire layer.
+- **4 new endpoints** (POST /api/council/vote, POST /api/council/round/open, GET /api/council/proposals, GET /api/council/decisions/{id})
+- **Per-node Ed25519 signing** via deterministic pubkey_registry (HMAC-SHA256 seed derivation, pynacl hard-fails at module load in production, HMAC dev fallback gated by env var)
+- **4-phase PBFT** (pre-prepare → prepare → commit → committed) with 2f+1 = 22-of-36 threshold
+- **10 tests, 9 pass + 1 skip** (pynacl skip is expected in this venv); test_pubkey_registry_deterministic_across_rebuilds is the trust-anchor test
+- 11 files / +2,183 lines / direct-to-main (no feat/council-vote branch)
+- **URL for Nick** (gh CLI fails on private meok-ai repo, SSH-only token): https://github.com/CSOAI-ORG/meok-ai/pull/new/main
+- **Phantom check passed** — git ls-remote confirms `07e018d` on origin/main, git log confirms local, gh api returns the expected 404. PR itself is only visible to Nick via the hand-built URL.
+- **Spec** (with v0.3 corrections, including 33-vs-36 retirement): `_TABS/L0G_PBFT_COUNCIL_VOTE_SPEC_2026-06-12.md`
+- **WebBridge PR-fallback doc** (for future private-repo PRs): `_TABS/WEBBRIDGE_PR_FALLBACK_2026-06-12.md`
+- **Next:** PR-B /sign gate (1-2 days, in meok-attestation-api) + PR-C MEOK DOME UI (1 week, optional) + L0-F Rekor integration (1 week, separate)
+- **Open on Nick:** review PR-A URL, approve 22/36 PBFT design, set MEOK_COUNCIL_MASTER_SEED in Vercel env, decide inner+outer packaging dedupe

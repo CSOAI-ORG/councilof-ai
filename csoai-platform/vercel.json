@@ -1,5 +1,32 @@
 {
   "buildCommand": "echo 'static deploy'",
   "outputDirectory": ".",
-  "framework": null
+  "framework": null,
+  "installCommand": "echo 'no install needed'",
+  "rewrites": [
+    {
+      "source": "/council",
+      "destination": "https://csoai-org-v2.vercel.app/council"
+    },
+    {
+      "source": "/council/dome",
+      "destination": "https://csoai-org-v2.vercel.app/council/dome"
+    },
+    {
+      "source": "/council/maps",
+      "destination": "https://csoai-org-v2.vercel.app/council/maps"
+    },
+    {
+      "source": "/council/law",
+      "destination": "https://csoai-org-v2.vercel.app/council/law"
+    },
+    {
+      "source": "/council/sigil",
+      "destination": "https://csoai-org-v2.vercel.app/council/sigil"
+    },
+    {
+      "source": "/council/compliance",
+      "destination": "https://csoai-org-v2.vercel.app/council/compliance"
+    }
+  ]
 }
