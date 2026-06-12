@@ -1,10 +1,10 @@
-# Openmore.ai: Diamonds, Breakthroughs & Open-Source Arsenal
+# openmoe.ai: Diamonds, Breakthroughs & Open-Source Arsenal
 ## A Fact-Checked Intelligence Report for Building the Next Generation of Sovereign AI
 
 ---
 
 **FACT-CHECK EDITION (12 Jun 2026) — verified by Mavis**
-Every claim in this report was checked against the live source (PyPI JSON, GitHub API, HuggingFace model card, official pricing page). Discrepancies with the previous edition are listed in the appendix. The original report is preserved at `openmore_ai_diamonds_and_breakthroughs.md` for diff. Diagram: `csoai_ecosystem.png` / `model_comparison.png`.
+Every claim in this report was checked against the live source (PyPI JSON, GitHub API, HuggingFace model card, official pricing page). Discrepancies with the previous edition are listed in the appendix. The original report is preserved at `openmoe_ai_diamonds_and_breakthroughs.md` for diff. Diagram: `csoai_ecosystem.png` / `model_comparison.png`.
 
 ---
 
@@ -165,7 +165,7 @@ The previous edition was honest about this — it said "no public repository... 
 
 ![Model Architecture Comparison](model_comparison.png)
 
-The open-source model landscape in mid-2026 is a Cambrian explosion. Four architectures matter for the openmore.ai stack: MoE for efficiency, Mamba/SSM for long-context scaling, hybrid architectures for best-of-both-worlds, and diffusion LMs for novel generation.
+The open-source model landscape in mid-2026 is a Cambrian explosion. Four architectures matter for the openmoe.ai stack: MoE for efficiency, Mamba/SSM for long-context scaling, hybrid architectures for best-of-both-worlds, and diffusion LMs for novel generation.
 
 **DeepSeek V4** (MIT, verified against HF model card):
 
@@ -338,7 +338,7 @@ For CSOAI's domain-specific compliance models (trained on regulatory text, case 
 
 ---
 
-## 5. Integration Architecture for openmore.ai
+## 5. Integration Architecture for openmoe.ai
 
 ### 5.1 Recommended Stack (verified layers, real packages)
 
@@ -411,7 +411,7 @@ The penalty for non-compliance (**€35M or 7% of global turnover**) is consiste
 
 9. **Verify the Article 50 deadline** with the legal team before any external publication — the live package doc says November 2026, marketing says August 2026. The Digital Omnibus context is real and the date drift matters.
 
-10. **SOV3 should be added to the openmore.ai stack as the sovereign model layer.** The public surface is `consciousness-engine-mcp` (CSOAI-ORG, last push 2026-06-12), the underlying architecture is the Sovereign Temple v3 running on M4 hardware.
+10. **SOV3 should be added to the openmoe.ai stack as the sovereign model layer.** The public surface is `consciousness-engine-mcp` (CSOAI-ORG, last push 2026-06-12), the underlying architecture is the Sovereign Temple v3 running on M4 hardware.
 
 ---
 

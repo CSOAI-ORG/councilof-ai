@@ -1,5 +1,5 @@
 ---
-title: Openmore.ai Diamonds & Breakthroughs
+title: openmoe.ai Diamonds & Breakthroughs
 description: Fact-checked intelligence report on the open-source AI governance stack — verified against live PyPI, GitHub, HuggingFace, MCP Registry, and meok.ai sources.
 pubDate: 2026-06-12
 author: Nicholas Templeman / MEOK AI Labs
@@ -7,7 +7,7 @@ license: MIT
 verified: 2026-06-12
 ---
 
-# Openmore.ai: Diamonds, Breakthroughs & Open-Source Arsenal
+# openmoe.ai: Diamonds, Breakthroughs & Open-Source Arsenal
 
 The fact-checked intelligence report on the open-source AI governance stack.
 Every claim in this dossier was verified against live sources on 12 June 2026.
@@ -30,7 +30,7 @@ Every claim in this dossier was verified against live sources on 12 June 2026.
 
 ## Read the dossier
 
-- [Read on the web](https://councilof.ai/openmore/) (rendered)
+- [Read on the web](https://councilof.ai/openmoe/) (rendered)
 - [Original first edition](original-first-edition.md) (preserved for diff)
 - [Fact-check appendix](README.md#appendix-a-fact-check-summary) in the main report
 

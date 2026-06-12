@@ -1,4 +1,4 @@
-# Openmore.ai: Diamonds, Breakthroughs & Open-Source Arsenal
+# openmoe.ai: Diamonds, Breakthroughs & Open-Source Arsenal
 ## A Fact-Checked Intelligence Report for Building the Next Generation of Sovereign AI
 
 ---
