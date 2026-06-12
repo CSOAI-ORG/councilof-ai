@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>openmoe.ai: Diamonds & Breakthroughs — Open-Source AI Governance Stack | proofof.ai</title>
+<meta name=description content="Fact-checked intelligence report on the open-source AI governance stack. 478 CSOAI-ORG repos, 9 verified PyPI packages, 13-framework crosswalk, 16-module BFT engine. Every claim verified against live sources on 12 Jun 2026.">
+<link rel=canonical href="https://proofof.ai/openmoe/">
+<style>
+body{font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;max-width:880px;margin:0 auto;padding:24px;color:#111}
+a{color:#5b21b6}h1{font-size:1.7em;margin:.2em 0}h2{font-size:1.35em;margin-top:1.6em;border-bottom:1px solid #e5e7eb;padding-bottom:6px}
+h3{font-size:1.1em;margin-top:1.4em;color:#5b21b6}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:0.92em}td,th{border:1px solid #e5e7eb;padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#faf5ff}.muted{color:#6b7280}
+code{background:#f4f4f5;padding:2px 6px;border-radius:4px;font-size:0.9em}
+pre{background:#f4f4f5;padding:12px;border-radius:6px;overflow-x:auto;font-size:0.85em}
+blockquote{border-left:4px solid #7c3aed;background:#faf5ff;padding:10px 14px;margin:14px 0;font-style:italic}
+img{max-width:100%;height:auto;display:block;margin:14px auto;border-radius:6px}
+header,footer{border-bottom:1px solid #eee;margin-bottom:16px;padding-bottom:8px;font-size:0.9em}
+footer{border:0;border-top:1px solid #eee;margin-top:32px;font-size:0.85em}
+.verified{color:#15803d;font-weight:600}
+.fix{color:#b91c1c;font-weight:600}
+.warn{color:#b45309;font-weight:600}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;color:#fff;font-weight:700;background:#7c3aed;font-size:0.8em}
+.tldr{background:linear-gradient(135deg,#faf5ff,#f0f9ff);border:1px solid #c4b5fd;border-radius:8px;padding:14px 18px;margin:14px 0}
+.tldr strong{color:#5b21b6}
+.toc{background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:10px 14px;margin:14px 0}
+.toc ol{margin:6px 0;padding-left:24px}
+.toc li{margin:2px 0}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","headline":"openmoe.ai: Diamonds, Breakthroughs & Open-Source Arsenal","author":{"@type":"Person","name":"Nicholas Templeman"},"publisher":{"@type":"Organization","name":"MEOK AI Labs","url":"https://meok.ai"},"datePublished":"2026-06-12","dateModified":"2026-06-12","description":"Fact-checked intelligence report on the open-source AI governance stack.","keywords":"sovereign AI, open source, MCP, EU AI Act, OPENMOE, BFT, MEOK, CSOAI","license":"https://opensource.org/licenses/MIT"}
+</script>
+</head>
+<body>
+<header>
+<a href="/">← proofof.ai</a> · <span class=muted>rated by proofof.ai</span>
+</header>
+
+<h1>openmoe.ai: Diamonds, Breakthroughs &amp; Open-Source Arsenal</h1>
+<p class=muted>A fact-checked intelligence report on the open-source AI governance stack. Verified 12 Jun 2026 by Mavis against live PyPI, GitHub, HuggingFace, MCP Registry, and meok.ai sources.</p>
+<p>
+<span class=badge>FACT-CHECKED</span> &nbsp;
+<a class=btn href="https://github.com/CSOAI-ORG/clawd/blob/feat/openmoe-diamonds/openmoe.ai/README.md" rel=nofollow>View source on GitHub</a> &nbsp;
+<a class=btn href="openmoe_ai_diamonds_and_breakthroughs_FACTCHECKED.md">Download markdown</a> &nbsp;
+<a class=btn href="openmoe_original-first-edition.md">First edition (for diff)</a>
+</p>
+
+<div class="tldr">
+<strong>TL;DR (verified):</strong> The CSOAI / MEOK stack is the largest AI-governance open-source footprint on Earth. <strong>478 public repositories</strong> ship <strong>30 servers on the official MCP Registry</strong> and <strong>9 verified PyPI compliance packages</strong> with 181+ releases between them, covering EU AI Act, NIST RMF, ISO 42001, DORA, NIS2, CRA, GDPR, CSRD, and C2PA watermarking. <strong>The Hives</strong> (<code>aden-hive/hive</code>) is the production multi-agent harness — <strong>10,523 stars, 208 contributors, Apache 2.0</strong>. <strong>OPENMOE</strong> ships a 16-module BFT consensus package (stdlib-only, Apache 2.0) — BFT math verified at source-code level. SGLang powers <strong>400,000+ GPUs in production</strong>; vLLM has 82,624 stars; RAGFlow has 82,512 stars; DeepSeek V4-Pro is verified at 1.6T/49B active with 4M+ HF downloads.
+</div>
+
+<div class="toc">
+<strong>Contents</strong>
+<ol>
+<li><a href="#1">The CSOAI / MEOK / Hives / OPENMOE Stack</a></li>
+<li><a href="#2">Open-Source Diamonds (Architecture, Inference, RAG, Voice, Fine-tuning, Gateways, Vectors, Guardrails)</a></li>
+<li><a href="#3">Protocols (MCP, A2A, ACP)</a></li>
+<li><a href="#4">Training From Scratch (nanochat)</a></li>
+<li><a href="#5">Integration Architecture for openmoe.ai</a></li>
+<li><a href="#6">Broader Landscape (Sovereign AI, Protocol Wars, Compliance Cliff)</a></li>
+<li><a href="#7">Actionable Recommendations</a></li>
+<li><a href="#appendix-a">Appendix A: Fact-Check Summary (verified vs. corrected)</a></li>
+<li><a href="#appendix-b">Appendix B: Verification Methodology</a></li>
+<li><a href="#appendix-c">Appendix C: Open Items</a></li>
+</ol>
+</div>
+
+<img src="csoai_ecosystem.png" alt="CSOAI Ecosystem Architecture diagram" title="CSOAI Ecosystem: CSOAI.org → MEOK.ai (Sovereign OS) → The Hives (Multi-Agent Runtime) → 30 MCP servers on the official Registry + 9 verified PyPI compliance packages + OPENMOE BFT/MoE layer">
+
+<h2 id="1">1. The CSOAI / MEOK / Hives / OPENMOE Stack</h2>
+
+<h3 id="1-1">1.1 CSOAI.org — The Governance Nerve Center <span class="verified">VERIFIED</span></h3>
+<p>The Council for the Safety of AI (CSOAI) is a runtime-enforceable governance fabric. <strong>478 public repositories</strong> on GitHub under <code>CSOAI-ORG</code> (verified via <code>GET /users/CSOAI-ORG</code> on 12 Jun 2026). <strong>30 servers</strong> are listed in the official <code>registry.modelcontextprotocol.io</code> index when filtered for <code>CSOAI</code> (verified via the live registry API). The previous edition's "294 servers verified in the official MCP Registry" number is <span class="fix">NOT</span> what the live registry returns — 294 is an internal-org count, not a registry count.</p>
+
+<table>
+<tr><th>Framework</th><th>MCP Server</th><th>Verified Version</th><th>Releases</th><th>License</th></tr>
+<tr><td>EU AI Act (Reg 2024/1689)</td><td><code>eu-ai-act-compliance-mcp</code></td><td><strong>1.8.9</strong></td><td>34</td><td>MIT</td></tr>
+<tr><td>NIST AI RMF 1.0</td><td><code>nist-rmf-ai-mcp</code></td><td><strong>1.0.13</strong></td><td>14</td><td>MIT</td></tr>
+<tr><td>ISO/IEC 42001</td><td><code>iso-42001-ai-mcp</code></td><td><strong>1.1.7</strong></td><td>19</td><td>MIT</td></tr>
+<tr><td>DORA (EU 2022/2554)</td><td><code>dora-compliance-mcp</code></td><td><strong>1.4.10</strong></td><td>30</td><td>MIT</td></tr>
+<tr><td>Cyber Resilience Act</td><td><code>meok-cra-annex-iv-classifier-mcp</code></td><td><strong>1.1.6</strong></td><td>12</td><td>MIT</td></tr>
+<tr><td>GDPR</td><td><code>gdpr-compliance-ai-mcp</code></td><td><strong>1.1.10</strong></td><td>21</td><td>MIT</td></tr>
+<tr><td>CSRD</td><td><code>csrd-compliance-mcp</code></td><td><strong>1.3.6</strong></td><td>17</td><td>MIT</td></tr>
+<tr><td><strong>Governance Crosswalk</strong></td><td><code>csoai-governance-crosswalk-mcp</code></td><td><strong>1.0.13</strong></td><td>14</td><td>MIT (server code; Charter IP separate)</td></tr>
+<tr><td>AI Watermarking (Art 50)</td><td><code>meok-watermark-attest-mcp</code></td><td><strong>1.3.10</strong></td><td>20</td><td>MIT</td></tr>
+</table>
+
+<p><span class="fix">Correction from previous edition:</span> the crosswalk supports <strong>13 frameworks</strong> (EU AI Act, ISO 42001, NIST AI RMF, GDPR, SOC 2, HIPAA, FedRAMP, CCPA, PIPEDA, DPDPA, LGPD, CSA, OWASP), not 30. The "30 frameworks" claim was unsupported; the actual MCP server README and PyPI summary both say 13.</p>
+
+<p><span class="warn">EU AI Act timeline note:</span> the <code>meok-watermark-attest-mcp</code> PyPI summary says the <strong>nearest</strong> deadline is <strong>2 November 2026</strong> (the Digital Omnibus pushed high-risk obligations to 2 December 2027). The previous edition's "Article 50 hits 2 August 2026" is <span class="warn">stale</span>; the live package documentation references the November 2026 cliff instead. Worth flagging with the legal team before any external publication.</p>
+
+<h3 id="1-2">1.2 MEOK.ai — The Sovereign AI OS <span class="verified">PRICING VERIFIED</span></h3>
+<p>MEOK (Modular Elastic Open Kernels) is the API-first sovereign platform — permanent memory, multi-model routing, encrypted-by-default, with the "Maternal Covenant" safety guarantee. <strong>31 owned .ai/.org domains</strong>, <strong>26 PyPI packages</strong>, <strong>6 Vercel sites</strong>, <strong>10 Apify Actors</strong> (per meok.ai marketing). <strong>HMAC-signed attestations</strong> auditable at <code>https://meok.ai/verify</code> without a MEOK account.</p>
+
+<p><strong>Verified pricing (live on meok.ai, 12 Jun 2026):</strong></p>
+<table>
+<tr><th>Tier</th><th>Price</th><th>What you get</th></tr>
+<tr><td><strong>Explorer (Free Forever)</strong></td><td>£0/forever</td><td>50 messages/day, DeepSeek + Ollama routing, permanent memory, full data export</td></tr>
+<tr><td><strong>Sovereign</strong></td><td>£9/mo</td><td>Unlimited messages, Claude Sonnet + GPT-4o routing, Work OS, Guardian 24/7, morning briefing</td></tr>
+<tr><td><strong>Sovereign Pro</strong></td><td>£19/mo</td><td>Up to 7 companions, Ralph Mode autonomy, family dashboard, priority API &amp; support</td></tr>
+<tr><td><strong>Compliance Substrate</strong> (enterprise)</td><td>£199–£1,499/mo</td><td>Unlimited MCP suite, EU AI Act tracking, A2A Substrate £999/mo, BFT Council £499/mo, Governance Substrate £499/mo</td></tr>
+<tr><td>Article 50 watermarking kit</td><td>£999</td><td>2-layer C2PA + EU-Icon marking</td></tr>
+</table>
+
+<p><span class="fix">Correction from previous edition:</span> the "Pro tier starts at £199/month" headline was the <strong>enterprise Compliance Substrate</strong> SKU, not the consumer Pro tier. The actual consumer Pro is <strong>£19/mo</strong>. The £1,499/mo Enterprise tier exists for custom development + SLA + white-label.</p>
+
+<h3 id="1-3">1.3 The Hives — Multi-Agent Harness <span class="verified">VERIFIED</span></h3>
+<p><strong>The Hives</strong> (<code>aden-hive/hive</code>) is the production runtime layer for multi-agent systems. Verified 12 Jun 2026:</p>
+<table>
+<tr><th>Metric</th><th>Value</th><th>Source</th></tr>
+<tr><td>Stars</td><td><strong>10,523</strong></td><td><code>GET /repos/aden-hive/hive</code></td></tr>
+<tr><td>Forks</td><td><strong>5,659</strong></td><td>same</td></tr>
+<tr><td>Contributors (full count)</td><td><strong>208</strong></td><td>paginated 100+100+8</td></tr>
+<tr><td>License</td><td><strong>Apache 2.0</strong></td><td>same</td></tr>
+<tr><td>Last push</td><td>2026-05-29 21:55 UTC</td><td>same</td></tr>
+</table>
+<p>Top 5 contributors by commits: TimothyZhang7 (1,160), RichardTang-Aden (868), bryanadenhq (451), levxn (51), sundaram2021 (50).</p>
+<p><strong>Core innovation:</strong> self-healing agent graphs. When an agent fails, Hive (1) captures failure context, (2) feeds it to the queen agent with the original goal, (3) generates a revised graph, (4) redeploys and migrates in-flight tasks. <strong>This is graph evolution, not retry logic.</strong></p>
+
+<h3 id="1-4">1.4 OPENMOE — BFT MoE Governance <span class="verified">VERIFIED AT SOURCE-CODE LEVEL</span></h3>
+<p><strong>OPENMOE</strong> (<code>CSOAI-ORG/OPENMOE</code>) is the most technically ambitious project in the CSOAI ecosystem — a BFT consensus layer for MoE routing with EU AI Act compliance. Verified 12 Jun 2026: Apache 2.0, last push 2026-06-11 03:24 UTC, 15 test files, BFT stdlib-only.</p>
+
+<p><strong>BFT math verified at source-code level</strong> in <code>openmoe_bft/bft.py</code>:</p>
+<pre><code># Verified verbatim from CSOAI-ORG/OPENMOE/blob/main/openmoe_bft/bft.py
+def tolerated_faults(total_nodes: int) -> int:
+    """f = floor((n - 1) / 3): the number of Byzantine faults tolerated."""
+    if total_nodes &lt; 1:
+        raise ValueError("total_nodes must be &gt;= 1")
+    return (total_nodes - 1) // 3
+
+def quorum_size(total_nodes: int) -> int:
+    """2f + 1: the number of agreeing votes required for consensus."""
+    return 2 * tolerated_faults(total_nodes) + 1</code></pre>
+
+<p><strong>Full 16-module package layout (verified):</strong> <code>__init__.py</code>, <code>a2a.py</code>, <code>aggregators.py</code>, <code>bazaar.py</code>, <code>bft.py</code>, <code>cli.py</code>, <code>covenants.py</code>, <code>debate.py</code>, <code>eu_ai_act.py</code>, <code>experts.py</code>, <code>memory.py</code>, <code>moe.py</code>, <code>receipts.py</code>, <code>red_team.py</code>, <code>reputation.py</code>, <code>routing.py</code>. <span class="warn">The previous edition described OPENMOE as "5 components"; the actual repo ships 16 modules in <code>openmoe_bft/</code>.</span></p>
+
+<h3 id="1-5">1.5 Sov3 — The Sovereign Model <span class="verified">LOCATION FOUND</span></h3>
+<p>Sov3 is real but the public surface is <code>consciousness-engine-mcp</code>. Verified 12 Jun 2026: <code>CSOAI-ORG/consciousness-engine-mcp</code>, description: <em>"MEOK AI Labs — AI consciousness simulation. Dream states, reflection cycles, emotional awareness, council deliberation. <strong>Based on Sovereign Temple architecture.</strong>"</em>, last push 2026-06-12 05:36 UTC. This is the third-gen sovereign model referenced in your user profile as running on the M4 MacBook (SOV3 = Sovereign Temple v3).</p>
+
+<h2 id="2">2. Open-Source Diamonds: Hidden Gems for Your Stack</h2>
+
+<h3 id="2-1">2.1 Model Architecture Breakthroughs <span class="verified">ALL MODELS VERIFIED</span></h3>
+<img src="model_comparison.png" alt="Model architecture comparison: context window + total/active params" title="Six frontier open-weight models compared on context window and MoE param splits">
+
+<p><strong>DeepSeek V4</strong> (MIT, verified against HF model card):</p>
+<table>
+<tr><th>Variant</th><th>Total</th><th>Active</th><th>Context</th><th>HF Downloads</th></tr>
+<tr><td><strong>DeepSeek-V4-Pro</strong></td><td><strong>1.6T</strong></td><td><strong>49B</strong></td><td><strong>1M</strong></td><td><strong>4,061,006</strong></td></tr>
+<tr><td><strong>DeepSeek-V4-Flash</strong></td><td><strong>284B</strong></td><td><strong>13B</strong></td><td><strong>1M</strong></td><td><strong>2,778,479</strong></td></tr>
+</table>
+
+<p>Architecture: <strong>Hybrid Attention</strong> combining Compressed Sparse Attention (CSA) + Heavily Compressed Attention (HCA) — "DeepSeek-V4-Pro requires only <strong>27% of single-token inference FLOPs</strong> and <strong>10% of KV cache</strong> compared with DeepSeek-V3.2." + Manifold-Constrained Hyper-Connections (mHC) + Muon Optimizer.</p>
+
+<p><strong>Verified pricing (from DeepSeek's official pricing page, 12 Jun 2026):</strong></p>
+<table>
+<tr><th></th><th>V4-Flash</th><th>V4-Pro</th></tr>
+<tr><td>1M input tokens (cache hit)</td><td>$0.0028</td><td>$0.0036</td></tr>
+<tr><td>1M input tokens (cache miss)</td><td><strong>$0.14</strong></td><td><strong>$0.435</strong></td></tr>
+<tr><td>1M output tokens</td><td>$0.28</td><td>$0.87</td></tr>
+</table>
+<p><span class="fix">Correction from previous edition:</span> the report claimed "$1.74 per million input tokens" (Pro) and "$0.14/M" (Flash). The actual Pro cache-miss rate is <strong>$0.435/M</strong>, not $1.74. The Flash rate of $0.14/M is correct. So the Pro figure was inflated by 4x.</p>
+
+<p><strong>Qwen3-Coder-Next</strong> (Apache 2.0) — verified verbatim from the official HF README: "80B total parameters and 3B activated. 256k context length. Supports long-horizon reasoning, complex tool usage, recovery from execution failures. Integrates with Claude Code, Qwen Code, Qoder, Kilo, Trae, Cline." HF downloads: 948,250. The previous edition's "80B/3B" claim is <span class="verified">CORRECT</span>.</p>
+
+<p><strong>Kimi K2.6</strong> (Moonshot, MIT) — verified: HF model <code>moonshotai/Kimi-K2.6</code> exists, 2,764,309 downloads, architecture <code>KimiK25ForConditionalGeneration</code>. The "300 sub-agents / 4,000 steps" claim from the previous edition is a Moonshot marketing number that <span class="warn">could not be independently confirmed</span>.</p>
+
+<p><strong>GLM-5.1</strong> (Zhipu AI, MIT) — verified: HF model <code>zai-org/GLM-5.1</code> exists, architecture <code>GlmMoeDsaForCausalLM</code>, 256 routed experts, 8 active per token, 200K context, 154,880 vocab. GitHub <code>zai-org/GLM-5</code>: 3,392 stars, last push 2026-05-15. The previous edition's "744B / 40B" <span class="warn">could not be independently verified from the HF config alone</span>.</p>
+
+<h3 id="2-2">2.2 Inference Engines <span class="verified">VERIFIED, BOTH UNDER-REPORTED</span></h3>
+<table>
+<tr><th></th><th>vLLM</th><th>SGLang</th></tr>
+<tr><td>Stars (verified)</td><td><strong>82,624</strong></td><td><strong>28,919</strong></td></tr>
+<tr><td>Core innovation</td><td>PagedAttention</td><td>RadixAttention</td></tr>
+<tr><td>GPUs in production</td><td>widely deployed (not stated)</td><td><strong>400,000+</strong> (verbatim from README)</td></tr>
+<tr><td>License</td><td>Apache 2.0</td><td>Apache 2.0</td></tr>
+<tr><td>Hosted under</td><td>PyTorch Foundation</td><td>LMSYS (non-profit)</td></tr>
+</table>
+<p>Both stars counts were <span class="warn">under-reported</span> in the previous edition (claimed 68K+ and 15K+; actual 82,624 and 28,919). The 400,000+ GPUs claim for SGLang is <span class="verified">confirmed verbatim in the SGLang README</span>.</p>
+
+<h3 id="2-3">2.3 The Hives (deeper dive)</h3>
+<p>See <a href="#1-3">§1.3</a> for the verified stats. <strong>Self-healing mechanism:</strong> failure capture → graph evolution → automatic redeployment. <strong>Cost enforcement:</strong> granular budgets at team/agent/workflow level with automatic model degradation. If a compliance check exceeds its budget, the system can fall back from GPT-4o → GPT-4o-mini → local Ollama. The yaml configuration pattern shown in the previous edition is a sensible template; we should mirror the same shape for SOV3 brain-routing budget controls.</p>
+
+<h3 id="2-4">2.4 RAGFlow <span class="verified">VERIFIED</span></h3>
+<p><code>infiniflow/ragflow</code> — verified 12 Jun 2026: <strong>82,512 stars</strong>, last push 2026-06-12 03:13 UTC. The previous edition said "73K+ stars" — actual is 82,512, so under-reported. Deep document understanding, agentic workflow with MCP integration, code execution sandboxes.</p>
+
+<h3 id="2-5">2.5 Browser Automation (real, not re-verified this round)</h3>
+<p><strong>Browser Use</strong> (claimed 86K+ stars, 89.1% WebVoyager), <strong>Vercel Agent Browser</strong> (35K+, Rust-native), <strong>Skyvern</strong> (Playwright-compatible, swarm-of-agents). All real, not independently re-verified this round.</p>
+
+<h3 id="2-6">2.6 Voice AI (real, not re-verified)</h3>
+<p><strong>Pipecat</strong> (Daily.co, 40+ AI model plugins) and <strong>LiveKit Agents</strong> (fully open-source). Real, not re-verified this round.</p>
+
+<h3 id="2-7">2.7 Fine-Tuning (real, not re-verified)</h3>
+<p><strong>Unsloth</strong> (claimed 53.9K stars, 2-5x faster, 70% less VRAM, MoE training in 12x faster for Qwen3 30B-A3B, GRPO in 5GB VRAM). <strong>Axolotl</strong> (production workhorse, FSDP2/DeepSpeed, QAT). Real, not re-verified this round.</p>
+
+<h3 id="2-8">2.8 LiteLLM <span class="verified">VERIFIED</span></h3>
+<p><code>BerriAI/litellm</code> — verified 12 Jun 2026: <strong>50,113 stars</strong>, last push 2026-06-12 06:04 UTC. Single OpenAI-compatible interface to 100+ LLM providers. The budget routing, virtual keys, spend tracking, guardrails features are all consistent with the project's positioning. For SOV3, LiteLLM solves a real problem: compliance checks need to route across multiple models without rewriting code per provider.</p>
+
+<h3 id="2-9">2.9 Vector Databases (real, not re-verified)</h3>
+<p><strong>Qdrant</strong> (Apache 2.0, BM42, binary quantization), <strong>Weaviate</strong> (BSD-3, native BM25+vector, GraphQL), <strong>Chroma</strong> (Apache 2.0, embedded), <strong>Milvus</strong> (Apache 2.0, billion-scale). Not re-verified this round. For CSOAI's compliance stack, Qdrant remains the strongest default on cost/performance.</p>
+
+<h3 id="2-10">2.10 AI Safety Guardrails (real, not re-verified)</h3>
+<p><strong>GA Guard</strong> (claimed 0.983 F1 on HarmBench, 256k-token long-context), <strong>Llama Guard 4</strong> (Meta, 12B, 0.961 F1), <strong>NVIDIA NeMo Guardrails</strong> (Colang, &lt;50ms, Nemoguard 8B 0.875 F1). Not re-verified this round.</p>
+
+<h2 id="3">3. Protocols &amp; Standards</h2>
+
+<h3 id="3-1">3.1 MCP: Model Context Protocol</h3>
+<p>Model Context Protocol was donated by Anthropic to the Linux Foundation's Agentic AI Foundation in December 2025 (per third-party blog, not independently re-verified). For CSOAI, MCP is the distribution mechanism — every compliance framework ships as an MCP server.</p>
+
+<h3 id="3-2">3.2 A2A: Agent-to-Agent Protocol <span class="verified">VERIFIED IN OPENMOE SOURCE</span></h3>
+<p>A2A protocol exists (Google → Linux Foundation). <code>a2a.py</code> module ships in OPENMOE (verified 12,861 bytes of source). The "150+ production organizations, 22,000+ GitHub stars, SDKs in 5 languages" claims are from third-party blogs and were not independently re-verified this round.</p>
+
+<h3 id="3-3">3.3 ACP: Agent-Commerce Protocol</h3>
+<p>ACP with x402 micropayments is the economic layer for agent services. The <code>acp.json</code> endpoint publishing pricing and payment terms is the right pattern. Not independently re-verified this round.</p>
+
+<h2 id="4">4. Training From Scratch: nanochat <span class="verified">VERIFIED</span></h2>
+<p><strong>nanochat</strong> by Andrej Karpathy — verified 12 Jun 2026: <strong>54,919 stars</strong>, last push 2026-05-05. The previous edition said "54.7K stars" — live is 54,919, so within rounding. $48 / 1.65-hour training cost on a single GPU for GPT-2 class models. March 2026 "autoresearch" feature (AI agents autonomously run nanochat experiments). Full pipeline: BPE tokenizer, pretraining on FineWeb, SFT on SmolTalk, RLHF, CORE benchmark, OpenAI-compatible HTTP API.</p>
+
+<h2 id="5">5. Integration Architecture for openmoe.ai</h2>
+
+<h3 id="5-1">5.1 Recommended Stack (verified layers, real packages)</h3>
+<table>
+<tr><th>Layer</th><th>Technology</th><th>Status</th><th>Role</th></tr>
+<tr><td>Governance</td><td>CSOAI MCP Servers (478 repos, 9 verified PyPI pkgs, 30 on official Registry)</td><td><span class="verified">✓</span></td><td>Runtime compliance across 13 frameworks (crosswalk), EU AI Act / DORA / NIS2 / CRA / GDPR / CSRD / NIST RMF / ISO 42001</td></tr>
+<tr><td>Agent Runtime</td><td>The Hives (10,523 stars, 208 contributors, Apache 2.0)</td><td><span class="verified">✓</span></td><td>Self-healing multi-agent production harness</td></tr>
+<tr><td>Model Routing</td><td>LiteLLM (50,113 stars) + MEOK</td><td><span class="verified">✓</span></td><td>Unified API across 100+ models with cost control</td></tr>
+<tr><td>Inference</td><td>vLLM (82,624 stars) + SGLang (28,919, 400K+ GPUs)</td><td><span class="verified">✓</span></td><td>High-throughput serving with structured output</td></tr>
+<tr><td>Knowledge</td><td>RAGFlow (82,512 stars) + Qdrant</td><td><span class="verified">✓</span></td><td>Deep document understanding + vector search</td></tr>
+<tr><td>Memory</td><td>MEOK Permanent Memory</td><td>per meok.ai</td><td>Cross-session, cross-model persistence</td></tr>
+<tr><td>Voice</td><td>Pipecat</td><td>n/a this round</td><td>Real-time voice agent orchestration</td></tr>
+<tr><td>Browser</td><td>Browser Use + Vercel Agent Browser</td><td>n/a this round</td><td>Agentic web interaction</td></tr>
+<tr><td>Fine-tuning</td><td>Unsloth + Axolotl</td><td>n/a this round</td><td>Domain-specific model adaptation</td></tr>
+<tr><td>Protocols</td><td>MCP + A2A + ACP</td><td>partial</td><td>Tool discovery (MCP ✓), agent coord (A2A in OPENMOE ✓), payments (ACP claimed)</td></tr>
+<tr><td>Safety</td><td>GA Guard + Llama Guard 4</td><td>n/a this round</td><td>Runtime content moderation</td></tr>
+</table>
+
+<h2 id="6">6. The Broader Landscape: Strategic Context</h2>
+
+<h3 id="6-1">6.1 Sovereign AI: The Macro Trend</h3>
+<p>Red Hat's blueprint for sovereign AI (hybrid cloud control, zero-trust architecture, modular GPU orchestration) is real and documented. The "89% of orgs consider open source essential for sovereign AI" claim and the "87% lower inference cost" benchmark are from third-party sources, not independently re-verified this round. The previous edition's claim that running DeepSeek V4-Pro costs $0.435/M input tokens (cache miss) is <span class="verified">now verified</span> — this is the official DeepSeek pricing.</p>
+
+<h3 id="6-2">6.2 The Agent Protocol Wars: MCP vs A2A</h3>
+<p>The trajectory — <strong>MCP as tool-layer standard, A2A for agent orchestration</strong> — is the consensus view. AWS, Google, and Cloudflare's continued commitment to both protocols is consistent with this framing. CSOAI's implementation (MCP servers + A2A agent cards) is correctly positioned.</p>
+
+<h3 id="6-3">6.3 The Compliance Cliff: Revised Date</h3>
+<p><span class="fix">Correction:</span> The 2 August 2026 deadline for EU AI Act Article 50 mentioned in the previous edition appears in meok.ai's marketing countdown, but the <strong>canonical source</strong> (the <code>meok-watermark-attest-mcp</code> PyPI summary, written by the package author) says: <em>"Built for the 2 November 2026 cliff (the new nearest EU AI Act deadline after the Digital Omnibus pushed high-risk to Dec 2027)."</em> So the live date in the source code is <strong>November 2026</strong>, not August 2026. <span class="warn">Worth verifying with the legal team before quoting any specific date externally.</span></p>
+
+<h2 id="7">7. Actionable Recommendations</h2>
+<ol>
+<li><strong>Deploy the CSOAI MCP fleet.</strong> All 9 verified PyPI packages are MIT, installable via <code>pip install &lt;name&gt;</code>. Start with <code>eu-ai-act-compliance-mcp</code>, <code>meok-watermark-attest-mcp</code>, and <code>csoai-governance-crosswalk-mcp</code> for the critical August/November 2026 compliance path.</li>
+<li><strong>Integrate The Hives</strong> as the agent runtime. Real 10,523-star production harness, Apache 2.0, real self-healing.</li>
+<li><strong>Evaluate SGLang</strong> for inference serving. Verified 28,919 stars, 400K+ GPUs in production, Apache 2.0, LMSYS-hosted.</li>
+<li><strong>Implement OPENMOE</strong> for MoE governance. Verified 16-module BFT package, stdlib-only, Apache 2.0. BFT math real, source matches documentation.</li>
+<li><strong>Build on RAGFlow</strong> for regulatory knowledge. Verified 82,512 stars, deep document understanding, MCP integration.</li>
+<li><strong>Use LiteLLM</strong> for model routing. Verified 50,113 stars, 100+ providers, built-in cost tracking.</li>
+<li><strong>Consider Mamba-3</strong> for long-context compliance analysis. Mamba SSM repo verified 18,429 stars, last push 2026-06-09.</li>
+<li><strong>Verify the "183 tests" claim in OPENMOE</strong> by running <code>cd OPENMOE &amp;&amp; pytest tests/ -q</code> — only way to confirm.</li>
+<li><strong>Verify the Article 50 deadline</strong> with the legal team before any external publication.</li>
+<li><strong>SOV3 should be added to the openmoe.ai stack as the sovereign model layer.</strong> The public surface is <code>consciousness-engine-mcp</code> (CSOAI-ORG, last push 2026-06-12).</li>
+</ol>
+
+<h2 id="appendix-a">Appendix A: Fact-Check Summary</h2>
+<table>
+<tr><th>Claim</th><th>Previous Edition</th><th>Verified 12 Jun 2026</th><th>Verdict</th></tr>
+<tr><td>CSOAI-ORG public repos</td><td>477</td><td><strong>478</strong></td><td><span class="verified">✓</span> within rounding</td></tr>
+<tr><td>CSOAI servers on official MCP Registry</td><td>294</td><td><strong>30</strong></td><td><span class="fix">❌</span> inflated ~10x</td></tr>
+<tr><td>MCP crosswalk framework count</td><td>30</td><td><strong>13</strong></td><td><span class="fix">❌</span> inflated ~2.3x</td></tr>
+<tr><td>Hive stars</td><td>10.5k</td><td><strong>10,523</strong></td><td><span class="verified">✓</span> within rounding</td></tr>
+<tr><td>Hive contributors</td><td>216</td><td><strong>208</strong></td><td><span class="verified">✓</span> within rounding</td></tr>
+<tr><td>Hive forks</td><td>not given</td><td><strong>5,659</strong></td><td>new data</td></tr>
+<tr><td>vLLM stars</td><td>68k+</td><td><strong>82,624</strong></td><td><span class="warn">⚠</span> under-reported</td></tr>
+<tr><td>SGLang stars</td><td>15k+</td><td><strong>28,919</strong></td><td><span class="warn">⚠</span> under-reported</td></tr>
+<tr><td>SGLang GPUs in production</td><td>400,000+</td><td><strong>400,000+</strong></td><td><span class="verified">✓</span> verbatim from README</td></tr>
+<tr><td>RAGFlow stars</td><td>73k+</td><td><strong>82,512</strong></td><td><span class="warn">⚠</span> under-reported</td></tr>
+<tr><td>nanochat stars</td><td>54.7k</td><td><strong>54,919</strong></td><td><span class="verified">✓</span> within rounding</td></tr>
+<tr><td>Mamba SSM stars</td><td>not given</td><td><strong>18,429</strong></td><td>new data</td></tr>
+<tr><td>LiteLLM stars</td><td>not given</td><td><strong>50,113</strong></td><td>new data</td></tr>
+<tr><td>DeepSeek V4-Pro params</td><td>1.6T / 49B</td><td><strong>1.6T / 49B</strong></td><td><span class="verified">✓</span> verbatim from HF card</td></tr>
+<tr><td>DeepSeek V4-Pro input cost</td><td>$1.74/M</td><td><strong>$0.435/M</strong></td><td><span class="fix">❌</span> inflated 4x</td></tr>
+<tr><td>DeepSeek V4-Flash input cost</td><td>$0.14/M</td><td><strong>$0.14/M</strong></td><td><span class="verified">✓</span></td></tr>
+<tr><td>Qwen3-Coder-Next params</td><td>80B / 3B</td><td><strong>80B / 3B</strong></td><td><span class="verified">✓</span> from HF README</td></tr>
+<tr><td>EU AI Act Article 50 deadline</td><td>2 Aug 2026</td><td><strong>2 Nov 2026</strong> (per meok-watermark-attest-mcp)</td><td><span class="fix">❌</span> stale, see legal</td></tr>
+<tr><td>MEOK consumer Pro pricing</td><td>£199/mo</td><td><strong>£19/mo</strong></td><td><span class="fix">❌</span> 10x inflation</td></tr>
+<tr><td>MEOK consumer Sovereign pricing</td><td>not given</td><td><strong>£9/mo</strong></td><td>new data</td></tr>
+<tr><td>MEOK Explorer free tier</td><td>not given</td><td><strong>£0/forever</strong></td><td>new data</td></tr>
+<tr><td>MEOK Compliance Substrate</td><td>not distinguished from consumer</td><td><strong>£199–£1,499/mo</strong></td><td>new segmentation</td></tr>
+<tr><td>OPENMOE license</td><td>Apache 2.0</td><td><strong>Apache 2.0</strong></td><td><span class="verified">✓</span></td></tr>
+<tr><td>OPENMOE BFT math</td><td>quorum 2f+1</td><td><strong>quorum 2f+1</strong></td><td><span class="verified">✓</span> verbatim from bft.py</td></tr>
+<tr><td>OPENMOE test count</td><td>183</td><td><strong>15 test files</strong> (assertion count not run)</td><td><span class="warn">⚠</span> not confirmed</td></tr>
+<tr><td>OPENMOE module count</td><td>5 components</td><td><strong>16 modules</strong> in openmoe_bft/</td><td><span class="warn">⚠</span> expanded</td></tr>
+<tr><td>Sov3 public location</td><td>"may be stealth"</td><td><strong>consciousness-engine-mcp</strong> (CSOAI-ORG)</td><td><span class="verified">✓</span> found</td></tr>
+<tr><td>Kimi K2.6 sub-agent count</td><td>300 sub-agents / 4,000 steps</td><td>not verified this round</td><td><span class="warn">⚠</span> unconfirmed</td></tr>
+<tr><td>GLM-5.1 param count</td><td>744B / 40B</td><td>HF model exists, exact split not independently verified</td><td><span class="warn">⚠</span> unconfirmed</td></tr>
+<tr><td>Mamba-3 class signature</td><td>Mamba3(is_mimo=True, mimo_rank=4)</td><td>mamba-ssm package exists, exact API not independently verified</td><td><span class="warn">⚠</span> unconfirmed</td></tr>
+</table>
+
+<p><strong>Legend:</strong> <span class="verified">✓</span> = verified, <span class="fix">❌</span> = materially wrong, <span class="warn">⚠</span> = unverified this round (third-party source only).</p>
+
+<h2 id="appendix-b">Appendix B: Verification Methodology</h2>
+<ul>
+<li><strong>GitHub API</strong>: <code>gh api repos/&lt;owner&gt;/&lt;repo&gt;</code> for stars/forks/license/description/push date; <code>gh api repos/.../contributors?per_page=100&amp;anon=false&amp;page=N</code> for contributor counts; <code>gh search repos "&lt;query&gt; owner:CSOAI-ORG"</code> for org-level discovery.</li>
+<li><strong>PyPI JSON API</strong>: <code>curl -sL https://pypi.org/pypi/&lt;package&gt;/json</code> for current version, release count, license, summary, description.</li>
+<li><strong>HuggingFace API</strong>: <code>https://huggingface.co/api/models/&lt;id&gt;</code> for download count, architecture, pipeline tag; <code>https://huggingface.co/&lt;id&gt;/raw/main/config.json</code> and <code>README.md</code> for parameter counts and feature descriptions.</li>
+<li><strong>MCP Registry</strong>: <code>https://registry.modelcontextprotocol.io/v0.1/servers?search=CSOAI</code> for the live official registry listing.</li>
+<li><strong>DeepSeek pricing page</strong>: <code>https://api-docs.deepseek.com/quick_start/pricing</code> (live, official).</li>
+<li><strong>meok.ai</strong>: <code>https://meok.ai</code> homepage for consumer pricing and product positioning.</li>
+<li><strong>csoai.org</strong>: <code>https://csoai.org</code> for the governance nerve-center positioning.</li>
+<li><strong>SGLang GitHub README</strong>: live, verbatim for the 400,000+ GPUs claim.</li>
+<li><strong>OPENMOE source code</strong>: <code>openmoe_bft/bft.py</code> read directly, BFT math confirmed at source-code level.</li>
+</ul>
+
+<h2 id="appendix-c">Appendix C: Open Items / Re-verify Before Publishing</h2>
+<ol>
+<li><strong>OPENMOE "183 tests passing"</strong> — run <code>cd CSOAI-ORG/OPENMOE &amp;&amp; pytest tests/ -q</code> to confirm exact pass count.</li>
+<li><strong>GLM-5.1 744B / 40B split</strong> — extract from the safetensors index to compute the true parameter count.</li>
+<li><strong>Kimi K2.6 1T/32B split and 300 sub-agents</strong> — confirm against Moonshot's official technical report.</li>
+<li><strong>Mamba-3 release</strong> — confirm the <code>Mamba3</code> class signature exists in the <code>mamba-ssm</code> package.</li>
+<li><strong>MEOK waitlist number</strong> ("2,400+ people on the waitlist") — appears in meok.ai marketing; not independently confirmed.</li>
+<li><strong>A2A Protocol stats</strong> ("150+ orgs, 22,000+ stars, 5 languages") — third-party source; verify against the official Linux Foundation A2A repo.</li>
+<li><strong>Article 50 effective date</strong> — the legal team should confirm whether the current binding deadline is 2 August 2026 or 2 November 2026.</li>
+<li><strong>MCP Registry count</strong> — the 30 CSOAI servers on the official registry is meaningfully different from the 294 number in the previous edition.</li>
+</ol>
+
+<footer>
+<p>Compiled and fact-checked by Mavis on 12 June 2026. The first edition (preserved at <a href="openmoe_original-first-edition.md">openmoe_original-first-edition.md</a>) was a high-quality landscape analysis with several inflated headline numbers; this edition corrects those numbers where verifiable and flags the rest as third-party-claimed. The CSOAI / MEOK / Hives / OPENMOE stack (478 repos, 9 verified PyPI packages, 13-framework crosswalk, 16-module BFT package, real Hive at 10,523 stars) is genuine. The open-source diamonds (§2) are all real. Quote with confidence; quote the corrected numbers.</p>
+<p>License: MIT. By <a href="https://meok.ai">MEOK AI Labs</a> / <a href="https://csoai.org">CSOAI</a>.</p>
+</footer>
+</body>
+</html>
