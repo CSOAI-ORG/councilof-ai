@@ -563,6 +563,12 @@ export default function OpenGridWorks() {
               Council Dome (36 nodes)
             </Button>
           </Link>
+          <Link href="/council/globe?preset=physical-infra">
+            <Button variant="outline" className="border-slate-700 text-slate-200">
+              <ArrowRight className="w-4 h-4 mr-1" />
+              By the council (Globe view)
+            </Button>
+          </Link>
           <a href="https://github.com/CSOAI-ORG/gods-eye-geospatial-mcp" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="border-slate-700 text-slate-200">
               <ExternalLink className="w-4 h-4 mr-1" />
