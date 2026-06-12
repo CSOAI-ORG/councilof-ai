@@ -102,6 +102,7 @@ import CouncilMaps from "./pages/CouncilMaps";
 import CouncilCompliance from "./pages/CouncilCompliance";
 import CouncilLaw from "./pages/CouncilLaw";
 import CouncilSigil from "./pages/CouncilSigil";
+import OpenGridWorks from "./pages/OpenGridWorks";
 import { AnalyticsProvider } from "./components/Analytics";
 
 function ScrollToTop() {
@@ -238,6 +239,9 @@ function App() {
                   <Route path="/council/compliance" component={CouncilCompliance} />
                   <Route path="/council/law" component={CouncilLaw} />
                   <Route path="/council/sigil" component={CouncilSigil} />
+                  <Route path="/opengridworks" component={OpenGridWorks} />
+                  <Route path="/map" component={OpenGridWorks} />
+                  <Route path="/physical-cyber-twin" component={OpenGridWorks} />
                   <Route path="/public-watchdog" component={PublicWatchdog} />
                   <Route path="/government" component={GovernmentDashboard} />
                   <Route path="/government-dashboard" component={GovernmentDashboard} />
