@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>csoai.org — Sovereign Attestation Chain</title>
+<style>
+  :root { --bg:#0b0d12; --panel:#11151c; --ink:#e6e8ec; --muted:#7a8395; --accent:#7be0a8; --warn:#ffb86b; --bad:#ff7a7a; --line:#1c2230; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 24px 96px}
+  header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+  h1{margin:0;font-size:28px;letter-spacing:-0.01em}
+  h1 small{color:var(--muted);font-weight:400;font-size:14px;display:block;margin-top:4px}
+  .pill{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12px;color:var(--muted)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  .dot.warn{background:var(--warn)} .dot.bad{background:var(--bad)}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:24px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .card .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.06em}
+  .card .v{font-size:24px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
+  .card .sub{color:var(--muted);font-size:12px;margin-top:4px}
+  .cliff{background:linear-gradient(135deg,#2a1f29 0%,#1f2a1d 100%);border:1px solid #ffb86b;border-radius:12px;padding:20px;margin:24px 0}
+  .cliff .countdown{font-size:48px;font-weight:800;color:#ffb86b;letter-spacing:-0.02em}
+  .cliff .label{color:var(--muted);font-size:12px;margin-top:4px}
+  .cliff h2{margin:0 0 8px;color:#ffb86b;font-size:18px}
+  .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0 24px}
+  .price-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .price-card.featured{border-color:var(--accent);background:linear-gradient(135deg,#11201a 0%,#11151c 100%)}
+  .price-card .name{font-weight:600;font-size:16px;margin-bottom:4px}
+  .price-card .price{color:var(--accent);font-size:20px;font-weight:700;margin:8px 0}
+  .price-card ul{list-style:none;padding:0;margin:12px 0;font-size:13px;color:var(--muted)}
+  .price-card li{padding:3px 0;padding-left:14px;position:relative}
+  .price-card li::before{content:"✓";color:var(--accent);position:absolute;left:0}
+  h2{font-size:18px;margin:32px 0 12px;color:var(--ink);letter-spacing:-0.01em}
+  h2 .meta{color:var(--muted);font-size:12px;font-weight:400;margin-left:8px}
+  .kind{display:inline-block;padding:2px 8px;border-radius:6px;background:#1a2030;color:var(--ink);font-size:11px;margin-right:8px;font-family:ui-monospace,SF Mono,Menlo,monospace}
+  .kind.diamond{background:#1d2c3a;color:#8ec5ff}
+  .kind.compliance{background:#2a1f1d;color:#ff9b8c}
+  .kind.bootstrap{background:#1f2a1d;color:#b8e986}
+  .kind.integration{background:#1d2a2a;color:#7dd3d3}
+  .kind.regulatory{background:#2a1f29;color:#e3a3d3}
+  .kind.competitive{background:#2a271d;color:#e6cf8c}
+  .kind.architecture{background:#1d1f2a;color:#a3a8e3}
+  .row{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px}
+  .row .sub{color:var(--muted);font-size:12px;margin-top:2px;font-family:ui-monospace,SF Mono,Menlo,monospace}
+  .row .hash{color:var(--muted);font-family:ui-monospace,SF Mono,Menlo,monospace;font-size:11px}
+  .status{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
+  .status.certified{background:#1f3a2c;color:#7be0a8}
+  .status.no_quorum,.status.conflict{background:#3a1f1f;color:#ff7a7a}
+  code{font-family:ui-monospace,SF Mono,Menlo,monospace;background:#0e131b;padding:1px 6px;border-radius:4px;font-size:12px}
+  .hives{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 24px}
+  .hive{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px}
+  .hive .name{font-weight:600}
+  .hive .info{color:var(--muted);font-size:11px;margin-top:4px}
+  .hive .probe{font-family:ui-monospace,SF Mono,Menlo,monospace;font-size:11px;margin-top:6px;padding:3px 6px;background:#0e131b;border-radius:4px;display:inline-block}
+  .hive .probe.ok{color:#7be0a8}
+  .hive .probe.down{color:#ff7a7a}
+  footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+  a{color:var(--accent);text-decoration:none}
+  .toolbar{display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap}
+  .toolbar button, .toolbar a.btn{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;text-decoration:none;display:inline-block}
+  .toolbar button:hover, .toolbar a.btn:hover{border-color:var(--accent)}
+  .toolbar input{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:6px 12px;font-size:12px;flex:1;min-width:180px;font-family:ui-monospace,SF Mono,Menlo,monospace}
+  .toolbar select{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:6px 12px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>csoai.org <small>Sovereign Attestation Chain · 4-hive HORUS federation · 50-day EU AI Act cliff</small></h1>
+    </div>
+    <div>
+      <span class="pill"><span class="dot" id="status-dot"></span> <span id="status-text">live</span></span>
+    </div>
+  </header>
+
+  <div class="grid" id="metrics">
+    <div class="card"><div class="k">attestations</div><div class="v" id="m-total">—</div><div class="sub" id="m-total-sub">on chain</div></div>
+    <div class="card"><div class="k">hives (live)</div><div class="v" id="m-hives">—</div><div class="sub">n=4, f=1, q=3</div></div>
+    <div class="card"><div class="k">frameworks</div><div class="v" id="m-fw">—</div><div class="sub">30 attested</div></div>
+    <div class="card"><div class="k">chain tip</div><div class="v" id="m-tip" style="font-size:14px;font-family:ui-monospace,monospace">—</div><div class="sub" id="m-tip-sub">sha256</div></div>
+  </div>
+
+  <div class="cliff" id="cliff-box">
+    <h2>⚠ EU AI Act Article 50 — 50-day cliff</h2>
+    <div style="display:flex;align-items:baseline;gap:24px">
+      <div>
+        <div class="countdown" id="countdown">—</div>
+        <div class="label">days remaining until 2026-08-02</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:13px;color:var(--ink);line-height:1.6">
+          <strong style="color:#ffb86b">Tier 2:</strong> €15M or 3% global turnover &nbsp;·&nbsp;
+          <strong style="color:#ffb86b">Tier 1:</strong> €35M or 7%
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">
+          Article 50 requires: AI content disclosure · deepfake watermarking · GPAI transparency · EU database registration.
+        </div>
+        <div style="margin-top:12px">
+          <a href="#" onclick="loadPricing();return false" class="btn" style="background:var(--accent);color:#0b0d12;font-weight:600">⚡ Get the Article 50 Kit — £999</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>4-hive federation <span class="meta">real backends probed on every attest</span></h2>
+  <div class="hives" id="hives"></div>
+
+  <h2>attestation chain <span class="meta" id="chain-meta">—</span></h2>
+  <div class="toolbar">
+    <input id="q" placeholder="search subject, claim, kind..." />
+    <select id="kind-filter">
+      <option value="">all kinds</option>
+      <option value="diamond">diamond</option>
+      <option value="bootstrap">bootstrap</option>
+      <option value="integration">integration</option>
+      <option value="regulatory">regulatory</option>
+      <option value="competitive">competitive</option>
+      <option value="architecture">architecture</option>
+      <option value="compliance">compliance</option>
+    </select>
+    <button onclick="search()">search</button>
+    <button onclick="load(20)">last 20</button>
+    <button onclick="load(50)">last 50</button>
+    <button onclick="loadAll()">all</button>
+  </div>
+  <div id="chain"></div>
+
+  <h2>30 compliance frameworks</h2>
+  <div id="frameworks-list" class="row" style="display:block">
+    <div style="padding:8px;color:var(--muted)">loading...</div>
+  </div>
+
+  <h2>cliff product · L0-E</h2>
+  <div class="pricing" id="pricing"></div>
+
+  <footer>
+    <div>Public endpoints: <a href="/attest">/attest</a> · <a href="/log">/log</a> · <a href="/log/summary">/log/summary</a> · <a href="/verify">/verify</a> · <a href="/horus">/horus</a> · <a href="/hives">/hives</a> · <a href="/frameworks">/frameworks</a> · <a href="/art50">/art50</a> · <a href="/pricing">/pricing</a> · <a href="/search">/search</a></div>
+    <div>POST <a href="#" onclick="newClaim();return false">/attest</a> · POST <a href="#" onclick="checkout();return false">/checkout</a> · GET /attest/verify/&lt;hash&gt;</div>
+    <div class="tip" id="ft">—</div>
+  </footer>
+</div>
+
+<script>
+let POLL_MS = 6000;
+async function jget(p) {
+  const r = await fetch(p, {cache: "no-store"});
+  if (!r.ok) throw new Error(p + ' -> ' + r.status);
+  return r.json();
+}
+function short(s, n=12) { return s ? s.slice(0, n) : '—'; }
+function esc(s) { return String(s == null ? '' : s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+
+async function loadMetrics() {
+  try {
+    const s = await jget('/log/summary');
+    document.getElementById('m-total').textContent = s.attestations_total;
+    document.getElementById('m-total-sub').textContent =
+      Object.entries(s.by_kind).map(([k,v]) => `${k}:${v}`).join(' · ');
+    document.getElementById('m-hives').textContent = s.horus.n + '/' + s.horus.certified;
+    document.getElementById('m-fw').textContent = '30';
+    document.getElementById('m-tip').textContent = short(s.tip_hash, 24);
+    document.getElementById('m-tip-sub').textContent =
+      'chain ' + (s.chain_valid ? 'valid' : 'INVALID');
+    document.getElementById('chain-meta').textContent =
+      `${s.attestations_total} attestations · tip ${short(s.tip_hash, 16)}`;
+    const dot = document.getElementById('status-dot');
+    const txt = document.getElementById('status-text');
+    if (s.chain_valid) { dot.className = 'dot'; txt.textContent = 'live'; }
+    else { dot.className = 'dot bad'; txt.textContent = 'chain broken'; }
+  } catch (e) {
+    document.getElementById('status-text').textContent = 'offline: ' + e.message;
+  }
+}
+
+async function loadHives() {
+  try {
+    const h = await jget('/hives');
+    const el = document.getElementById('hives');
+    el.innerHTML = '';
+    for (const [hid, s] of Object.entries(h.status)) {
+      const div = document.createElement('div');
+      div.className = 'hive';
+      const bs = s.backend_status || 'n/a';
+      const bl = s.backend_latency_ms || 0;
+      const liveBadge = s.live ? '<span style="color:#7be0a8">●</span>' : '<span style="color:#ff7a7a">●</span>';
+      div.innerHTML = `<div class="name">${liveBadge} ${esc(hid)}</div>
+        <div class="info">queens: ${s.queens} · f=${s.f} q=${s.quorum}</div>
+        <div class="info">certified: ${s.tickets_certified} · routed: ${s.sigils_routed}</div>
+        <div class="probe ${bs}">${esc(s.probe_url || '').slice(0,40)} → ${bs} (${bl.toFixed(0)}ms)</div>`;
+      el.appendChild(div);
+    }
+  } catch (e) {}
+}
+
+async function loadCountdown() {
+  try {
+    const a = await jget('/art50');
+    document.getElementById('countdown').textContent = a.days_remaining;
+  } catch (e) {
+    document.getElementById('countdown').textContent = '?';
+  }
+}
+
+async function loadFrameworks() {
+  try {
+    const f = await jget('/frameworks');
+    const el = document.getElementById('frameworks-list');
+    el.innerHTML = '';
+    for (const fw of f.frameworks) {
+      const div = document.createElement('div');
+      div.className = 'row';
+      const badge = `<span class="kind ${fw.jurisdiction.toLowerCase().substring(0,4)}">${esc(fw.jurisdiction)}</span>`;
+      div.innerHTML = `<div>
+        ${badge} <strong>${esc(fw.id)}</strong> — ${esc(fw.name)}
+        <div class="sub">effective ${esc(fw.effective)} · ${esc(fw.notes || '').slice(0, 100)}</div>
+      </div>
+      <div><div class="status certified">${esc(fw.status)}</div></div>`;
+      el.appendChild(div);
+    }
+  } catch (e) {}
+}
+
+async function loadPricing() {
+  try {
+    const p = await jget('/pricing');
+    const el = document.getElementById('pricing');
+    el.innerHTML = '';
+    for (const tier of p.tiers) {
+      const featured = tier.id === 'article50' ? ' featured' : '';
+      const div = document.createElement('div');
+      div.className = 'price-card' + featured;
+      div.innerHTML = `<div class="name">${esc(tier.name)}</div>
+        <div class="price">${esc(tier.price)}</div>
+        <ul>${tier.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+        <button class="btn" onclick="checkout('${tier.id}')">buy ${esc(tier.name)}</button>`;
+      el.appendChild(div);
+    }
+    document.getElementById('pricing').scrollIntoView({behavior:'smooth'});
+  } catch (e) {}
+}
+
+async function load(n) {
+  const d = await jget('/log?limit=' + n);
+  const el = document.getElementById('chain');
+  el.innerHTML = '';
+  for (const it of d.items) {
+    const div = document.createElement('div');
+    div.className = 'row';
+    const k = (it.kind || '').toLowerCase();
+    const claimStr = JSON.stringify(it.claim || {}).slice(0, 200);
+    div.innerHTML = `
+      <div>
+        <span class="kind ${k}">${esc(it.kind)}</span>
+        <strong>${esc(it.subject)}</strong>
+        <div class="sub">${esc(claimStr)}</div>
+        <div class="hash">id: ${short(it.attestation_id, 8)} · hash: ${short(it.attestation_hash, 24)} · <a href="/attest/verify/${it.attestation_hash}">verify →</a> · ${new Date(it.created_at*1000).toISOString()}</div>
+      </div>
+      <div>
+        <div class="status ${esc(it.status)}">${esc(it.status)}</div>
+        <div class="hash" style="margin-top:4px;text-align:right">conf: ${(it.meta_confidence || 0).toFixed(2)}</div>
+      </div>`;
+    el.appendChild(div);
+  }
+}
+async function loadAll() { load(500); }
+
+async function search() {
+  const q = document.getElementById('q').value;
+  const kind = document.getElementById('kind-filter').value;
+  let url = '/search?limit=50';
+  if (q) url += '&q=' + encodeURIComponent(q);
+  if (kind) url += '&kind=' + encodeURIComponent(kind);
+  const d = await jget(url);
+  const el = document.getElementById('chain');
+  el.innerHTML = `<div style="margin-bottom:12px;color:var(--muted)">${d.total} matches${q ? ` for "${q}"` : ''}${kind ? ` in ${kind}` : ''}</div>`;
+  for (const it of d.results) {
+    const div = document.createElement('div');
+    div.className = 'row';
+    const k = (it.kind || '').toLowerCase();
+    const claimStr = JSON.stringify(it.claim || {}).slice(0, 200);
+    div.innerHTML = `
+      <div>
+        <span class="kind ${k}">${esc(it.kind)}</span>
+        <strong>${esc(it.subject)}</strong>
+        <div class="sub">${esc(claimStr)}</div>
+        <div class="hash">id: ${short(it.attestation_id, 8)} · hash: ${short(it.attestation_hash, 24)} · <a href="/attest/verify/${it.attestation_hash}">verify →</a></div>
+      </div>
+      <div><div class="status ${esc(it.status)}">${esc(it.status)}</div></div>`;
+    el.appendChild(div);
+  }
+}
+
+async function checkout(tier) {
+  if (!tier) tier = 'article50';
+  const email = prompt(`Checkout — ${tier}\nEnter your email (for receipt):`) || '';
+  const r = await fetch('/checkout', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({tier, email}),
+  });
+  const d = await r.json();
+  if (d.checkout_url) {
+    alert(`Intent recorded on chain:\n${d.intent_attestation.id}\n\nIn production, you'd be redirected to:\n${d.checkout_url}`);
+    window.open(d.checkout_url, '_blank');
+  } else {
+    alert('Checkout error: ' + JSON.stringify(d));
+  }
+}
+
+async function newClaim() {
+  const kind = prompt('Kind? (diamond/bootstrap/integration/regulatory/competitive/architecture/compliance)') || 'competitive';
+  const subject = prompt('Subject?') || 'manual-test';
+  const claimStr = prompt('Claim (JSON object as string)?') || '{"note":"manual test"}';
+  let claim;
+  try { claim = JSON.parse(claimStr); } catch (e) { alert('Bad JSON'); return; }
+  const r = await fetch('/attest', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({kind, subject, claim}),
+  });
+  const d = await r.json();
+  alert(`Attested!\nid: ${d.attestation_id}\nstatus: ${d.status}\nhash: ${d.attestation_hash}`);
+  loadMetrics(); load(20);
+}
+
+(async function main(){
+  document.getElementById('ft').textContent =
+    'csoai.org v0.1 · n=4 f=1 q=3 · ' + new Date().toISOString();
+  await loadMetrics();
+  await loadHives();
+  await loadCountdown();
+  await loadFrameworks();
+  await load(20);
+  setInterval(() => { loadMetrics(); loadHives(); loadCountdown(); }, POLL_MS);
+})();
+</script>
+</body>
+</html>
