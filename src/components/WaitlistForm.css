@@ -1,0 +1,161 @@
+/* Waitlist Form Styles */
+.waitlist-form {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 16px;
+  padding: 48px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.waitlist-form.inline {
+  padding: 32px;
+  background: rgba(10, 10, 15, 0.8);
+}
+
+.waitlist-form h2 {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.waitlist-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 32px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .waitlist-form {
+    padding: 32px 24px;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #8B5CF6;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.form-group select {
+  cursor: pointer;
+}
+
+.form-group select option {
+  background: #0a0a0f;
+  color: white;
+}
+
+.btn-large {
+  width: 100%;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.form-note {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 16px;
+}
+
+/* Success State */
+.waitlist-success {
+  text-align: center;
+  padding: 64px 48px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(59, 130, 246, 0.1));
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.waitlist-success.inline {
+  padding: 48px 32px;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #22C55E, #3B82F6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: white;
+  margin: 0 auto 24px;
+  animation: successPop 0.5s ease-out;
+}
+
+@keyframes successPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.waitlist-success h3 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.waitlist-success p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 8px;
+}
+
+.success-detail {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
+}

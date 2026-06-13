@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - AI Safety Empire</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #10b981;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s ease-out;
+        }
+        
+        .checkmark svg {
+            width: 50px;
+            height: 50px;
+            stroke: white;
+            stroke-width: 3;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            animation: drawCheck 0.5s ease-out 0.3s forwards;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+        }
+        
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes drawCheck {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        h1 {
+            font-size: 32px;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+        
+        .details {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        .jabl-tokens {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 24px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+        
+        .next-steps {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            text-align: left;
+        }
+        
+        .next-steps h2 {
+            font-size: 24px;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-content h3 {
+            font-size: 16px;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+        
+        .step-content p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="checkmark">
+            <svg viewBox="0 0 52 52">
+                <path d="M14 27l8 8 16-16"/>
+            </svg>
+        </div>
+        
+        <h1>Payment Successful!</h1>
+        <p class="subtitle">Welcome to AI Safety Empire</p>
+        
+        <div class="details">
+            <div class="detail-row">
+                <span class="detail-label">Email</span>
+                <span class="detail-value" id="customer-email">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Subscription Tier</span>
+                <span class="detail-value" id="subscription-tier">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">JABL Tokens/Month</span>
+                <span class="detail-value jabl-tokens" id="jabl-tokens">Loading...</span>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+            <a href="/docs" class="btn btn-secondary">View Documentation</a>
+        </div>
+        
+        <div class="next-steps">
+            <h2>Next Steps</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Check Your Email</h3>
+                    <p>We've sent you a welcome email with your API key and getting started guide.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Make Your First API Call</h3>
+                    <p>Test the Council of 12 AIs with our quick start tutorial.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Join Our Community</h3>
+                    <p>Connect with other developers on Discord and get support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="stripe-checkout.js"></script>
+</body>
+</html>
+

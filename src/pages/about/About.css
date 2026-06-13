@@ -1,0 +1,367 @@
+/* About Page Styling - ProofOf.ai Standard */
+
+.about-page {
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.about-hero {
+  padding: 6rem 2rem 4rem;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(139, 92, 246, 0.1) 0%, transparent 100%);
+}
+
+.about-hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.about-hero .subtitle {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.mission-section {
+  padding: 5rem 2rem;
+}
+
+.mission-section .large-text {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.mission-section p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+}
+
+.founder-section {
+  padding: 5rem 2rem;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.founder-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.founder-text h3 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-purple);
+}
+
+.founder-title {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.founder-text p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.founder-text strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.founder-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.company-section {
+  padding: 5rem 2rem;
+}
+
+.company-section p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  max-width: 900px;
+  margin: 0 auto 3rem;
+}
+
+.company-pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.pillar-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.pillar-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-purple);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+}
+
+.pillar-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.pillar-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--primary-purple);
+}
+
+.pillar-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.values-section {
+  padding: 5rem 2rem;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.value-item {
+  background: var(--card-bg);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all 0.3s;
+}
+
+.value-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-purple);
+}
+
+.value-item h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.value-item p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.timeline-section {
+  padding: 5rem 2rem;
+}
+
+.timeline {
+  max-width: 800px;
+  margin: 3rem auto 0;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--primary-purple), var(--primary-blue));
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.timeline-item:nth-child(even) .timeline-date {
+  order: 2;
+  text-align: left;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+  order: 1;
+  text-align: right;
+}
+
+.timeline-date {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--primary-purple);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.timeline-item:nth-child(even) .timeline-date {
+  justify-content: flex-start;
+}
+
+.timeline-content {
+  background: var(--card-bg);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.timeline-content h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-purple);
+}
+
+.timeline-content p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ecosystem-section {
+  padding: 5rem 2rem;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.ecosystem-platforms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.platform-link {
+  background: var(--card-bg);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.platform-link:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-purple);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+}
+
+.platform-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.platform-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary-purple);
+  margin-bottom: 0.5rem;
+}
+
+.platform-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.cta-section {
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .about-hero h1 {
+    font-size: 2rem;
+  }
+
+  .about-hero .subtitle {
+    font-size: 1.125rem;
+  }
+
+  .mission-section .large-text {
+    font-size: 1.25rem;
+  }
+
+  .timeline::before {
+    left: 20px;
+  }
+
+  .timeline-item {
+    grid-template-columns: 1fr;
+    padding-left: 50px;
+  }
+
+  .timeline-item:nth-child(even) .timeline-date {
+    order: 1;
+    text-align: left;
+  }
+
+  .timeline-item:nth-child(even) .timeline-content {
+    order: 2;
+    text-align: left;
+  }
+
+  .timeline-date {
+    justify-content: flex-start !important;
+  }
+
+  .timeline-content {
+    text-align: left !important;
+  }
+
+  .company-pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .values-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ecosystem-platforms {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

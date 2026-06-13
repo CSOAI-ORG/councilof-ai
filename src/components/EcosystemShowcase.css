@@ -1,0 +1,273 @@
+.ecosystem-showcase {
+  padding: 80px 20px;
+  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.showcase-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.showcase-header h2 {
+  font-size: 3rem;
+  color: #1e293b;
+  margin-bottom: 20px;
+}
+
+.showcase-header .subtitle {
+  font-size: 1.2rem;
+  color: #64748b;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  line-height: 1.8;
+}
+
+.ecosystem-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 5px;
+}
+
+.platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  margin-bottom: 80px;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .platforms-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.platform-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 2px solid transparent;
+}
+
+.platform-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
+}
+
+.platform-card.coming_soon {
+  opacity: 0.7;
+  border: 2px dashed #cbd5e1;
+}
+
+.platform-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.platform-card h3 {
+  font-size: 1.5rem;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.platform-tagline {
+  font-size: 1rem;
+  color: #667eea;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.platform-description {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.platform-features {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.feature-tag {
+  font-size: 0.85rem;
+  color: #475569;
+  padding: 5px 0;
+}
+
+.platform-actions {
+  margin-top: auto;
+}
+
+.platform-link {
+  display: inline-block;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: opacity 0.3s;
+}
+
+.platform-link:hover {
+  opacity: 0.9;
+}
+
+.coming-soon-badge {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #e2e8f0;
+  color: #64748b;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.ecosystem-benefits {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.ecosystem-benefits h3 {
+  font-size: 2.5rem;
+  color: #1e293b;
+  margin-bottom: 50px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.benefit {
+  text-align: center;
+}
+
+.benefit-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.benefit h4 {
+  font-size: 1.3rem;
+  color: #1e293b;
+  margin-bottom: 15px;
+}
+
+.benefit p {
+  font-size: 1rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.integration-cta {
+  text-align: center;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  color: white;
+}
+
+.integration-cta h3 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.integration-cta p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary-large,
+.btn-secondary-large {
+  padding: 18px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-primary-large {
+  background: white;
+  color: #667eea;
+}
+
+.btn-secondary-large {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn-primary-large:hover,
+.btn-secondary-large:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .showcase-header h2 {
+    font-size: 2rem;
+  }
+  
+  .platforms-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ecosystem-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .integration-cta h3 {
+    font-size: 1.8rem;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+  }
+}
+
