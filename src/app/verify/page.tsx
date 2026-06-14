@@ -19,6 +19,12 @@ export default function VerifyPage() {
           <ArrowRight className="w-4 h-4" />
         </a>
       </div>
+      <div className="mt-8 text-center">
+        <a href="https://proofof.ai" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-brand-400 hover:text-brand-300 transition-colors">
+          <Shield className="w-4 h-4" />
+          Attestations published on proofof.ai ↗
+        </a>
+      </div>
     </div>
   );
 }

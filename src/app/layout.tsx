@@ -60,6 +60,7 @@ function Navigation() {
             <a href="/verify" className="text-muted-foreground hover:text-foreground transition-colors">Verify</a>
             <a href="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
                       <a href="/protocols" className="text-muted-foreground hover:text-foreground transition-colors">Protocols</a>
+            <a href="https://csoai.org" target="_blank" rel="noopener noreferrer" className="text-brand-400 hover:text-brand-300 transition-colors">csoai.org ↗</a>
           </nav>
           <div className="flex items-center gap-3">
             <a href="/pricing" className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg gradient-brand text-white hover:opacity-90 transition-opacity">
@@ -94,11 +95,11 @@ function Footer() {
             </div>
           </div>
           <div>
-            <h4 className="text-sm font-semibold mb-3">Resources</h4>
+            <h4 className="text-sm font-semibold mb-3">Ecosystem</h4>
             <div className="space-y-2 text-xs text-muted-foreground">
+              <a href="https://csoai.org" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">CSOAI Standard ↗</a>
+              <a href="https://proofof.ai" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">Verified on proofof.ai ↗</a>
               <a href="#" className="block hover:text-foreground">Documentation</a>
-              <a href="#" className="block hover:text-foreground">API Reference</a>
-              <a href="#" className="block hover:text-foreground">Research</a>
             </div>
           </div>
           <div>
