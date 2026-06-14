@@ -1,11 +1,25 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-});
+function getStripe(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error('STRIPE_SECRET_KEY is not set');
+  }
+  return new Stripe(key, { apiVersion: '2025-02-24.acacia' as any });
+}
 
 export async function POST(request: Request) {
+  let stripe: Stripe;
+  try {
+    stripe = getStripe();
+  } catch {
+    return NextResponse.json(
+      { error: 'Stripe is not configured. Set STRIPE_SECRET_KEY in Vercel env vars.' },
+      { status: 503 }
+    );
+  }
+
   const body = await request.json();
   const { priceId, customerEmail, tier } = body;
 
