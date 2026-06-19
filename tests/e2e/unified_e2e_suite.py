@@ -1319,34 +1319,44 @@ class E2ERunner:
             assert count >= 8, f"too few tiers: {count}"
             return f"tiers: {count}"
 
+        def _https_get(url: str, timeout: int = 8):
+            """Fetch a static HTML page with a working SSL context.
+
+            Local Python (3.14 on this Mac) ships without a system CA bundle, so a
+            bare urlopen() raises CERTIFICATE_VERIFY_FAILED even when the page is
+            live and healthy. Prefer certifi; fall back to an unverified context so
+            a CA-store gap never masquerades as a dead page.
+            """
+            import urllib.request as _ur
+            import ssl as _ssl
+            try:
+                import certifi as _certifi
+                ctx = _ssl.create_default_context(cafile=_certifi.where())
+            except Exception:
+                ctx = _ssl._create_unverified_context()
+            req = _ur.Request(url)
+            with _ur.urlopen(req, timeout=timeout, context=ctx) as r:
+                return r.status, r.read().decode()
+
         async def countdown_live_check():
             """Day 26 BLOCK 3: /countdown page is live on csoai.org."""
-            import urllib.request as _ur
-            req = _ur.Request("https://csoai-org.vercel.app/countdown")
-            with _ur.urlopen(req, timeout=8) as r:
-                html = r.read().decode()
-            assert r.status == 200, f"status={r.status}"
+            status, html = _https_get("https://csoai-org.vercel.app/countdown")
+            assert status == 200, f"status={status}"
             assert "Article 50" in html, f"missing Article 50"
             assert "countdown" in html.lower(), f"missing countdown"
             return f"countdown: live, {len(html):,}B"
 
         async def opengrid_live_check():
             """Day 26 BLOCK 4: /opengrid page is live on csoai.org."""
-            import urllib.request as _ur
-            req = _ur.Request("https://csoai-org.vercel.app/opengrid")
-            with _ur.urlopen(req, timeout=8) as r:
-                html = r.read().decode()
-            assert r.status == 200, f"status={r.status}"
+            status, html = _https_get("https://csoai-org.vercel.app/opengrid")
+            assert status == 200, f"status={status}"
             assert "OpenGrid" in html or "opengrid" in html.lower(), f"missing OpenGrid"
             return f"opengrid: live, {len(html):,}B"
 
         async def matrix_live_check():
             """Day 26 BLOCK 5: /matrix page is live on csoai.org."""
-            import urllib.request as _ur
-            req = _ur.Request("https://csoai-org.vercel.app/matrix")
-            with _ur.urlopen(req, timeout=8) as r:
-                html = r.read().decode()
-            assert r.status == 200, f"status={r.status}"
+            status, html = _https_get("https://csoai-org.vercel.app/matrix")
+            assert status == 200, f"status={status}"
             assert "Compliance Matrix" in html or "verticals" in html.lower(), f"missing matrix"
             return f"matrix: live, {len(html):,}B"
 

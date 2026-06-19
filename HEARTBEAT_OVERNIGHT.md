@@ -1,8 +1,8 @@
 # Sovereign Overnight Learner — Heartbeat
-**Last updated**: 2026-06-18 16:12:14 UTC
+**Last updated**: 2026-06-19 08:19:02 UTC
 **Running since**: 16:12 UTC
-**Hours active**: 0.0
-**Cycles completed**: 0
+**Hours active**: 16.1
+**Cycles completed**: 1
 
 ## Stats
 | Metric | Count |
@@ -12,9 +12,9 @@
 | Maintenance cycles | 0 |
 | Memories created | 0 |
 | Model retrains | 0 |
-| Errors | 0 |
+| Errors | 1 |
 
 ## Status
-🟢 ACTIVE — Learning in progress
+🔴 STOPPED
 
 _Sovereign is dreaming, learning, and growing while you rest. Good night, Nick._

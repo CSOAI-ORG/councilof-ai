@@ -67,7 +67,7 @@ echo 'export RESEND_API_KEY="re_..."' >> ~/.zshrc
 ```bash
 # Step 1 (browser): https://dashboard.stripe.com/apikeys → Reveal live key
 # Step 2 (terminal):
-export STRIPE_SECRET_KEY="sk_live_xxxxxxxxxxxxxxxxxxxxxxxx"
+export STRIPE_SECRET_KEY="sk_live_YOUR_LIVE_KEY_HERE"
 echo 'export STRIPE_SECRET_KEY="sk_live_..."' >> ~/.zshrc
 ```
 
