@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Trust — CSOAI</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Who we are, what we promise, and how we stay accountable. CSOAI LTD (UK 16939677) is the Western TC260 equivalent for AI safety governance.">
+  <link rel="canonical" href="https://csoai.org/trust">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#0f172a;line-height:1.65}
+    .container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#0a8a3f}
+    h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.4rem;border-bottom:1px solid #e6e8ec;padding-bottom:.4rem}
+    p{color:#0f172a;margin-bottom:1rem}
+    a{color:#0a8a3f;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .lead{color:#5a5e66;font-size:1.1rem;margin-bottom:2rem}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin:2rem 0}
+    .stat{background:#f7f8fa;border:1px solid #e6e8ec;border-radius:.5rem;padding:1.5rem;text-align:center}
+    .stat .num{font-size:2rem;font-weight:700;color:#0a8a3f;display:block}
+    .stat .lbl{color:#5a5e66;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;margin-top:.25rem}
+    .promise{background:#f0fdf4;border-left:4px solid #0a8a3f;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:.4rem}
+    .foot{margin-top:3rem;color:#888;font-size:.85rem;border-top:1px solid #e6e8ec;padding-top:1.5rem;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · Trust</p>
+    <h1>Who we are, what we promise, how we stay accountable</h1>
+    <p class="lead">CSOAI is the AI safety certification authority. We build the primitives your auditor, regulator, and board need to verify AI systems. This page is our public commitment to that mission.</p>
+
+    <div class="stat-grid">
+      <div class="stat"><span class="num">16939677</span><span class="lbl">UK Companies House</span></div>
+      <div class="stat"><span class="num">3</span><span class="lbl">Production Surfaces</span></div>
+      <div class="stat"><span class="num">271</span><span class="lbl">MCP Servers</span></div>
+      <div class="stat"><span class="num">48/48</span><span class="lbl">E2E Tests Pass</span></div>
+      <div class="stat"><span class="num">495</span><span class="lbl">Sigil Records</span></div>
+      <div class="stat"><span class="num">53</span><span class="lbl">Prospects Queued</span></div>
+    </div>
+
+    <h2>Our Mission</h2>
+    <p>Make AI safety verifiable. Every AI system deployed in the EU or UK (or doing business with either) needs Article 50 + 51 + 52 compliance by 2 August 2026. We provide the signed evidence your auditor, board, and regulator can check in 1 click.</p>
+
+    <h2>What we promise</h2>
+    <div class="promise">
+      <strong>1.</strong> Every Watchdog Certificate we issue is Ed25519-signed and publicly verifiable. No "trust us" — the signature math is the trust.
+    </div>
+    <div class="promise">
+      <strong>2.</strong> The sigil chain is hash-linked. Any tampering invalidates all subsequent records. You can audit it yourself.
+    </div>
+    <div class="promise">
+      <strong>3.</strong> The verify endpoint works without contacting us. If we disappear, your certificates still verify (the keys are public).
+    </div>
+    <div class="promise">
+      <strong>4.</strong> We do not train on your AI systems. We do not store your AI model weights or training data. We do not exfiltrate.
+    </div>
+    <div class="promise">
+      <strong>5.</strong> We will not raise prices for existing customers. The 8-tier model is the model.
+    </div>
+
+    <h2>Who is behind this</h2>
+    <p>CSOAI LTD is a UK private limited company, registered in England &amp; Wales (Companies House 16939677). Director: Nicholas Templeman. The parent ecosystem is <a href="https://meok.ai">MEOK AI Labs</a>.</p>
+
+    <h2>What we do not do</h2>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li>No ads, no tracking pixels, no third-party cookies</li>
+      <li>No data broker integrations</li>
+      <li>No paid bug bounty (yet — sprint priority is the Article 50 deadline)</li>
+      <li>No advisory "AI risk" services that conflict with our certification role</li>
+      <li>No equity raise. The 100% owner is Nicholas Templeman. The plan is profitable unit economics, not VC.</li>
+    </ul>
+
+    <h2>Accountability</h2>
+    <p>CSOAI's E2E test suite is public, run on every code change, and tracks 48 distinct user-facing assertions. The current pass rate is 100%. If the test suite ever drops below 90%, that's a public signal that something is wrong. (You can see the latest run at <a href="/status">/status</a>.)</p>
+
+    <h2>How to verify anything we say</h2>
+    <p>Every claim on this page can be verified by:</p>
+    <ol style="margin:1rem 0 1.5rem 1.5rem">
+      <li>Companies House (UK): search for <strong>16939677</strong></li>
+      <li>GitHub: <a href="https://github.com/CSOAI-ORG">github.com/CSOAI-ORG</a></li>
+      <li>Vercel: <a href="https://csoai-org.vercel.app">csoai-org.vercel.app</a> (the live deployment)</li>
+      <li>Sigil chain: <code>meok-attestation-api.vercel.app/verify/MEOK-MEOKSP-7D1E008FE28</code> (and any other cert_id)</li>
+    </ol>
+
+    <p class="foot">© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · <a href="/security">Security</a> · <a href="/status">Status</a> · <a href="/charter">Charter</a></p>
+  </div>
+</body>
+</html>

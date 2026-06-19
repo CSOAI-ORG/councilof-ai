@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>For Auditors — CSOAI</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="How auditors, regulators, and assurance teams can verify CSOAI Watchdog Certificates. The 5-step verification flow + cryptographic math.">
+  <link rel="canonical" href="https://csoai.org/auditor">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#0f172a;line-height:1.65}
+    .container{max-width:1000px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#0a8a3f}
+    h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.4rem;border-bottom:1px solid #e6e8ec;padding-bottom:.4rem;color:#0a8a3f}
+    h3{font-size:1.1rem;margin-top:1.5rem;margin-bottom:.3rem;color:#0f172a}
+    p{color:#0f172a;margin-bottom:.75rem}
+    a{color:#0a8a3f;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .lead{color:#5a5e66;font-size:1.1rem;margin-bottom:2rem}
+    .step{background:#f7f8fa;border:1px solid #e6e8ec;border-radius:.5rem;padding:1.5rem;margin-bottom:1.5rem;display:grid;grid-template-columns:60px 1fr;gap:1.5rem}
+    .step .num{font-size:2.2rem;font-weight:700;color:#0a8a3f;line-height:1}
+    .step h3{font-size:1.1rem;margin-bottom:.5rem;color:#0f172a}
+    .step p{font-size:.92rem;color:#5a5e66;margin:0}
+    .step pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:.3rem;margin-top:.75rem;overflow-x:auto;font-size:.78rem;line-height:1.5}
+    .verify-box{background:#f0fdf4;border:2px solid #0a8a3f;border-radius:.5rem;padding:2rem;margin:2rem 0;text-align:center}
+    .verify-box h2{color:#0a8a3f;margin:0 0 1rem 0;border:none;padding:0}
+    .verify-box .url{background:#fff;padding:.75rem;border-radius:.4rem;font-family:ui-monospace,monospace;font-size:.95rem;border:1px solid #e6e8ec;margin:1rem 0}
+    .cta{display:inline-block;background:#0a8a3f;color:white;padding:.75rem 1.5rem;border-radius:.5rem;font-weight:600;text-decoration:none;margin-top:1rem}
+    .foot{margin-top:3rem;color:#888;font-size:.85rem;border-top:1px solid #e6e8ec;padding-top:1.5rem;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · For Auditors</p>
+    <h1>5 steps to verify any Watchdog Certificate</h1>
+    <p class="lead">If you're an auditor, regulator, or assurance team, this is your verification flow. Every Watchdog Certificate is cryptographically signed. You can verify in 1 click, with no contact with us.</p>
+
+    <div class="verify-box">
+      <h2>Try it now</h2>
+      <p>Pick any cert_id (e.g. <code>MEOK-MEOKSP-7D1E008FE28</code>) and verify:</p>
+      <div class="url">https://meok-attestation-api.vercel.app/verify/MEOK-MEOKSP-7D1E008FE28</div>
+      <a href="https://meok-attestation-api.vercel.app/verify/MEOK-MEOKSP-7D1E008FE28" class="cta">Verify Now</a>
+    </div>
+
+    <h2>The 5-step verification flow</h2>
+
+    <div class="step">
+      <div class="num">1</div>
+      <div>
+        <h3>Hit the verify URL</h3>
+        <p>Every cert has a public URL of the form <code>https://meok-attestation-api.vercel.app/verify/{cert_id}</code>. The URL is idempotent — anyone can hit it, no auth, no rate limit.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">2</div>
+      <div>
+        <h3>Get the certificate JSON</h3>
+        <p>The response is a JSON object with the cert's full details:</p>
+<pre>{
+  "id": "MEOK-MEOKSP-7D1E008FE28",
+  "ts": 1781669322.0,
+  "line": "C|jeeves-cli|nicholas-templeman|DAY 17 SEAL...",
+  "gloss": "Plain-English summary of the attestation",
+  "digest": "909c0295afb058e9",     // SHA-256 of the parsed line
+  "prev_sig": "a9dd344e8b54b2db...",  // Previous record in the chain
+  "signature": "abc123def456...",     // Ed25519 sig of (digest + prev_sig)
+  "alg": "ed25519"
+}</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">3</div>
+      <div>
+        <h3>Verify the Ed25519 signature</h3>
+        <p>Use any Ed25519 library to verify the signature. The public key is in the cert response:</p>
+<pre># Python
+from nacl.signing import VerifyKey
+vk = VerifyKey(bytes.fromhex(pubkey_hex))
+vk.verify(
+    bytes.fromhex(signature_hex),
+    bytes.fromhex(digest + prev_sig)
+)</pre>
+        <p>If valid: the cert was issued by the holder of the private key (CSOAI). If invalid: the cert is fake.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">4</div>
+      <div>
+        <h3>Verify the chain (optional but recommended)</h3>
+        <p>Each cert references the previous cert's signature. To verify the entire chain, walk from genesis:</p>
+<pre>curl -s "https://meok-attestation-api.vercel.app/api/manifest" | jq
+# Returns the full sigil ledger
+# Each record: { digest, prev_sig, signature }
+# Walk and verify each link</pre>
+        <p>If the chain is intact: the cert was issued in the right order, no records were tampered with. If the chain is broken: something was edited.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">5</div>
+      <div>
+        <h3>Accept the cert</h3>
+        <p>For your audit, you can record the cert_id, the timestamp, the cert JSON, and the chain position. The cert is your evidence — the cryptographic math is your trust.</p>
+      </div>
+    </div>
+
+    <h2>What you don't need</h2>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li>No contact with CSOAI (the URL is enough)</li>
+      <li>No account or login</li>
+      <li>No payment</li>
+      <li>No DB lookup — the verify is cryptographic</li>
+      <li>No third-party (the verification math is the verification)</li>
+    </ul>
+
+    <h2>What you might want</h2>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li>The full chain manifest: <code>https://meok-attestation-api.vercel.app/api/manifest</code></li>
+      <li>The CSOAI public key (for batch verification scripts)</li>
+      <li>The sigil bus's chain integrity proof (for periodic checks)</li>
+      <li>White-label verification (your own branded verify page that calls ours)</li>
+    </ul>
+
+    <h2>When verification fails</h2>
+    <p>Three things to check:</p>
+    <ol style="margin:1rem 0 1.5rem 1.5rem">
+      <li><strong>Signature fails:</strong> the cert is fake OR the line was tampered with. Reject.</li>
+      <li><strong>Chain is broken:</strong> a previous cert was tampered with. This is rare but possible. The chain break point tells you which cert was edited.</li>
+      <li><strong>Cert not found:</strong> the cert_id is wrong. Re-check the URL.</li>
+    </ol>
+
+    <h2>For tooling</h2>
+    <p>If you want a CLI verifier, we provide a Python script:</p>
+<pre>pip install pynacl requests
+python3 -c "
+import requests, json
+r = requests.get('https://meok-attestation-api.vercel.app/verify/MEOK-MEOKSP-7D1E008FE28')
+print(json.dumps(r.json(), indent=2))
+"</pre>
+
+    <p class="foot">© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · <a href="/security">Security</a> · <a href="/trust">Trust</a> · <a href="/certify">/certify</a> · Updated 2026-06-17</p>
+  </div>
+</body>
+</html>

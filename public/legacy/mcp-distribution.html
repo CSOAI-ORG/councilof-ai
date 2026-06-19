@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layer 0: MCP & Protocol Landscape (2026) — CSOAI</title>
+    <meta name="description" content="CSOAI Layer 0 distribution registry. 202 nodes across 14 domains. Integrated with A2A, x402, and Microsoft AGT.">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "DataFeed", "name": "CSOAI Layer 0 MCP Distribution Registry", "description": "Global distribution of 202 MCP nodes across 14 sovereign AI sites, mapped to Layer 0 infrastructure (2026).", "provider": {"@type": "Organization", "name": "CSOAI", "url": "https://csoai.org"}, "dataset": [{"@type": "Dataset", "name": "meok.ai MCP Node (L0-A: Identity)", "description": "AI Research & Development Labs", "spatialCoverage": ["London, UK", "Singapore"]}, {"@type": "Dataset", "name": "accountabilityof.ai MCP Node (L0-B: Certification)", "description": "Algorithmic Accountability", "spatialCoverage": ["Brussels, BE", "London, UK"]}, {"@type": "Dataset", "name": "csoai.org MCP Node (L0-C: Policy Engine)", "description": "Primary Governance Institution", "spatialCoverage": ["London, UK", "Frankfurt, DE", "New York, US"]}, {"@type": "Dataset", "name": "agisafe.ai MCP Node (L0-C: Policy Engine)", "description": "AGI Safety & Guardrails", "spatialCoverage": ["Zurich, CH", "London, UK"]}, {"@type": "Dataset", "name": "asisecurity.ai MCP Node (L0-C: Policy Engine)", "description": "ASI Security & Control", "spatialCoverage": ["San Francisco, US", "London, UK"]}, {"@type": "Dataset", "name": "ethicalgovernanceof.ai MCP Node (L0-C: Policy Engine)", "description": "Ethics & Value Alignment", "spatialCoverage": ["Stockholm, SE", "Geneva, CH"]}, {"@type": "Dataset", "name": "dataprivacyof.ai MCP Node (L0-D: Cross-Regional)", "description": "AI Data Protection", "spatialCoverage": ["Frankfurt, DE", "London, UK"]}, {"@type": "Dataset", "name": "biasdetectionof.ai MCP Node (L0-D: Cross-Regional)", "description": "Bias & Fairness Testing", "spatialCoverage": ["Paris, FR", "Dublin, IE"]}, {"@type": "Dataset", "name": "checkoutof.ai MCP Node (L0-E: Payment)", "description": "Agentic Payment Compliance", "spatialCoverage": ["London, UK", "New York, US"]}, {"@type": "Dataset", "name": "proofof.ai MCP Node (L0-F: Audit)", "description": "On-chain Compliance Verification", "spatialCoverage": ["London, UK", "Distributed Nodes"]}, {"@type": "Dataset", "name": "transparencyof.ai MCP Node (L0-F: Audit)", "description": "AI Transparency & Watermarking", "spatialCoverage": ["Amsterdam, NL", "London, UK"]}, {"@type": "Dataset", "name": "councilof.ai MCP Node (L0-G: Human-in-the-loop)", "description": "Global AI Governance Council", "spatialCoverage": ["London, UK", "Tokyo, JP"]}, {"@type": "Dataset", "name": "safetyof.ai MCP Node (L0-G: Human-in-the-loop)", "description": "Real-time AI Safety Monitoring", "spatialCoverage": ["London, UK", "Berlin, DE"]}, {"@type": "Dataset", "name": "cobolbridge.ai MCP Node (L0-H: Legacy Bridge)", "description": "Legacy Modernization Safety", "spatialCoverage": ["London, UK", "Charlotte, US"]}]}</script>
+    <style>
+        :root {
+            --primary: #0a8a3f;
+            --bg: #0a0a0f;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --card: #11111a;
+            --border: #1e293b;
+            --gold: #c9a84c;
+            --accent: #3b82f6;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        h1 {
+            font-size: 3rem;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .fleet-stats {
+            display: inline-block;
+            background: rgba(10, 138, 63, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        .site-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .site-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .site-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--gold);
+        }
+        .layer-badge {
+            font-size: 0.65rem;
+            background: rgba(201, 168, 76, 0.15);
+            color: var(--gold);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 800;
+            border: 1px solid rgba(201, 168, 76, 0.3);
+        }
+        .purpose {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+            color: #fff;
+        }
+        .geo-tag {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            margin-right: 0.3rem;
+            margin-top: 0.3rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .aeo-tag {
+            display: inline-block;
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--muted);
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            margin-right: 0.3rem;
+            margin-top: 0.3rem;
+        }
+        .geo-section, .aeo-section {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        .landscape-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 0.85rem;
+        }
+        .landscape-table th {
+            background: #1e293b;
+            text-align: left;
+            padding: 1rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+        }
+        .landscape-table td {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        .landscape-table tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+        .highlight {
+            color: var(--gold);
+            font-weight: 700;
+        }
+        .layer-zero-manifesto {
+            background: linear-gradient(135deg, #11111a 0%, #0a0a0f 100%);
+            border: 1px solid var(--gold);
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .layer-zero-manifesto::before {
+            content: 'LAYER 0';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(201, 168, 76, 0.03);
+            pointer-events: none;
+        }
+        footer {
+            margin-top: 6rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSOAI IS LAYER 0</h1>
+            <p style="color:var(--muted); font-size: 1.25rem; max-width: 700px; margin: 1rem auto;">The sovereign foundation for the agentic economy. Certifying identity, policy, and payments across the 2026 protocol landscape.</p>
+            <div class="fleet-stats">202 NODES · 14 SOVEREIGN DOMAINS · 2026_COMPLIANT</div>
+        </header>
+
+        <section class="layer-zero-manifesto">
+            <h2 style="color:var(--gold); margin-top:0;">The Protocol Landscape (2026)</h2>
+            <p>Every protocol addresses a piece of the stack, but <strong>CSOAI</strong> is the only entity providing the complete <strong>Layer 0</strong> foundation.</p>
+            <table class="landscape-table">
+                <thead>
+                    <tr>
+                        <th>Protocol</th>
+                        <th>Layer</th>
+                        <th>Status</th>
+                        <th>What It Does</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="highlight">MCP</td><td>L1 Tool Integration</td><td>97M SDK/mo</td><td>Agents call tools</td></tr>
+                    <tr><td class="highlight">A2A</td><td>L2 Agent Coordination</td><td>v1.0 Stable</td><td>Agents discover/delegate</td></tr>
+                    <tr><td class="highlight">x402</td><td>L3 Settlement</td><td>140M Trans.</td><td>HTTP-native payments</td></tr>
+                    <tr><td class="highlight">Microsoft AGT</td><td>L1-L2 Governance</td><td>9,500+ Tests</td><td>Runtime policy enforcement</td></tr>
+                    <tr style="background: rgba(201, 168, 76, 0.05);"><td class="highlight">did:csoai</td><td>LAYER 0</td><td>PROD</td><td>Sovereign Identity & Certification</td></tr>
+                </tbody>
+            </table>
+            <p style="font-size: 0.9rem; color: var(--muted);">"Before any agent can pay, hire, or act — it needs to prove it's compliant. That's Layer 0. And CSOAI is the only company that built it."</p>
+        </section>
+
+        <h2 style="margin-bottom: 2rem; border-left: 4px solid var(--gold); padding-left: 1rem;">The 8 Layers of CSOAI Infrastructure</h2>
+        <div class="grid">
+            
+        <div class="site-card">
+            <div class="site-header">
+                <h3>meok.ai</h3>
+                <span class="layer-badge">L0-A: Identity</span>
+            </div>
+            <p class="purpose">AI Research & Development Labs</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>London, UK</span><span class='geo-tag'>Singapore</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>MEOK AI</span><span class='aeo-tag'>Sovereign AI</span><span class='aeo-tag'>Model Context Protocol servers</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>accountabilityof.ai</h3>
+                <span class="layer-badge">L0-B: Certification</span>
+            </div>
+            <p class="purpose">Algorithmic Accountability</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>Brussels, BE</span><span class='geo-tag'>London, UK</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>AI accountability</span><span class='aeo-tag'>Article 16 AI Act</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>csoai.org</h3>
+                <span class="layer-badge">L0-C: Policy Engine</span>
+            </div>
+            <p class="purpose">Primary Governance Institution</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>London, UK</span><span class='geo-tag'>Frankfurt, DE</span><span class='geo-tag'>New York, US</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>AI safety governance</span><span class='aeo-tag'>AI audit checklist</span><span class='aeo-tag'>EU AI Act compliance</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>agisafe.ai</h3>
+                <span class="layer-badge">L0-C: Policy Engine</span>
+            </div>
+            <p class="purpose">AGI Safety & Guardrails</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>Zurich, CH</span><span class='geo-tag'>London, UK</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>AGI safety</span><span class='aeo-tag'>AI guardrails</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>asisecurity.ai</h3>
+                <span class="layer-badge">L0-C: Policy Engine</span>
+            </div>
+            <p class="purpose">ASI Security & Control</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>San Francisco, US</span><span class='geo-tag'>London, UK</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>ASI security</span><span class='aeo-tag'>superintelligence control</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>ethicalgovernanceof.ai</h3>
+                <span class="layer-badge">L0-C: Policy Engine</span>
+            </div>
+            <p class="purpose">Ethics & Value Alignment</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>Stockholm, SE</span><span class='geo-tag'>Geneva, CH</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>AI ethics framework</span><span class='aeo-tag'>ISO 42001 governance</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>dataprivacyof.ai</h3>
+                <span class="layer-badge">L0-D: Cross-Regional</span>
+            </div>
+            <p class="purpose">AI Data Protection</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>Frankfurt, DE</span><span class='geo-tag'>London, UK</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>AI GDPR compliance</span><span class='aeo-tag'>DPIA for AI</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>biasdetectionof.ai</h3>
+                <span class="layer-badge">L0-D: Cross-Regional</span>
+            </div>
+            <p class="purpose">Bias & Fairness Testing</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>Paris, FR</span><span class='geo-tag'>Dublin, IE</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>AI bias detection</span><span class='aeo-tag'>algorithmic fairness</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>checkoutof.ai</h3>
+                <span class="layer-badge">L0-E: Payment</span>
+            </div>
+            <p class="purpose">Agentic Payment Compliance</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>London, UK</span><span class='geo-tag'>New York, US</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>ACP compliance</span><span class='aeo-tag'>x402 pre-check</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>proofof.ai</h3>
+                <span class="layer-badge">L0-F: Audit</span>
+            </div>
+            <p class="purpose">On-chain Compliance Verification</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>London, UK</span><span class='geo-tag'>Distributed Nodes</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>proof of AI</span><span class='aeo-tag'>blockchain AI compliance</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>transparencyof.ai</h3>
+                <span class="layer-badge">L0-F: Audit</span>
+            </div>
+            <p class="purpose">AI Transparency & Watermarking</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>Amsterdam, NL</span><span class='geo-tag'>London, UK</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>AI watermarking</span><span class='aeo-tag'>Article 50 AI Act</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>councilof.ai</h3>
+                <span class="layer-badge">L0-G: Human-in-the-loop</span>
+            </div>
+            <p class="purpose">Global AI Governance Council</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>London, UK</span><span class='geo-tag'>Tokyo, JP</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>AI governance council</span><span class='aeo-tag'>global AI standards</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>safetyof.ai</h3>
+                <span class="layer-badge">L0-G: Human-in-the-loop</span>
+            </div>
+            <p class="purpose">Real-time AI Safety Monitoring</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>London, UK</span><span class='geo-tag'>Berlin, DE</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>AI safety monitoring</span><span class='aeo-tag'>real-time AI audit</span>
+            </div>
+        </div>
+        
+        <div class="site-card">
+            <div class="site-header">
+                <h3>cobolbridge.ai</h3>
+                <span class="layer-badge">L0-H: Legacy Bridge</span>
+            </div>
+            <p class="purpose">Legacy Modernization Safety</p>
+            <div class="geo-section">
+                <strong>GEO:</strong> <span class='geo-tag'>London, UK</span><span class='geo-tag'>Charlotte, US</span>
+            </div>
+            <div class="aeo-section">
+                <strong>AEO:</strong> <span class='aeo-tag'>COBOL to AI</span><span class='aeo-tag'>legacy system safety</span>
+            </div>
+        </div>
+        
+        </div>
+
+        <footer style="background:var(--dark);border-top:3px solid var(--accent);padding:4rem 0 2rem;margin-top:4rem;position:relative;z-index:1">
+<div class="container">
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:2rem;margin-bottom:3rem">
+    <div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+      </div>
+      <p style="color:rgba(232,228,240,.6);font-size:.9rem;line-height:1.6;margin-bottom:1rem">The global standard for AI safety. Institutional governance through the 52-article charter and Byzantine consensus.</p>
+      <div style="display:flex;gap:.75rem"><a href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">𝕏</a><a href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">in</a><a href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">▶</a></div>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Standards</h4><a href="charter.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Charter</a><a href="crosswalks.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Crosswalks</a><a href="guides.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Guides</a><a href="glossary.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Glossary</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Products</h4><a href="certification.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Certification</a><a href="enterprise.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Enterprise</a><a href="advisory.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Advisory</a><a href="pricing.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Pricing</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Ecosystem</h4><a href="https://meok.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">MEOK.AI</a><a href="https://github.com/csoai-org" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">GitHub (305 repos)</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Company</h4><a href="about.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">About</a><a href="case-studies.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Case Studies</a><a href="blog.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Blog</a><a href="contact.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Contact</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Account</h4><a href="dashboard.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Dashboard</a><a href="faq.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">FAQ</a><a href="resources.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Resources</a><a href="api.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">API Docs</a><a href="status.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">System Status</a></div>
+  </div>
+  <div style="border-top:1px solid rgba(212,168,67,.1);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+    <p style="color:rgba(232,228,240,.4);font-size:.8rem">&copy; 2026 CSOAI — The Global Standard for AI Safety. Powered by <a href="https://meok.ai" style="color:rgba(232,228,240,.4);text-decoration:none">MEOK AI Labs</a>. All rights reserved.</p>
+    <div style="display:flex;gap:1.5rem"><a href="privacy.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Privacy</a><a href="terms.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Terms</a><a href="cookies.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Cookies</a></div>
+  </div>
+</div>
+</footer>
+    </div>
+</body>
+</html>

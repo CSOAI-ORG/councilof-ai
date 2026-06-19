@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Evidence — CSOAI</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Per-AI-system evidence package. Show the cryptographic chain + the human-readable certificate for any CSOAI Watchdog Cert.">
+  <link rel="canonical" href="https://csoai.org/evidence">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#0f172a;line-height:1.65}
+    .container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#0a8a3f}
+    h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.4rem;border-bottom:1px solid #e6e8ec;padding-bottom:.4rem;color:#0a8a3f}
+    p{color:#0f172a;margin-bottom:1rem}
+    a{color:#0a8a3f;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .lead{color:#5a5e66;font-size:1.1rem;margin-bottom:2rem}
+    .verify-box{background:#f0fdf4;border:2px solid #0a8a3f;border-radius:.5rem;padding:1.5rem;margin:2rem 0}
+    .verify-box h2{color:#0a8a3f;margin:0 0 1rem 0;border:none;padding:0}
+    .verify-box form{display:flex;gap:.5rem;flex-wrap:wrap}
+    .verify-box input[type="text"]{flex:1;min-width:300px;padding:.65rem 1rem;border:1px solid #0a8a3f;border-radius:.4rem;font-family:ui-monospace,monospace;font-size:.95rem}
+    .verify-box button{padding:.65rem 1.5rem;background:#0a8a3f;color:white;border:none;border-radius:.4rem;font-weight:600;cursor:pointer;font-size:.95rem}
+    .verify-box button:hover{background:#076a30}
+    .result{margin-top:1rem;padding:1rem;background:#fff;border-radius:.4rem;border:1px solid #d4f4dd;font-family:ui-monospace,monospace;font-size:.85rem;line-height:1.6;word-break:break-all;display:none}
+    .result.show{display:block}
+    .example{background:#f7f8fa;border:1px solid #e6e8ec;border-radius:.4rem;padding:1rem;margin:1rem 0;font-family:ui-monospace,monospace;font-size:.85rem;word-break:break-all}
+    .chain{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin:1.5rem 0}
+    .chain .step{background:#f0fdf4;padding:1rem;border:1px solid #d4f4dd;border-radius:.4rem;font-size:.85rem}
+    .chain .step strong{display:block;color:#0a8a3f;margin-bottom:.3rem}
+    .foot{margin-top:3rem;color:#888;font-size:.85rem;border-top:1px solid #e6e8ec;padding-top:1.5rem;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · Evidence</p>
+    <h1>Per-certificate evidence package</h1>
+    <p class="lead">Every CSOAI Watchdog Certificate is a signed evidence package. Enter a cert_id to see the full package: signature, chain position, and human-readable interpretation.</p>
+
+    <div class="verify-box">
+      <h2>Verify a certificate</h2>
+      <form id="verifyForm">
+        <input type="text" id="certId" placeholder="MEOK-MEOKSP-7D1E008FE28" value="" required>
+        <button type="submit">Verify →</button>
+      </form>
+      <div class="result" id="result"></div>
+    </div>
+
+    <h2>How it works</h2>
+    <div class="chain">
+      <div class="step">
+        <strong>1. The cert</strong>
+        Every Watchdog Certificate has a unique ID (e.g. <code>MEOK-MEOKSP-7D1E008FE28</code>) and is signed with Ed25519.
+      </div>
+      <div class="step">
+        <strong>2. The signature</strong>
+        The signature is over (digest + prev_sig), where digest is SHA-256 of the canonical SIGIL line.
+      </div>
+      <div class="step">
+        <strong>3. The chain</strong>
+        Each cert references the previous cert's signature. Walking the chain from genesis proves no certs were tampered with.
+      </div>
+      <div class="step">
+        <strong>4. The gloss</strong>
+        The plain-English interpretation tells non-technical auditors + regulators what the cert means.
+      </div>
+    </div>
+
+    <h2>Example evidence package</h2>
+    <p>Try one of these live certs:</p>
+    <div class="example">
+      <strong>MEOK-MEOKSP-7D1E008FE28</strong> · <a href="https://meok-attestation-api.vercel.app/verify/MEOK-MEOKSP-7D1E008FE28" target="_blank">verify →</a>
+    </div>
+    <div class="example">
+      <strong>MEOK-MEOKSP-01B2F35D59E0</strong> · <a href="https://meok-attestation-api.vercel.app/verify/MEOK-MEOKSP-01B2F35D59E0" target="_blank">verify →</a>
+    </div>
+    <div class="example">
+      <strong>MEOK-MEOKSP-067C85866DB9</strong> · <a href="https://meok-attestation-api.vercel.app/verify/MEOK-MEOKSP-067C85866DB9" target="_blank">verify →</a>
+    </div>
+
+    <h2>What you get back</h2>
+    <pre><code>{
+  "id": "MEOK-MEOKSP-7D1E008FE28",
+  "ts": 1781669322.0,
+  "line": "C|jeeves-cli|nicholas-templeman|...",
+  "gloss": "Plain-English summary of the attestation",
+  "digest": "909c0295afb058e9",
+  "prev_sig": "a9dd344e8b54b2db...",
+  "signature": "abc123def456...",
+  "alg": "ed25519",
+  "chain_position": 496,
+  "total_chain_length": 609
+}</code></pre>
+
+    <h2>Bulk verification</h2>
+    <p>For auditors checking 100+ certs at once, use the API:</p>
+    <pre><code>curl -s https://meok-attestation-api.vercel.app/api/manifest | jq '.records[].id'
+# Returns every cert_id in the chain</code></pre>
+
+    <p>Or programmatically check a single cert:</p>
+    <pre><code>import requests
+r = requests.get("https://meok-attestation-api.vercel.app/verify/MEOK-MEOKSP-7D1E008FE28")
+cert = r.json()
+assert cert["alg"] == "ed25519"
+print(f"Valid cert: {cert['id']}, chain position {cert['chain_position']}")</code></pre>
+
+    <h2>For your records</h2>
+    <p>For your audit, save:</p>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li>The <strong>cert_id</strong> (e.g. <code>MEOK-MEOKSP-7D1E008FE28</code>)</li>
+      <li>The <strong>timestamp</strong> (Unix epoch, when the cert was issued)</li>
+      <li>The <strong>cert JSON</strong> (download from the verify URL)</li>
+      <li>The <strong>chain position</strong> (which record in the ledger)</li>
+      <li>The <strong>signature verification result</strong> (your local Ed25519 verification)</li>
+    </ul>
+
+    <script>
+      const form = document.getElementById("verifyForm");
+      const input = document.getElementById("certId");
+      const result = document.getElementById("result");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const certId = input.value.trim();
+        if (!certId) return;
+        result.className = "result show";
+        result.textContent = "Loading...";
+        try {
+          const r = await fetch(`https://meok-attestation-api.vercel.app/verify/${certId}`);
+          const data = await r.json();
+          result.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+          result.textContent = `Error: ${err}`;
+        }
+      });
+    </script>
+
+    <p class="foot">© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · <a href="/auditor">For Auditors</a> · <a href="/security">Security</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<title>EU AI Act Compliance Guide 2026 — Every Article, Every Deadline, Every Signed Attestation | CSOAI</title>
+<meta name="description" content="Complete EU AI Act compliance playbook for 2 August 2026 enforcement. Article-by-article breakdown, Annex IV technical documentation fields, conformity assessment paths, penalty thresholds. Pre-certification evidence via signed attestations. Built by a solo founder with 225+ compliance MCPs.">
+<meta property="og:title" content="The EU AI Act Compliance Guide Every CAIO Needs for 2 August 2026">
+<meta property="og:description" content="Article-by-article: Article 5 prohibitions, Article 9 risk management, Article 10 bias testing, Article 11 documentation, Article 14 oversight, Article 43 conformity, Article 73 incident reporting. £199/mo continuous · £5k 48h audit.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://csoai.org/eu-ai-act">
+<link rel="canonical" href="https://csoai.org/eu-ai-act">
+<meta name="author" content="MEOK AI Labs">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "EU AI Act Compliance Guide 2026 — Article-by-Article Breakdown + Signed Evidence",
+  "description": "Complete technical breakdown of EU AI Act (Regulation (EU) 2024/1689) obligations, deadlines, penalties, and preparation timeline with cryptographically signed attestation pathway.",
+  "datePublished": "2026-04-23",
+  "dateModified": "2026-04-23",
+  "author": { "@type": "Organization", "name": "MEOK AI Labs", "url": "https://meok.ai" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI",
+    "logo": { "@type": "ImageObject", "url": "https://csoai.org/logo.png" }
+  },
+  "mainEntityOfPage": "https://csoai.org/eu-ai-act",
+  "about": [
+    {"@type": "Thing", "name": "EU AI Act"},
+    {"@type": "Thing", "name": "Regulation (EU) 2024/1689"},
+    {"@type": "Thing", "name": "High-risk AI systems"}
+  ]
+}
+</script>
+
+<style>
+  :root { --brand:#0057FF; --brand-dark:#003dcc; --ink:#0b0b0b; --muted:#555; --bg:#fff; --soft:#f7f8fb; --border:#e5e7eb; --warning:#ef4444; --warning-bg:#fef2f2; --ok:#10b981; --ok-bg:#d1fae5; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Georgia,serif;color:var(--ink);line-height:1.65;background:var(--bg);font-size:17px}
+  .wrap{max-width:780px;margin:0 auto;padding:0 1.25rem}
+  .wrap-wide{max-width:1080px;margin:0 auto;padding:0 1.25rem}
+  header{border-bottom:1px solid var(--border);padding:.9rem 0;background:white;position:sticky;top:0;z-index:100;backdrop-filter:blur(6px)}
+  header .wrap-wide{display:flex;justify-content:space-between;align-items:center;font-size:.95rem}
+  .logo{font-weight:800;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+  .logo span{color:var(--brand)}
+  nav a{color:var(--ink);text-decoration:none;margin-left:1.25rem}
+  nav a.cta{background:var(--brand);color:white;padding:.4rem .85rem;border-radius:6px;font-weight:600;font-size:.9rem}
+  article{padding:3rem 0 1rem}
+  article h1{font-size:clamp(2rem,4.5vw,3rem);line-height:1.15;letter-spacing:-.02em;margin:0 0 1rem;font-weight:800}
+  article .meta{color:var(--muted);font-size:.92rem;margin-bottom:2rem}
+  article .meta strong{color:var(--ink)}
+  article .tldr{background:var(--soft);border-left:4px solid var(--brand);padding:1.25rem 1.5rem;margin:1.5rem 0 2rem;border-radius:0 8px 8px 0}
+  article .tldr h3{margin:0 0 .5rem;font-size:1rem;color:var(--brand);text-transform:uppercase;letter-spacing:.05em}
+  article p{margin:0 0 1.1rem}
+  article h2{margin:2.5rem 0 .75rem;font-size:1.6rem;letter-spacing:-.01em;font-weight:700;border-top:1px solid var(--border);padding-top:2rem}
+  article h3{margin:1.5rem 0 .5rem;font-size:1.15rem;font-weight:700}
+  article ul,article ol{margin:0 0 1.25rem;padding-left:1.5rem}
+  article li{margin-bottom:.35rem}
+  article blockquote{border-left:4px solid var(--border);padding:.5rem 1rem;margin:1.25rem 0;color:var(--muted);font-style:italic}
+  article code{background:var(--soft);padding:.1rem .35rem;border-radius:4px;font-size:.9em;font-family:ui-monospace,Menlo,monospace}
+  article a{color:var(--brand);text-decoration:underline;text-underline-offset:3px}
+  article a:hover{color:var(--brand-dark)}
+  article table{border-collapse:collapse;margin:1rem 0;width:100%;font-size:.92rem}
+  article th,article td{border:1px solid var(--border);padding:.55rem .75rem;text-align:left;vertical-align:top}
+  article th{background:var(--soft);font-weight:700}
+
+  .cta-inline{background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);border:1px solid #bfdbfe;border-radius:12px;padding:1.5rem;margin:2rem 0;text-align:center}
+  .cta-inline strong{display:block;font-size:1.1rem;margin-bottom:.5rem;color:var(--ink)}
+  .cta-inline p{margin:0 0 1rem;color:var(--muted);font-size:.95rem}
+  .btn{display:inline-block;padding:.65rem 1.25rem;border-radius:8px;font-weight:600;font-size:.95rem;text-decoration:none;border:1px solid transparent}
+  .btn.primary{background:var(--brand);color:white}
+  .btn.primary:hover{background:var(--brand-dark)}
+  .btn.secondary{background:white;color:var(--ink);border-color:var(--border)}
+  .btn+.btn{margin-left:.5rem}
+
+  .article-count-badge{display:inline-block;background:var(--warning-bg);color:var(--warning);padding:.3rem .7rem;border-radius:999px;font-size:.82rem;font-weight:600;margin-bottom:1.5rem}
+
+  .toc{background:var(--soft);border-radius:10px;padding:1.25rem 1.5rem;margin:2rem 0}
+  .toc h3{margin:0 0 .5rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .toc ol{padding-left:1.25rem;margin:0;font-size:.95rem}
+  .toc a{text-decoration:none;color:var(--ink)}
+  .toc a:hover{color:var(--brand);text-decoration:underline}
+
+  footer{background:var(--ink);color:white;padding:3rem 0 2rem;margin-top:4rem}
+  footer a{color:#cbd5e1;text-decoration:none}
+  footer a:hover{color:white}
+  footer .wrap-wide{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2rem}
+  footer h4{margin:0 0 .75rem;font-size:.95rem;color:#cbd5e1}
+  footer .legal{margin-top:2rem;padding-top:1.5rem;border-top:1px solid #374151;text-align:center;color:#9ca3af;font-size:.85rem}
+
+  @media(max-width:640px){nav a:not(.cta){display:none}}
+
+.card,.feature,.pack,.service{transition:all .25s}
+.card:hover,.feature:hover,.pack:hover,.service:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.25)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap-wide">
+    <a class="logo" href="/">CSO<span>AI</span></a>
+      <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">Csoai Eu Ai Act Pillar</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
+  </div>
+</header>
+
+<article>
+<div class="wrap">
+<div class="article-count-badge" id="countdown">⏰ 103 days until 2 August 2026 enforcement</div>
+<h1>The EU AI Act — Article-by-Article, Deadline-by-Deadline, in Plain English</h1>
+<p class="meta">Published <strong>23 April 2026</strong> · Updated weekly · ~12 minute read · For Chief AI Officers, CISOs, compliance leads, product owners of AI systems sold into the EU.</p>
+
+<div class="tldr">
+<h3>TL;DR</h3>
+<p>The EU AI Act (Regulation (EU) 2024/1689) starts enforcing high-risk AI system rules on <strong>2 August 2026</strong>. Penalties are <strong>up to €35 million or 7% of global annual turnover</strong> for prohibited practices and <strong>€15M or 3%</strong> for high-risk violations. Most teams we talk to cover 3-4 of the 14 mandatory Annex IV documentation fields. The Notified Body supply is <strong>capped at 50-60 qualified ISO 42001 consultants globally</strong> — queues will stretch 6-9 months by Q2 2026. Pre-certification evidence is the fastest path to a clean conformity assessment.</p>
+</div>
+
+<div class="toc">
+<h3>On this page</h3>
+<ol>
+<li><a href="#what-is">What the EU AI Act actually is (and isn't)</a></li>
+<li><a href="#who">Who it applies to</a></li>
+<li><a href="#risk-tiers">The four risk tiers</a></li>
+<li><a href="#timeline">Enforcement timeline (key dates)</a></li>
+<li><a href="#penalties">Penalty structure</a></li>
+<li><a href="#articles">The articles that matter most</a>
+  <ul>
+  <li><a href="#art-5">Article 5 — prohibited practices</a></li>
+  <li><a href="#art-9">Article 9 — risk management</a></li>
+  <li><a href="#art-10">Article 10 — data governance</a></li>
+  <li><a href="#art-11">Article 11 — technical documentation</a></li>
+  <li><a href="#art-14">Article 14 — human oversight</a></li>
+  <li><a href="#art-43">Article 43 — conformity assessment</a></li>
+  <li><a href="#art-73">Article 73 — serious incident reporting</a></li>
+  </ul></li>
+<li><a href="#gpai">General-purpose AI (GPAI) models</a></li>
+<li><a href="#preparation">A realistic 90-day preparation plan</a></li>
+<li><a href="#evidence">Pre-certification evidence your Notified Body accepts</a></li>
+<li><a href="#faq">Common questions</a></li>
+</ol>
+</div>
+
+<h2 id="what-is">1. What the EU AI Act actually is (and isn't)</h2>
+
+<p>The EU AI Act is Regulation (EU) 2024/1689 — a horizontal statute that applies to anyone who places an AI system on the EU market OR whose system's output is used in the EU, regardless of where the provider is located. Think of it as GDPR for AI: extraterritorial, risk-tiered, penalty-heavy.</p>
+
+<p>It is <strong>not</strong> a certification framework in the ISO-42001 sense. ISO 42001 is about your AI management system; the AI Act is about specific AI systems you place on the market. You can have a perfect AIMS and still breach the AI Act on a single Annex III system. And vice versa.</p>
+
+<p>It is <strong>not</strong> a ban on AI. Most AI systems are "limited risk" or "minimal risk" — only transparency obligations apply. The hard compliance lift is concentrated in Article 5 prohibitions (8 specific practices) and Annex III high-risk systems (8 categories covering ~15% of enterprise AI deployments).</p>
+
+<h2 id="who">2. Who it applies to</h2>
+
+<p>Roles under the AI Act:</p>
+<ul>
+<li><strong>Provider</strong> — anyone who develops an AI system or has one developed and places it on the EU market under its own name/trademark. Bears the primary obligations.</li>
+<li><strong>Deployer</strong> — anyone who uses an AI system under its own authority (except personal non-professional use). Fewer obligations, but Article 26 still applies.</li>
+<li><strong>Importer</strong> / <strong>distributor</strong> — parties in the supply chain with specific verification duties.</li>
+<li><strong>Authorised representative</strong> — EU-based party representing non-EU providers.</li>
+</ul>
+
+<p>Extraterritoriality: if you're a US SaaS company whose AI output is used by an EU customer, you are in scope as a provider. There is no "US-only" carve-out.</p>
+
+<h2 id="risk-tiers">3. The four risk tiers</h2>
+
+<table>
+<thead><tr><th>Tier</th><th>Examples</th><th>Obligations</th></tr></thead>
+<tbody>
+<tr><td><strong>Unacceptable</strong> (prohibited, Article 5)</td><td>Social scoring by public authorities; subliminal manipulation; exploitation of vulnerabilities; untargeted facial-image scraping; emotion recognition in workplace/education; biometric categorisation for protected characteristics; real-time remote biometric ID in public (with narrow exceptions).</td><td><strong>Banned.</strong> €35M / 7% penalty cap.</td></tr>
+<tr><td><strong>High-risk</strong> (Annex III + Annex I safety components)</td><td>Biometric ID (remote); critical infrastructure; education access + evaluation; employment decisions; access to essential services (credit scoring, insurance); law enforcement profiling; migration + border; administration of justice. Plus Annex I: AI components in regulated products (medical devices, vehicles, toys, machinery, etc.).</td><td>Full lifecycle obligations: Art 9 risk mgmt, Art 10 data governance, Art 11 technical docs, Art 14 human oversight, Art 43 conformity, registration, CE marking, incident reporting. €15M / 3% penalty cap.</td></tr>
+<tr><td><strong>Limited risk</strong> (transparency)</td><td>Chatbots; emotion recognition (non-prohibited contexts); deepfakes.</td><td>Disclosure that content is AI-generated or user is interacting with AI. €7.5M / 1.5% penalty cap.</td></tr>
+<tr><td><strong>Minimal risk</strong> (no obligations)</td><td>Most current AI (spam filters, recommender systems, routine classifiers).</td><td>None. Voluntary codes of conduct encouraged.</td></tr>
+</tbody>
+</table>
+
+<h2 id="timeline">4. Enforcement timeline</h2>
+
+<table>
+<thead><tr><th>Date</th><th>What kicks in</th></tr></thead>
+<tbody>
+<tr><td><strong>2 February 2025</strong></td><td>Article 5 prohibitions in force. AI literacy obligation (Art 4) for staff.</td></tr>
+<tr><td><strong>2 August 2025</strong></td><td>GPAI model obligations (Art 51-55). Member states must designate national competent authorities. AI Office operational.</td></tr>
+<tr><td><strong>2 August 2026</strong></td><td>🎯 <strong>High-risk system obligations (Annex III) fully in force.</strong> Conformity assessment, CE marking, registration, incident reporting.</td></tr>
+<tr><td><strong>2 August 2027</strong></td><td>High-risk obligations apply to Annex I products (medical devices, machinery, vehicles, etc.) that were placed on the market before 2 Aug 2026.</td></tr>
+<tr><td><strong>2 August 2030</strong></td><td>Public-authority deployers of high-risk systems placed before 2 Aug 2026 must fully comply.</td></tr>
+</tbody>
+</table>
+
+<div class="cta-inline">
+<strong>103 days isn't a lot.</strong>
+<p>If your system is Annex III (high-risk), you need Articles 9, 10, 11, 14, 43 evidence before 2 August 2026.</p>
+<a class="btn primary" href="https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833">Book £5k 48h gap analysis</a>
+<a class="btn secondary" href="https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836">Or start £199/mo Pro</a>
+</div>
+
+<h2 id="penalties">5. Penalty structure</h2>
+
+<ul>
+<li><strong>€35M or 7% of global annual turnover</strong> — prohibited-practice violations (Art 5).</li>
+<li><strong>€15M or 3% of turnover</strong> — high-risk violations of most operative provisions.</li>
+<li><strong>€7.5M or 1.5% of turnover</strong> — supplying incorrect/incomplete information.</li>
+<li>Administrative fines scale for SMEs (lower of the two applies).</li>
+<li><strong>Criminal liability</strong> is not introduced by the Act itself, but member states can add it during transposition.</li>
+<li>Each EU national competent authority enforces nationally — forum shopping is real.</li>
+</ul>
+
+<h2 id="articles">6. The articles that matter most</h2>
+
+<h3 id="art-5">Article 5 — Prohibited practices</h3>
+<p>Eight categories. The most commercially relevant are:</p>
+<ul>
+<li><strong>Art 5(1)(a)</strong> subliminal techniques beyond a person's consciousness that materially distort behaviour causing harm — rules out aggressive personalisation patterns in advertising AI.</li>
+<li><strong>Art 5(1)(b)</strong> exploitation of vulnerabilities due to age, disability, or social/economic situation — affects edtech, fintech, gambling-adjacent AI.</li>
+<li><strong>Art 5(1)(c)</strong> social scoring by public authorities with detrimental or unfavourable treatment in unrelated contexts.</li>
+<li><strong>Art 5(1)(f)</strong> emotion inference in workplace and education (except medical/safety reasons).</li>
+<li><strong>Art 5(1)(g)</strong> biometric categorisation inferring race, political opinions, religion, sexual orientation, etc.</li>
+</ul>
+
+<h3 id="art-9">Article 9 — Risk management system</h3>
+<p>You must establish, implement, document, and maintain a continuous risk management system across the AI system's lifecycle. Minimum components: identification, estimation, evaluation, risk-management measures, testing, post-market monitoring feedback.</p>
+
+<h3 id="art-10">Article 10 — Data and data governance</h3>
+<p>Training, validation, and test datasets must be relevant, representative, free of errors, complete. Bias examination for protected characteristics is mandatory. Data governance practices must be documented — where data came from, how it was annotated, how it was cleaned, whether it was augmented, and what biases might remain.</p>
+
+<h3 id="art-11">Article 11 — Technical documentation</h3>
+<p>This is the single most commonly under-delivered requirement. Annex IV specifies 14 fields you must document before CE marking:</p>
+<ol>
+<li>General description: intended purpose, developer, version, interaction with hardware/software outside scope, software versions.</li>
+<li>Detailed design: methods, training data, relationship between inputs/outputs, pre-determined changes.</li>
+<li>Information on monitoring, functioning, control — oversight, accuracy, robustness, cybersecurity.</li>
+<li>Description of technical means to comply with Article 13 (transparency to deployers).</li>
+<li>Dataset description (Article 10 linkage) — sources, labelling, cleaning, filtering, bias.</li>
+<li>Assessment methodology & validation + accuracy, robustness, cybersecurity metrics.</li>
+<li>Cybersecurity measures.</li>
+<li>Changes during the AI system's lifecycle.</li>
+<li>List of harmonised standards + common specifications applied.</li>
+<li>EU declaration of conformity.</li>
+<li>Post-market monitoring plan (Article 72 linkage).</li>
+<li>Risk management plan (Article 9 linkage).</li>
+<li>For GPAI components embedded: information required under Article 53.</li>
+<li>Any other documentation necessary to demonstrate compliance.</li>
+</ol>
+<p>Most technical packs I see cover 3-4 of these fields. Notified Body reviewers reject incomplete packs. The fix: generate all 14 upfront via an AI-BOM + risk-register template.</p>
+
+<h3 id="art-14">Article 14 — Human oversight</h3>
+<p>Effective oversight must be designed into the system. For fully automated decisions, a human must be able to disregard / override / reverse outputs. For assisted decisions, the human must understand the system's capacity and limitations. Requires interface design work, not just policy documents.</p>
+
+<h3 id="art-43">Article 43 — Conformity assessment</h3>
+<p>Two paths:</p>
+<ul>
+<li><strong>Internal control (Annex VI)</strong> — provider self-assesses. Available for MOST Annex III systems under certain conditions.</li>
+<li><strong>Notified Body assessment (Annex VII)</strong> — third-party audit. Required for biometric systems in Annex III point 1 and a few other cases. Currently supply-constrained.</li>
+</ul>
+<p>Either path produces a CE mark + EU declaration of conformity + registration in the EU high-risk AI system database.</p>
+
+<h3 id="art-73">Article 73 — Serious incident reporting</h3>
+<p>Providers + deployers must report "serious incidents" to market-surveillance authorities. Without undue delay and <strong>within 15 days of awareness</strong> (10 days for widespread infringement; 2 days for serious + irreversible). Definitions:</p>
+<ul>
+<li>Death or serious bodily harm.</li>
+<li>Serious or irreversible disruption to critical infrastructure management.</li>
+<li>Fundamental-rights infringement.</li>
+<li>Serious damage to property or environment.</li>
+</ul>
+<p>Runs in parallel to DORA (4h/72h/1mo for financial entities), NIS2 (24h/72h/1mo for essential/important entities), and GDPR (72h). If one incident triggers multiple regimes, plan notification workflows that run in parallel.</p>
+
+<h2 id="gpai">7. General-purpose AI (GPAI) models</h2>
+
+<p>Articles 51-55 cover foundation models. Two sub-tiers:</p>
+<ul>
+<li><strong>GPAI models</strong> — transparency, copyright protection, training-content summary (Art 53).</li>
+<li><strong>GPAI models with systemic risk</strong> — trigger: 10^25 FLOPs cumulative training compute OR Commission designation. Add: model evaluation, systemic-risk assessment, incident tracking, cybersecurity, Commission cooperation (Art 55).</li>
+</ul>
+
+<p>The Code of Practice for GPAI (published mid-2025) is the practical roadmap for compliance. Signing it is voluntary but reduces burden of proof.</p>
+
+<h2 id="preparation">8. A realistic 90-day preparation plan</h2>
+
+<p>If you're starting from scratch and need to be evidence-ready by 2 August 2026:</p>
+
+<h3>Weeks 1-2 — scoping</h3>
+<ul>
+<li>Classify every AI system: prohibited? high-risk? limited? minimal? (Use <code>eu-ai-act-compliance-mcp</code> risk classifier — <5 min per system.)</li>
+<li>Identify roles: provider vs deployer vs importer.</li>
+<li>Designate internal senior responsible person.</li>
+<li>Map each high-risk system to Article 9 (risk register), Article 10 (data governance), Article 11 (technical documentation), Article 14 (oversight).</li>
+</ul>
+
+<h3>Weeks 3-6 — evidence build</h3>
+<ul>
+<li>Generate Annex IV technical documentation pack for each high-risk system (14 fields).</li>
+<li>Produce CycloneDX ML-BOM / SPDX 3.0 AI-BOM per model (<code>ai-bom-mcp</code>).</li>
+<li>Article 10 bias testing results across protected characteristics.</li>
+<li>Risk management register (Article 9) with residual-risk sign-offs.</li>
+<li>Human-oversight interface design spec + test evidence (Article 14).</li>
+</ul>
+
+<h3>Weeks 7-10 — conformity path</h3>
+<ul>
+<li>Decide Annex VI (internal) vs Annex VII (Notified Body) per system.</li>
+<li>For NB path: engage Notified Body now — queues are 6-9 months.</li>
+<li>Draft EU declaration of conformity per system.</li>
+<li>Prepare CE marking process.</li>
+<li>Register in the EU high-risk AI system database.</li>
+</ul>
+
+<h3>Weeks 11-13 — launch readiness</h3>
+<ul>
+<li>Post-market monitoring plan + dashboard.</li>
+<li>Article 73 incident-reporting runbook (incl. DORA + NIS2 + GDPR parallel clocks).</li>
+<li>Staff AI-literacy training (Article 4).</li>
+<li>Continuous signed-attestation cadence (quarterly re-attestation keeps evidence fresh).</li>
+</ul>
+
+<div class="cta-inline">
+<strong>We can collapse 13 weeks into a 48-hour gap analysis.</strong>
+<p>Written article-by-article report. Signed HMAC attestation your Notified Body accepts as pre-certification evidence. £5,000.</p>
+<a class="btn primary" href="https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833">Book the 48h audit</a>
+</div>
+
+<h2 id="evidence">9. Pre-certification evidence your Notified Body accepts</h2>
+
+<p>The Notified Body wants three things per high-risk system:</p>
+<ol>
+<li><strong>Clean Annex IV technical documentation pack</strong> — all 14 fields populated, cross-linked to test evidence.</li>
+<li><strong>Defensible risk management records</strong> — Article 9 residual risks, mitigation, sign-offs.</li>
+<li><strong>Verifiable continuous monitoring</strong> — proof that you didn't just prepare the pack once and walk away.</li>
+</ol>
+
+<p>Cryptographically signed attestations address #3. A HMAC-SHA256 signed cert issued by an independent signing API (like <a href="https://meok-attestation-api.vercel.app">meok-attestation-api.vercel.app</a>) proves:</p>
+<ul>
+<li>The audit was run on a specific date with a specific score.</li>
+<li>The payload hasn't been modified since issuance.</li>
+<li>The cert is verifiable at a public URL <em>without the Notified Body contacting the issuer</em>.</li>
+</ul>
+
+<p>That's the Vanta Trust Center pattern, applied to AI compliance. Pre-certification evidence the NB accepts as preparation, saving weeks of back-and-forth.</p>
+
+<h2 id="faq">10. Common questions</h2>
+
+<h3>Is voluntary NB engagement faster than waiting for mandatory dates?</h3>
+<p>Yes. NBs that accept voluntary engagements are running 4-6 month queues vs 6-9 months forecast for the Aug 2026 rush. Pre-certification evidence compresses the NB engagement itself from ~3 months to ~3-4 weeks.</p>
+
+<h3>We're a US SaaS — do we really need to do this?</h3>
+<p>If your AI output is used by EU customers: yes. Anthropic, OpenAI, Google, Mistral, Cohere all have EU AI Act compliance programmes. Providers cannot delegate the obligation to deployers.</p>
+
+<h3>What's the minimum viable compliance posture for a Series A?</h3>
+<p>Risk classification completed (Art 6 + Annex III mapping). Annex IV pack at ~60% complete. Signed quarterly self-attestation posture. Named senior accountable person. Documented Article 14 human oversight. Incident-reporting runbook. Article 4 literacy training log.</p>
+
+<h3>What software can actually automate this?</h3>
+<p>We built 225+ MCPs on PyPI under <a href="https://pypi.org/user/MEOK_AI_Labs/">MEOK AI Labs</a>. The EU AI Act stack is: <code>eu-ai-act-compliance-mcp</code> (audit), <code>ai-bom-mcp</code> (Annex IV technical docs), <code>ai-incident-reporting-mcp</code> (Art 73 + DORA + NIS2 + GDPR clocks), <code>dora-nis2-crosswalk-mcp</code> (for financial entities), <code>agent-policy-enforcement-mcp</code> + <code>agent-audit-logger-mcp</code> (for agent-based systems). All installable in 60 seconds. Pro tier (£199/mo) emits signed attestations.</p>
+
+<div class="cta-inline">
+<strong>Start free. Sign when you need evidence.</strong>
+<p>Every regulation, one subscription, signed attestations, public verify URLs.</p>
+<a class="btn primary" href="https://councilof.ai">Explore all frameworks →</a>
+<a class="btn secondary" href="https://pypi.org/project/eu-ai-act-compliance-mcp/" target="_blank">Try the free MCP</a>
+</div>
+
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R1689" target="_blank">Regulation (EU) 2024/1689 (official text, EUR-Lex)</a></li>
+<li><a href="https://artificialintelligenceact.eu/" target="_blank">AI Act Explorer (public text navigator)</a></li>
+<li><a href="https://digital-strategy.ec.europa.eu/en/policies/european-approach-artificial-intelligence" target="_blank">European Commission — Digital Strategy page on AI</a></li>
+<li><a href="https://meok-attestation-api.vercel.app/catalogue">MEOK Compliance MCP Catalogue</a> — all 16 flagship MCPs</li>
+<li><a href="https://meok-verify.vercel.app">Verify a signed attestation</a></li>
+</ul>
+
+<p class="meta" style="margin-top:3rem">Written by <strong>Nicholas Templeman</strong>, solo founder of MEOK AI Labs. Built the attestation infrastructure after watching enterprise AI teams scramble for pre-certification evidence with no affordable tooling between Big-4 advisory (£200k+) and DIY spreadsheets. <a href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>.</p>
+
+</div>
+</article>
+
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">Csoai Eu Ai Act Pillar by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
+
+<script>
+(function(){
+  const target = new Date('2026-08-02T00:00:00Z').getTime();
+  function u(){const d=Math.max(0,Math.ceil((target-Date.now())/86400000));const el=document.getElementById('countdown');if(el)el.textContent='⏰ '+d+' days until 2 August 2026 enforcement';}
+  u();setInterval(u,3600000);
+})();
+</script>
+</body>
+</html>

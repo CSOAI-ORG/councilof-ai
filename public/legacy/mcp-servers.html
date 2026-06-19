@@ -1,0 +1,3051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MCP Server Catalogue — 271 Published Servers · CSOAI</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Browse 271 published MCP servers in the CSOAI / MEOK marketplace. Filter by industry sector, tier, or name. Each server has a verify URL, keystone cert, and live deployment.">
+  <link rel="canonical" href="https://csoai.org/mcp-servers">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#e2e8f0;line-height:1.6}
+    .container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#c9a84c}
+    h2{margin-top:2.5rem;margin-bottom:.75rem;font-size:1.4rem;border-bottom:1px solid #1e293b;padding-bottom:.4rem;color:#c9a84c}
+    h3{font-size:1.1rem;margin-bottom:.5rem;color:#c9a84c}
+    p{color:#cbd5e1;margin-bottom:1rem}
+    a{color:#c9a84c;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .hero{background:linear-gradient(180deg,#0a0a0f 0%,#11111a 100%);padding:4rem 1.5rem 2rem;text-align:center;border-bottom:1px solid #1e293b}
+    .hero h1{color:#c9a84c;font-size:2.5rem;margin-bottom:.5rem}
+    .hero .lead{color:#94a3b8;font-size:1.1rem;max-width:780px;margin:0 auto}
+    .stats{display:flex;justify-content:center;gap:2.5rem;margin:1.5rem 0;flex-wrap:wrap}
+    .stat{text-align:center}
+    .stat .num{font-size:1.8rem;font-weight:700;color:#c9a84c;display:block}
+    .stat .lbl{color:#94a3b8;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+    .filter-bar{display:flex;gap:1rem;flex-wrap:wrap;margin:1.5rem 0;align-items:center}
+    .filter-bar input,.filter-bar select{background:#0f172a;color:#e2e8f0;border:1px solid #1e293b;padding:.5rem .75rem;border-radius:.5rem;font-size:.9rem}
+    .filter-bar input{flex:1;min-width:200px}
+    .sector-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+    .sector-card{background:#0f172a;border:1px solid #1e293b;border-radius:.75rem;padding:1rem;transition:transform .2s,border-color .2s}
+    .sector-card:hover{transform:translateY(-2px);border-color:#c9a84c}
+    .sector-card h3{color:#c9a84c;font-size:1.05rem;margin-bottom:.5rem}
+    .sector-card .count{color:#94a3b8;font-size:.8rem;margin-bottom:.75rem}
+    .server-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem;margin:1.5rem 0}
+    .server{background:#0f172a;border:1px solid #1e293b;border-radius:.5rem;padding:.75rem 1rem;display:flex;flex-direction:column;gap:.3rem;transition:border-color .2s}
+    .server:hover{border-color:#c9a84c}
+    .server .name{font-family:ui-monospace,monospace;font-size:.85rem;color:#e2e8f0}
+    .server .meta{display:flex;gap:.5rem;align-items:center;font-size:.72rem}
+    .tier-badge{padding:.15rem .5rem;border-radius:99px;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+    .tier-nano{background:#1e293b;color:#9CA3AF}
+    .tier-lvp{background:#1e3a8a;color:#3B82F6}
+    .tier-mvp{background:#5b21b6;color:#8B5CF6}
+    .tier-hvp{background:#92400e;color:#F59E0B}
+    .tier-elite{background:#7f1d1d;color:#EF4444}
+    .sector-tag{color:#94a3b8;font-size:.65rem}
+    .foot{margin-top:4rem;padding:2rem 1.5rem;text-align:center;color:#64748b;font-size:.85rem;border-top:1px solid #1e293b}
+    .cta-row{margin:2rem 0;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+    .cta{display:inline-block;background:#c9a84c;color:#0a0a0f;padding:.85rem 1.5rem;border-radius:.5rem;font-weight:600;text-decoration:none}
+    .cta-secondary{background:transparent;color:#c9a84c;border:1px solid #c9a84c}
+    .empty{padding:1rem;text-align:center;color:#94a3b8}
+    details{margin:1.5rem 0}
+    summary{cursor:pointer;color:#c9a84c;font-size:1.1rem;padding:.5rem 0;user-select:none}
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="container">
+      <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.15em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · MEOK AI Labs</p>
+      <h1>MCP Server Catalogue</h1>
+      <p class="lead">Browse 271 published MCP servers across 12 industry sectors. Filter by tier, sector, or name. Every server has a public verify URL and a free keystone certificate.</p>
+      <div class="stats">
+        <div class="stat"><span class="num">271</span><span class="lbl">Published Servers</span></div>
+        <div class="stat"><span class="num">12</span><span class="lbl">Industry Sectors</span></div>
+        <div class="stat"><span class="num">5</span><span class="lbl">Pricing Tiers</span></div>
+        <div class="stat"><span class="num">8</span><span class="lbl">Stripe Price Points</span></div>
+        <div class="stat"><span class="num">3</span><span class="lbl">Compliance Packs</span></div>
+      </div>
+      <div class="cta-row">
+        <a href="/certify" class="cta">View Pricing</a>
+        <a href="https://meok.ai" class="cta cta-secondary">MEOK SDK →</a>
+        <a href="https://meok.ai/dashboard" class="cta cta-secondary">Live Dashboard →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>By Industry Sector</h2>
+    <p>Click a sector to see all servers in that vertical. Each is mapped to a relevant compliance framework (EU AI Act, DORA, NIS2, HIPAA, etc.)</p>
+    <div class="sector-grid">
+      <a href="#sec-general" class="sector-card">
+        <h3>General</h3>
+        <div class="count">276 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-legal" class="sector-card">
+        <h3>Legal</h3>
+        <div class="count">22 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-healthcare" class="sector-card">
+        <h3>Healthcare</h3>
+        <div class="count">18 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-finance" class="sector-card">
+        <h3>Finance</h3>
+        <div class="count">10 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-government" class="sector-card">
+        <h3>Government</h3>
+        <div class="count">10 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-media" class="sector-card">
+        <h3>Media</h3>
+        <div class="count">4 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-manufacturing" class="sector-card">
+        <h3>Manufacturing</h3>
+        <div class="count">4 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-retail" class="sector-card">
+        <h3>Retail</h3>
+        <div class="count">2 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-insurance" class="sector-card">
+        <h3>Insurance</h3>
+        <div class="count">2 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-transportation" class="sector-card">
+        <h3>Transportation</h3>
+        <div class="count">2 servers</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-education" class="sector-card">
+        <h3>Education</h3>
+        <div class="count">1 server</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+      <a href="#sec-energy" class="sector-card">
+        <h3>Energy</h3>
+        <div class="count">1 server</div>
+        <div style="color:#64748b;font-size:.7rem">↓ Jump to list</div>
+      </a>
+    </div>
+
+    <h2>By Pricing Tier</h2>
+    <p>Each tier has a Stripe price, keystone cert, and lead-magnet CTA. Click a tier to see all servers at that price point.</p>
+    <div class="sector-grid">
+      <a href="#tier-lvp" class="sector-card">
+        <h3 style="color:#3B82F6">LVP</h3>
+        <div class="count">279 servers · £9/mo</div>
+        <div style="color:#64748b;font-size:.7rem">Standard AI tools</div>
+      </a>
+      <a href="#tier-mvp" class="sector-card">
+        <h3 style="color:#8B5CF6">MVP</h3>
+        <div class="count">35 servers · £29/mo</div>
+        <div style="color:#64748b;font-size:.7rem">Advanced AI</div>
+      </a>
+      <a href="#tier-hvp" class="sector-card">
+        <h3 style="color:#F59E0B">HVP</h3>
+        <div class="count">28 servers · £79/mo</div>
+        <div style="color:#64748b;font-size:.7rem">Governance & Security</div>
+      </a>
+      <a href="#tier-elite" class="sector-card">
+        <h3 style="color:#EF4444">ELITE</h3>
+        <div class="count">6 servers · £199/mo</div>
+        <div style="color:#64748b;font-size:.7rem">Specialized</div>
+      </a>
+    </div>
+
+    <h2>All Published Servers (by sector)</h2>
+    <details id="sec-general">
+      <summary>General (276 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">a2a-governance-bridge-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">accessibility-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">accounting-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ad-copy-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-commerce-protocol-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-cost-allocator-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-data-residency-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-delegation-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-handoff-certified-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-identity-trust-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-incident-relay-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-incident-reporter-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-mcp-router-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-negotiation-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-orchestrator-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-prompt-injection-firewall-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-rate-limiter-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-replay-debugger-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-token-budget-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agriculture-robotics-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ai-bom-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ai-gateway-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ai-incident-reporting-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ai-ops-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ai-reflection-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">airspace-monitor-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">api-docs-generator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">api-tester-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ascii-art-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">backup-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">basel-ai-overlay-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">bft-governance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">bft-progress-council-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">bias-detection-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">blockchain-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">blockchain-verification-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">budget-planner-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">c2pa-watermark-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">calendar-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">canada-aida-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">changelog-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">chas-elite-prep-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">churn-predictor-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ci-cd-generator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">cisa-kev-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">citation-finder-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">cli-builder-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">clipboard-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">cobol-bridge-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">code-executor-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">code-reviewer-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">color-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">commit-message-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">competitor-monitor-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">compression-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">concrete-pump-cpa-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">config-validator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">consciousness-engine-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">construction-iso-19650-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">coppa-ferpa-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">crane-hire-cpcs-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">creativity-engine-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">crm-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">cron-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">crypto-tracker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">csoai-governance-crosswalk-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">csv-analytics-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">csv-tools-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">currency-converter-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">customer-support-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">cybersecurity-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">data-science-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">database-universal-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">dataprivacy-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">date-calculator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">deepfake-detector-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">dependency-updater-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">devops-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">diff-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">dispense-record-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">docker-helper-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">dockerfile-generator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">document-comparison-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">dora-nis2-crosswalk-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">drone-airspace-governance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">email-automation-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">email-validator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">emoji-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">encoder-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">env-manager-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">eudi-wallet-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">event-planning-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">expense-tracker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">explainability-report-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">faker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">feedback-analyzer-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">file-organizer-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">firmware-attestation-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">fishkeeper-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">fitness-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">flashcard-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">flight-logger-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">focus-timer-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">fsa-food-safety-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">gardening-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">geolocation-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">git-helper-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">gods-eye-geospatial-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">gos-claim-validator-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">grammar-fix-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">habit-tracker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">hash-utils-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">hr-management-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">html-parser-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">hydration-reminder-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">image-metadata-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">invoice-generator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ip-network-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">iso-27001-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">iso-42001-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">iso-42005-impact-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">job-description-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">json-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">jwt-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">keystone-catalogue-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">keystone-verify-proxy-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">keyword-extractor-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">korea-ai-basic-act-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">lead-scoring-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">license-checker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">linkedin-outreach-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">lorem-ipsum-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">markdown-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">marketing-analytics-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">math-solver-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mcp-scorecard-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meal-planner-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meditation-guide-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meeting-summarizer-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">memory-search-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-aaif-agent-card-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-abci-bridge-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-agents-md-lint-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-ai-treaty-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-allmi-hiab-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-aquaponics-monitor-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-article-50-kit-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-asc-rspca-crosswalk-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-bs7121-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-c2pa-durable-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-c2pa-watermark-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-cra-annex-iv-classifier-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-cra-art14-reporter-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-credential-manager-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-dpia-edpb-template-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-drcf-agent-crosswalk-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-dvsa-olicence-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-eu-aia-art-9-rms-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-eu-platform-worker-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-ev-recall-transport-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-fmcsa-hours-of-service-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-fors-clocs-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-gaming-eve-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-gaming-ffxiv-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-gaming-minecraft-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-gaming-osrs-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-gaming-wow-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-governance-engine-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-haulage-governance-bridge-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-iata-dgr-air-cargo-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-imo-marpol-marine-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-iru-tir-international-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-koikeeper-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-laia-aquatic-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-libp2p-agent-mesh-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-livestock-welfare-transport-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-mcp-cardgen-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-mcp-hardening-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-mcp-injection-scan-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-mcp-test-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-nhvr-australia-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-nis2-de-register-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-omnibus-tracker-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-rspca-aquaculture-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-transport-canada-hos-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-uae-rta-transport-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-uas-commercial-drone-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-uk-adm-article22c-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-uk-fhi-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-uk-phv-tfl-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-vehicle-handover-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-w3c-tdm-rights-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-watermark-attest-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mica-crypto-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mifid-ii-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mitre-atlas-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mitre-attack-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mock-server-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mortgage-calculator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">muckaway-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">music-production-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">nist-rmf-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">note-taking-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">notification-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">nrswa-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">nutrition-tracker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">oasf-agent-directory-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">optometry-ai-safety-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">otp-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">owasp-agentic-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">password-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">pci-dss-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">pdf-document-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">pdf-merge-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">pdf-tools-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">performance-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">photography-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">plagiarism-checker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">planthire-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">pomodoro-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">price-tracker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">project-management-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">proofof-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">qidi-printer-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">qr-code-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">quantum-scoring-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">quiz-generator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">rag-knowledge-graph-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">rag-knowledge-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">readme-generator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">real-estate-listing-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">recipe-finder-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">recruitment-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">regex-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">restaurant-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">resume-parser-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">risk-assessment-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">robotics-control-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">sbom-cyclonedx-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">scam-detector-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">schema-validator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">security-scanner-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">self-healing-infrastructure-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">sentiment-analysis-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">seo-checker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">sigstore-cosign-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">skip-hire-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">slack-enterprise-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">sleep-tracker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">slugify-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">sql-builder-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">stock-analyzer-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">string-utils-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">subscription-tracker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">summarizer-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">survey-builder-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">tax-calculator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">text-stats-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">time-tracker-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">tone-rewriter-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">translation-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">translator-pro-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">trust-chain-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">unit-converter-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">url-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">uuid-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">validator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">vector-knowledge-graph-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">video-editing-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">voice-audio-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">watermarking-authenticity-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">weather-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">web-research-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">webhook-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">workout-planner-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">writing-assistant-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-legal">
+      <summary>Legal (22 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">agent-audit-logger-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">ai-self-audit-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">contract-review-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">cqc-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">cra-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">csrd-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            <span class="sector-tag">+ government</span>
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">dora-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">eu-ai-act-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            <span class="sector-tag">+ government</span>
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">gdpr-compliance-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">haulage-uk-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">hipaa-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            <span class="sector-tag">+ healthcare</span>
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">landlaw-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">legal-document-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-elite">elite</span>
+            <span style="color:#94a3b8">£199/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">llm-compliance-comparison-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mcp-spec-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-cpa-contract-lift-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-law-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-tacho-audit-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">nis2-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">soc2-compliance-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">test-case-generator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">uk-ai-bill-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-healthcare">
+      <summary>Healthcare (18 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">care-home-cqc-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">care-home-scheduling-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">care-membrane-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">clinical-trials-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">domiciliary-care-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">fda-samd-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-elite">elite</span>
+            <span style="color:#94a3b8">£199/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">health-check-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">healthcare-ai-governance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-elite">elite</span>
+            <span style="color:#94a3b8">£199/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">healthcare-fhir-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-elite">elite</span>
+            <span style="color:#94a3b8">£199/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">hipaa-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            <span class="sector-tag">+ legal</span>
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mdr-medical-device-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-cold-chain-pharma-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-elite">elite</span>
+            <span style="color:#94a3b8">£199/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">mhra-samd-optometry-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">neural-health-monitor-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">optical-care-home-bridge-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">optometry-patient-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">patient-safety-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">pet-care-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-finance">
+      <summary>Finance (10 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">agent-commerce-payments-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">agent-x402-paywall-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">aml-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-ap2-mandate-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-coinbase-x402-receipt-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-stripe-acp-checkout-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-x402-wrap-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">personal-finance-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-elite">elite</span>
+            <span style="color:#94a3b8">£199/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">stripe-billing-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">yaml-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-government">
+      <summary>Government (10 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">agent-policy-enforcement-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">csrd-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            <span class="sector-tag">+ legal</span>
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">eu-ai-act-compliance-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-hvp">hvp</span>
+            <span style="color:#94a3b8">£79/mo</span>
+            <span class="sector-tag">+ legal</span>
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">icon-generator-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-eu-ai-act-2-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-eu-ai-act-art-13-ifu-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-eu-ai-act-art-26-fria-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-eu-aigc-icon-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">regulatory-webhook-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">uk-ai-act-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-media">
+      <summary>Media (4 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">agent-content-watermark-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-mvp">mvp</span>
+            <span style="color:#94a3b8">£29/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">content-calendar-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">content-registry-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">social-media-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-manufacturing">
+      <summary>Manufacturing (4 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">logistics-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            <span class="sector-tag">+ transportation</span>
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-rail-freight-uk-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">slsa-supply-chain-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">supply-chain-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-retail">
+      <summary>Retail (2 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">ecommerce-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">inventory-management-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-insurance">
+      <summary>Insurance (2 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">insurance-verification-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">nhs-gos-claims-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-transportation">
+      <summary>Transportation (2 servers)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">logistics-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            <span class="sector-tag">+ manufacturing</span>
+          </div>
+        </div>
+        <div class="server">
+          <div class="name">meok-eu-mobility-package-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-education">
+      <summary>Education (1 server)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">education-ai-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="sec-energy">
+      <summary>Energy (1 server)</summary>
+      <div class="server-grid">
+        <div class="server">
+          <div class="name">meok-soil-assoc-organic-aqua-mcp</div>
+          <div class="meta">
+            <span class="tier-badge tier-lvp">lvp</span>
+            <span style="color:#94a3b8">£9/mo</span>
+            
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="foot">
+    <p>© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · <a href="https://meok.ai">meok.ai</a></p>
+    <p style="margin-top:.5rem">271 published servers · 12 industry sectors · 5 pricing tiers · live on csoai-mcp-monetization:3400</p>
+  </div>
+</body>
+</html>

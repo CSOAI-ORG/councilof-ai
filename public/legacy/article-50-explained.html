@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EU AI Act Article 50 Explained — Transparency Obligations &amp; the 2 Aug 2026 Deadline | CSOAI</title>
+    <meta name="description" content="EU AI Act Article 50 explained: who is affected, the transparency obligations for chatbots, deepfakes, and AI-generated content, the 2 August 2026 deadline, and a practical compliance checklist.">
+    <meta property="og:title" content="EU AI Act Article 50 Explained — Transparency Obligations">
+    <meta property="og:description" content="Plain-English guide to Article 50 of the EU AI Act: transparency duties for chatbots, synthetic content, deepfakes, and emotion recognition, with the 2 August 2026 deadline.">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://csoai.org/assets/og-image.png">
+    <meta property="og:url" content="https://csoai.org/article-50-explained">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EU AI Act Article 50 Explained">
+    <meta name="twitter:description" content="Transparency obligations for chatbots, deepfakes, and AI-generated content — deadline 2 August 2026.">
+    <link rel="canonical" href="https://csoai.org/article-50-explained">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "EU AI Act Article 50 Explained: Transparency Obligations and the 2 August 2026 Deadline",
+      "description": "A plain-English explainer of Article 50 of the EU AI Act, covering who is affected, what disclosures are required for chatbots, deepfakes, and AI-generated content, and how to comply before the deadline.",
+      "datePublished": "2026-06-19",
+      "dateModified": "2026-06-19",
+      "author": { "@type": "Organization", "name": "CSOAI", "url": "https://csoai.org" },
+      "publisher": { "@type": "Organization", "name": "CSOAI", "logo": { "@type": "ImageObject", "url": "https://csoai.org/assets/og-image.png" } },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://csoai.org/article-50-explained" },
+      "about": { "@type": "Legislation", "name": "Regulation (EU) 2024/1689 (EU Artificial Intelligence Act), Article 50" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does Article 50 of the EU AI Act require?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Article 50 sets transparency obligations. Providers must ensure systems that interact with people disclose they are AI, and that AI-generated audio, image, video, and text are marked in a machine-readable format. Deployers must disclose emotion recognition and biometric categorisation, label deepfakes, and disclose AI-generated text published to inform the public on matters of public interest." }
+        },
+        {
+          "@type": "Question",
+          "name": "When does Article 50 take effect?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Article 50 transparency obligations apply from 2 August 2026, which is 24 months after the Regulation entered into force on 1 August 2024." }
+        },
+        {
+          "@type": "Question",
+          "name": "Who has to comply with Article 50?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Both providers (those who develop and place systems on the market) and deployers (those who use them professionally) have duties. It applies to any operator whose system is used in the EU, regardless of where the operator is established." }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the penalties for breaching Article 50?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Non-compliance with transparency obligations can attract fines of up to €15 million or 3% of total worldwide annual turnover, whichever is higher." }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there exceptions to the disclosure duties?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Disclosure of AI interaction is not required where it is obvious to a reasonably informed person. Certain law-enforcement uses are exempt, and creative or satirical deepfakes have lighter, non-intrusive labelling requirements." }
+        }
+      ]
+    }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --navy: #1B2A4A; --dark-navy: #0F1A2E; --teal: #0D7377; --teal-light: #14919B;
+            --gold: #D4A843; --gold-dark: #B8912E; --white: #FFFFFF; --gray-light: #E8E8E8; --gray-dark: #2A3F5F; --red: #C7493B;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--navy); color: var(--white); line-height: 1.6; overflow-x: hidden; }
+        header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1.5rem 2rem; background: rgba(27, 42, 74, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(13, 115, 119, 0.2); transition: all 0.3s ease; }
+        header.scrolled { padding: 1rem 2rem; background: rgba(27, 42, 74, 0.98); box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
+        .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--gold); letter-spacing: 2px; text-decoration: none; }
+        .logo span { color: var(--teal); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { color: var(--white); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.3s ease; position: relative; }
+        nav a:hover { color: var(--teal); }
+        nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--gold); transition: width 0.3s ease; }
+        nav a:hover::after { width: 100%; }
+        .cta-button { background: linear-gradient(135deg, var(--teal), var(--teal-light)); color: var(--white); padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(13,115,119,0.3); font-size: 0.95rem; display:inline-block; }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13,115,119,0.5); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        .page-hero { min-height: 42vh; display: flex; align-items: center; justify-content: center; padding-top: 100px; background: linear-gradient(135deg, var(--navy) 0%, var(--dark-navy) 50%, #0A1428 100%); text-align: center; }
+        .page-hero h1 { font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 800; margin-bottom: 1rem; }
+        .page-hero h1 span { color: var(--gold); }
+        .page-hero p { color: #B0B8C8; font-size: 1.1rem; max-width: 720px; margin: 0 auto; }
+        .deadline-pill { display: inline-block; background: rgba(199,73,59,0.15); border: 1px solid var(--red); color: #F0A99E; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; }
+        section { padding: 4rem 0; }
+        section.light-bg { background-color: #273548; }
+        h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; margin-bottom: 1rem; }
+        h2 span { color: var(--gold); }
+        h3 { color: var(--gold); font-size: 1.2rem; margin: 1.5rem 0 0.5rem; }
+        p.lead { color: #B0B8C8; font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.2rem; }
+        .who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        @media (max-width: 700px){ .who-grid { grid-template-columns: 1fr; } }
+        .card { background: linear-gradient(135deg, #273548 0%, #2A4A6A 100%); border: 1px solid rgba(13,115,119,0.3); padding: 1.8rem; border-radius: 8px; }
+        .card h4 { color: var(--gold); margin-bottom: 0.6rem; }
+        .card p, .card li { color: #B0B8C8; font-size: 0.95rem; }
+        .card ul { list-style: none; margin-top: 0.6rem; }
+        .card li { padding-left: 1.4rem; position: relative; margin-bottom: 0.5rem; }
+        .card li::before { content: '✓'; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; font-size: 0.95rem; }
+        th, td { text-align: left; padding: 0.9rem 1rem; border-bottom: 1px solid rgba(13,115,119,0.2); }
+        th { color: var(--gold); font-weight: 700; }
+        td { color: #C6CDD8; }
+        .timeline { list-style: none; margin-top: 1.5rem; }
+        .timeline li { position: relative; padding-left: 1.8rem; margin-bottom: 1rem; color: #C6CDD8; }
+        .timeline li::before { content: ''; position: absolute; left: 0; top: 0.55rem; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); }
+        .timeline strong { color: var(--white); }
+        .checklist { list-style: none; margin-top: 1rem; }
+        .checklist li { padding-left: 1.6rem; position: relative; margin-bottom: 0.7rem; color: #C6CDD8; }
+        .checklist li::before { content: '☐'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+        .disclaimer { font-size: 0.82rem; color: #7A828F; margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; }
+        footer { background: linear-gradient(180deg, var(--dark-navy) 0%, #050A15 100%); border-top: 1px solid rgba(13,115,119,0.2); padding: 3rem 0 2rem; margin-top: 2rem; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer-section h4 { color: var(--gold); font-size: 1rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-section ul { list-style: none; }
+        .footer-section ul li { margin-bottom: 0.5rem; }
+        .footer-section a { color: #B0B8C8; text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; }
+        .footer-section a:hover { color: var(--teal); }
+        .footer-bottom { border-top: 1px solid rgba(13,115,119,0.1); padding-top: 1.5rem; text-align: center; color: #8A92A2; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div class="header-container">
+            <a href="/" class="logo">CS<span>AI</span></a>
+            <nav>
+                <a href="/about">About</a>
+                <a href="/high-risk-classifier">High-Risk Checker</a>
+                <a href="/framework-crosswalk">Crosswalk</a>
+                <a href="/mcp-infrastructure">MCP Infrastructure</a>
+                <a href="/contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <div class="container">
+            <div class="deadline-pill">⏱ Applies 2 August 2026</div>
+            <h1>EU AI Act <span>Article 50</span> Explained</h1>
+            <p>Article 50 is the transparency backbone of the EU AI Act. If your product talks to people, generates content, or creates synthetic media, it almost certainly applies to you — even if your system is not high-risk.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>What <span>Article 50</span> actually says</h2>
+            <p class="lead">Article 50 of Regulation (EU) 2024/1689 imposes transparency obligations on AI that interacts with, or produces content for, natural persons. The idea is simple: people have a right to know when they are dealing with a machine or with machine-made content. It splits duties between <strong>providers</strong> (who build and place systems on the market) and <strong>deployers</strong> (who put them to use professionally).</p>
+
+            <h3>Provider duties</h3>
+            <p class="lead">Providers must design AI systems that interact with people so those people are informed they are dealing with an AI — unless that is obvious to a reasonably well-informed person. Providers of generative systems must mark outputs (audio, image, video, text) as artificially generated or manipulated, in a <strong>machine-readable</strong> format, so detection tools and platforms can pick it up.</p>
+
+            <h3>Deployer duties</h3>
+            <p class="lead">Deployers of emotion-recognition or biometric-categorisation systems must inform the people exposed to them. Deployers who generate or manipulate deepfakes must disclose that the content is artificial. Where AI-generated text is published to inform the public on matters of public interest, the deployer must disclose it — unless the content underwent human editorial review and a person holds editorial responsibility.</p>
+        </div>
+    </section>
+
+    <section class="light-bg">
+        <div class="container">
+            <h2>Who is <span>affected?</span></h2>
+            <div class="who-grid">
+                <div class="card">
+                    <h4>You are in scope if you operate…</h4>
+                    <ul>
+                        <li>Customer-facing chatbots or voice assistants</li>
+                        <li>Generative text, image, audio, or video tools</li>
+                        <li>Deepfake or face/voice-swap features</li>
+                        <li>Emotion recognition or biometric categorisation</li>
+                        <li>AI that auto-publishes news or public-interest text</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Territorial reach</h4>
+                    <p>Article 50 follows the market, not the company. If your system's output is used in the EU, you are in scope regardless of where you are headquartered. Both EU and non-EU providers and deployers carry the duties, and non-EU providers may need an authorised representative.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>The <span>obligations</span> at a glance</h2>
+            <table>
+                <thead><tr><th>Trigger</th><th>Who</th><th>What you must do</th></tr></thead>
+                <tbody>
+                    <tr><td>System interacts with people</td><td>Provider</td><td>Inform users they are interacting with an AI, unless obvious.</td></tr>
+                    <tr><td>Generative output (text/image/audio/video)</td><td>Provider</td><td>Mark output as AI-generated in a machine-readable, interoperable format.</td></tr>
+                    <tr><td>Deepfake content</td><td>Deployer</td><td>Disclose the content is artificially generated or manipulated.</td></tr>
+                    <tr><td>Emotion recognition / biometric categorisation</td><td>Deployer</td><td>Inform the exposed persons and process data lawfully.</td></tr>
+                    <tr><td>AI-generated public-interest text</td><td>Deployer</td><td>Disclose unless human-reviewed with editorial responsibility.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="light-bg">
+        <div class="container">
+            <h2>Key <span>dates</span></h2>
+            <ul class="timeline">
+                <li><strong>1 August 2024</strong> — Regulation (EU) 2024/1689 enters into force.</li>
+                <li><strong>2 February 2025</strong> — Prohibited practices (Article 5) and AI-literacy duties apply.</li>
+                <li><strong>2 August 2025</strong> — Obligations for general-purpose AI models and governance bodies apply.</li>
+                <li><strong>2 August 2026</strong> — <strong>Article 50 transparency obligations apply</strong>, along with Annex III high-risk rules.</li>
+                <li><strong>2 August 2027</strong> — High-risk rules for Annex I product-safety systems apply.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>Compliance <span>checklist</span></h2>
+            <p class="lead">A practical starting point for Article 50 readiness before the 2 August 2026 deadline:</p>
+            <ul class="checklist">
+                <li>Inventory every AI surface that talks to users or generates content.</li>
+                <li>Add a clear "you are talking to an AI" disclosure to chatbots and assistants.</li>
+                <li>Embed machine-readable provenance (e.g. C2PA / watermarking) into generative outputs.</li>
+                <li>Label deepfakes and synthetic media at the point of publication.</li>
+                <li>Notify users subject to emotion recognition or biometric categorisation.</li>
+                <li>Document an editorial-review process for any AI-published public-interest text.</li>
+                <li>Record your assessment so you can demonstrate compliance to regulators.</li>
+            </ul>
+            <p class="lead" style="margin-top:1.5rem;">Not sure which tier your system sits in? Start with the interactive checker, then map your controls across frameworks.</p>
+            <a href="/high-risk-classifier" class="cta-button">Run the high-risk checker</a>
+            &nbsp;
+            <a href="/framework-crosswalk" class="cta-button" style="background:transparent;border:2px solid var(--gold);color:var(--gold);box-shadow:none;">See the framework crosswalk</a>
+            <p class="disclaimer">This explainer summarises the published text of Regulation (EU) 2024/1689 for educational purposes. It is not legal advice. Always confirm specifics against the official text and qualified counsel.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>CSOAI</h4>
+                    <p style="color:#B0B8C8;font-size:0.9rem;">The governance infrastructure for the global AI economy.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>EU AI Act</h4>
+                    <ul>
+                        <li><a href="/high-risk-classifier">High-risk checker</a></li>
+                        <li><a href="/article-50-explained">Article 50 explained</a></li>
+                        <li><a href="/framework-crosswalk">Framework crosswalk</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/mcp-infrastructure">MCP Infrastructure</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul><li><a href="/legal">Privacy &amp; Terms</a></li></ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CSOAI - Chief Standards Office for Artificial Intelligence</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+    </script>
+</body>
+</html>
