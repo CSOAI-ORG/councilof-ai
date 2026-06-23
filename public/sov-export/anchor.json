@@ -1,0 +1,28 @@
+{
+  "ledger": "flywheel_ledger_mac.jsonl",
+  "label": "sovereign-town flywheel: governed(A) vs ungoverned(B) crime, Ed25519-attestable cycles (mac ledger, 459 cycles)",
+  "merkle_root": "2396baa7908c49021da7b76d4916aa0dfd3f84c8c8bf73947b84ad0192642363",
+  "n_attestable": 459,
+  "n_total": 459,
+  "full_ledger_sha256": "6a86cad5cdb1b9dca55b001d2b99be1926aa3b1e3d5d16ebca4e480c4390de1d",
+  "ts_first": "2026-06-19T11:53:34",
+  "ts_last": "2026-06-21T18:18:10",
+  "bitcoin": {
+    "confirmed": true,
+    "blocks": [
+      {
+        "height": 954857,
+        "merkle_root": "598fe7ca1bb60d15c687645c3e0d7973c120edb8a12bb42d46319bdfc9e30bc0"
+      },
+      {
+        "height": 954866,
+        "merkle_root": "8dc7457517fcd46e6dc82cf664ecfba5920bc23120fb02fe46c6127587135ad6"
+      }
+    ],
+    "note": "Confirmed at Bitcoin block(s) 954857, 954866 per the .ots OpenTimestamps proof. Cross-check independently: each block's merkle_root must appear in the real Bitcoin block header (via any public node / blockstream)."
+  },
+  "anchor_manifest": "anchors-sov/anchor_0001.json",
+  "verify_cmd": "python3 verify_anchor.py --anchor anchors-sov/anchor_0001.json --ledger flywheel_ledger_mac.jsonl",
+  "issuer_pubkey": "53kc24fqQz4MctZwtH+SuPLEKdX+NLlhK5wALr5H188=",
+  "scope": "IN-SIMULATION governed-vs-ungoverned flywheel ledger. Ed25519-signed, hash-chained (entry.prev == previous entry.sig; entry[0].prev == 'genesis-<host>'). This is real signed data \u2014 verify it yourself client-side; the FULL ledger is Bitcoin-anchored (see anchor.json). Not a real-world compliance claim."
+}

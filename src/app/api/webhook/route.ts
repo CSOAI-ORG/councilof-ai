@@ -61,6 +61,25 @@ export async function POST(request: NextRequest) {
           }),
         }).catch(() => {});
       }
+
+      // Welcome email (preserved from the legacy stripe-webhook route).
+      if (customerEmail && process.env.RESEND_API_KEY) {
+        const label =
+          tierId === "enterprise" ? "Enterprise" : tierId === "pro" ? "Pro" : tierId;
+        await fetch("https://api.resend.com/v1/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "CouncilOf.AI <welcome@councilof.ai>",
+            to: [customerEmail],
+            subject: `Welcome to CouncilOf.AI ${label}`,
+            html: `<h2>Welcome to CouncilOf.AI!</h2><p>Thank you for your ${label} purchase. Your access is now active — visit <a href="https://councilof.ai">councilof.ai</a> to get started.</p>`,
+          }),
+        }).catch((e) => console.error("[welcome email]", e));
+      }
     }
     return NextResponse.json({ received: true });
   } catch (err) {

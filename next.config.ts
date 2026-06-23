@@ -33,6 +33,14 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Audit fixes: legacy/broken internal links → real pages
+      { source: "/sectors/finance", destination: "/industries/finance", permanent: true },
+      { source: "/docs", destination: "/api-docs", permanent: true },
+      { source: "/docs/:path*", destination: "/api-docs", permanent: true },
+      { source: "/integrations/:path*", destination: "/mcp", permanent: true },
+      { source: "/tutorials/:path*", destination: "/guides", permanent: true },
+      { source: "/whitepapers/:path*", destination: "/resources", permanent: true },
+      { source: "/certification/:path*", destination: "/certification", permanent: true },
       // App-route duplicates that exist as static .html files
       { source: "/article-50-kit.html", destination: "/article-50-kit", permanent: true },
       { source: "/mcp-packs.html", destination: "/mcp-packs", permanent: true },

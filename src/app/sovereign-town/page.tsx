@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Bitcoin, Link2 } from "lucide-react";
 import { fetchSovTownStats, formatCount } from "@/lib/sov-town-data";
+import {
+  getSovLedgerHeadServer,
+  getSovAnchorServer,
+} from "@/lib/sovereign.server";
+import type { SovAnchor } from "@/lib/sovereign";
+import SovereignVerifier from "@/components/SovereignVerifier";
 
 export const metadata: Metadata = {
   title: "Sovereign Town — Live Governed AI World · CSOAI",
@@ -47,7 +54,11 @@ const useCases = [
 ];
 
 export default async function SovereignTownPage() {
-  const stats = await fetchSovTownStats();
+  const [stats, ledgerHead, anchor] = await Promise.all([
+    fetchSovTownStats(),
+    getSovLedgerHeadServer(),
+    getSovAnchorServer(),
+  ]);
 
   const schema = {
     "@context": "https://schema.org",
@@ -266,6 +277,37 @@ export default async function SovereignTownPage() {
         </div>
       </section>
 
+      {/* Verify the signed ledger yourself — the trust-minimized half of the moat.
+          The stats above are a self-published snapshot; this is the part anyone can
+          independently check in-browser against the issuer key, no server called. */}
+      <section className="py-24 border-b border-white/5 bg-slate-900/20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <p className="text-emerald-400 text-xs font-bold tracking-widest uppercase mb-3">
+              Trust-minimized proof
+            </p>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter mb-6">
+              Don&rsquo;t take the numbers. Verify the ledger.
+            </h2>
+            <p className="text-lg text-slate-400">
+              The stats on this page are a self-published snapshot. The signed flywheel ledger below
+              is Ed25519-attested and Bitcoin-anchored — verify it in your browser, against the
+              published issuer key, without calling a CSOAI server.
+            </p>
+          </div>
+
+          {anchor && <AnchorCard anchor={anchor} />}
+
+          <p className="text-[11px] text-slate-600 mb-6 text-center">
+            {ledgerHead
+              ? `Showing ${ledgerHead.entries.length} of ${ledgerHead.of_total} public signed entries (ledger head). The chain auto-verifies live below.`
+              : "Signed ledger head temporarily unreachable — paste a ledger or load the bundled copy to verify."}
+          </p>
+
+          <SovereignVerifier entries={ledgerHead?.entries} />
+        </div>
+      </section>
+
       {/* Use cases */}
       <section className="py-24 border-b border-white/5 bg-slate-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -340,6 +382,39 @@ export default async function SovereignTownPage() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+function AnchorCard({ anchor }: { anchor: SovAnchor }) {
+  const blocks = anchor.bitcoin?.blocks ?? [];
+  return (
+    <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.03] p-6 mb-6">
+      <div className="flex items-center gap-2 text-xs text-slate-400 mb-2">
+        <Bitcoin className="w-4 h-4 text-amber-400" /> Externally anchored — full ledger
+      </div>
+      <div className="text-sm font-mono break-all text-slate-300">
+        Merkle root {anchor.merkle_root?.slice(0, 24)}…
+      </div>
+      <div className="text-xs text-slate-400 mt-1">
+        {anchor.n_attestable} attestable signed entries · ledger {anchor.ledger}
+      </div>
+      {anchor.bitcoin?.confirmed ? (
+        <div className="text-xs text-emerald-400 mt-2">
+          ✓ Bitcoin-confirmed at block{blocks.length > 1 ? 's' : ''}{' '}
+          {blocks.map((b) => b.height).join(', ')}
+          <span className="text-slate-500"> — per the .ots OpenTimestamps proof</span>
+        </div>
+      ) : (
+        <div className="text-xs text-amber-400 mt-2">
+          ⊘ Bitcoin attestation pending — calendar has not yet posted the tx
+        </div>
+      )}
+      <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-2">
+        <Link2 className="w-3 h-3" />
+        <span className="font-mono break-all">{anchor.verify_cmd}</span>
+      </div>
+      <p className="text-[11px] text-slate-500 mt-2">{anchor.scope}</p>
     </div>
   );
 }
