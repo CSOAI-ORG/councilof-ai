@@ -1,0 +1,7 @@
+# pnpm 10+ reads settings here, not from the package.json "pnpm" field.
+# Pre-approve dependency build scripts so pnpm doesn't hard-error in CI
+# (ERR_PNPM_IGNORED_BUILDS). sharp = Next image opt / @vercel/og;
+# unrs-resolver = eslint tooling.
+onlyBuiltDependencies:
+  - sharp
+  - unrs-resolver
