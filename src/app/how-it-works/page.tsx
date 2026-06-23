@@ -1,73 +1,260 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ShieldCheck, Signature, Bitcoin, Users, Vote, FileCheck2, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "How councilof.ai Works | CSOAI",
-  description: "Democratic AI Governance Through Ensemble Learning — Council of 12 AIs, 8 ensemble methods, blockchain verification, integration options.",
+  title: "How CSOAI Works | Council Safety of AI",
+  description:
+    "A weighted multi-model council (Claude, Hermes, Kimi) deliberates, a tie-breaking judge decides, and every verdict is Ed25519-signed and Bitcoin-anchored — independently verifiable, no black box.",
   alternates: { canonical: "/how-it-works" },
   openGraph: {
-    title: "How councilof.ai Works | CSOAI",
-    description: "Democratic AI Governance Through Ensemble Learning — Council of 12 AIs, 8 ensemble methods, blockchain verification, integration options.",
+    title: "How CSOAI Works | Council Safety of AI",
+    description:
+      "Weighted multi-model council + tie-breaking judge, Ed25519 Sigil-signed verdicts, Bitcoin-anchored ledger. Trust-minimized AI governance — verify any verdict yourself.",
     type: "website",
-    
   },
 };
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://csoai.org/" },
-    { "@type": "ListItem", position: 2, name: "How councilof.ai Works | CSOAI", item: "https://csoai.org/how-it-works" },
-  ],
-};
+const flow = [
+  {
+    icon: Vote,
+    step: "1",
+    title: "Submit a decision",
+    body: "A governance question — a policy check, a content verdict, an agent action — enters the council via the API or dashboard.",
+  },
+  {
+    icon: Users,
+    step: "2",
+    title: "Council deliberation",
+    body: "A weighted multi-model council (Claude, Hermes, Kimi and other pluggable brains) analyses the decision in parallel from distinct personas, each scored on confidence.",
+  },
+  {
+    icon: FileCheck2,
+    step: "3",
+    title: "Tie-breaking judge",
+    body: "A judge model resolves the weighted vote. Ties are honest: a tied verdict is marked unattestable and is NOT signed — we never dress an inconclusive vote as a confident one.",
+  },
+  {
+    icon: Signature,
+    step: "4",
+    title: "Sigil Ed25519 signature",
+    body: "Only a winning, non-tied verdict is signed with an Ed25519 Sigil attestation, binding the decision to the council substrate and the issuer key.",
+  },
+  {
+    icon: Bitcoin,
+    step: "5",
+    title: "Bitcoin-anchored ledger",
+    body: "Signed verdicts join a hash-chained ledger whose Merkle root is timestamped on Bitcoin via OpenTimestamps — externally anchored, not just self-signed.",
+  },
+  {
+    icon: ShieldCheck,
+    step: "6",
+    title: "Return a verifiable receipt",
+    body: "You get the verdict plus a signed, anchored receipt. Anyone can re-verify it in their browser against the public issuer key — no call to CSOAI required.",
+  },
+];
 
 export default function HowItWorksPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <style>{`
+      {/* Hero */}
+      <section className="border-b border-white/5 bg-gradient-to-b from-slate-900/40 to-slate-950">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <p className="text-emerald-400 text-xs font-bold tracking-widest uppercase mb-4">
+            How it works
+          </p>
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tighter mb-6">
+            A governed council you can verify, not a black box you must trust.
+          </h1>
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+            CSOAI runs a weighted multi-model council — Claude, Hermes, Kimi and other pluggable
+            brains — with a tie-breaking judge. Every winning verdict is Ed25519-signed and the
+            ledger is Bitcoin-anchored, so any decision is independently checkable. No governance
+            tokens, no on-chain voting theatre — just cryptography and an audit trail.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 mt-8">
+            <Link
+              href="/council"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold transition"
+            >
+              See the live council <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/verify"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/10 text-emerald-400 font-bold transition"
+            >
+              Verify a verdict
+            </Link>
+          </div>
+        </div>
+      </section>
 
-.legacy-content body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;background:#0a0a12;color:#e8e8f0;line-height:1.6}
-.legacy-content .container{max-width:1100px;margin:0 auto;padding:0 24px}
-.legacy-content .hero{padding:80px 0 40px;text-align:center;background:linear-gradient(135deg,#1a1a2e,#16213e)}
-.legacy-content h1{font-size:2.6rem;margin:0 0 12px;background:linear-gradient(90deg,#7c5cff,#46d3ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.legacy-content .subtitle{font-size:1.2rem;color:#a0a0c0}
-.legacy-content section{padding:40px 0;border-top:1px solid #1f1f33}
-.legacy-content h2{font-size:1.9rem;color:#fff}
-.legacy-content h3{color:#cdb8ff}
-.legacy-content h4{color:#9fe6ff;margin:14px 0 4px}
-.legacy-content .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-.legacy-content .card{background:#13131f;border:1px solid #26263d;border-radius:12px;padding:22px}
-.legacy-content .tag{display:inline-block;background:#241d4d;color:#c9bcff;border-radius:6px;padding:3px 10px;margin:3px;font-size:.85rem}
-.legacy-content pre{background:#0d0d18;border:1px solid #26263d;border-radius:8px;padding:14px;overflow:auto;color:#a8e6cf;font-size:.85rem}
-.legacy-content .btn{display:inline-block;background:#7c5cff;color:#fff;text-decoration:none;padding:10px 20px;border-radius:8px;margin-top:14px}
-.legacy-content .btn.secondary{background:transparent;border:1px solid #7c5cff;color:#cdb8ff}
-.legacy-content ul{padding-left:20px}
-.legacy-content nav a{color:#9fe6ff;margin-right:18px;text-decoration:none}
-.legacy-content .tabhdr{font-size:1.4rem;color:#46d3ff;margin-top:30px}
+      {/* The flow */}
+      <section className="py-24 border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter mb-6">
+              From question to signed receipt
+            </h2>
+            <p className="text-lg text-slate-400">
+              Six steps, each producing an artifact you can re-check. The signing and anchoring are
+              the difference between a governance claim and governance proof.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {flow.map((s) => (
+              <div
+                key={s.step}
+                className="rounded-2xl border border-white/10 bg-white/[0.03] p-7 hover:border-emerald-500/30 transition"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <s.icon className="w-6 h-6 text-emerald-400" />
+                  <span className="text-xs font-bold text-slate-500 tracking-widest">
+                    STEP {s.step}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold mb-2">{s.title}</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      `}</style>
-      <div
-        className="legacy-content"
-        dangerouslySetInnerHTML={{ __html: `<section class="hero"><div class="container"><h1>How councilof.ai Works</h1><p class="subtitle">Democratic AI Governance Through Ensemble Learning</p></div></section>
-<section><div class="container"><h2>System Overview</h2><p>councilof.ai is the a democratic AI governance platform. Instead of trusting a single AI model, we use 12 specialized AIs that vote on every decision. This ensemble approach provides superior accuracy, transparency, and accountability.</p><div class="grid"><div class="card"><h3>1. Submit Decision</h3><p>Your application sends a decision request via API, SDK, or dashboard</p></div><div class="card"><h3>2. Council Deliberation</h3><p>12 specialized AIs analyze the decision in parallel from different perspectives</p></div><div class="card"><h3>3. Democratic Vote</h3><p>Each AI casts a weighted vote based on confidence and past accuracy</p></div><div class="card"><h3>4. Ensemble Learning</h3><p>8 advanced methods combine votes for optimal decision</p></div><div class="card"><h3>5. Blockchain Logging</h3><p>Decision and votes logged immutably on Polygon blockchain</p></div><div class="card"><h3>6. Return Result</h3><p>Final decision with full transparency and audit trail</p></div></div><h3 class="tabhdr">Key Benefits</h3><div class="grid"><div class="card"><h4>🎯 Higher Accuracy</h4><p>Ensemble learning outperforms single models by 15-30%</p></div><div class="card"><h4>🔍 Full Transparency</h4><p>See exactly how each AI voted and why</p></div><div class="card"><h4>⚖️ Democratic</h4><p>No single AI has absolute power</p></div><div class="card"><h4>🔗 Blockchain Verified</h4><p>Immutable audit trail for compliance</p></div><div class="card"><h4>⚡ Fast Response</h4><p>Parallel processing delivers results in seconds</p></div><div class="card"><h4>🛡️ EU AI Act Ready</h4><p>Compliant with all transparency requirements</p></div></div></div></section><section><div class="container"><h2>The Council of 12 AIs</h2><p>Each AI in the council is specialized in a critical domain. Together, they provide balanced, well-rounded decisions that no single AI could achieve alone.</p><div class="grid"><div class="card"><h3>1. The Orchestrator</h3><p class="tag">councilof.ai</p> <span class="tag">GPT-4</span><p><strong>Specialty:</strong> Democratic Governance</p><p>Coordinates the council, ensures fair voting procedures, and maintains democratic principles.</p></div><div class="card"><h3>2. Deepfake Detector</h3><p class="tag">proofof.ai</p> <span class="tag">Gemini</span><p><strong>Specialty:</strong> Content Authenticity</p><p>Detects manipulated media, verifies content authenticity, and identifies deepfakes.</p></div><div class="card"><h3>3. Security Guardian</h3><p class="tag">asisecurity.ai</p> <span class="tag">GPT-4</span><p><strong>Specialty:</strong> Cybersecurity</p><p>Assesses security risks, identifies vulnerabilities, and ensures system protection.</p></div><div class="card"><h3>4. AGI Safety Monitor</h3><p class="tag">agisafe.ai</p> <span class="tag">Claude</span><p><strong>Specialty:</strong> AGI Risk Assessment</p><p>Monitors for AGI/ASI risks, assesses advanced AI capabilities, and ensures alignment.</p></div><div class="card"><h3>5. Mental Health Guardian</h3><p class="tag">suicidestop.ai</p> <span class="tag">Claude</span><p><strong>Specialty:</strong> Crisis Intervention</p><p>Identifies mental health risks, provides crisis support, and ensures responsible AI for vulnerable populations.</p></div><div class="card"><h3>6. Transparency Advocate</h3><p class="tag">transparencyof.ai</p> <span class="tag">GPT-4</span><p><strong>Specialty:</strong> Explainability</p><p>Ensures AI decisions are explainable, transparent, and understandable to humans.</p></div><div class="card"><h3>7. Ethics Philosopher</h3><p class="tag">ethicalgovernanceof.ai</p> <span class="tag">Claude</span><p><strong>Specialty:</strong> Ethical Reasoning</p><p>Evaluates ethical implications, ensures values alignment, and maintains moral standards.</p></div><div class="card"><h3>8. Safety First</h3><p class="tag">safetyof.ai</p> <span class="tag">Gemini</span><p><strong>Specialty:</strong> Safety Prevention</p><p>Identifies potential harms, implements safety measures, and prevents negative outcomes.</p></div><div class="card"><h3>9. Accountability Enforcer</h3><p class="tag">accountabilityof.ai</p> <span class="tag">GPT-4</span><p><strong>Specialty:</strong> Responsibility</p><p>Tracks accountability, ensures responsible AI practices, and maintains audit trails.</p></div><div class="card"><h3>10. Bias Detector</h3><p class="tag">biasdetectionof.ai</p> <span class="tag">Gemini</span><p><strong>Specialty:</strong> Fairness Analysis</p><p>Identifies biases, ensures fairness across demographics, and promotes equity.</p></div><div class="card"><h3>11. Privacy Protector</h3><p class="tag">dataprivacyof.ai</p> <span class="tag">Claude</span><p><strong>Specialty:</strong> Data Protection</p><p>Ensures GDPR compliance, protects user privacy, and secures sensitive data.</p></div><div class="card"><h3>12. Jabulon&#x27;s Law Enforcer</h3><p class="tag">jabulon.ai</p> <span class="tag">Gemini</span><p><strong>Specialty:</strong> Three Laws Compliance</p><p>⚡ VETO POWER: Ensures compliance with Jabulon&#x27;s Three Laws of AI Safety. Can veto any decision that violates fundamental safety principles.</p></div></div><h3 class="tabhdr">Voting Rules</h3><ul><li>Supermajority Required: 10 out of 12 AIs (83.3%) must agree for approval</li><li>Weighted Voting: AIs with better track records get more influence</li><li>Confidence Weighting: High-confidence votes count more</li><li>Veto Power: Jabulon&#x27;s Law Enforcer can veto decisions that violate safety principles</li><li>Transparency: All votes are recorded and explainable</li></ul></div></section><section><div class="container"><h2>8 Advanced Ensemble Learning Methods</h2><p>We don't just collect votes—we use sophisticated ensemble learning techniques to combine AI decisions optimally.</p><div class="grid"><div class="card"><h3>⚖️ 1. Weighted Voting</h3><p><strong>How it works:</strong> Each AI&#x27;s vote is weighted based on its historical accuracy on similar decisions.</p><p><strong>Why it matters:</strong> AIs that have proven expertise in specific domains get more influence. Meritocracy in action.</p><p><strong>Example:</strong> The Security Guardian&#x27;s vote counts more on cybersecurity decisions.</p></div><div class="card"><h3>🎯 2. Confidence Weighting</h3><p><strong>How it works:</strong> AIs report confidence levels (0-100%). High-confidence votes count more.</p><p><strong>Why it matters:</strong> Prevents uncertain majority from overruling confident experts.</p><p><strong>Example:</strong> If 7 AIs vote yes with 60% confidence and 5 vote no with 95% confidence, the no votes may prevail.</p></div><div class="card"><h3>🧠 3. Meta-Learning</h3><p><strong>How it works:</strong> A 13th AI learns from all 12 AIs&#x27; voting patterns and optimizes the ensemble.</p><p><strong>Why it matters:</strong> The system gets smarter over time, learning which AI combinations work best.</p><p><strong>Example:</strong> Meta-learner discovers that Ethics + Privacy + Bias Detection together catch 95% of fairness issues.</p></div><div class="card"><h3>⏰ 4. Temporal Learning</h3><p><strong>How it works:</strong> System learns from outcomes 6-12 months later, not just immediate results.</p><p><strong>Why it matters:</strong> Some decisions have long-term consequences that aren&#x27;t immediately apparent.</p><p><strong>Example:</strong> A decision that seemed safe initially but caused issues 6 months later updates AI weights.</p></div><div class="card"><h3>⚔️ 5. Adversarial Testing</h3><p><strong>How it works:</strong> Red team AIs try to break the decision, blue team defends it.</p><p><strong>Why it matters:</strong> Forces deeper reasoning and catches blind spots before deployment.</p><p><strong>Example:</strong> Red team finds edge case where decision fails; blue team must address it or decision is rejected.</p></div><div class="card"><h3>🐝 6. Swarm Intelligence</h3><p><strong>How it works:</strong> AIs form dynamic coalitions based on decision type, like bees swarming.</p><p><strong>Why it matters:</strong> Emergent intelligence from AI collaboration exceeds individual capabilities.</p><p><strong>Example:</strong> For privacy decisions, Privacy + Security + Ethics + Bias form a specialized swarm.</p></div><div class="card"><h3>🔄 7. Knowledge Transfer</h3><p><strong>How it works:</strong> AIs teach each other across domains through cross-training.</p><p><strong>Why it matters:</strong> System continuously improves as AIs learn from each other&#x27;s expertise.</p><p><strong>Example:</strong> Security Guardian teaches Bias Detector about adversarial attacks on fairness metrics.</p></div><div class="card"><h3>❓ 8. Uncertainty Quantification</h3><p><strong>How it works:</strong> System knows when it doesn&#x27;t know and asks humans for guidance.</p><p><strong>Why it matters:</strong> No guessing on critical decisions. Human oversight when needed.</p><p><strong>Example:</strong> If council is split 6-6 with low confidence, decision escalates to human review.</p></div></div><h3 class="tabhdr">Proven Results</h3><div class="grid"><div class="card"><h2 style="margin:0">15-30%</h2><p>Higher Accuracy vs. Single AI</p></div><div class="card"><h2 style="margin:0">95%+</h2><p>Confidence on Clear Decisions</p></div><div class="card"><h2 style="margin:0">8</h2><p>Advanced Methods Combined</p></div><div class="card"><h2 style="margin:0">100%</h2><p>Transparency &amp; Explainability</p></div></div></div></section><section><div class="container"><h2>Blockchain Verification</h2><p>Every AI decision is logged immutably on the Polygon blockchain, creating a permanent audit trail for compliance, transparency, and accountability.</p><div class="grid"><div class="card"><h3>1. Decision Made</h3><p>Council votes and reaches consensus on a decision</p></div><div class="card"><h3>2. Data Hashed</h3><p>Decision details, votes, and metadata are cryptographically hashed</p></div><div class="card"><h3>3. Smart Contract Call</h3><p>AIDecisionLogger smart contract is invoked on Polygon</p></div><div class="card"><h3>4. Blockchain Confirmation</h3><p>Transaction is confirmed and permanently recorded</p></div><div class="card"><h3>5. Proof Generated</h3><p>Cryptographic proof is generated and returned to user</p></div></div><h3 class="tabhdr">Our Smart Contracts</h3><div class="grid"><div class="card"><h4>AIDecisionLogger</h4><p>Logs every AI decision with full vote breakdown, timestamps, and metadata</p><span class="tag">Deployed on Polygon</span></div><div class="card"><h4>GovernanceVoting</h4><p>Manages council voting rules, supermajority requirements, and veto power</p><span class="tag">Deployed on Polygon</span></div><div class="card"><h4>AEGISToken</h4><p>Governance token (100M supply) for platform voting and premium features</p><span class="tag">ERC-20 Token</span></div><div class="card"><h4>JabulonCoin</h4><p>Community rewards token (1B supply) for participation and contributions</p><span class="tag">ERC-20 Token</span></div></div></div></section><section><div class="container"><h2>Integration Options</h2><p>Multiple ways to integrate councilof.ai into your application, from simple API calls to full SDK integration.</p><div class="grid"><div class="card"><h3>🔌 RESTful API</h3><p><strong>Best for:</strong> Quick integration, any programming language</p><p><strong>Setup time:</strong> 10 minutes</p><pre>POST https://api.councilof.ai/v1/decisions
-{
-  &quot;type&quot;: &quot;content_moderation&quot;,
-  &quot;content&quot;: &quot;...&quot;,
-  &quot;context&quot;: {...}
-}</pre><a class="btn secondary" href="/api-docs">API Documentation</a></div><div class="card"><h3>🐍 Python SDK</h3><p><strong>Best for:</strong> Python applications, data science, ML pipelines</p><p><strong>Setup time:</strong> 5 minutes</p><pre>pip install aisafety
+      {/* Why signed + anchored, not "blockchain voting" */}
+      <section className="py-24 border-b border-white/5 bg-slate-900/20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter mb-6">
+              Why signing and anchoring beat a token vote
+            </h2>
+            <p className="text-lg text-slate-400">
+              Most "decentralised AI governance" is a token-weighted vote on a smart contract —
+              trust the token holders, trust the chain, never check the model. CSOAI inverts that:
+              the proof is in the signature, and the signature is anchored outside any CSOAI system.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.03] p-7">
+              <h3 className="text-lg font-bold text-red-400 mb-3">Token-vote governance</h3>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li>• Trust resides in token holders, not in the decision</li>
+                <li>• The model&apos;s reasoning is never verifiable</li>
+                <li>• A coin majority can override a correct verdict</li>
+                <li>• &ldquo;On-chain&rdquo; ≠ &ldquo;checked&rdquo; — the vote is logged, the AI is not</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.05] p-7">
+              <h3 className="text-lg font-bold text-emerald-400 mb-3">Signed + anchored governance</h3>
+              <ul className="space-y-2 text-sm text-slate-300">
+                <li>• Every winning verdict is Ed25519-signed by the council issuer key</li>
+                <li>• Ties are flagged unattestable and never signed — no false confidence</li>
+                <li>• The ledger Merkle root is timestamped on Bitcoin (OpenTimestamps)</li>
+                <li>• Verification is client-side, against a public key — no CSOAPI call needed</li>
+              </ul>
+            </div>
+          </div>
+          <p className="text-xs text-slate-600 mt-6 text-center">
+            CSOAI issues no governance tokens and runs no on-chain voting. The only chain usage is
+            Bitcoin timestamping of the signed ledger&apos;s Merkle root.
+          </p>
+        </div>
+      </section>
 
-from aisafety import CouncilClient
-client = CouncilClient(api_key=&quot;your_key&quot;)
-decision = client.decide(type=&quot;content_moderation&quot;, content=&quot;...&quot;, context={...})</pre><a class="btn secondary" href="/api-docs">Python SDK Docs</a></div><div class="card"><h3>📦 JavaScript SDK</h3><p><strong>Best for:</strong> Web applications, Node.js, React, Vue, Angular</p><p><strong>Setup time:</strong> 5 minutes</p><pre>npm install @aisafety/council
+      {/* The measured result — the real evidence, not "15-30% accuracy" */}
+      <section className="py-24 border-b border-white/5">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-emerald-400 text-xs font-bold tracking-widest uppercase mb-3">
+            The evidence
+          </p>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter mb-6">
+            The proof is a signed ledger, not a marketing stat.
+          </h2>
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
+            Sovereign Town runs the governed-vs-ungoverned counterfactual across dozens of hives and
+            ~1.45 billion signed episodes. With the Sovereign Gate on, violations are blocked at the
+            gate by construction; with it off, the same agents produce tens of millions of
+            violations. That counterfactual — and the Ed25519 chain it is signed into — is the
+            measurable claim. Verify it yourself.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link
+              href="/sovereign-town"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold transition"
+            >
+              Explore Sovereign Town <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/verify"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/10 text-emerald-400 font-bold transition"
+            >
+              Verify the ledger
+            </Link>
+          </div>
+          <p className="text-xs text-slate-600 mt-8 max-w-2xl mx-auto">
+            We do not publish &ldquo;X% more accurate than a single model&rdquo; figures. Comparative
+            accuracy depends on task, model and benchmark; the durable, falsifiable claim is the
+            signed counterfactual above.
+          </p>
+        </div>
+      </section>
 
-import { CouncilClient } from &#x27;@aisafety/council&#x27;;
-const client = new CouncilClient({ apiKey: &#x27;your_key&#x27; });
-const decision = await client.decide({ type: &#x27;content_moderation&#x27;, content: &#x27;...&#x27; });</pre><a class="btn secondary" href="/api-docs">JavaScript SDK Docs</a></div><div class="card"><h3>🖥️ Dashboard UI</h3><p><strong>Best for:</strong> Manual review, testing, demonstrations</p><p>Use our web dashboard to submit decisions, view results, and explore the council&#x27;s voting history.</p><a class="btn secondary" href="https://app.csoai.org">Open Dashboard</a></div><div class="card"><h3>🔗 Webhooks</h3><p><strong>Best for:</strong> Async workflows, event-driven architecture</p><p>Receive real-time notifications when decisions are made, votes are cast, or blockchain confirmations arrive.</p><a class="btn secondary" href="/api-docs">Webhooks Guide</a></div><div class="card"><h3>🏢 Enterprise API</h3><p><strong>Best for:</strong> Large organizations, custom requirements</p><p>Dedicated infrastructure, custom SLAs, white-label options, and hands-on integration support.</p><a class="btn secondary" href="/contact">Contact Sales</a></div></div></div></section>` }}
-      />
+      {/* Integration — honest surfaces only, no fabricated SDKs */}
+      <section className="py-24 bg-slate-900/20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter mb-6">
+              Work with it
+            </h2>
+            <p className="text-lg text-slate-400">
+              No &ldquo;pip install&rdquo; magic. The real surfaces today are the public proof layer
+              and a design-partner pilot for teams that want the council wired into their own
+              governance flow.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-5">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-7">
+              <h3 className="font-bold mb-2 text-emerald-400">Public proof layer</h3>
+              <p className="text-sm text-slate-400 mb-4">
+                The signed ledger head and Bitcoin anchor are public. Verify any entry in your
+                browser, or read the live council dome.
+              </p>
+              <div className="flex flex-col gap-2 text-sm">
+                <Link href="/verify" className="text-emerald-400 hover:underline">/verify — ledger verifier</Link>
+                <Link href="/council" className="text-emerald-400 hover:underline">/council — live dome</Link>
+                <Link href="/sovereign-town" className="text-emerald-400 hover:underline">/sovereign-town — the counterfactual</Link>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-7">
+              <h3 className="font-bold mb-2 text-emerald-400">Design-partner pilot</h3>
+              <p className="text-sm text-slate-400 mb-4">
+                Wire the council into your policy, content or agent-action review. We integrate with
+                your risk engine and your regulator observes.
+              </p>
+              <a
+                href="mailto:nicholas@csoai.org?subject=Council%20design-partner%20pilot"
+                className="text-emerald-400 hover:underline text-sm"
+              >
+                Request a pilot →
+              </a>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-7">
+              <h3 className="font-bold mb-2 text-emerald-400">Certification</h3>
+              <p className="text-sm text-slate-400 mb-4">
+                Run a CSOAI compliance audit against DORA, NIS2, GDPR or the EU AI Act. Certified
+                decisions carry a signed Watchdog certificate.
+              </p>
+              <Link href="/certification" className="text-emerald-400 hover:underline text-sm">
+                /certification →
+              </Link>
+            </div>
+          </div>
+          <p className="text-xs text-slate-600 mt-8 text-center max-w-2xl mx-auto">
+            Simulation output is research-grade and predictive only. No named-firm assertions. Public
+            data sources are cited and OGL-UK-3.0 / public-domain where applicable.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
