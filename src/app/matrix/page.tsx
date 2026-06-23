@@ -1,0 +1,179 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Compliance Matrix — CSOAI",
+  description: "CSOAI compliance matrix: 17 verticals × 8 tiers × 3 packs × 12 sectors × 4 bundles × 271 MCP servers. Pick your stack.",
+  alternates: { canonical: "/matrix" },
+  openGraph: {
+    title: "Compliance Matrix — CSOAI",
+    description: "CSOAI compliance matrix: 17 verticals × 8 tiers × 3 packs × 12 sectors × 4 bundles × 271 MCP servers. Pick your stack.",
+    type: "website",
+    
+  },
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://csoai.org/" },
+    { "@type": "ListItem", position: 2, name: "Compliance Matrix — CSOAI", item: "https://csoai.org/matrix" },
+  ],
+};
+
+export default function MatrixPage() {
+  return (
+    <div className="min-h-screen bg-slate-950 text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <style>{`
+
+    .legacy-content *{box-sizing:border-box;margin:0;padding:0}
+    .legacy-content body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#0f172a;line-height:1.65}
+    .legacy-content .container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+    .legacy-content h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#0a8a3f}
+    .legacy-content h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.4rem;border-bottom:1px solid #e6e8ec;padding-bottom:.4rem;color:#0a8a3f}
+    .legacy-content p{color:#0f172a;margin-bottom:1rem}
+    .legacy-content a{color:#0a8a3f;text-decoration:none}
+    .legacy-content a:hover{text-decoration:underline}
+    .legacy-content .lead{color:#5a5e66;font-size:1.1rem;margin-bottom:2rem}
+    .legacy-content .matrix{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+    .legacy-content .matrix th,.legacy-content .matrix td{padding:.5rem .75rem;border:1px solid #e6e8ec;text-align:left}
+    .legacy-content .matrix th{background:#f0fdf4;color:#076a30;font-weight:600;position:sticky;top:0}
+    .legacy-content .matrix tr:nth-child(even){background:#fafafa}
+    .legacy-content .matrix td.covered{background:#10b981;color:white;text-align:center;font-weight:700}
+    .legacy-content .matrix td.partial{background:#fbbf24;color:white;text-align:center;font-weight:700}
+    .legacy-content .matrix td.gap{background:#ef4444;color:white;text-align:center;font-weight:700}
+    .legacy-content .legend{display:flex;gap:1.5rem;margin:1rem 0;font-size:.85rem;flex-wrap:wrap}
+    .legacy-content .legend-item{display:flex;align-items:center;gap:.4rem}
+    .legacy-content .swatch{width:14px;height:14px;border-radius:2px}
+    .legacy-content .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:2rem 0}
+    .legacy-content .stat{background:#f0fdf4;border:1px solid #d4f4dd;border-radius:.5rem;padding:1rem;text-align:center}
+    .legacy-content .stat .num{font-size:1.8rem;font-weight:700;color:#0a8a3f;line-height:1}
+    .legacy-content .stat .lbl{font-size:.78rem;color:#5a5e66;text-transform:uppercase;letter-spacing:.05em;margin-top:.4rem}
+    .legacy-content .foot{margin-top:3rem;color:#888;font-size:.85rem;border-top:1px solid #e6e8ec;padding-top:1.5rem;text-align:center}
+  
+      `}</style>
+      <div
+        className="legacy-content"
+        dangerouslySetInnerHTML={{ __html: `<div class="container">
+    <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · Compliance Matrix</p>
+    <h1>Pick your stack</h1>
+    <p class="lead">The CSOAI hive is a 17-vertical × 8-tier × 3-pack × 12-sector × 4-bundle × 271-server matrix. Below: which frameworks each combination covers, where the gaps are, and how to start.</p>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="num">17</div><div class="lbl">Verticals</div></div>
+      <div class="stat"><div class="num">8</div><div class="lbl">Tiers (£9 → £4,950)</div></div>
+      <div class="stat"><div class="num">3</div><div class="lbl">Packs (£499, £999, £1,499)</div></div>
+      <div class="stat"><div class="num">12</div><div class="lbl">Sectors</div></div>
+      <div class="stat"><div class="num">4</div><div class="lbl">Bundles</div></div>
+      <div class="stat"><div class="num">271</div><div class="lbl">MCP Servers</div></div>
+      <div class="stat"><div class="num">288</div><div class="lbl">Prospects</div></div>
+      <div class="stat"><div class="num">105+</div><div class="lbl">Organisations</div></div>
+    </div>
+
+    <h2>1. Vertical × Tier matrix</h2>
+    <p>Every vertical × tier combination covers specific frameworks. ✅ = full coverage, 🟡 = partial, ❌ = not available.</p>
+
+    <div class="legend">
+      <div class="legend-item"><div class="swatch" style="background:#10b981"></div>✅ Full coverage</div>
+      <div class="legend-item"><div class="swatch" style="background:#fbbf24"></div>🟡 Partial</div>
+      <div class="legend-item"><div class="swatch" style="background:#ef4444"></div>❌ Gap</div>
+    </div>
+
+    <table class="matrix">
+      <thead>
+        <tr><th>Vertical</th><th>Sovereign £29</th><th>Pro £199</th><th>Enterprise £1,499</th><th>Watchdog £4,950</th><th>Audit-Prep £4,950</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Central Banks (UK, EU, US, MENA, APAC, BRICS+)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Insurance (Lloyd's, Munich Re, Swiss Re, etc.)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Asset Managers (BlackRock, Vanguard)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Custodians (BNY Mellon, State Street, Citi, HSBC, StanChart)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Crypto/Web3 (Coinbase, Binance, Kraken, Circle, Chainalysis)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Cybersecurity (CrowdStrike, Palo Alto, Fortinet, SentinelOne, Wiz)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Consulting (Deloitte, PwC, KPMG, EY, Baringa)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Hyperscalers (AWS, Azure, GCP, Oracle, IBM)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Telecom (BT, Vodafone, Orange, Deutsche Telekom, NTT)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Big Tech (Google, Microsoft, Apple, Meta, Amazon)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>National Cyber Agencies (NCSC, BSI, ANSSI, ENISA, Cert-In)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Big Pharma (Pfizer, Roche, Novartis, Merck, GSK)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Healthcare (NHS, hospitals, diagnostics)</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Government / Public Sector</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Legal / Compliance</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Media / Content</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+        <tr><td>Energy / Manufacturing / Transportation</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td><td class="covered">✅</td></tr>
+      </tbody>
+    </table>
+
+    <h2>2. Sector × Server matrix</h2>
+    <p>How many of the 271 MCP servers cover each industry sector.</p>
+    <table class="matrix">
+      <thead>
+        <tr><th>Sector</th><th>MCP Servers</th><th>Top picks</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Healthcare</td><td><strong>18</strong></td><td>care-membrane-mcp, healthcare-fhir-mcp, healthcare-ai-governance-mcp, fda-samd-mcp</td></tr>
+        <tr><td>Legal</td><td><strong>22</strong></td><td>agent-audit-logger-mcp, ai-self-audit-mcp, dora-compliance-mcp, nis2-compliance-mcp</td></tr>
+        <tr><td>Finance</td><td><strong>10</strong></td><td>agent-commerce-payments-mcp, aml-ai-mcp, dora-compliance-mcp, payment-csp-mcp</td></tr>
+        <tr><td>Government</td><td><strong>9</strong></td><td>agent-policy-enforcement-mcp, agent-audit-logger-mcp, meok-iso-42005-impact-mcp</td></tr>
+        <tr><td>Insurance</td><td><strong>2</strong></td><td>insurance-compliance-mcp, agentic-commerce-mcp</td></tr>
+        <tr><td>Media</td><td><strong>4</strong></td><td>ai-content-moderation-mcp, content-detection-mcp, bias-detection-mcp</td></tr>
+        <tr><td>Retail</td><td><strong>2</strong></td><td>ai-pricing-mcp, customer-segmentation-mcp</td></tr>
+        <tr><td>Education</td><td><strong>1</strong></td><td>education-ai-ethics-mcp</td></tr>
+        <tr><td>Energy</td><td><strong>1</strong></td><td>grid-ai-optimization-mcp</td></tr>
+        <tr><td>Manufacturing</td><td><strong>4</strong></td><td>construction-iso-19650-mcp, supply-chain-ai-mcp, robotics-ai-mcp, manufacturing-iso-mcp</td></tr>
+        <tr><td>Transportation</td><td><strong>2</strong></td><td>av-ai-safety-mcp, logistics-ai-mcp</td></tr>
+        <tr><td>General (cross-industry)</td><td><strong>267</strong></td><td>eu-ai-act-compliance-mcp, gdpr-compliance-ai-mcp, care-membrane-mcp, nist-rmf-ai-mcp</td></tr>
+      </tbody>
+    </table>
+
+    <h2>3. Tier × Price matrix</h2>
+    <p>Pick the tier that matches your AI deployment scale.</p>
+    <table class="matrix">
+      <thead>
+        <tr><th>Tier</th><th>Price</th><th>AI systems</th><th>Audits/month</th><th>Watchdog Certs</th><th>White-label</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Sovereign</td><td>£29/mo</td><td>5</td><td>5</td><td>1</td><td>—</td></tr>
+        <tr><td>Pro</td><td>£199/mo</td><td>50</td><td>50</td><td>1</td><td>—</td></tr>
+        <tr><td>Enterprise</td><td>£1,499/mo</td><td>Unlimited</td><td>Unlimited</td><td>1</td><td>Optional</td></tr>
+        <tr><td>Article 50 Kit</td><td>£999 (one-time)</td><td>7 servers</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>LAUNCH50</td><td>£499 (one-time)</td><td>6 servers</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>Quick Kit</td><td>£9 (one-time)</td><td>1 server</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>Watchdog Cert</td><td>£4,950 (one-time)</td><td>1 system</td><td>—</td><td>1</td><td>Optional</td></tr>
+        <tr><td>Audit-Prep</td><td>£4,950 (one-time)</td><td>1 system</td><td>48h expert review</td><td>1</td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <h2>4. Pack matrix</h2>
+    <p>3 pre-bundled server packs for common deployments.</p>
+    <table class="matrix">
+      <thead>
+        <tr><th>Pack</th><th>Price</th><th>Servers</th><th>Use case</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>EU AI Act Emergency</td><td>£999</td><td>7</td><td>48-hour EU AI Act compliance</td></tr>
+        <tr><td>Brand Authority & Distribution</td><td>£499</td><td>6</td><td>Public-sector procurement</td></tr>
+        <tr><td>Agentic Finance</td><td>£1,499/yr</td><td>5</td><td>Finance + payments</td></tr>
+      </tbody>
+    </table>
+
+    <h2>5. What this means</h2>
+    <p>Every vertical × tier combination is covered. The matrix is the single source of truth for what's in stock.</p>
+    <p>If you're not sure where to start:</p>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li><a href="/sandbox">Try the sandbox</a> — get a free Watchdog Certificate in 30 seconds</li>
+      <li><a href="/api-docs">Browse the API docs</a> — get tailored server suggestions by use case</li>
+      <li><a href="/onboarding">Follow the 10-step onboarding</a> — 30-day plan to compliance</li>
+      <li><a href="/pricing">Pick a tier</a> — Sovereign £29/mo to Enterprise £1,499/mo</li>
+    </ul>
+
+    <p class="foot">© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · <a href="/opengrid">/opengrid</a> · <a href="/api/playground">/api/playground</a> · Updated 2026-06-17</p>
+  </div>` }}
+      />
+    </div>
+  );
+}
