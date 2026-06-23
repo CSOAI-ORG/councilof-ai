@@ -1,7 +1,10 @@
-# pnpm 10+ reads settings here, not from the package.json "pnpm" field.
-# Pre-approve dependency build scripts so pnpm doesn't hard-error in CI
-# (ERR_PNPM_IGNORED_BUILDS). sharp = Next image opt / @vercel/og;
-# unrs-resolver = eslint tooling.
-onlyBuiltDependencies:
-  - sharp
-  - unrs-resolver
+# pnpm 10+/11 reads build-script approvals here, not from package.json.
+# pnpm 11.8.0 hard-errors in CI on any dependency build script it hasn't
+# approved (ERR_PNPM_IGNORED_BUILDS). The approval key for this pnpm is
+# `allowBuilds` — a per-package boolean map (the older `onlyBuiltDependencies`
+# list is silently ignored by pnpm 11, which is why the prior deploys failed).
+# sharp = Next image optimisation / @vercel/og (ships prebuilt @img/sharp-*
+# binaries, safe on Vercel's image); unrs-resolver = eslint tooling.
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
