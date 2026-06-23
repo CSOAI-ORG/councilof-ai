@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       line_items: [line_item],
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel`,
-      metadata: { product_id: productId },
+      metadata: { product_id: productId, tierId: productId },
       payment_method_types: ["card"],
       allow_promotion_codes: true,
     });
