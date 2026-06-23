@@ -77,7 +77,7 @@ function Footer() {
   return (
     <footer className="border-t border-border bg-card mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div>
             <h4 className="text-sm font-semibold mb-3">Platform</h4>
             <div className="space-y-2 text-xs text-muted-foreground">
@@ -99,7 +99,18 @@ function Footer() {
             <div className="space-y-2 text-xs text-muted-foreground">
               <a href="https://csoai.org" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">CSOAI Standard ↗</a>
               <a href="https://proofof.ai" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">Verified on proofof.ai ↗</a>
-              <a href="#" className="block hover:text-foreground">Documentation</a>
+              <a href="https://www.fishkeeper.ai" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">FishKeeper.ai ↗</a>
+              <a href="https://www.koikeeper.ai" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">KoiKeeper.ai ↗</a>
+              <a href="https://care-lfnevbs14-niks-projects-0a2ef942.vercel.app" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">CareShield.ai ↗</a>
+              <a href="https://wowmcp-deploy-hl5uc1twi-niks-projects-0a2ef942.vercel.app" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">WoWMCP.ai ↗</a>
+            </div>
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold mb-3">Industries</h4>
+            <div className="space-y-2 text-xs text-muted-foreground">
+              <a href="https://grabhire-site-a5s80x6zt-niks-projects-0a2ef942.vercel.app" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">GrabHire.ai ↗</a>
+              <a href="https://planthire-site-niks-projects-0a2ef942.vercel.app" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">PlantHire.ai ↗</a>
+              <a href="https://meok.ai" target="_blank" rel="noopener noreferrer" className="block hover:text-foreground">MEOK AI ↗</a>
             </div>
           </div>
           <div>
