@@ -115,6 +115,12 @@ import Technology from "./pages/Technology";
 import Integrations from "./pages/Integrations";
 import Crosswalks from "./pages/Crosswalks";
 import CharterArticle from "./pages/CharterArticle";
+import ContentPage from "./pages/ContentPage";
+import SovereignTown from "./pages/SovereignTown";
+import { frameworksdata } from "./data/frameworks-content";
+import { sectorsdata } from "./data/sectors-content";
+import { industriesdata } from "./data/industries-content";
+import { blogdata } from "./data/blog-content";
 import { AnalyticsProvider } from "./components/Analytics";
 
 function ScrollToTop() {
@@ -270,6 +276,12 @@ function App() {
                   <Route path="/guides/nist-ai-rmf" component={NISTAIRMFGuide} />
                   <Route path="/guides/iso-42001" component={ISO42001Guide} />
                   <Route path="/guides/tc260" component={TC260Guide} />
+                  {/* Absorbed data-driven content: per-framework / sector / industry / blog pages */}
+                  <Route path="/frameworks/:slug">{(p: any) => <ContentPage dataset={frameworksdata} slug={p.slug} />}</Route>
+                  <Route path="/sectors/:slug">{(p: any) => <ContentPage dataset={sectorsdata} slug={p.slug} />}</Route>
+                  <Route path="/industries/:slug">{(p: any) => <ContentPage dataset={industriesdata} slug={p.slug} />}</Route>
+                  <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
+                  <Route path="/sovereign-town" component={SovereignTown} />
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
