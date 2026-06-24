@@ -9,6 +9,7 @@ type App = { name: string; desc: string; href: string; glyph: string; tone: stri
 const APPS: App[] = [
   { name: "Sovereign Town", desc: "The signed record of AI governance — governed vs ungoverned, live.", href: "/sovereign-town", glyph: "▦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
   { name: "Command Center", desc: "Your whole governance program on one screen.", href: "/command-center", glyph: "◉", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
+  { name: "MCP Fleet", desc: "216 governed MCP servers across 10 hives — Layer 0 wrapped.", href: "/mcp-fleet", glyph: "⊟", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Immersive Globe", desc: "177 jurisdictions, sovereign nodes, agent swarm — one Earth.", href: "/globe.html", glyph: "◍", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30", ext: true },
   { name: "3D Governance Earth", desc: "Photorealistic CesiumJS globe with cross-region arcs.", href: "/globe3d.html", glyph: "✺", tone: "from-sky-500/20 to-sky-400/5 border-sky-400/30", ext: true },
   { name: "OSCAL Studio", desc: "Import/export NIST OSCAL — FedRAMP 20x ready.", href: "/oscal", glyph: "⌬", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },

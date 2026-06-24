@@ -126,6 +126,7 @@ import ComplianceCommandCenter from "./pages/ComplianceCommandCenter";
 import PolicyGenerator from "./pages/PolicyGenerator";
 import RiskHeatmap from "./pages/RiskHeatmap";
 import OsLauncher from "./pages/OsLauncher";
+import McpFleet from "./pages/McpFleet";
 import { frameworksdata } from "./data/frameworks-content";
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
@@ -294,6 +295,7 @@ function App() {
             <Route path="/framework-catalog" component={FrameworkCatalog} />
             <Route path="/command-center" component={ComplianceCommandCenter} />
             <Route path="/policy-generator" component={PolicyGenerator} />
+            <Route path="/mcp-fleet" component={McpFleet} />
             <Route path="/os" component={OsLauncher} />
             <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />
