@@ -58,8 +58,12 @@ function Navigation() {
           <nav className="hidden md:flex items-center gap-5 text-sm">
             <a href="/catalogue" className="text-muted-foreground hover:text-foreground transition-colors">Catalogue</a>
             <a href="/verify" className="text-muted-foreground hover:text-foreground transition-colors">Verify</a>
+            <a href="/town" className="text-muted-foreground hover:text-foreground transition-colors">Town</a>
             <a href="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
                       <a href="/protocols" className="text-muted-foreground hover:text-foreground transition-colors">Protocols</a>
+            <a href="/markets" className="text-muted-foreground hover:text-foreground transition-colors">Markets</a>
+            <a href="/opengrid" className="text-muted-foreground hover:text-foreground transition-colors">OpenGrid</a>
+            <a href="/examples" className="text-muted-foreground hover:text-foreground transition-colors">Examples</a>
             <a href="https://csoai.org" target="_blank" rel="noopener noreferrer" className="text-brand-400 hover:text-brand-300 transition-colors">csoai.org ↗</a>
           </nav>
           <div className="flex items-center gap-3">
