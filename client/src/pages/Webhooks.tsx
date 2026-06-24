@@ -25,6 +25,8 @@ const SAMPLE_DELIVERIES: Delivery[] = [
   { id: "d4", event: "assessment.completed", status: 200, at: "09:58:02" },
 ];
 
+const API: string = ((import.meta as any).env && (import.meta as any).env.VITE_API_BASE) || "";
+
 export default function Webhooks() {
   const [hooks, setHooks] = useState<Hook[]>(() => {
     try { const v = localStorage.getItem("csoai_webhooks"); if (v) return JSON.parse(v); } catch {}
@@ -37,9 +39,21 @@ export default function Webhooks() {
   const [url, setUrl] = useState("");
   const [picked, setPicked] = useState<string[]>(["control.failed"]);
 
+  useEffect(() => {
+    if (!API) return;
+    fetch(`${API}/api/webhooks`).then((r) => r.json()).then((d) => { if (Array.isArray(d)) setHooks(d); }).catch(() => {});
+  }, []);
+
   function add() {
     if (!/^https:\/\//.test(url)) return;
-    setHooks((h) => [{ id: "wh_" + (h.length + 1), url, events: picked, active: true }, ...h]);
+    if (API) {
+      fetch(`${API}/api/webhooks`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url, events: picked }) })
+        .then((r) => r.json())
+        .then((h) => setHooks((prev) => [h, ...prev]))
+        .catch(() => {});
+    } else {
+      setHooks((h) => [{ id: "wh_" + (h.length + 1), url, events: picked, active: true }, ...h]);
+    }
     setUrl("");
     setPicked(["control.failed"]);
   }
