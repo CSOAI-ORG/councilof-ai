@@ -1,11 +1,17 @@
 {
   "version": 2,
-  "public": true,
   "redirects": [
     {
       "source": "/checkout",
       "destination": "https://www.csoai.org/checkout",
       "permanent": false
     }
-  ]
+  ],
+  "experimentalServices": {
+    "web": {
+      "routePrefix": "/",
+      "framework": "nextjs",
+      "buildCommand": "npm install && npm run build"
+    }
+  }
 }
