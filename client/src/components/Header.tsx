@@ -21,6 +21,18 @@ import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 
 // Navigation structure with icons
 const navigation = [
+    {
+      name: "Tools",
+      icon: Shield,
+      submenu: [
+        { name: "Sovereign Town", href: "/sovereign-town", icon: Shield, description: "The signed record of AI governance" },
+        { name: "OSCAL Studio", href: "/oscal", icon: Settings, description: "Import/export NIST OSCAL, FedRAMP 20x ready" },
+        { name: "Evidence Hub", href: "/evidence", icon: BarChart3, description: "Continuous compliance evidence" },
+        { name: "Model Registry", href: "/models", icon: BarChart3, description: "Model cards and fairness audits" },
+        { name: "Framework Catalog", href: "/framework-catalog", icon: BookOpen, description: "25+ frameworks supported" },
+        { name: "Webhooks", href: "/webhooks", icon: Settings, description: "Real-time integration mesh" },
+      ],
+    },
   {
     name: 'Charter',
     href: '/charter',
