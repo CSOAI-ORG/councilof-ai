@@ -50,12 +50,41 @@ const CONNECTORS: Connector[] = [
 
 const card = "rounded-2xl border border-gray-200 bg-white p-5";
 
+// When VITE_API_BASE is set (GCP backend live), connectors use real OAuth + evidence.
+// Otherwise the page stays in demo mode. Isolated, non-breaking.
+const API: string = ((import.meta as any).env && (import.meta as any).env.VITE_API_BASE) || "";
+
 export default function EvidenceHub() {
   const [connected, setConnected] = useState<Record<string, string>>(() => {
     try { const v = localStorage.getItem("csoai_evidence"); if (v) return JSON.parse(v); } catch {}
     return { github: ts(), okta: ts() };
   });
   useEffect(() => { try { localStorage.setItem("csoai_evidence", JSON.stringify(connected)); } catch {} }, [connected]);
+
+  const [apiRows, setApiRows] = useState<{ source: string; control: string; framework: string; item: string; at: string }[]>([]);
+  useEffect(() => {
+    if (!API) return;
+    const p = new URLSearchParams(window.location.search);
+    const cid = p.get("cid") || localStorage.getItem("csoai_cid") || "";
+    if (p.get("connected") === "github" && cid) {
+      localStorage.setItem("csoai_cid", cid);
+      setConnected((prev) => ({ ...prev, github: ts() }));
+    }
+    if (cid) {
+      fetch(`${API}/api/evidence/github?owner=CSOAI-ORG&repo=councilof-ai`, { headers: { "X-CSOAI-Connection": cid } })
+        .then((r) => r.json())
+        .then((d) => {
+          if (Array.isArray(d.evidence))
+            setApiRows(d.evidence.map((e: any) => ({ source: "GitHub (live)", control: e.control, framework: e.framework, item: e.item, at: (e.collectedAt || "").slice(0, 16).replace("T", " ") || "live" })));
+        })
+        .catch(() => {});
+    }
+  }, []);
+
+  function onConnect(id: string) {
+    if (API && id === "github") { window.location.href = `${API}/api/oauth/github/start`; return; }
+    toggle(id);
+  }
 
   function ts() {
     return new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
@@ -74,8 +103,8 @@ export default function EvidenceHub() {
     CONNECTORS.forEach((c) => {
       if (connected[c.id]) c.evidence.forEach((e) => rows.push({ source: c.name, ...e, at: connected[c.id] }));
     });
-    return rows;
-  }, [connected]);
+    return [...apiRows, ...rows];
+  }, [connected, apiRows]);
 
   const connectedCount = Object.keys(connected).length;
   const frameworks = new Set(feed.map((r) => r.framework.split(" ")[0] + (r.framework.split(" ")[1] || "")));
@@ -117,7 +146,7 @@ export default function EvidenceHub() {
                     <div className="text-xs text-gray-500">{c.category}</div>
                   </div>
                   <button
-                    onClick={() => toggle(c.id)}
+                    onClick={() => onConnect(c.id)}
                     className={`rounded-lg px-3 py-1.5 text-sm font-semibold ${on ? "border border-gray-300 text-gray-600 hover:bg-gray-50" : "bg-emerald-600 text-white hover:bg-emerald-500"}`}
                   >
                     {on ? "Connected" : "Connect"}
