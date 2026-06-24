@@ -46,6 +46,12 @@ const OpenGridWorks = () => {
             Drag to spin · scroll to zoom · click a jurisdiction for its frameworks, Layer 0 controls and sovereign node ·
             <a href="/globe.html" style={{ color: '#34d399', marginLeft: '6px' }}>open full-screen ↗</a>
           </p>
+          <div style={{ textAlign: 'center', marginTop: '12px' }}>
+            <a href="/globe3d.html" className="btn primary" style={{ textDecoration: 'none' }}>🌍 Launch 3D Earth (beta)</a>
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '12px' }}>
+            <a href="/globe3d.html" className="btn primary" style={{ textDecoration: 'none' }}>🌍 Launch 3D Earth (beta)</a>
+          </div>
         </div>
       </section>
 
