@@ -117,6 +117,7 @@ import Crosswalks from "./pages/Crosswalks";
 import CharterArticle from "./pages/CharterArticle";
 import ContentPage from "./pages/ContentPage";
 import SovereignTown from "./pages/SovereignTown";
+import OscalStudio from "./pages/OscalStudio";
 import { frameworksdata } from "./data/frameworks-content";
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
@@ -281,7 +282,8 @@ function App() {
                   <Route path="/sectors/:slug">{(p: any) => <ContentPage dataset={sectorsdata} slug={p.slug} />}</Route>
                   <Route path="/industries/:slug">{(p: any) => <ContentPage dataset={industriesdata} slug={p.slug} />}</Route>
                   <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
-                  <Route path="/sovereign-town" component={SovereignTown} />
+                  <Route path="/oscal" component={OscalStudio} />
+            <Route path="/sovereign-town" component={SovereignTown} />
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
