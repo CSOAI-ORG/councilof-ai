@@ -207,5 +207,26 @@ app.get("/api/sovereign-town/export", async (_req, res) => {
   }
 });
 
+// ---------------------------------------------------------------- MCP fleet
+// Streams the live MCP deployment manifest (216 servers). Set GITHUB_TOKEN for the
+// private manifest, or MCP_MANIFEST_URL to point at any hosted copy.
+let _mcpCache = { at: 0, data: null };
+app.get("/api/mcp", async (_req, res) => {
+  if (_mcpCache.data && Date.now() - _mcpCache.at < 300_000) return res.json(_mcpCache.data);
+  const url = process.env.MCP_MANIFEST_URL || "https://raw.githubusercontent.com/CSOAI-ORG/clawd-workspace/main/MCP_DEPLOYMENT_MANIFEST.json";
+  try {
+    const r = await fetch(url, { headers: process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, "User-Agent": "csoai-api" } : { "User-Agent": "csoai-api" } });
+    const m = await r.json();
+    const servers = (m.deployable_servers || []).map((s) => ({
+      name: s.name, hive: s.hive, language: s.language,
+      ready: !!s.deployment_ready, auth: !!s.has_auth_middleware, version: s.version,
+      l0: s.deployment_ready ? "L0-3" : s.has_auth_middleware ? "L0-1" : "L0-0",
+    }));
+    const out = { total: m.total_servers ?? servers.length, hives: m.hive_count, generated_at: m.generated_at, servers };
+    _mcpCache = { at: Date.now(), data: out };
+    res.json(out);
+  } catch { res.status(502).json({ error: "manifest unavailable" }); }
+});
+
 app.use((_req, res) => res.status(404).json({ error: "not found" }));
 app.listen(PORT, () => console.log(`csoai-api listening on :${PORT}`));
