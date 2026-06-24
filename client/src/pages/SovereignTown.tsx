@@ -211,6 +211,29 @@ export default function SovereignTown() {
         </div>
       </section>
 
+      {/* Compliance tooling launcher — ties the live demo together */}
+      <section className="bg-gray-50 border-y border-gray-100">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <h2 className="text-2xl font-bold text-gray-900 text-center">Compliance tooling</h2>
+          <p className="mt-3 text-center text-gray-600 max-w-2xl mx-auto">
+            The governance moat, made operational — standards interoperability, continuous evidence, and the live grid.
+          </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { t: "OSCAL Studio", d: "Import/export NIST OSCAL — FedRAMP 20x ready.", href: "/oscal" },
+              { t: "Evidence Hub", d: "Continuous, automated compliance evidence.", href: "/evidence" },
+              { t: "Live governance grid", d: "The immersive globe across 177 jurisdictions.", href: "/globe.html" },
+              { t: "3D governance Earth", d: "Photorealistic CesiumJS globe (beta).", href: "/globe3d.html" },
+            ].map((x) => (
+              <a key={x.t} href={x.href} className="block rounded-2xl border border-gray-200 bg-white p-5 hover:border-emerald-300 hover:bg-emerald-50/40 transition">
+                <div className="font-semibold text-gray-900">{x.t} →</div>
+                <p className="mt-2 text-sm text-gray-600 leading-relaxed">{x.d}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA band */}
       <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white">
         <div className="max-w-5xl mx-auto px-6 py-16 text-center">
