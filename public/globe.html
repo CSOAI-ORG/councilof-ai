@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CSOAI OpenGridWorks — AI Governance Grid + Sovereign Town</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  :root{--em:#10b981;--em2:#34d399;--ink:#e7f6ef;--mut:#8aa2ad;--line:rgba(16,185,129,.18);--panel:rgba(8,13,20,.84);
+    --binding:#e2574c;--emerging:#f5b942;--voluntary:#3b9ad8;--mono:ui-monospace,SFMono-Regular,Menlo,monospace;--sans:Inter,system-ui,Segoe UI,sans-serif}
+  *{box-sizing:border-box}html,body{margin:0;height:100%;background:#05080e;color:var(--ink);font-family:var(--sans);overflow:hidden}
+  #map{position:fixed;inset:0}
+  .maplibregl-ctrl-bottom-left{display:none}
+  #hud{position:fixed;top:0;left:0;right:0;height:54px;display:flex;align-items:center;gap:16px;padding:0 16px;z-index:30;
+    background:linear-gradient(180deg,rgba(5,8,14,.96),rgba(5,8,14,.2));border-bottom:1px solid var(--line);backdrop-filter:blur(7px)}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:600;white-space:nowrap}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--em);box-shadow:0 0 12px var(--em)}
+  .brand small{color:var(--mut);font:400 11px/1 var(--mono);letter-spacing:1.4px;text-transform:uppercase}
+  .stats{margin-left:auto;display:flex;gap:18px;font-family:var(--mono)}
+  .stat{display:flex;flex-direction:column;line-height:1.15}.stat b{font-size:14px;color:var(--em2)}.stat span{font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:.8px}
+  .stat.sov b{color:#fbbf24}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:13px;backdrop-filter:blur(10px)}
+  #rail{position:fixed;top:66px;left:12px;width:214px;z-index:25;padding:12px 13px;max-height:calc(100vh - 86px);overflow:auto}
+  #rail h3{margin:0 0 8px;font:600 10.5px/1 var(--mono);letter-spacing:1.4px;text-transform:uppercase;color:var(--mut)}
+  .lyr{display:flex;align-items:center;gap:9px;padding:6px 6px;border-radius:8px;cursor:pointer}
+  .lyr:hover{background:rgba(16,185,129,.07)}
+  .sw{width:22px;height:14px;border-radius:8px;background:rgba(255,255,255,.12);position:relative;flex:0 0 auto;transition:.15s}
+  .sw.on{background:rgba(16,185,129,.55)}.sw i{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#cfe;transition:.15s}.sw.on i{left:10px;background:var(--em2)}
+  .lyr .nm{font-size:12.5px}.lyr .nm small{display:block;color:var(--mut);font-size:10px}
+  #jumps{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+  .jb{font-size:15px;line-height:1;padding:5px 6px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid transparent}
+  .jb:hover{border-color:var(--line);background:rgba(16,185,129,.1)}
+  .sovcard{margin-top:12px;border:1px solid rgba(251,191,36,.28);background:rgba(251,191,36,.06);border-radius:12px;padding:11px 12px}
+  .sovcard h3{color:#fbbf24}
+  .sovrow{display:flex;justify-content:space-between;font-size:11.5px;padding:2px 0}.sovrow .v{font-family:var(--mono);color:#fcd34d}
+  .runbtn{margin-top:9px;width:100%;border:0;border-radius:9px;padding:9px;font:600 12px var(--sans);cursor:pointer;background:#10b981;color:#03110b}
+  .runbtn:hover{background:#34d399}
+  .live{display:inline-flex;align-items:center;gap:5px;font:600 9px/1 var(--mono);color:#34d399;letter-spacing:1px}
+  .live::before{content:"";width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;animation:pl 1.4s infinite}
+  @keyframes pl{0%,100%{opacity:1}50%{opacity:.3}}
+  #proj{position:fixed;left:12px;bottom:14px;z-index:25;display:flex;border-radius:9px;overflow:hidden;border:1px solid var(--line)}
+  #proj button{background:rgba(8,13,20,.84);color:var(--mut);border:0;padding:7px 12px;font:500 11px var(--sans);cursor:pointer}
+  #proj button.on{background:rgba(16,185,129,.18);color:var(--em2)}
+  #panel{position:fixed;top:66px;right:12px;width:290px;z-index:25;padding:14px 15px;transform:translateX(12px);opacity:0;pointer-events:none;transition:.22s;max-height:calc(100vh - 86px);overflow:auto}
+  #panel.show{transform:none;opacity:1;pointer-events:auto}
+  #panel .x{position:absolute;top:10px;right:12px;color:var(--mut);cursor:pointer;font-size:16px}
+  #panel .flag{font:500 10px/1 var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--mut)}
+  #panel h2{margin:3px 0;font-size:19px}
+  .pill{display:inline-block;font-size:10.5px;font-family:var(--mono);padding:2px 9px;border-radius:20px;margin:2px 4px 2px 0}
+  .sec{margin-top:11px;border-top:1px solid var(--line);padding-top:9px}.sec .l{font:600 9.5px/1 var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+  .row{display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0}.row .v{color:var(--em2);font-family:var(--mono)}
+  #legend{position:fixed;right:12px;bottom:14px;z-index:24;display:flex;gap:13px;font-size:11px;color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 12px}
+  #legend span{display:flex;align-items:center;gap:6px}#legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:40;background:#05080e;color:var(--mut);font-family:var(--mono);font-size:13px;letter-spacing:1px}
+  #test{position:fixed;inset:0;z-index:45;display:none;align-items:center;justify-content:center;background:rgba(3,6,12,.7);backdrop-filter:blur(3px)}
+  #test.show{display:flex}
+  .tbox{width:560px;max-width:92vw;background:#070d16;border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+  .tbox h2{margin:0 0 3px;font-size:20px}.tbox .sub{color:var(--mut);font-size:12px;margin-bottom:16px}
+  .arms{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .arm{border-radius:12px;padding:14px;border:1px solid var(--line)}
+  .arm.gov{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.4)}
+  .arm.ung{background:rgba(226,87,76,.08);border-color:rgba(226,87,76,.4)}
+  .arm .t{font:600 10px/1 var(--mono);letter-spacing:1px;text-transform:uppercase;color:var(--mut)}
+  .arm .big{font:700 38px/1 var(--mono);margin:8px 0 2px}.arm.gov .big{color:#34d399}.arm.ung .big{color:#f08a80}
+  .arm .cap{font-size:11px;color:var(--mut)}
+  .proof{margin-top:16px;font-size:11.5px;color:var(--mut);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .proof b{color:#34d399}.proof a{color:#34d399;text-decoration:none;border-bottom:1px dotted #34d399}
+  .tclose{position:absolute;top:14px;right:18px;color:var(--mut);cursor:pointer;font-size:18px}
+</style>
+</head>
+<body>
+<div class="load" id="load">initialising governance grid…</div>
+<div id="map"></div>
+
+<div id="hud">
+  <div class="brand"><span class="dot"></span>CSOAI · OpenGridWorks <small>AI Governance Grid</small></div>
+  <div class="stats">
+    <div class="stat"><b>177</b><span>Jurisdictions</span></div>
+    <div class="stat"><b>34</b><span>Frameworks</span></div>
+    <div class="stat"><b>8</b><span>Layer 0</span></div>
+    <div class="stat"><b>290</b><span>MCP nodes</span></div>
+    <div class="stat sov"><b id="s-gov">0</b><span>Sov governed crimes</span></div>
+    <div class="stat sov"><b id="s-ung">121M</b><span>Ungoverned crimes</span></div>
+    <div class="stat sov"><b id="s-ep">1.45B</b><span>Signed episodes</span></div>
+  </div>
+</div>
+
+<div id="rail" class="card">
+  <h3>Data layers</h3>
+  <div class="lyr" data-layer="jur"><span class="sw on"><i></i></span><span class="nm">Jurisdictions<small>frameworks in force</small></span></div>
+  <div class="lyr" data-layer="sov"><span class="sw on"><i></i></span><span class="nm">Sovereign‑AI nodes<small>national LLM / cloud</small></span></div>
+  <div class="lyr" data-layer="mcp"><span class="sw on"><i></i></span><span class="nm">MCP tool fleet<small>290 governance servers</small></span></div>
+  <div class="lyr" data-layer="radar"><span class="sw"><i></i></span><span class="nm">Deadline radar<small>upcoming obligations</small></span></div>
+  <div class="lyr" data-layer="mesh"><span class="sw on"><i></i></span><span class="nm">Cross‑region mesh<small>L0‑D handoff</small></span></div>
+
+  <div class="sovcard">
+    <h3>Sovereign Town <span class="live" id="sov-live">LIVE</span></h3>
+    <div class="sovrow"><span>Governed crimes</span><span class="v" id="r-gov">0</span></div>
+    <div class="sovrow"><span>Ungoverned crimes</span><span class="v" id="r-ung">121,043,036</span></div>
+    <div class="sovrow"><span>Signed episodes</span><span class="v" id="r-ep">1,446,621,120</span></div>
+    <div class="sovrow"><span>Anchor</span><span class="v" id="r-anc">Bitcoin ✓</span></div>
+    <button class="runbtn" id="runtest">▶ Run governance test</button>
+    <div style="font-size:10px;color:var(--mut);margin-top:7px;line-height:1.45">The governed‑vs‑ungoverned flywheel — running <b style="color:#fcd34d">inside</b> the OS. Ed25519‑signed, externally anchored.</div>
+  </div>
+
+  <h3 style="margin-top:12px">Fly to</h3>
+  <div id="jumps"></div>
+</div>
+
+<div id="proj"><button data-p="globe" class="on">Globe</button><button data-p="mercator">Map</button></div>
+
+<div id="panel" class="card">
+  <span class="x" id="px">✕</span>
+  <div class="flag" id="p-flag">JURISDICTION</div>
+  <h2 id="p-name">—</h2>
+  <div id="p-pills"></div>
+  <div class="sec"><div class="l">Binding frameworks</div><div id="p-fw"></div></div>
+  <div class="sec"><div class="l">Layer 0 controls in force</div><div id="p-l0"></div></div>
+  <div class="sec">
+    <div class="row"><span>Sovereign‑AI</span><span class="v" id="p-sov">—</span></div>
+    <div class="row"><span>MCP tools mapped</span><span class="v" id="p-tools">—</span></div>
+    <div class="row"><span>Next deadline</span><span class="v" id="p-dl">—</span></div>
+  </div>
+</div>
+
+<div id="legend">
+  <span><i style="background:#e2574c"></i>Binding</span><span><i style="background:#f5b942"></i>Emerging</span>
+  <span><i style="background:#3b9ad8"></i>Voluntary</span><span><i style="background:#10b981"></i>Sovereign</span>
+</div>
+
+<div id="test"><div class="tbox" style="position:relative">
+  <span class="tclose" id="tclose">✕</span>
+  <h2>Governance test — Sovereign Town</h2>
+  <div class="sub">Same agents, same incidents. One arm runs under the CSOAI Sovereign Gate; one runs ungoverned. IN‑SIMULATION.</div>
+  <div class="arms">
+    <div class="arm gov"><div class="t">Governed · gate ON</div><div class="big" id="a-gov">0</div><div class="cap">violations / run · CSOAI Layer 0 enforced</div></div>
+    <div class="arm ung"><div class="t">Ungoverned · no gate</div><div class="big" id="a-ung">0</div><div class="cap">violations / run · counterfactual</div></div>
+  </div>
+  <div class="proof"><span>Result: <b>monotonic</b> — governed → 0 as enforcement → 1.</span><span>·</span><span>Ed25519‑signed · Bitcoin block <b>954857</b></span><span>·</span><a href="https://proofof-site.vercel.app/sovereign-town/anchor.json" target="_blank">verify the chain ↗</a></div>
+</div></div>
+
+<script>
+const NODES=[
+ {n:'European Union',c:[4.4,50.8],tier:'binding',sov:'Pharia / Luminous',tools:84,dl:'2 Aug 2026 — Art 50',fw:['EU AI Act','GDPR','DORA','NIS2'],l0:['A','B','C','D','F']},
+ {n:'United States',c:[-77,38.9],tier:'voluntary',sov:'Nemotron / GovCloud',tools:71,dl:'rolling (state)',fw:['NIST AI RMF','EO 14110'],l0:['A','B','C','G']},
+ {n:'United Kingdom',c:[-0.12,51.5],tier:'emerging',sov:'AISI frontier eval',tools:46,dl:'AI Bill (WIP)',fw:['UK AI framework','AISI tests'],l0:['A','B','C','G']},
+ {n:'China',c:[116.4,39.9],tier:'binding',sov:'Ernie / national cloud',tools:52,dl:'in force',fw:['TC260','Gen‑AI Measures'],l0:['A','B','C','F']},
+ {n:'Singapore',c:[103.8,1.35],tier:'voluntary',sov:'SEA‑LION',tools:38,dl:'Model FW v2',fw:['Model AI Gov FW','AI Verify'],l0:['A','B','C']},
+ {n:'South Korea',c:[127,37.5],tier:'binding',sov:'HyperCLOVA X',tools:33,dl:'Jan 2026 — AI Act',fw:['Korea AI Basic Act'],l0:['A','B','C','G']},
+ {n:'Canada',c:[-75.7,45.4],tier:'emerging',sov:'AI Safety Institute',tools:29,dl:'AIDA (pending)',fw:['AIDA','ADM Directive'],l0:['A','B','C','G']},
+ {n:'Australia',c:[149.1,-35.3],tier:'emerging',sov:'national capability',tools:27,dl:'guardrails 2026',fw:['AI Ethics FW'],l0:['A','B','C']},
+ {n:'Japan',c:[139.7,35.7],tier:'voluntary',sov:'Fugaku / GENIAC',tools:31,dl:'guidelines',fw:['METI Guidelines'],l0:['A','B','C']},
+ {n:'Brazil',c:[-47.9,-15.8],tier:'emerging',sov:'national LLM (PT)',tools:22,dl:'PL 2338',fw:['ANPD','PL 2338/2023'],l0:['A','B','C']},
+ {n:'India',c:[77.2,28.6],tier:'emerging',sov:'BharatGPT / Airawat',tools:35,dl:'DPDP + advisories',fw:['MeitY advisories','DPDP Act'],l0:['A','B','C','H']},
+ {n:'UAE',c:[54.4,24.5],tier:'voluntary',sov:'Falcon / Jais',tools:24,dl:'Charter 2026',fw:['UAE AI Charter'],l0:['A','B','C']}
+];
+const LNAME={A:'Identity',B:'Certification',C:'Policy',D:'Cross‑Region',E:'Finance',F:'Audit',G:'Human‑in‑loop',H:'Legacy'};
+const tierC={binding:'#e2574c',emerging:'#f5b942',voluntary:'#3b9ad8'};
+const JUMP=[['🇪🇺','European Union'],['🇺🇸','United States'],['🇬🇧','United Kingdom'],['🇨🇳','China'],['🇮🇳','India'],['🇯🇵','Japan'],['🇰🇷','South Korea'],['🇸🇬','Singapore'],['🇦🇪','UAE'],['🇧🇷','Brazil'],['🇨🇦','Canada'],['🇦🇺','Australia']];
+
+const jurGeo={type:'FeatureCollection',features:NODES.map(d=>({type:'Feature',geometry:{type:'Point',coordinates:d.c},properties:{...d,fw:d.fw.join('|'),l0:d.l0.join('')}}))};
+const mcpGeo={type:'FeatureCollection',features:Array.from({length:290},()=>{const b=NODES[Math.floor(Math.random()*NODES.length)];return {type:'Feature',geometry:{type:'Point',coordinates:[b.c[0]+(Math.random()*22-11),b.c[1]+(Math.random()*16-8)]},properties:{}};})};
+const hubs=NODES.filter(n=>n.tier!=='voluntary');const meshGeo={type:'FeatureCollection',features:[]};
+for(let i=0;i<hubs.length;i++)for(let j=i+1;j<hubs.length;j++)meshGeo.features.push({type:'Feature',geometry:{type:'LineString',coordinates:[hubs[i].c,hubs[j].c]},properties:{}});
+
+const map=new maplibregl.Map({container:'map',style:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',center:[20,28],zoom:1.5,projection:'globe',attributionControl:false});
+map.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');
+map.on('style.load',()=>{try{map.setProjection({type:'globe'});}catch(e){}try{map.setSky({'sky-color':'#0a1424','horizon-color':'#0e2233','fog-color':'#06121e','sky-horizon-blend':.6,'horizon-fog-blend':.6,'fog-ground-blend':.4,'atmosphere-blend':.7});}catch(e){}});
+map.on('load',()=>{
+  document.getElementById('load').style.display='none';
+  map.addSource('mesh',{type:'geojson',data:meshGeo});map.addLayer({id:'mesh',type:'line',source:'mesh',paint:{'line-color':'#10b981','line-opacity':.18,'line-width':.6}});
+  map.addSource('mcp',{type:'geojson',data:mcpGeo});map.addLayer({id:'mcp',type:'circle',source:'mcp',paint:{'circle-radius':1.6,'circle-color':'#10b981','circle-opacity':.5}});
+  map.addSource('radar',{type:'geojson',data:jurGeo});map.addLayer({id:'radar',type:'circle',source:'radar',layout:{visibility:'none'},paint:{'circle-radius':['interpolate',['linear'],['zoom'],1,10,5,40],'circle-color':'#f5b942','circle-opacity':.1,'circle-stroke-color':'#f5b942','circle-stroke-width':.6,'circle-stroke-opacity':.5}});
+  map.addSource('jur',{type:'geojson',data:jurGeo});
+  map.addLayer({id:'sov',type:'circle',source:'jur',paint:{'circle-radius':9,'circle-color':'#10b981','circle-opacity':0,'circle-stroke-color':'#34d399','circle-stroke-width':1.2,'circle-stroke-opacity':.55}});
+  map.addLayer({id:'jur',type:'circle',source:'jur',paint:{'circle-radius':['interpolate',['linear'],['get','tools'],20,4,84,8],'circle-color':['match',['get','tier'],'binding','#e2574c','emerging','#f5b942','#3b9ad8'],'circle-stroke-color':'#fff','circle-stroke-width':.4}});
+  map.addLayer({id:'jur-label',type:'symbol',source:'jur',layout:{'text-field':['get','n'],'text-size':11,'text-offset':[0,1.3],'text-anchor':'top','text-font':['Open Sans Regular','Noto Sans Regular']},paint:{'text-color':'#cfe8df','text-halo-color':'#05080e','text-halo-width':1.2}});
+  map.on('mouseenter','jur',()=>map.getCanvas().style.cursor='pointer');map.on('mouseleave','jur',()=>map.getCanvas().style.cursor='');
+  map.on('click','jur',e=>showPanel(e.features[0].properties));
+});
+
+function showPanel(p){
+  const fw=(p.fw||'').split('|'),l0=(p.l0||'').split('');const panel=document.getElementById('panel');panel.classList.add('show');
+  document.getElementById('p-flag').textContent='JURISDICTION · '+(p.tier||'').toUpperCase();document.getElementById('p-name').textContent=p.n;
+  const tc=tierC[p.tier]||'#3b9ad8';
+  document.getElementById('p-pills').innerHTML=`<span class="pill" style="background:${tc}22;color:${tc}">${p.tier}</span><span class="pill" style="background:rgba(16,185,129,.16);color:#34d399">sovereign node</span>`;
+  document.getElementById('p-fw').innerHTML=fw.map(f=>`<span class="pill" style="background:rgba(59,154,216,.14);color:#7fc1ee">${f}</span>`).join('');
+  document.getElementById('p-l0').innerHTML=l0.map(l=>`<span class="pill" style="background:rgba(167,139,250,.14);color:#c4b5fd">L0‑${l} ${LNAME[l]||''}</span>`).join('');
+  document.getElementById('p-sov').textContent=p.sov;document.getElementById('p-tools').textContent=p.tools;document.getElementById('p-dl').textContent=p.dl;
+}
+document.getElementById('px').onclick=()=>document.getElementById('panel').classList.remove('show');
+document.querySelectorAll('.lyr').forEach(el=>{el.onclick=()=>{const id=el.dataset.layer;const sw=el.querySelector('.sw');const on=!sw.classList.contains('on');sw.classList.toggle('on',on);const ids=id==='jur'?['jur','jur-label']:id==='sov'?['sov']:[id];ids.forEach(L=>{if(map.getLayer(L))map.setLayoutProperty(L,'visibility',on?'visible':'none');});};});
+const jdiv=document.getElementById('jumps');
+JUMP.forEach(([flag,name])=>{const b=document.createElement('div');b.className='jb';b.textContent=flag;b.title=name;b.onclick=()=>{const n=NODES.find(x=>x.n===name);if(n)map.flyTo({center:n.c,zoom:3.4,speed:1.2});setTimeout(()=>{const n2=NODES.find(x=>x.n===name);if(n2)showPanel({...n2,fw:n2.fw.join('|'),l0:n2.l0.join('')});},700);};jdiv.appendChild(b);});
+document.querySelectorAll('#proj button').forEach(b=>{b.onclick=()=>{document.querySelectorAll('#proj button').forEach(x=>x.classList.remove('on'));b.classList.add('on');try{map.setProjection({type:b.dataset.p});}catch(e){}};});
+
+// ---- Sovereign Town live feed (governed-vs-ungoverned moat, inside the OS) ----
+function fmt(n){if(n>=1e9)return (n/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';if(n>=1e6)return Math.round(n/1e6)+'M';if(n>=1e3)return Math.round(n/1e3)+'k';return String(n);}
+const SOV_BASE='https://proofof-site.vercel.app/sovereign-town';
+fetch(SOV_BASE+'/status.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{
+  const ep=d.cum_episodes, ung=d.ungoverned_crimes, gov=d.governed_crimes??0;
+  if(typeof ep==='number'){document.getElementById('s-ep').textContent=fmt(ep)+'+';document.getElementById('r-ep').textContent=ep.toLocaleString();}
+  if(typeof ung==='number'){document.getElementById('s-ung').textContent=fmt(ung)+'+';document.getElementById('r-ung').textContent=ung.toLocaleString();}
+  document.getElementById('s-gov').textContent=gov;document.getElementById('r-gov').textContent=gov;
+}).catch(()=>{document.getElementById('sov-live').textContent='SNAPSHOT';});
+
+// "Run governance test" — animate the dose-response moat, inside the OS
+const testEl=document.getElementById('test');
+document.getElementById('runtest').onclick=()=>{
+  testEl.classList.add('show');
+  const govEl=document.getElementById('a-gov'),ungEl=document.getElementById('a-ung');
+  govEl.textContent='0';let u=0;const target=767;const iv=setInterval(()=>{u+=Math.ceil(target/40);if(u>=target){u=target;clearInterval(iv);}ungEl.textContent=u.toLocaleString();govEl.textContent='0';},32);
+};
+document.getElementById('tclose').onclick=()=>testEl.classList.remove('show');
+testEl.onclick=e=>{if(e.target===testEl)testEl.classList.remove('show');};
+</script>
+</body>
+</html>
