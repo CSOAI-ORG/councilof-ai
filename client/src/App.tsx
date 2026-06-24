@@ -125,6 +125,7 @@ import Webhooks from "./pages/Webhooks";
 import ComplianceCommandCenter from "./pages/ComplianceCommandCenter";
 import PolicyGenerator from "./pages/PolicyGenerator";
 import RiskHeatmap from "./pages/RiskHeatmap";
+import OsLauncher from "./pages/OsLauncher";
 import { frameworksdata } from "./data/frameworks-content";
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
@@ -293,6 +294,7 @@ function App() {
             <Route path="/framework-catalog" component={FrameworkCatalog} />
             <Route path="/command-center" component={ComplianceCommandCenter} />
             <Route path="/policy-generator" component={PolicyGenerator} />
+            <Route path="/os" component={OsLauncher} />
             <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />
             <Route path="/evidence" component={EvidenceHub} />
