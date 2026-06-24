@@ -14,6 +14,7 @@ import Contact from './pages/contact/Contact';
 import Terms from './pages/legal/Terms';
 import Privacy from './pages/legal/Privacy';
 import Cookies from './pages/legal/Cookies';
+import SovereignTown from './pages/sovereign-town/SovereignTown';
 import Layer0 from './pages/layer0/Layer0';
 import OpenGridWorks from './pages/opengridworks/OpenGridWorks';
 import System from './pages/system/System';
@@ -52,6 +53,7 @@ const Navigation = () => {
           <Link to="/use-cases" onClick={() => setMobileMenuOpen(false)}>Use Cases</Link>
           <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
           <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+          <Link to="/sovereign-town" onClick={() => setMobileMenuOpen(false)}>Sovereign Town</Link>
           <a href="/#pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
           <Link to="/contact" className="btn primary btn-nav" onClick={() => setMobileMenuOpen(false)}>
             Get Started
@@ -88,6 +90,7 @@ const Footer = () => {
             <Link to="/free-risk-check">Free Risk Check</Link>
             <Link to="/layer0">Layer 0</Link>
             <Link to="/use-cases">Use Cases</Link>
+            <Link to="/sovereign-town">Sovereign Town</Link>
             <a href="/#pricing">Pricing</a>
             <a href="/#documentation">Documentation</a>
           </div>
@@ -152,6 +155,7 @@ const AppWithRouter = () => {
             <Route path="/legal/terms" element={<Terms />} />
             <Route path="/legal/privacy" element={<Privacy />} />
             <Route path="/legal/cookies" element={<Cookies />} />
+            <Route path="/sovereign-town" element={<SovereignTown />} />
           </Routes>
         </main>
 
