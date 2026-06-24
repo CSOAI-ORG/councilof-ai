@@ -15,6 +15,7 @@ import Terms from './pages/legal/Terms';
 import Privacy from './pages/legal/Privacy';
 import Cookies from './pages/legal/Cookies';
 import Layer0 from './pages/layer0/Layer0';
+import OpenGridWorks from './pages/opengridworks/OpenGridWorks';
 import Layer0 from './pages/layer0/Layer0';
 
 const Navigation = () => {
@@ -39,6 +40,7 @@ const Navigation = () => {
           <Link to="/about" onClick={() => setMobileMenuOpen(false)}>About</Link>
           <Link to="/how-it-works" onClick={() => setMobileMenuOpen(false)}>How It Works</Link>
           <Link to="/layer0" onClick={() => setMobileMenuOpen(false)}>Layer 0</Link>
+          <Link to="/opengridworks" onClick={() => setMobileMenuOpen(false)}>Reg Map</Link>
           <Link to="/layer0" onClick={() => setMobileMenuOpen(false)}>Layer 0</Link>
           <Link to="/use-cases" onClick={() => setMobileMenuOpen(false)}>Use Cases</Link>
           <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
@@ -120,6 +122,7 @@ const AppWithRouter = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/layer0" element={<Layer0 />} />
+            <Route path="/opengridworks" element={<OpenGridWorks />} />
             <Route path="/layer0" element={<Layer0 />} />
             <Route path="/about" element={<About />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
