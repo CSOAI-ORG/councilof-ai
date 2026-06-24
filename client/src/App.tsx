@@ -122,6 +122,9 @@ import EvidenceHub from "./pages/EvidenceHub";
 import ModelRegistry from "./pages/ModelRegistry";
 import FrameworkCatalog from "./pages/FrameworkCatalog";
 import Webhooks from "./pages/Webhooks";
+import ComplianceCommandCenter from "./pages/ComplianceCommandCenter";
+import PolicyGenerator from "./pages/PolicyGenerator";
+import RiskHeatmap from "./pages/RiskHeatmap";
 import { frameworksdata } from "./data/frameworks-content";
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
@@ -288,6 +291,9 @@ function App() {
                   <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
                   <Route path="/models" component={ModelRegistry} />
             <Route path="/framework-catalog" component={FrameworkCatalog} />
+            <Route path="/command-center" component={ComplianceCommandCenter} />
+            <Route path="/policy-generator" component={PolicyGenerator} />
+            <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />
             <Route path="/evidence" component={EvidenceHub} />
             <Route path="/oscal" component={OscalStudio} />
