@@ -25,6 +25,9 @@ const navigation = [
       name: "Tools",
       icon: Shield,
       submenu: [
+        { name: "Command Center", href: "/command-center", icon: BarChart3, description: "Your whole governance program on one screen" },
+        { name: "AI Policy Generator", href: "/policy-generator", icon: BookOpen, description: "Generate a board-ready AI policy" },
+        { name: "Risk Heatmap", href: "/risk-heatmap", icon: Shield, description: "Likelihood x impact risk matrix" },
         { name: "Sovereign Town", href: "/sovereign-town", icon: Shield, description: "The signed record of AI governance" },
         { name: "OSCAL Studio", href: "/oscal", icon: Settings, description: "Import/export NIST OSCAL, FedRAMP 20x ready" },
         { name: "Evidence Hub", href: "/evidence", icon: BarChart3, description: "Continuous compliance evidence" },
