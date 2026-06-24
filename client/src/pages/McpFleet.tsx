@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+const API: string = ((import.meta as any).env && (import.meta as any).env.VITE_API_BASE) || "";
 
 // MCP Fleet — the real CSOAI/MEOK governance MCP fleet, sourced from the deployment
 // manifest (MCP_DEPLOYMENT_MANIFEST.json, generated 2026-06-14). 216 servers across
@@ -58,7 +60,24 @@ const hiveColor: Record<string, string> = {
 
 export default function McpFleet() {
   const [q, setQ] = useState("");
-  const list = useMemo(() => SERVERS.filter((s) => s.n.includes(q.toLowerCase())), [q]);
+  const [liveServers, setLiveServers] = useState<{ n: string; h: string }[] | null>(null);
+  const [liveTotal, setLiveTotal] = useState(TOTAL);
+
+  useEffect(() => {
+    if (!API) return;
+    fetch(`${API}/api/mcp`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d.servers)) {
+          setLiveServers(d.servers.map((s: any) => ({ n: s.name, h: (s.hive || "").replace("meok-", "") })));
+          if (d.total) setLiveTotal(d.total);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const SRC = liveServers || SERVERS;
+  const list = useMemo(() => SRC.filter((s) => s.n.includes(q.toLowerCase())), [q, SRC]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -97,7 +116,7 @@ export default function McpFleet() {
           <h2 className="text-xl font-bold text-gray-900">Servers</h2>
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search servers…" className="w-56 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-emerald-400 focus:outline-none" />
         </div>
-        <p className="mt-1 text-xs text-gray-500">Showing {list.length} of {TOTAL} — full fleet streams from <code className="text-emerald-700">/api/mcp</code> once the gateway is live.</p>
+        <p className="mt-1 text-xs text-gray-500">Showing {list.length} of {liveTotal}{liveServers ? " (live)" : ""} — {liveServers ? "streamed from the gateway" : <>full fleet streams from <code className="text-emerald-700">/api/mcp</code> once the gateway is live</>}.</p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((s) => (
             <div key={s.n} className="rounded-xl border border-gray-200 p-4">
