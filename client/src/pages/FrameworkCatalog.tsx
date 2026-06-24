@@ -45,6 +45,13 @@ const FRAMEWORKS: Framework[] = [
   { name: "ISO 23894 (AI risk)", category: "AI", region: "Global", status: "Mapped" },
 ];
 
+// Acknowledged gaps — handled via CSOAI's specialist partner network (honesty signal).
+const PARTNER_GAPS = [
+  "HITRUST", "FedRAMP", "EUCS", "APPI (Japan)", "PIPL (China)", "PDPA (Singapore)",
+  "DPDPA (India)", "LGPD (Brazil)", "Privacy Act (AU)", "PIPEDA (CA)", "GLBA / SOX",
+  "NERC CIP", "GxP / 21 CFR Part 11", "ISO 21434 / UN R155",
+];
+
 const statusColor: Record<Status, string> = {
   Supported: "bg-emerald-100 text-emerald-700 border-emerald-200",
   Mapped: "bg-blue-100 text-blue-700 border-blue-200",
@@ -116,6 +123,23 @@ export default function FrameworkCatalog() {
           ))}
         </div>
         {list.length === 0 && <p className="mt-6 text-sm text-gray-500">No frameworks match.</p>}
+
+        <div className="mt-12 rounded-2xl border border-gray-200 bg-gray-50 p-6">
+          <h2 className="text-lg font-bold text-gray-900">Acknowledged gaps — partner network</h2>
+          <p className="mt-2 max-w-3xl text-sm text-gray-600">
+            We don&rsquo;t pretend to cover everything. These regimes are handled through CSOAI&rsquo;s specialist
+            partner network rather than claimed directly &mdash; an honesty signal that builds trust, and a
+            revenue channel for certified partners.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {PARTNER_GAPS.map((g) => (
+              <span key={g} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-500">{g}</span>
+            ))}
+          </div>
+          <a href="mailto:nicholas@csoai.org?subject=CSOAI%20framework%20partner" className="mt-5 inline-block rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800">
+            Become a framework partner →
+          </a>
+        </div>
       </section>
     </div>
   );
