@@ -1,0 +1,21 @@
+# /etc/systemd/system/csoai-api.service
+[Unit]
+Description=CSOAI Governance API
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/csoai-api
+EnvironmentFile=/opt/csoai-api/.env
+ExecStart=/usr/bin/node /opt/csoai-api/server.js
+Restart=always
+RestartSec=3
+User=csoai
+Group=csoai
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/csoai-api
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
