@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // CSOAI Evidence Hub — continuous compliance evidence collection.
 // Closes HUNT_24 Tier-1 #10 (the #1 value prop of compliance automation).
@@ -51,7 +51,11 @@ const CONNECTORS: Connector[] = [
 const card = "rounded-2xl border border-gray-200 bg-white p-5";
 
 export default function EvidenceHub() {
-  const [connected, setConnected] = useState<Record<string, string>>({ github: ts(), okta: ts() });
+  const [connected, setConnected] = useState<Record<string, string>>(() => {
+    try { const v = localStorage.getItem("csoai_evidence"); if (v) return JSON.parse(v); } catch {}
+    return { github: ts(), okta: ts() };
+  });
+  useEffect(() => { try { localStorage.setItem("csoai_evidence", JSON.stringify(connected)); } catch {} }, [connected]);
 
   function ts() {
     return new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";

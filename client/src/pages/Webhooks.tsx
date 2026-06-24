@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // CSOAI Webhooks — real-time integration mesh.
 // Closes HUNT_24 Tier-1 #9 / Tier-2 #17 (webhooks + Jira/ServiceNow/Slack).
@@ -26,10 +26,14 @@ const SAMPLE_DELIVERIES: Delivery[] = [
 ];
 
 export default function Webhooks() {
-  const [hooks, setHooks] = useState<Hook[]>([
-    { id: "wh_1", url: "https://hooks.slack.com/services/T000/B000/xxx", events: ["control.failed", "finding.created"], active: true },
-    { id: "wh_2", url: "https://example.atlassian.net/rest/api/webhook", events: ["finding.created"], active: true },
-  ]);
+  const [hooks, setHooks] = useState<Hook[]>(() => {
+    try { const v = localStorage.getItem("csoai_webhooks"); if (v) return JSON.parse(v); } catch {}
+    return [
+      { id: "wh_1", url: "https://hooks.slack.com/services/T000/B000/xxx", events: ["control.failed", "finding.created"], active: true },
+      { id: "wh_2", url: "https://example.atlassian.net/rest/api/webhook", events: ["finding.created"], active: true },
+    ];
+  });
+  useEffect(() => { try { localStorage.setItem("csoai_webhooks", JSON.stringify(hooks)); } catch {} }, [hooks]);
   const [url, setUrl] = useState("");
   const [picked, setPicked] = useState<string[]>(["control.failed"]);
 

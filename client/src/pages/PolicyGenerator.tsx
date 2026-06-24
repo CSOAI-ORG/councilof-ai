@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // CSOAI AI Policy Generator — HUNT_24 Tier-2 #13 ("highest-ROI AI use case in compliance").
 // Generates a tailored AI governance policy document from a few inputs, mapped to the
@@ -17,11 +17,13 @@ const FRAMEWORK_CLAUSES: Record<string, string> = {
 };
 
 export default function PolicyGenerator() {
-  const [org, setOrg] = useState("Acme AI");
-  const [tier, setTier] = useState<(typeof TIERS)[number]>("High");
-  const [useCase, setUseCase] = useState("customer-facing decision support");
-  const [picked, setPicked] = useState<string[]>(["EU AI Act", "NIST AI RMF", "ISO 42001"]);
+  const saved = (() => { try { return JSON.parse(localStorage.getItem("csoai_policy") || "{}"); } catch { return {}; } })();
+  const [org, setOrg] = useState<string>(saved.org ?? "Acme AI");
+  const [tier, setTier] = useState<(typeof TIERS)[number]>(saved.tier ?? "High");
+  const [useCase, setUseCase] = useState<string>(saved.useCase ?? "customer-facing decision support");
+  const [picked, setPicked] = useState<string[]>(saved.picked ?? ["EU AI Act", "NIST AI RMF", "ISO 42001"]);
   const [out, setOut] = useState("");
+  useEffect(() => { try { localStorage.setItem("csoai_policy", JSON.stringify({ org, tier, useCase, picked })); } catch {} }, [org, tier, useCase, picked]);
 
   function toggle(f: string) {
     setPicked((p) => (p.includes(f) ? p.filter((x) => x !== f) : [...p, f]));
