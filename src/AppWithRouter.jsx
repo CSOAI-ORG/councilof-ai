@@ -14,6 +14,8 @@ import Contact from './pages/contact/Contact';
 import Terms from './pages/legal/Terms';
 import Privacy from './pages/legal/Privacy';
 import Cookies from './pages/legal/Cookies';
+import Layer0 from './pages/layer0/Layer0';
+import Layer0 from './pages/layer0/Layer0';
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -36,6 +38,8 @@ const Navigation = () => {
         <div className={`nav-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
           <Link to="/about" onClick={() => setMobileMenuOpen(false)}>About</Link>
           <Link to="/how-it-works" onClick={() => setMobileMenuOpen(false)}>How It Works</Link>
+          <Link to="/layer0" onClick={() => setMobileMenuOpen(false)}>Layer 0</Link>
+          <Link to="/layer0" onClick={() => setMobileMenuOpen(false)}>Layer 0</Link>
           <Link to="/use-cases" onClick={() => setMobileMenuOpen(false)}>Use Cases</Link>
           <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
           <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
@@ -115,6 +119,8 @@ const AppWithRouter = () => {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/layer0" element={<Layer0 />} />
+            <Route path="/layer0" element={<Layer0 />} />
             <Route path="/about" element={<About />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/use-cases" element={<UseCases />} />
