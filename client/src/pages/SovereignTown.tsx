@@ -29,24 +29,24 @@ const FRAMEWORKS = [
 
 const EXPLAINERS = [
   {
-    t: "What is governed-vs-ungoverned?",
-    d: "A counterfactual measure of the harm governance prevents — same agents, two futures.",
-    href: "/opengridworks",
+    t: "Explore the live governance grid →",
+    d: "The immersive globe — 177 jurisdictions, sovereign nodes, the MCP fleet and the Sovereign Town feed, live on one Earth.",
+    href: "/globe.html",
   },
   {
-    t: "What is external anchoring?",
-    d: "Why every episode is Ed25519-signed and committed to Bitcoin, so the record can't be quietly rewritten.",
-    href: "https://proofof.ai/sovereign-town",
+    t: "See the 3D governance Earth (beta) →",
+    d: "A photorealistic CesiumJS globe with agent swarms and cross-region handoff arcs.",
+    href: "/globe3d.html",
   },
   {
-    t: "What is a Sovereign passport?",
-    d: "An offline-verifiable attestation of an agent's identity and governance state.",
+    t: "Track global AI regulation",
+    d: "Every binding and emerging framework in force, mapped across 177 jurisdictions.",
+    href: "/regulation-tracker",
+  },
+  {
+    t: "Verify a Sovereign passport",
+    d: "Offline-verify any agent's identity and governance state directly on the chain.",
     href: "https://proofof.ai/passport",
-  },
-  {
-    t: "What is Layer 0?",
-    d: "The governance substrate the eight trust layers — and Sovereign Town — stand on.",
-    href: "/layer0",
   },
 ];
 
