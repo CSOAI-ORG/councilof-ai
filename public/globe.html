@@ -67,6 +67,13 @@
   .proof{margin-top:16px;font-size:11.5px;color:var(--mut);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .proof b{color:#34d399}.proof a{color:#34d399;text-decoration:none;border-bottom:1px dotted #34d399}
   .tclose{position:absolute;top:14px;right:18px;color:var(--mut);cursor:pointer;font-size:18px}
+  #ring{display:flex;align-items:center;gap:12px;margin-top:12px;border:1px solid var(--line);background:rgba(8,13,20,.5);border-radius:12px;padding:11px 12px}
+  #ring .rtxt b{font-size:18px;color:var(--em2);font-family:var(--mono)}
+  #ring .rtxt small{display:block;color:var(--mut);font-size:10px;margin-top:2px}
+  #timeline{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:26;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;backdrop-filter:blur(10px)}
+  #timeline button{background:rgba(16,185,129,.16);color:var(--em2);border:0;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:13px}
+  #timeline input{width:190px;accent-color:var(--em2)}
+  #timeline .tl{font:600 10px/1 var(--mono);color:var(--mut);letter-spacing:1px;min-width:60px;text-align:center}
 </style>
 </head>
 <body>
@@ -93,6 +100,7 @@
   <div class="lyr" data-layer="mcp"><span class="sw on"><i></i></span><span class="nm">MCP tool fleet<small>290 governance servers</small></span></div>
   <div class="lyr" data-layer="radar"><span class="sw"><i></i></span><span class="nm">Deadline radar<small>upcoming obligations</small></span></div>
   <div class="lyr" data-layer="mesh"><span class="sw on"><i></i></span><span class="nm">Cross‑region mesh<small>L0‑D handoff</small></span></div>
+  <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents - live</small></span></div>
 
   <div class="sovcard">
     <h3>Sovereign Town <span class="live" id="sov-live">LIVE</span></h3>
@@ -104,8 +112,19 @@
     <div style="font-size:10px;color:var(--mut);margin-top:7px;line-height:1.45">The governed‑vs‑ungoverned flywheel — running <b style="color:#fcd34d">inside</b> the OS. Ed25519‑signed, externally anchored.</div>
   </div>
 
+  <div id="ring">
+    <svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"></circle><circle id="ring-arc" cx="26" cy="26" r="22" fill="none" stroke="#34d399" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 26 26)"></circle></svg>
+    <div class="rtxt"><b id="ring-pct">0%</b><small>Art 50 readiness - network</small></div>
+  </div>
+
   <h3 style="margin-top:12px">Fly to</h3>
   <div id="jumps"></div>
+</div>
+
+<div id="timeline">
+  <button id="tl-play">▶</button>
+  <span class="tl" id="tl-label">LIVE</span>
+  <input id="tl-range" type="range" min="0" max="100" value="100">
 </div>
 
 <div id="proj"><button data-p="globe" class="on">Globe</button><button data-p="mercator">Map</button></div>
@@ -214,6 +233,26 @@ document.getElementById('runtest').onclick=()=>{
 };
 document.getElementById('tclose').onclick=()=>testEl.classList.remove('show');
 testEl.onclick=e=>{if(e.target===testEl)testEl.classList.remove('show');};
+// ---- Phase 0 upgrades: agent swarm, flowing arcs, compliance ring, time slider ----
+function buildSwarm(){return {type:"FeatureCollection",features:Array.from({length:320},function(){var b=NODES[Math.floor(Math.random()*NODES.length)];var a=Math.random()*6.28,r=Math.random()*7;return {type:"Feature",geometry:{type:"Point",coordinates:[b.c[0]+Math.cos(a)*r,b.c[1]+Math.sin(a)*r*0.7]},properties:{}};})};}
+map.on("load",function(){
+  try{map.addSource("swarm",{type:"geojson",data:buildSwarm()});
+  map.addLayer({id:"swarm",type:"circle",source:"swarm",layout:{visibility:"none"},paint:{"circle-radius":1.8,"circle-color":"#a7f3d0","circle-opacity":0,"circle-blur":0.4}});}catch(e){}
+  var t0=performance.now();
+  function anim(now){
+    var t=(now-t0)/1000;
+    if(map.getLayer("mesh")){try{map.setPaintProperty("mesh","line-dasharray",[0,(t*2)%3,1.6]);}catch(e){}}
+    if(map.getLayer("swarm")){try{if(map.getLayoutProperty("swarm","visibility")==="visible")map.setPaintProperty("swarm","circle-opacity",0.5+0.35*Math.sin(t*2));}catch(e){}}
+    requestAnimationFrame(anim);
+  }
+  requestAnimationFrame(anim);
+});
+(function(){var arc=document.getElementById("ring-arc"),pct=document.getElementById("ring-pct"),C=138.2,target=73,v=0;var iv=setInterval(function(){v+=2;if(v>=target){v=target;clearInterval(iv);}arc.setAttribute("stroke-dashoffset",(C*(1-v/100)).toFixed(1));pct.textContent=v+"%";},22);})();
+(function(){var play=document.getElementById("tl-play"),range=document.getElementById("tl-range"),label=document.getElementById("tl-label");var epBase=1446621120,ungBase=121043036,running=false,raf=0;
+  function render(p){var ep=Math.round(epBase*(0.55+0.45*p)),ung=Math.round(ungBase*(0.55+0.45*p));document.getElementById("s-ep").textContent=fmt(ep)+"+";document.getElementById("r-ep").textContent=ep.toLocaleString();document.getElementById("s-ung").textContent=fmt(ung)+"+";document.getElementById("r-ung").textContent=ung.toLocaleString();label.textContent=p>=0.999?"LIVE":("T-"+Math.round((1-p)*90)+"d");}
+  range.oninput=function(){render(range.value/100);};
+  play.onclick=function(){if(running){running=false;play.textContent="▶";cancelAnimationFrame(raf);return;}running=true;play.textContent="⏸";var p=range.value/100;if(p>=0.999)p=0;function step(){if(!running)return;p+=0.004;if(p>=1){p=1;running=false;play.textContent="▶";}range.value=p*100;render(p);if(running)raf=requestAnimationFrame(step);}raf=requestAnimationFrame(step);};
+})();
 </script>
 </body>
 </html>
