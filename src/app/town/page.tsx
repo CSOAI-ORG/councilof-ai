@@ -1,7 +1,3 @@
-'use client';
-
-export const metadata = { title: 'Town — CSOAI' };
-
 export default function Page() {
   return <div dangerouslySetInnerHTML={{ __html: `<div class="container">
     <p style="color:#7df0c0;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI \\u00b7 Sovereign Town \\u00b7 Layer 0</p>

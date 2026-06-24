@@ -1,7 +1,3 @@
-'use client';
-
-export const metadata = { title: 'Markets — CSOAI' };
-
 export default function Page() {
   return <div dangerouslySetInnerHTML={{ __html: `<div class="container">
     <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · Coverage Atlas</p>

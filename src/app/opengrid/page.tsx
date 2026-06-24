@@ -1,7 +1,3 @@
-'use client';
-
-export const metadata = { title: 'Opengrid — CSOAI' };
-
 export default function Page() {
   return <div dangerouslySetInnerHTML={{ __html: `<div class="app">
     <!-- TOP BAR -->
