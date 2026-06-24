@@ -16,6 +16,11 @@ import Privacy from './pages/legal/Privacy';
 import Cookies from './pages/legal/Cookies';
 import Layer0 from './pages/layer0/Layer0';
 import OpenGridWorks from './pages/opengridworks/OpenGridWorks';
+import System from './pages/system/System';
+import FreeRiskCheck from './pages/free-risk-check/FreeRiskCheck';
+import Atlas from './pages/atlas/Atlas';
+import SoaiPdca from './pages/soai-pdca/SoaiPdca';
+import McpFleet from './pages/mcp/McpFleet';
 import Layer0 from './pages/layer0/Layer0';
 
 const Navigation = () => {
@@ -41,6 +46,8 @@ const Navigation = () => {
           <Link to="/how-it-works" onClick={() => setMobileMenuOpen(false)}>How It Works</Link>
           <Link to="/layer0" onClick={() => setMobileMenuOpen(false)}>Layer 0</Link>
           <Link to="/opengridworks" onClick={() => setMobileMenuOpen(false)}>Reg Map</Link>
+          <Link to="/atlas" onClick={() => setMobileMenuOpen(false)}>Atlas</Link>
+          <Link to="/free-risk-check" onClick={() => setMobileMenuOpen(false)}>Free Check</Link>
           <Link to="/layer0" onClick={() => setMobileMenuOpen(false)}>Layer 0</Link>
           <Link to="/use-cases" onClick={() => setMobileMenuOpen(false)}>Use Cases</Link>
           <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
@@ -73,6 +80,13 @@ const Footer = () => {
           <div className="footer-section">
             <h4>Product</h4>
             <Link to="/how-it-works">How It Works</Link>
+            <Link to="/opengridworks">Reg Map</Link>
+            <Link to="/atlas">Atlas</Link>
+            <Link to="/system">System</Link>
+            <Link to="/soai-pdca">SOAI-PDCA</Link>
+            <Link to="/mcp">MCP Fleet</Link>
+            <Link to="/free-risk-check">Free Risk Check</Link>
+            <Link to="/layer0">Layer 0</Link>
             <Link to="/use-cases">Use Cases</Link>
             <a href="/#pricing">Pricing</a>
             <a href="/#documentation">Documentation</a>
@@ -123,6 +137,11 @@ const AppWithRouter = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/layer0" element={<Layer0 />} />
             <Route path="/opengridworks" element={<OpenGridWorks />} />
+            <Route path="/system" element={<System />} />
+            <Route path="/free-risk-check" element={<FreeRiskCheck />} />
+            <Route path="/atlas" element={<Atlas />} />
+            <Route path="/soai-pdca" element={<SoaiPdca />} />
+            <Route path="/mcp" element={<McpFleet />} />
             <Route path="/layer0" element={<Layer0 />} />
             <Route path="/about" element={<About />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
