@@ -119,6 +119,9 @@ import ContentPage from "./pages/ContentPage";
 import SovereignTown from "./pages/SovereignTown";
 import OscalStudio from "./pages/OscalStudio";
 import EvidenceHub from "./pages/EvidenceHub";
+import ModelRegistry from "./pages/ModelRegistry";
+import FrameworkCatalog from "./pages/FrameworkCatalog";
+import Webhooks from "./pages/Webhooks";
 import { frameworksdata } from "./data/frameworks-content";
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
@@ -283,7 +286,10 @@ function App() {
                   <Route path="/sectors/:slug">{(p: any) => <ContentPage dataset={sectorsdata} slug={p.slug} />}</Route>
                   <Route path="/industries/:slug">{(p: any) => <ContentPage dataset={industriesdata} slug={p.slug} />}</Route>
                   <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
-                  <Route path="/evidence" component={EvidenceHub} />
+                  <Route path="/models" component={ModelRegistry} />
+            <Route path="/framework-catalog" component={FrameworkCatalog} />
+            <Route path="/webhooks" component={Webhooks} />
+            <Route path="/evidence" component={EvidenceHub} />
             <Route path="/oscal" component={OscalStudio} />
             <Route path="/sovereign-town" component={SovereignTown} />
                   <Route path="/prosperity" component={ProsperityFund} />
