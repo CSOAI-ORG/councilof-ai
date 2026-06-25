@@ -11,6 +11,7 @@ const APPS: App[] = [
   { name: "Command Center", desc: "Your whole governance program on one screen.", href: "/command-center", glyph: "◉", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Layer 0 Protocol", desc: "The 8 trust controls every governed agent stands on.", href: "/layer0", glyph: "▥", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
   { name: "Regulation Atlas", desc: "Live AI law across 40+ jurisdictions — what applies, what to do.", href: "/global-regulations", glyph: "❖", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
+  { name: "Governance Pulse", desc: "Live feed of every regulation move worldwide — synced daily from the grid.", href: "/pulse", glyph: "◈", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
   { name: "Readiness Check", desc: "Free 2-minute AI governance maturity assessment.", href: "/readiness-assessment", glyph: "✓", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Framework Crosswalks", desc: "One control set mapped across EU AI Act, NIST, ISO 42001, TC260.", href: "/crosswalks", glyph: "⇄", tone: "from-blue-500/20 to-blue-400/5 border-blue-400/30" },
   { name: "MCP Fleet", desc: "216 governed MCP servers across 10 hives — Layer 0 wrapped.", href: "/mcp-fleet", glyph: "⊟", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
