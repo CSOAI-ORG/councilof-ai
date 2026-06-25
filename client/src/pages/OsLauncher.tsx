@@ -24,6 +24,7 @@ const APPS: App[] = [
   { name: "Policy Generator", desc: "Generate a board-ready AI policy in seconds.", href: "/policy-generator", glyph: "✎", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Risk Heatmap", desc: "Likelihood × impact matrix + risk register.", href: "/risk-heatmap", glyph: "▦", tone: "from-rose-500/20 to-rose-400/5 border-rose-400/30" },
   { name: "Webhooks", desc: "Real-time, HMAC-signed integration mesh.", href: "/webhooks", glyph: "⌁", tone: "from-cyan-500/20 to-cyan-400/5 border-cyan-400/30" },
+  { name: "Sovereign Academy", desc: "Learn governance as a guided journey \u2014 Foundations to certification.", href: "/academy", glyph: "\u2738", tone: "from-violet-500/20 to-violet-400/5 border-violet-400/30" },
   { name: "Get Certified", desc: "Earn a Watchdog Certificate — provable proof your AI is governed.", href: "/certification", glyph: "✦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
   { name: "Pricing & Plans", desc: "From a free risk check to enterprise governance.", href: "/pricing", glyph: "◆", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
 ];
