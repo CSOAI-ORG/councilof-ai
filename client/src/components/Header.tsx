@@ -213,6 +213,8 @@ export function Header() {
                 Home
               </a>
 
+              <a href="/try" className={`px-3 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${isActive('/try') ? 'text-white bg-emerald-600' : 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100'}`}>⚖ Try the Council</a>
+
               {/* Main Nav Items */}
               {navigation.map((item) => (
                 <div
@@ -408,6 +410,8 @@ export function Header() {
               >
                 Home
               </a>
+
+              <a href="/try" className="block px-4 py-3 rounded-lg font-bold text-emerald-700 bg-emerald-50" onClick={() => setMobileMenuOpen(false)}>⚖ Try the Council</a>
 
               {navigation.map((item) => (
                 <div key={item.name} className="space-y-1">
