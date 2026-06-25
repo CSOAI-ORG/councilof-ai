@@ -23,6 +23,8 @@ const APPS: App[] = [
   { name: "Policy Generator", desc: "Generate a board-ready AI policy in seconds.", href: "/policy-generator", glyph: "✎", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Risk Heatmap", desc: "Likelihood × impact matrix + risk register.", href: "/risk-heatmap", glyph: "▦", tone: "from-rose-500/20 to-rose-400/5 border-rose-400/30" },
   { name: "Webhooks", desc: "Real-time, HMAC-signed integration mesh.", href: "/webhooks", glyph: "⌁", tone: "from-cyan-500/20 to-cyan-400/5 border-cyan-400/30" },
+  { name: "Get Certified", desc: "Earn a Watchdog Certificate — provable proof your AI is governed.", href: "/certification", glyph: "✦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
+  { name: "Pricing & Plans", desc: "From a free risk check to enterprise governance.", href: "/pricing", glyph: "◆", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
 ];
 
 function fmt(n: number) {
@@ -83,8 +85,9 @@ export default function OsLauncher() {
               app — all standing on one signed Layer 0 floor, externally anchored to Bitcoin.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href="/globe.html" className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Launch the globe →</a>
-              <a href="/command-center" className="rounded-lg border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Open Command Center</a>
+              <a href="/certification" className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get certified →</a>
+              <a href="/globe.html" className="rounded-lg border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Launch the globe</a>
+              <a href="/command-center" className="rounded-lg border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Command Center</a>
             </div>
           </div>
           {/* layer 0 readiness ring */}
