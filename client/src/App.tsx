@@ -128,6 +128,7 @@ import PolicyGenerator from "./pages/PolicyGenerator";
 import RiskHeatmap from "./pages/RiskHeatmap";
 import OsLauncher from "./pages/OsLauncher";
 import OsEnter from "./pages/OsEnter";
+import SovereignDock from "./components/SovereignDock";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
 import { frameworksdata } from "./data/frameworks-content";
@@ -225,6 +226,7 @@ function WidgetRouter() {
             </Switch>
           </WidgetLayout>
           <Toaster position="top-right" />
+      <SovereignDock />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
