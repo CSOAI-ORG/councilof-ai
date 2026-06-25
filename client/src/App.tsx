@@ -48,6 +48,7 @@ import ComplianceScorecard from "./pages/ComplianceScorecard";
 import KnowledgeBase from "./pages/KnowledgeBase";
 import EnterpriseOnboarding from "./pages/EnterpriseOnboarding";
 import Pricing from "./pages/Pricing";
+import Payg from "./pages/Payg";
 import WatchdogLeaderboard from "./pages/WatchdogLeaderboard";
 import RegulatorDashboard from "./pages/RegulatorDashboard";
 import Blog from "./pages/Blog";
@@ -264,6 +265,7 @@ function App() {
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
+                  <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
                   <Route path="/careers" component={Careers} />
                   {/* Key CSOAI pages */}
