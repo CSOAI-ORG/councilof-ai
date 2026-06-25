@@ -302,6 +302,14 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
 
+            {/* OpenGridWorks OS launcher */}
+            <a
+              href="/os"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
+            >
+              <span className="text-base leading-none">⊞</span> Open OS
+            </a>
+
             {user ? (
               <>
                 <NotificationCenter />
@@ -429,6 +437,9 @@ export function Header() {
               ))}
 
               <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
+                <a href="/os" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊞ Open the OS</Button>
+                </a>
                 {user ? (
                   <>
                     <a href="/dashboard" className="block">
