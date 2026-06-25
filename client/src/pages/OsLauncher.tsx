@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 type App = { name: string; desc: string; href: string; glyph: string; tone: string; ext?: boolean };
 
 const APPS: App[] = [
+  { name: "Try the Council", desc: "30-second WOW — type a compliance question, watch 5 AI agents debate it, get a risk verdict. The front door.", href: "/try", glyph: "◆", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
   { name: "Sovereign Town", desc: "The signed record of AI governance — governed vs ungoverned, live.", href: "/sovereign-town", glyph: "▦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
   { name: "Command Center", desc: "Your whole governance program on one screen.", href: "/command-center", glyph: "◉", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Layer 0 Protocol", desc: "The 8 trust controls every governed agent stands on.", href: "/layer0", glyph: "▥", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
