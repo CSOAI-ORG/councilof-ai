@@ -133,6 +133,7 @@ import SovereignAcademy from "./pages/SovereignAcademy";
 import SovereignRegistry from "./pages/SovereignRegistry";
 import SovereignHives from "./pages/SovereignHives";
 import GovernancePulse from "./pages/GovernancePulse";
+import LegacyBridge from "./pages/LegacyBridge";
 import SovereignDock from "./components/SovereignDock";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
@@ -315,6 +316,8 @@ function App() {
           <Route path="/pulse" component={GovernancePulse} />
           <Route path="/join" component={SovereignRegistry} />
           <Route path="/distribution" component={Distribution} />
+          <Route path="/legacy" component={LegacyBridge} />
+          <Route path="/cobol" component={LegacyBridge} />
             <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />
             <Route path="/evidence" component={EvidenceHub} />
