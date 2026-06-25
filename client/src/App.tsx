@@ -128,6 +128,7 @@ import PolicyGenerator from "./pages/PolicyGenerator";
 import RiskHeatmap from "./pages/RiskHeatmap";
 import OsLauncher from "./pages/OsLauncher";
 import OsEnter from "./pages/OsEnter";
+import SovereignTour from "./pages/SovereignTour";
 import SovereignDock from "./components/SovereignDock";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
@@ -303,6 +304,7 @@ function App() {
             <Route path="/mcp-fleet" component={McpFleet} />
             <Route path="/os" component={OsLauncher} />
           <Route path="/enter" component={OsEnter} />
+          <Route path="/tour" component={SovereignTour} />
           <Route path="/distribution" component={Distribution} />
             <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />

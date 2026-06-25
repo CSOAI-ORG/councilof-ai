@@ -26,6 +26,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
 ];
 
 const QUICK: { label: string; href: string }[] = [
+  { label: "Take the tour", href: "/tour" },
   { label: "Industries & Regulations", href: "/global-regulations" },
   { label: "Crosswalks", href: "/crosswalks" },
   { label: "Sovereign Town", href: "/sovereign-town" },
