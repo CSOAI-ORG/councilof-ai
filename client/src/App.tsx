@@ -130,6 +130,7 @@ import OsLauncher from "./pages/OsLauncher";
 import OsEnter from "./pages/OsEnter";
 import SovereignTour from "./pages/SovereignTour";
 import SovereignAcademy from "./pages/SovereignAcademy";
+import SovereignRegistry from "./pages/SovereignRegistry";
 import SovereignDock from "./components/SovereignDock";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
@@ -307,6 +308,8 @@ function App() {
           <Route path="/enter" component={OsEnter} />
           <Route path="/tour" component={SovereignTour} />
           <Route path="/academy" component={SovereignAcademy} />
+          <Route path="/register" component={SovereignRegistry} />
+          <Route path="/join" component={SovereignRegistry} />
           <Route path="/distribution" component={Distribution} />
             <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />
