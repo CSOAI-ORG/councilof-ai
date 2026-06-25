@@ -25,6 +25,18 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /\bos\b|home|launch|grid|everything/i, href: "/os", label: "the OS launcher" },
 ];
 
+const KNOWLEDGE: { re: RegExp; a: string }[] = [
+  { re: /what.?s? layer ?0|explain layer ?0/i, a: "Layer 0 is the trust floor for AI: eight controls — identity (did:csoai), runtime policy / PDCA, agentic-finance pre-checks, a legacy bridge and cross-region handoff — plus Ed25519 attestation and A2A. Every governed agent stands on it." },
+  { re: /eu ai act/i, a: "The EU AI Act is the EU's risk-tiered AI law; Article 50 transparency duties bite first. I can map your systems to it — open Crosswalks or the Regulation Atlas and I'll show what applies." },
+  { re: /\bnist\b/i, a: "NIST AI RMF is the US voluntary framework: Govern, Map, Measure, Manage. I crosswalk it to the EU AI Act and ISO 42001 so you comply once and satisfy many." },
+  { re: /iso ?42001/i, a: "ISO/IEC 42001 is the certifiable AI management system standard. It pairs with our Evidence Hub and the Certification path." },
+  { re: /crosswalk/i, a: "Crosswalks map one control set across the EU AI Act, NIST AI RMF, ISO 42001 and TC260 — do the work once, prove it everywhere. Want me to open them?" },
+  { re: /how .*(comply|start)|where .*start/i, a: "Start with a free Readiness Check; then I pre-load the regulations for your region, generate a board-ready policy, collect evidence, and take you to certification. Say 'readiness' and I'll begin." },
+  { re: /who are you|what are you/i, a: "I am your Sovereign — the agent-first interface to the CSOAI OS. Speak or type and I act: open any tool, explain any framework, and with the gateway live, do the governance work for you." },
+  { re: /pulse|what.?s? new|latest|recent/i, a: "The Governance Pulse is the live feed of every regulation move worldwide, synced daily. Say 'pulse' and I'll open it." },
+  { re: /hive|queen|sov3/i, a: "Every tool is its own hive with a sovereign queen — sov3 — that learns from your usage and ensembles with the others, all governed by Layer 0. See the Hive Grid." },
+];
+
 const QUICK: { label: string; href: string }[] = [
   { label: "Take the tour", href: "/tour" },
   { label: "Industries & Regulations", href: "/global-regulations" },
@@ -49,7 +61,7 @@ export default function SovereignDock() {
     if (!voiceOn || msgs.length <= 1) return;
     var last = msgs[msgs.length - 1];
     if (last && last.role === "sov") {
-      try { var u = new SpeechSynthesisUtterance(last.text); u.rate = 1.03; u.pitch = 1; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {}
+      try { var u = new SpeechSynthesisUtterance(last.text); u.rate = 1.03; u.pitch = 1; var vs = window.speechSynthesis.getVoices(); var pick = vs.find((vo) => /Google US English|Samantha|Daniel|Microsoft Aria|en-US/i.test(vo.name + " " + vo.lang)); if (pick) u.voice = pick; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {}
     }
   }, [msgs, voiceOn]);
 
@@ -59,6 +71,8 @@ export default function SovereignDock() {
     setMsgs((m) => m.concat({ role: "you", text: t }));
     setInput("");
     const hit = ROUTES.find((r) => r.re.test(t));
+    const know = KNOWLEDGE.find((k) => k.re.test(t));
+    if (know && !hit) { setMsgs((m) => m.concat({ role: "sov", text: know.a })); return; }
     if (hit) {
       setMsgs((m) => m.concat({ role: "sov", text: "Opening " + hit.label + " \u2014 taking you there now." }));
       setTimeout(() => { window.location.assign(hit.href); }, 650);
