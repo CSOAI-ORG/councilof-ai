@@ -140,6 +140,7 @@ import SovTowns from "./pages/SovTowns";
 import SovereignMinds from "./pages/SovereignMinds";
 import TryCouncil from "./pages/TryCouncil";
 import Lineage from "./pages/Lineage";
+import RelevanceMap from "./pages/RelevanceMap";
 import SovereignDock from "./components/SovereignDock";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
@@ -329,6 +330,8 @@ function App() {
           <Route path="/minds" component={SovereignMinds} />
           <Route path="/try" component={TryCouncil} />
           <Route path="/lineage" component={Lineage} />
+          <Route path="/map" component={RelevanceMap} />
+          <Route path="/relevance-map" component={RelevanceMap} />
           <Route path="/rediscovered" component={Lineage} />
           <Route path="/demo" component={TryCouncil} />
           <Route path="/voice" component={SovereignMinds} />

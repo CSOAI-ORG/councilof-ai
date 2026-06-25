@@ -9,6 +9,7 @@ type App = { name: string; desc: string; href: string; glyph: string; tone: stri
 const APPS: App[] = [
   { name: "Try the Council", desc: "30-second WOW — type a compliance question, watch 5 AI agents debate it, get a risk verdict. The front door.", href: "/try", glyph: "◆", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
   { name: "Rediscovered, Not Invented", desc: "The 4,000-year lineage — every CSOAI system mapped to the ancient original that ran empires.", href: "/lineage", glyph: "𓉴", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30" },
+  { name: "Relevance Map", desc: "What governs what — pick your industry, see the relevant CSOAI bridges, frameworks and gaps.", href: "/map", glyph: "◌", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
   { name: "Sovereign Town", desc: "The signed record of AI governance — governed vs ungoverned, live.", href: "/sovereign-town", glyph: "▦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
   { name: "Command Center", desc: "Your whole governance program on one screen.", href: "/command-center", glyph: "◉", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Layer 0 Protocol", desc: "The 8 trust controls every governed agent stands on.", href: "/layer0", glyph: "▥", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
