@@ -30,10 +30,15 @@ export default function OsEnter() {
   const [phase, setPhase] = useState(0);
   const [loc, setLoc] = useState<Loc | null>(null);
   const [err, setErr] = useState(false);
+  const [deltas, setDeltas] = useState<any[]>([]);
 
   useEffect(() => {
     document.title = "Enter the CSOAI World";
     const boot = setTimeout(() => setPhase(1), 1500);
+    fetch("https://raw.githubusercontent.com/CSOAI-ORG/csoai-dashboard/main/client/public/data/regulation-deltas.json", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => { if (Array.isArray(d)) setDeltas(d.slice(-40).reverse()); })
+      .catch(() => {});
     fetch("https://ipapi.co/json/")
       .then((r) => r.json())
       .then((d) => {
@@ -99,6 +104,18 @@ export default function OsEnter() {
                 ))}
               </div>
               <p className="mt-3 text-[13px] leading-snug text-emerald-50/70">Pre-loaded: the regulations and crosswalks that apply to you, with sample scenarios for your region on Sovereign Town. No setup, no training required {"\u2014"} your Sovereign helps automatically. Prefer to learn? Immersive courses are inside.</p>
+              <div className="mt-4 border-t border-emerald-400/15 pt-3">
+                <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Live regulation pulse · synced from the grid</div>
+                {deltas.length === 0 ? (
+                  <div className="mt-1 text-[12px] text-emerald-50/50">Syncing the latest moves…</div>
+                ) : (
+                  <ul className="mt-2 space-y-1.5">
+                    {deltas.slice(0, 3).map((d, i) => (
+                      <li key={i} className="text-[12px] leading-snug text-emerald-50/75"><span className="font-semibold text-emerald-300/80">{d.frameworkSlug || d.kind || "update"}</span> · {d.summary}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
 
             <div className="mt-6 flex w-full flex-wrap justify-center gap-3">
