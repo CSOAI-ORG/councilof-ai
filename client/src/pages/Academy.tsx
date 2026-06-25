@@ -1,0 +1,75 @@
+import { useEffect, useState } from "react";
+
+// Academy - training + demo distribution surface. Turns the OS into courses anyone can
+// learn from and share. Each track is a short, sharable path through the live OS.
+type Track = { id: string; name: string; level: string; mins: number; blurb: string; steps: { t: string; href: string }[] };
+const TRACKS: Track[] = [
+  { id: "found", name: "Foundations of AI Governance", level: "Beginner", mins: 20, blurb: "Why governance, where it comes from, and how the OS decides.", steps: [
+    { t: "Rediscovered, Not Invented - 4,000 years", href: "/lineage" },
+    { t: "The Hive - how consensus works", href: "/hive" },
+    { t: "The 4-Wing Model", href: "/dragonfly" },
+    { t: "Try the Council yourself", href: "/try" },
+  ]},
+  { id: "law", name: "Know Your Jurisdiction", level: "Beginner", mins: 15, blurb: "Read the cross-layer law stack for any place.", steps: [
+    { t: "MEOK Law by jurisdiction", href: "/meok-law" },
+    { t: "Framework Temples", href: "/temples" },
+    { t: "Relevance Map", href: "/map" },
+  ]},
+  { id: "sector", name: "Govern Your Sector", level: "Practitioner", mins: 25, blurb: "Find your industry, its frameworks, and the next steps.", steps: [
+    { t: "Sector Atlas - find your sector", href: "/sectors" },
+    { t: "Industry Playbooks", href: "/playbooks" },
+    { t: "Ask the Council about your system", href: "/try" },
+  ]},
+  { id: "build", name: "Build on the OS", level: "Advanced", mins: 30, blurb: "Legacy bridging, sovereign towns, and the distribution model.", steps: [
+    { t: "Legacy Bridge", href: "/legacy" },
+    { t: "Sov Towns - the multiplication engine", href: "/towns" },
+    { t: "Services - the whole OS", href: "/services" },
+  ]},
+];
+
+export default function Academy() {
+  useEffect(() => { document.title = "CSOAI Academy - learn + demo the governance OS"; }, []);
+  const [t, setT] = useState("found");
+  const track = TRACKS.find((x) => x.id === t) || TRACKS[0];
+  return (
+    <div className="min-h-screen bg-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
+        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
+        <div className="relative max-w-6xl mx-auto px-6">
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - academy</p>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Learn the OS in an afternoon</h1>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Short, shareable tracks that walk you through the live OS - perfect for onboarding, demos, and distribution. Pick a track, follow the steps, send the link.</p>
+        </div>
+      </section>
+      <section className="max-w-6xl mx-auto px-6 py-10 grid gap-8 lg:grid-cols-[300px_1fr] items-start">
+        <div className="space-y-2">
+          {TRACKS.map((x) => (
+            <button key={x.id} onClick={() => setT(x.id)} className={"w-full rounded-xl border px-4 py-3 text-left transition-colors " + (t === x.id ? "border-emerald-400 bg-emerald-50" : "border-gray-200 hover:bg-gray-50")}>
+              <div className="font-bold text-gray-900">{x.name}</div>
+              <div className="text-xs text-gray-500">{x.level} - {x.mins} min</div>
+            </button>
+          ))}
+        </div>
+        <div className="rounded-2xl border border-gray-200 p-6">
+          <div className="text-xs font-bold uppercase tracking-wide text-emerald-700">{track.level} - {track.mins} min</div>
+          <div className="mt-1 text-2xl font-black text-gray-900">{track.name}</div>
+          <p className="mt-1 text-gray-600">{track.blurb}</p>
+          <ol className="mt-5 space-y-3">
+            {track.steps.map((s, i) => (
+              <li key={s.href}>
+                <a href={s.href} className="flex items-center gap-3 rounded-xl border border-gray-200 px-4 py-3 hover:border-emerald-300 hover:bg-emerald-50/40">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-black text-white">{i + 1}</span>
+                  <span className="font-semibold text-gray-800">{s.t}</span>
+                  <span className="ml-auto text-emerald-700 font-bold">-&gt;</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+            Share this track as a demo: send the first link and let them walk the OS themselves. Every step is live.
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
