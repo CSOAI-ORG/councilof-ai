@@ -14,6 +14,7 @@ const APPS: App[] = [
   { name: "Readiness Check", desc: "Free 2-minute AI governance maturity assessment.", href: "/readiness-assessment", glyph: "✓", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Framework Crosswalks", desc: "One control set mapped across EU AI Act, NIST, ISO 42001, TC260.", href: "/crosswalks", glyph: "⇄", tone: "from-blue-500/20 to-blue-400/5 border-blue-400/30" },
   { name: "MCP Fleet", desc: "216 governed MCP servers across 10 hives — Layer 0 wrapped.", href: "/mcp-fleet", glyph: "⊟", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
+  { name: "Hive Grid", desc: "Every tool a hive with a sovereign queen — learning, aware, ensembled.", href: "/hives", glyph: "⬡", tone: "from-violet-500/20 to-violet-400/5 border-violet-400/30" },
   { name: "Distribution", desc: "Every endpoint we ship to — PyPI, npm, glama, mcpize, GitHub — with Layer 0 coverage.", href: "/distribution", glyph: "⌖", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
   { name: "Immersive Globe", desc: "177 jurisdictions, sovereign nodes, agent swarm — one Earth.", href: "/globe.html", glyph: "◍", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30", ext: true },
   { name: "3D Governance Earth", desc: "Photorealistic CesiumJS globe with cross-region arcs.", href: "/globe3d.html", glyph: "✺", tone: "from-sky-500/20 to-sky-400/5 border-sky-400/30", ext: true },
