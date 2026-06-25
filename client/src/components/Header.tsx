@@ -51,6 +51,9 @@ const navigation = [
       { name: 'Framework Temples', href: '/temples', description: 'Each regulation at its real-world seat' },
       { name: 'Rediscovered, Not Invented', href: '/lineage', description: 'The 4,000-year governance architecture' },
       { name: 'Sov Towns', href: '/towns', description: 'The learning multiplication engine' },
+      { name: 'Sector Atlas', href: '/sectors', description: 'All CASA sectors mapped to frameworks + risk tier' },
+      { name: 'Services', href: '/services', description: 'The whole OS, end to end' },
+      { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
       { name: 'Open the OS', href: '/os', description: 'The full launcher' },
     ]
   },
