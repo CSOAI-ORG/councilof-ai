@@ -226,7 +226,6 @@ function WidgetRouter() {
             </Switch>
           </WidgetLayout>
           <Toaster position="top-right" />
-      <SovereignDock />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
@@ -444,6 +443,7 @@ function App() {
                   },
                 }}
               />
+              <SovereignDock />
             </TooltipProvider>
           </AnalyticsProvider>
         </AuthProvider>
