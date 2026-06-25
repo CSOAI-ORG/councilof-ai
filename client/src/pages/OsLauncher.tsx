@@ -11,6 +11,7 @@ const APPS: App[] = [
   { name: "Rediscovered, Not Invented", desc: "The 4,000-year lineage — every CSOAI system mapped to the ancient original that ran empires.", href: "/lineage", glyph: "𓉴", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30" },
   { name: "Relevance Map", desc: "What governs what — pick your industry, see the relevant CSOAI bridges, frameworks and gaps.", href: "/map", glyph: "◌", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
   { name: "Framework Temples", desc: "Each regulation a temple at its real-world seat — step inside for the visual breakdown.", href: "/temples", glyph: "卂", tone: "from-amber-500/20 to-teal-400/5 border-amber-400/30" },
+  { name: "Industry Playbooks", desc: "For your sector: the AI scenario, risk tier, frameworks, the CSOAI bridges that cover you, and the steps.", href: "/playbooks", glyph: "▣", tone: "from-emerald-500/20 to-sky-400/5 border-emerald-400/30" },
   { name: "Sovereign Town", desc: "The signed record of AI governance — governed vs ungoverned, live.", href: "/sovereign-town", glyph: "▦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
   { name: "Command Center", desc: "Your whole governance program on one screen.", href: "/command-center", glyph: "◉", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Layer 0 Protocol", desc: "The 8 trust controls every governed agent stands on.", href: "/layer0", glyph: "▥", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },

@@ -142,6 +142,7 @@ import TryCouncil from "./pages/TryCouncil";
 import Lineage from "./pages/Lineage";
 import RelevanceMap from "./pages/RelevanceMap";
 import Temples from "./pages/Temples";
+import Playbooks from "./pages/Playbooks";
 import SovereignDock from "./components/SovereignDock";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
@@ -333,6 +334,8 @@ function App() {
           <Route path="/lineage" component={Lineage} />
           <Route path="/map" component={RelevanceMap} />
           <Route path="/temples" component={Temples} />
+          <Route path="/playbooks" component={Playbooks} />
+          <Route path="/industry-playbooks" component={Playbooks} />
           <Route path="/framework-temples" component={Temples} />
           <Route path="/relevance-map" component={RelevanceMap} />
           <Route path="/rediscovered" component={Lineage} />
