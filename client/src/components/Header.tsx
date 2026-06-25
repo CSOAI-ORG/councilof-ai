@@ -37,6 +37,24 @@ const navigation = [
       ],
     },
   {
+    name: 'The OS',
+    href: '/os',
+    icon: Globe2,
+    description: 'The agentic governance OS',
+    submenu: [
+      { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus on your question' },
+      { name: 'MEOK Law', href: '/meok-law', description: 'What governs you here, cross-layer by jurisdiction' },
+      { name: 'The 4-Wing Model', href: '/dragonfly', description: 'The dragonfly architecture + BFT Council' },
+      { name: 'The Hive', href: '/hive', description: 'How BFT consensus is reached' },
+      { name: 'Industry Playbooks', href: '/playbooks', description: 'For your sector: frameworks, bridges, steps' },
+      { name: 'Relevance Map', href: '/map', description: 'What governs what - bridges, frameworks, gaps' },
+      { name: 'Framework Temples', href: '/temples', description: 'Each regulation at its real-world seat' },
+      { name: 'Rediscovered, Not Invented', href: '/lineage', description: 'The 4,000-year governance architecture' },
+      { name: 'Sov Towns', href: '/towns', description: 'The learning multiplication engine' },
+      { name: 'Open the OS', href: '/os', description: 'The full launcher' },
+    ]
+  },
+  {
     name: 'Charter',
     href: '/charter',
     icon: FileText,
