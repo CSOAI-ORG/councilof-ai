@@ -40,9 +40,18 @@ export default function SovereignDock() {
   const [input, setInput] = useState("");
   const [msgs, setMsgs] = useState<Msg[]>([{ role: "sov", text: "I am your Sovereign. Tell me what to do \u2014 say it or type it, and I take you there. Soon I will do the work for you." }]);
   const [listening, setListening] = useState(false);
+  const [voiceOn, setVoiceOn] = useState(true);
   const endRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [msgs, open]);
+
+  useEffect(() => {
+    if (!voiceOn || msgs.length <= 1) return;
+    var last = msgs[msgs.length - 1];
+    if (last && last.role === "sov") {
+      try { var u = new SpeechSynthesisUtterance(last.text); u.rate = 1.03; u.pitch = 1; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {}
+    }
+  }, [msgs, voiceOn]);
 
   function act(text: string) {
     const t = (text || "").trim();
@@ -87,6 +96,7 @@ export default function SovereignDock() {
               <div className="text-sm font-bold text-emerald-100">Your Sovereign</div>
               <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">CSOAI OS {"\u00B7"} agent-first</div>
             </div>
+            <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} aria-label="Toggle voice" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{voiceOn ? "🔊" : "🔇"}</button>
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>
           </div>
 
