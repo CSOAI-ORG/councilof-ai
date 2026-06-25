@@ -1,18 +1,18 @@
 # Sovereign Overnight Learner — Heartbeat
-**Last updated**: 2026-06-24 22:44:38 UTC
+**Last updated**: 2026-06-25 01:44:39 UTC
 **Running since**: 16:00 UTC
-**Hours active**: 6.7
-**Cycles completed**: 22
+**Hours active**: 9.7
+**Cycles completed**: 33
 
 ## Stats
 | Metric | Count |
 |--------|-------|
-| Dreams | 22 |
-| Reflections | 22 |
-| Maintenance cycles | 22 |
-| Memories created | 44 |
+| Dreams | 33 |
+| Reflections | 33 |
+| Maintenance cycles | 33 |
+| Memories created | 66 |
 | Model retrains | 0 |
-| Errors | 7 |
+| Errors | 11 |
 
 ## Status
 🟢 ACTIVE — Learning in progress

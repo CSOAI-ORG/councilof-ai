@@ -1,22 +1,24 @@
 {
-  "generated_at": "2026-06-24T22:53:55.835329+00:00",
-  "all_ok": true,
-  "critical_failures": [],
+  "generated_at": "2026-06-25T04:14:25.835334+00:00",
+  "all_ok": false,
+  "critical_failures": [
+    "csoai.org"
+  ],
   "results": [
     {
       "name": "csoai.org",
       "url": "https://csoai.org",
       "critical": true,
-      "checked_at": "2026-06-24T22:53:54.551018+00:00",
-      "status_code": 200,
-      "body_preview": "<!doctype html>\n<html lang=\"en\" class=\"dark\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>CSOAI \u2014 The Sovereign AI Council \u00b7 Watchdog Cert ",
-      "ok": true
+      "checked_at": "2026-06-25T04:13:45.405861+00:00",
+      "status_code": 0,
+      "error": "<urlopen error timed out>",
+      "ok": false
     },
     {
       "name": "meok.ai",
       "url": "https://meok.ai",
       "critical": true,
-      "checked_at": "2026-06-24T22:53:54.687628+00:00",
+      "checked_at": "2026-06-25T04:14:05.505671+00:00",
       "status_code": 200,
       "body_preview": "<!DOCTYPE html><!--wJycJ2qx5V6Gx3tdARj_M--><html lang=\"en\" class=\"dark\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" href=\"/_ne",
       "ok": true
@@ -25,7 +27,7 @@
       "name": "cobolbridge.ai",
       "url": "https://cobolbridge.ai",
       "critical": true,
-      "checked_at": "2026-06-24T22:53:55.043316+00:00",
+      "checked_at": "2026-06-25T04:14:24.963527+00:00",
       "status_code": 200,
       "body_preview": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>COBOL Bridge - Modernize Legacy Systems</title>\n  <me",
       "ok": true
@@ -34,7 +36,7 @@
       "name": "proofof.ai",
       "url": "https://proofof.ai",
       "critical": true,
-      "checked_at": "2026-06-24T22:53:55.243824+00:00",
+      "checked_at": "2026-06-25T04:14:25.112757+00:00",
       "status_code": 200,
       "body_preview": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>ProofOf.AI \u2014 Digital Content Verification & Robot Saf",
       "ok": true
@@ -43,7 +45,7 @@
       "name": "meok-attestation-api",
       "url": "https://meok-attestation-api.vercel.app/health",
       "critical": true,
-      "checked_at": "2026-06-24T22:53:55.575883+00:00",
+      "checked_at": "2026-06-25T04:14:25.517445+00:00",
       "status_code": 200,
       "body_preview": "{\"ok\": true, \"status\": \"ok\", \"service\": \"meok-attestation-api\", \"kid\": \"v1\", \"version\": \"1.2.0\", \"ed25519\": true}",
       "ok": true
@@ -52,7 +54,7 @@
       "name": "sov3-local",
       "url": "http://127.0.0.1:3101/mcp",
       "critical": true,
-      "checked_at": "2026-06-24T22:53:55.827160+00:00",
+      "checked_at": "2026-06-25T04:14:25.824046+00:00",
       "status_code": 200,
       "body_preview": "{\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"tools\":[{\"name\":\"hermes_ask\",\"description\":\"Send a prompt to Hermes agent (Kimi K2.5 / Claude / Gemma) and get a response\",\"inputSchema\":{\"type\":\"object\",\"properties",
       "ok": true
@@ -61,18 +63,18 @@
       "name": "meok-api",
       "url": "http://127.0.0.1:3200/health",
       "critical": false,
-      "checked_at": "2026-06-24T22:53:55.828785+00:00",
+      "checked_at": "2026-06-25T04:14:25.828262+00:00",
       "status_code": 200,
-      "body_preview": "{\"status\":\"operational\",\"service\":\"meok-api\",\"version\":\"3.0.0\",\"timestamp\":\"2026-06-24T23:53:55.829681\",\"council_nodes\":36}",
+      "body_preview": "{\"status\":\"operational\",\"service\":\"meok-api\",\"version\":\"3.0.0\",\"timestamp\":\"2026-06-25T05:14:25.829310\",\"council_nodes\":36}",
       "ok": true
     },
     {
       "name": "meok-mcp",
       "url": "http://127.0.0.1:3102/health",
       "critical": false,
-      "checked_at": "2026-06-24T22:53:55.830565+00:00",
+      "checked_at": "2026-06-25T04:14:25.830574+00:00",
       "status_code": 200,
-      "body_preview": "{\"status\":\"healthy\",\"timestamp\":\"2026-06-24T23:53:55.833724\",\"version\":\"3.0.0\",\"components\":{\"neural_models\":{\"care_validation_nn\":{\"model_name\":\"care_validation_nn\",\"is_trained\":true,\"metrics\":{\"mse\"",
+      "body_preview": "{\"status\":\"healthy\",\"timestamp\":\"2026-06-25T05:14:25.833494\",\"version\":\"3.0.0\",\"components\":{\"neural_models\":{\"care_validation_nn\":{\"model_name\":\"care_validation_nn\",\"is_trained\":true,\"metrics\":{\"mse\"",
       "ok": true
     }
   ]
