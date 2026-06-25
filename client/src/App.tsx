@@ -137,6 +137,7 @@ import LegacyBridge from "./pages/LegacyBridge";
 import SocialOS from "./pages/SocialOS";
 import CrownJewels from "./pages/CrownJewels";
 import SovTowns from "./pages/SovTowns";
+import SovereignMinds from "./pages/SovereignMinds";
 import SovereignDock from "./components/SovereignDock";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
@@ -323,6 +324,8 @@ function App() {
           <Route path="/social" component={SocialOS} />
           <Route path="/jewels" component={CrownJewels} />
           <Route path="/towns" component={SovTowns} />
+          <Route path="/minds" component={SovereignMinds} />
+          <Route path="/voice" component={SovereignMinds} />
           <Route path="/sov-towns" component={SovTowns} />
           <Route path="/crown-jewels" component={CrownJewels} />
           <Route path="/cobol" component={LegacyBridge} />

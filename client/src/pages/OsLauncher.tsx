@@ -16,6 +16,7 @@ const APPS: App[] = [
   { name: "Social OS", desc: "Your AI character as your social presence — 50+ platforms, one inbox, governed posting.", href: "/social", glyph: "◐", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
   { name: "Crown Jewels", desc: "308 open-source goldmines + 121 black swans, tiered and mapped to the OS — the absorption marketplace.", href: "/jewels", glyph: "◆", tone: "from-cyan-500/20 to-amber-400/5 border-cyan-400/30" },
   { name: "Sov Towns", desc: "The learning multiplication engine — towns ingest white papers, simulate, spawn, and compound governed data.", href: "/towns", glyph: "❋", tone: "from-emerald-500/20 to-teal-400/5 border-emerald-400/30" },
+  { name: "Sovereign Minds", desc: "The cognition & voice layer — perceive, remember, reflect, plan, act. A mind for every town and node.", href: "/minds", glyph: "◉", tone: "from-emerald-500/20 to-cyan-400/5 border-emerald-400/30" },
   { name: "Readiness Check", desc: "Free 2-minute AI governance maturity assessment.", href: "/readiness-assessment", glyph: "✓", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Framework Crosswalks", desc: "One control set mapped across EU AI Act, NIST, ISO 42001, TC260.", href: "/crosswalks", glyph: "⇄", tone: "from-blue-500/20 to-blue-400/5 border-blue-400/30" },
   { name: "MCP Fleet", desc: "216 governed MCP servers across 10 hives — Layer 0 wrapped.", href: "/mcp-fleet", glyph: "⊟", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
