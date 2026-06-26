@@ -357,6 +357,12 @@ function App() {
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/sectors" component={SectorsAtlas} />
           <Route path="/compare" component={Compare} />
+          <Route path="/vs" component={Compare} />
+          <Route path="/vs-competitors" component={Compare} />
+          <Route path="/rfc-0024" component={Fedramp} />
+          <Route path="/aug-2026" component={Readiness} />
+          <Route path="/governance-council" component={Agents} />
+          <Route path="/council-vs-agents" component={Agents} />
           <Route path="/fedramp" component={Fedramp} />
           <Route path="/oscal-readiness" component={Fedramp} />
           <Route path="/readiness" component={Readiness} />
