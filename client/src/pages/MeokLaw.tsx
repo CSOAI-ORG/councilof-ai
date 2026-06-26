@@ -31,7 +31,8 @@ const REGIONS: Region[] = [
         { name: "BDSG (Fed. Data Protection Act)", status: "In force", note: "National GDPR implementation; automated decisions." },
         { name: "AI liability transposition", status: "Proposed", note: "National transposition of EU AI liability rules." } ] },
       { layer: "Bloc", scope: "European Union", laws: [
-        { name: "EU AI Act", status: "In force", note: "Risk tiers; bans + high-risk obligations phasing in." },
+        { name: "EU AI Act - transparency (Art. 50) + GPAI", status: "In force", note: "Transparency duties + GPAI penalty powers activate 2 Aug 2026." },
+        { name: "EU AI Act - high-risk (Annex III)", status: "Proposed", note: "Deferred to 2 Dec 2027 by the Digital Omnibus (provisional deal 7 May 2026)." },
         { name: "GDPR", status: "In force", note: "Lawful basis, DPIA, automated-decision safeguards." },
         { name: "Digital Services Act", status: "In force", note: "Algorithmic transparency + systemic-risk audits." } ] },
       { layer: "International", scope: "Global", laws: [{ name: "Council of Europe AI Treaty", status: "Proposed", note: "First binding international AI human-rights treaty." }] },
@@ -66,6 +67,7 @@ export default function MeokLaw() {
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - MEOK Law</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">What governs you, here</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Pick a place. MEOK Law shows the full stack of AI rules that apply - city, state, nation, bloc - and how each layer cross-references the others. One question, the whole jurisdiction.</p>
+          <p className="mt-3 inline-block rounded-lg bg-white/10 px-3 py-1 text-xs font-semibold text-emerald-100">As of June 2026 - EU AI Act: transparency 2 Aug 2026, high-risk deferred to Dec 2027 (Digital Omnibus).</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-10">
