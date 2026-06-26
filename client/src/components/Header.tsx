@@ -54,6 +54,12 @@ const navigation = [
       { name: 'Sector Atlas', href: '/sectors', description: 'All CASA sectors mapped to frameworks + risk tier' },
       { name: 'Services', href: '/services', description: 'The whole OS, end to end' },
       { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
+      { name: 'Governance Agent', href: '/agents', description: 'A Council beats one agent' },
+      { name: 'Compare vs Vanta/Credo/OneTrust', href: '/vs', description: 'Framework coverage matrix' },
+      { name: 'FedRAMP RFC-0024 Readiness', href: '/fedramp', description: 'Machine-readable OSCAL by 30 Sep 2026' },
+      { name: '2 Aug 2026 Readiness', href: '/readiness', description: 'EU AI Act transparency countdown' },
+      { name: 'Blog', href: '/blog', description: 'AI governance, explained' },
+      { name: 'Pressroom', href: '/press', description: 'Facts, quotes, boilerplate' },
       { name: 'Open the OS', href: '/os', description: 'The full launcher' },
     ]
   },
