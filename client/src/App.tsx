@@ -150,6 +150,7 @@ import Services from "./pages/Services";
 import HowItWorks from "./pages/HowItWorks";
 import SectorsAtlas from "./pages/SectorsAtlas";
 import RegionsMap from "./pages/RegionsMap";
+import WorldGlobe from "./pages/WorldGlobe";
 import Pressroom from "./pages/Pressroom";
 import Compare from "./pages/Compare";
 import Fedramp from "./pages/Fedramp";
@@ -358,6 +359,8 @@ function App() {
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/sectors" component={SectorsAtlas} />
           <Route path="/regions" component={RegionsMap} />
+          <Route path="/globe" component={WorldGlobe} />
+          <Route path="/world" component={WorldGlobe} />
           <Route path="/map-regions" component={RegionsMap} />
           <Route path="/compare" component={Compare} />
           <Route path="/vs" component={Compare} />
