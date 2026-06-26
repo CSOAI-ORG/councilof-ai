@@ -30,6 +30,7 @@ import ActSummary from "./pages/ActSummary";
 import AiGovernanceHub from "./pages/AiGovernanceHub";
 import AiActFaq from "./pages/AiActFaq";
 import ConformityAssessment from "./pages/ConformityAssessment";
+import JurisdictionAct from "./pages/JurisdictionAct";
 import Dashboard from "./pages/Dashboard";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
@@ -385,6 +386,10 @@ function App() {
           <Route path="/gpai" component={GpaiObligations} />
           <Route path="/foundation-models" component={GpaiObligations} />
           <Route path="/penalties" component={Penalties} />
+          <Route path="/uk-ai-regulation">{() => <JurisdictionAct jx="uk" />}</Route>
+          <Route path="/canada-aida">{() => <JurisdictionAct jx="canada" />}</Route>
+          <Route path="/china-ai-law">{() => <JurisdictionAct jx="china" />}</Route>
+          <Route path="/singapore-ai-governance">{() => <JurisdictionAct jx="singapore" />}</Route>
           <Route path="/ai-act-faq" component={AiActFaq} />
           <Route path="/eu-ai-act-faq" component={AiActFaq} />
           <Route path="/conformity-assessment" component={ConformityAssessment} />
