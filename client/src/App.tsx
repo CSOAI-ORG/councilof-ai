@@ -151,6 +151,7 @@ import HowItWorks from "./pages/HowItWorks";
 import SectorsAtlas from "./pages/SectorsAtlas";
 import RegionsMap from "./pages/RegionsMap";
 import WorldGlobe from "./pages/WorldGlobe";
+import RegistryAll from "./pages/RegistryAll";
 import BftConfig from "./pages/BftConfig";
 import Pressroom from "./pages/Pressroom";
 import Compare from "./pages/Compare";
@@ -361,6 +362,8 @@ function App() {
           <Route path="/sectors" component={SectorsAtlas} />
           <Route path="/regions" component={RegionsMap} />
           <Route path="/globe" component={WorldGlobe} />
+          <Route path="/registry" component={RegistryAll} />
+          <Route path="/all" component={RegistryAll} />
           <Route path="/bft" component={BftConfig} />
           <Route path="/consensus" component={BftConfig} />
           <Route path="/world" component={WorldGlobe} />
