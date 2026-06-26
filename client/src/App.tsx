@@ -28,6 +28,8 @@ import UsStateAct from "./pages/UsStateAct";
 import HighRiskSystems from "./pages/HighRiskSystems";
 import ActSummary from "./pages/ActSummary";
 import AiGovernanceHub from "./pages/AiGovernanceHub";
+import AiActFaq from "./pages/AiActFaq";
+import ConformityAssessment from "./pages/ConformityAssessment";
 import Dashboard from "./pages/Dashboard";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
@@ -383,6 +385,9 @@ function App() {
           <Route path="/gpai" component={GpaiObligations} />
           <Route path="/foundation-models" component={GpaiObligations} />
           <Route path="/penalties" component={Penalties} />
+          <Route path="/ai-act-faq" component={AiActFaq} />
+          <Route path="/eu-ai-act-faq" component={AiActFaq} />
+          <Route path="/conformity-assessment" component={ConformityAssessment} />
           <Route path="/ai-governance" component={AiGovernanceHub} />
           <Route path="/ai-governance-guide" component={AiGovernanceHub} />
           <Route path="/high-risk-ai-systems" component={HighRiskSystems} />
