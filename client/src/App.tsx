@@ -18,6 +18,8 @@ import Landing from "./pages/Landing";
 import EUActChecklist from "./pages/EUActChecklist";
 import GpaiObligations from "./pages/GpaiObligations";
 import Penalties from "./pages/Penalties";
+import NistVsEuAct from "./pages/NistVsEuAct";
+import Iso42001VsEuAct from "./pages/Iso42001VsEuAct";
 import Dashboard from "./pages/Dashboard";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
@@ -371,6 +373,10 @@ function App() {
           <Route path="/gpai" component={GpaiObligations} />
           <Route path="/foundation-models" component={GpaiObligations} />
           <Route path="/penalties" component={Penalties} />
+          <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />
+          <Route path="/nist-eu" component={NistVsEuAct} />
+          <Route path="/iso-42001-vs-eu-ai-act" component={Iso42001VsEuAct} />
+          <Route path="/iso-eu" component={Iso42001VsEuAct} />
           <Route path="/fines" component={Penalties} />
           <Route path="/all" component={RegistryAll} />
           <Route path="/bft" component={BftConfig} />
