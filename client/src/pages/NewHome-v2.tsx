@@ -520,6 +520,26 @@ export default function NewHomeV2() {
       </section>
 
       {/* ============================================ */}
+      {/* SECTION 1.75: OS FUNNEL STRIP */}
+      <section className="py-20 bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Enter the OS</p>
+          <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">Five doors into the Sovereign OS</h2>
+          <p className="mt-3 max-w-2xl text-emerald-50/85">Build your identity, connect your world, see governance on the globe, choose your consensus, and browse every regulation - all live.</p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <a href="/sovereign" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Sovereign</div><p className="mt-1 text-xs text-white/70">One identity: voice, character, passport.</p></a>
+            <a href="/connect" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Connect socials</div><p className="mt-1 text-xs text-white/70">Give your AI character a face.</p></a>
+            <a href="/globe" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Sovereign Globe</div><p className="mt-1 text-xs text-white/70">AI governance, layered on the world.</p></a>
+            <a href="/bft" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Choose your BFT</div><p className="mt-1 text-xs text-white/70">5, 12-around-1, or 33-node swarm.</p></a>
+            <a href="/registry" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Registry</div><p className="mt-1 text-xs text-white/70">Every regulation, standard, protocol.</p></a>
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a href="/try" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Ask the Council -&gt;</a>
+            <a href="/meok-law" className="rounded-xl border border-emerald-300/50 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Your jurisdiction stack -&gt;</a>
+          </div>
+        </div>
+      </section>
+
       {/* SECTION 2: ECOSYSTEM DIAGRAM */}
       {/* ============================================ */}
       <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
