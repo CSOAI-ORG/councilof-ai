@@ -20,6 +20,7 @@ import GpaiObligations from "./pages/GpaiObligations";
 import Penalties from "./pages/Penalties";
 import NistVsEuAct from "./pages/NistVsEuAct";
 import Iso42001VsEuAct from "./pages/Iso42001VsEuAct";
+import SectorAct from "./pages/SectorAct";
 import Dashboard from "./pages/Dashboard";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
@@ -376,6 +377,9 @@ function App() {
           <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />
           <Route path="/nist-eu" component={NistVsEuAct} />
           <Route path="/iso-42001-vs-eu-ai-act" component={Iso42001VsEuAct} />
+          <Route path="/healthcare-ai-act">{() => <SectorAct sector="healthcare" />}</Route>
+          <Route path="/finance-ai-act">{() => <SectorAct sector="finance" />}</Route>
+          <Route path="/hr-ai-act">{() => <SectorAct sector="hr" />}</Route>
           <Route path="/iso-eu" component={Iso42001VsEuAct} />
           <Route path="/fines" component={Penalties} />
           <Route path="/all" component={RegistryAll} />
