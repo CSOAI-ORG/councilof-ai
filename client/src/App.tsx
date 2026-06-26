@@ -23,6 +23,7 @@ import Iso42001VsEuAct from "./pages/Iso42001VsEuAct";
 import SectorAct from "./pages/SectorAct";
 import AltPage from "./pages/AltPage";
 import EuActVsGdpr from "./pages/EuActVsGdpr";
+import ActTimeline from "./pages/ActTimeline";
 import Dashboard from "./pages/Dashboard";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
@@ -387,6 +388,8 @@ function App() {
           <Route path="/credo-ai-alternative">{() => <AltPage comp="credo" />}</Route>
           <Route path="/eu-ai-act-vs-gdpr" component={EuActVsGdpr} />
           <Route path="/ai-act-vs-gdpr" component={EuActVsGdpr} />
+          <Route path="/eu-ai-act-timeline" component={ActTimeline} />
+          <Route path="/ai-act-timeline" component={ActTimeline} />
           <Route path="/iso-eu" component={Iso42001VsEuAct} />
           <Route path="/fines" component={Penalties} />
           <Route path="/all" component={RegistryAll} />
