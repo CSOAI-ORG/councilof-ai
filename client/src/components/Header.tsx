@@ -62,6 +62,8 @@ const navigation = [
       { name: 'Pressroom', href: '/press', description: 'Facts, quotes, boilerplate' },
       { name: 'The Sovereign Globe', href: '/globe', description: 'AI governance, layered on the world' },
       { name: 'Choose your BFT', href: '/bft', description: 'Configurable consensus - 5, 12, or 33' },
+      { name: 'Your Sovereign', href: '/sovereign', description: 'One identity: voice, character, passport' },
+      { name: 'Connect socials', href: '/connect', description: 'Give your AI character a face' },
       { name: 'Open the OS', href: '/os', description: 'The full launcher' },
     ]
   },
