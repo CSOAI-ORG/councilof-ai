@@ -144,6 +144,12 @@ import RelevanceMap from "./pages/RelevanceMap";
 import Temples from "./pages/Temples";
 import Playbooks from "./pages/Playbooks";
 import Dragonfly from "./pages/Dragonfly";
+import MeokLaw from "./pages/MeokLaw";
+import HiveModel from "./pages/HiveModel";
+import Services from "./pages/Services";
+import HowItWorks from "./pages/HowItWorks";
+import SectorsAtlas from "./pages/SectorsAtlas";
+import Academy from "./pages/Academy";
 import SovereignDock from "./components/SovereignDock";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
@@ -337,6 +343,17 @@ function App() {
           <Route path="/temples" component={Temples} />
           <Route path="/playbooks" component={Playbooks} />
           <Route path="/dragonfly" component={Dragonfly} />
+          <Route path="/meok-law" component={MeokLaw} />
+          <Route path="/law" component={MeokLaw} />
+          <Route path="/hive" component={HiveModel} />
+          <Route path="/hive-model" component={HiveModel} />
+          <Route path="/services" component={Services} />
+          <Route path="/how" component={HowItWorks} />
+          <Route path="/how-it-works" component={HowItWorks} />
+          <Route path="/sectors" component={SectorsAtlas} />
+          <Route path="/sector-atlas" component={SectorsAtlas} />
+          <Route path="/learn" component={Academy} />
+          <Route path="/tracks" component={Academy} />
           <Route path="/four-wings" component={Dragonfly} />
           <Route path="/industry-playbooks" component={Playbooks} />
           <Route path="/framework-temples" component={Temples} />
