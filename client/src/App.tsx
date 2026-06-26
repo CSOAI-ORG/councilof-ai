@@ -149,6 +149,7 @@ import HiveModel from "./pages/HiveModel";
 import Services from "./pages/Services";
 import HowItWorks from "./pages/HowItWorks";
 import SectorsAtlas from "./pages/SectorsAtlas";
+import Pressroom from "./pages/Pressroom";
 import Academy from "./pages/Academy";
 import SovereignDock from "./components/SovereignDock";
 import Distribution from "./pages/Distribution";
@@ -351,6 +352,8 @@ function App() {
           <Route path="/how" component={HowItWorks} />
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/sectors" component={SectorsAtlas} />
+          <Route path="/press" component={Pressroom} />
+          <Route path="/pressroom" component={Pressroom} />
           <Route path="/sector-atlas" component={SectorsAtlas} />
           <Route path="/learn" component={Academy} />
           <Route path="/tracks" component={Academy} />
