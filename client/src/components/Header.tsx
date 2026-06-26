@@ -60,6 +60,8 @@ const navigation = [
       { name: '2 Aug 2026 Readiness', href: '/readiness', description: 'EU AI Act transparency countdown' },
       { name: 'Blog', href: '/blog', description: 'AI governance, explained' },
       { name: 'Pressroom', href: '/press', description: 'Facts, quotes, boilerplate' },
+      { name: 'The Sovereign Globe', href: '/globe', description: 'AI governance, layered on the world' },
+      { name: 'Choose your BFT', href: '/bft', description: 'Configurable consensus - 5, 12, or 33' },
       { name: 'Open the OS', href: '/os', description: 'The full launcher' },
     ]
   },
