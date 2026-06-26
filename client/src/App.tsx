@@ -15,6 +15,9 @@ import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
 // Home removed - using NewHomeV2 instead
 import Landing from "./pages/Landing";
+import EUActChecklist from "./pages/EUActChecklist";
+import GpaiObligations from "./pages/GpaiObligations";
+import Penalties from "./pages/Penalties";
 import Dashboard from "./pages/Dashboard";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
@@ -363,6 +366,12 @@ function App() {
           <Route path="/regions" component={RegionsMap} />
           <Route path="/globe" component={WorldGlobe} />
           <Route path="/registry" component={RegistryAll} />
+          <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
+          <Route path="/checklist" component={EUActChecklist} />
+          <Route path="/gpai" component={GpaiObligations} />
+          <Route path="/foundation-models" component={GpaiObligations} />
+          <Route path="/penalties" component={Penalties} />
+          <Route path="/fines" component={Penalties} />
           <Route path="/all" component={RegistryAll} />
           <Route path="/bft" component={BftConfig} />
           <Route path="/consensus" component={BftConfig} />
