@@ -161,6 +161,8 @@ import SectorsAtlas from "./pages/SectorsAtlas";
 import RegionsMap from "./pages/RegionsMap";
 import WorldGlobe from "./pages/WorldGlobe";
 import RegistryAll from "./pages/RegistryAll";
+import SocialConnect from "./pages/SocialConnect";
+import SovereignHub from "./pages/SovereignHub";
 import BftConfig from "./pages/BftConfig";
 import Pressroom from "./pages/Pressroom";
 import Compare from "./pages/Compare";
@@ -377,6 +379,9 @@ function App() {
           <Route path="/gpai" component={GpaiObligations} />
           <Route path="/foundation-models" component={GpaiObligations} />
           <Route path="/penalties" component={Penalties} />
+          <Route path="/connect" component={SocialConnect} />
+          <Route path="/sovereign" component={SovereignHub} />
+          <Route path="/me" component={SovereignHub} />
           <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />
           <Route path="/nist-eu" component={NistVsEuAct} />
           <Route path="/iso-42001-vs-eu-ai-act" component={Iso42001VsEuAct} />
