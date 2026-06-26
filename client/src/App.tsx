@@ -152,6 +152,8 @@ import SectorsAtlas from "./pages/SectorsAtlas";
 import RegionsMap from "./pages/RegionsMap";
 import WorldGlobe from "./pages/WorldGlobe";
 import RegistryAll from "./pages/RegistryAll";
+import SocialConnect from "./pages/SocialConnect";
+import SovereignHub from "./pages/SovereignHub";
 import BftConfig from "./pages/BftConfig";
 import Pressroom from "./pages/Pressroom";
 import Compare from "./pages/Compare";
@@ -363,6 +365,9 @@ function App() {
           <Route path="/regions" component={RegionsMap} />
           <Route path="/globe" component={WorldGlobe} />
           <Route path="/registry" component={RegistryAll} />
+          <Route path="/connect" component={SocialConnect} />
+          <Route path="/sovereign" component={SovereignHub} />
+          <Route path="/me" component={SovereignHub} />
           <Route path="/all" component={RegistryAll} />
           <Route path="/bft" component={BftConfig} />
           <Route path="/consensus" component={BftConfig} />
