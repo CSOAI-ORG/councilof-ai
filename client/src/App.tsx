@@ -21,6 +21,8 @@ import Penalties from "./pages/Penalties";
 import NistVsEuAct from "./pages/NistVsEuAct";
 import Iso42001VsEuAct from "./pages/Iso42001VsEuAct";
 import SectorAct from "./pages/SectorAct";
+import AltPage from "./pages/AltPage";
+import EuActVsGdpr from "./pages/EuActVsGdpr";
 import Dashboard from "./pages/Dashboard";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
@@ -380,6 +382,11 @@ function App() {
           <Route path="/healthcare-ai-act">{() => <SectorAct sector="healthcare" />}</Route>
           <Route path="/finance-ai-act">{() => <SectorAct sector="finance" />}</Route>
           <Route path="/hr-ai-act">{() => <SectorAct sector="hr" />}</Route>
+          <Route path="/vanta-alternative">{() => <AltPage comp="vanta" />}</Route>
+          <Route path="/onetrust-alternative">{() => <AltPage comp="onetrust" />}</Route>
+          <Route path="/credo-ai-alternative">{() => <AltPage comp="credo" />}</Route>
+          <Route path="/eu-ai-act-vs-gdpr" component={EuActVsGdpr} />
+          <Route path="/ai-act-vs-gdpr" component={EuActVsGdpr} />
           <Route path="/iso-eu" component={Iso42001VsEuAct} />
           <Route path="/fines" component={Penalties} />
           <Route path="/all" component={RegistryAll} />
