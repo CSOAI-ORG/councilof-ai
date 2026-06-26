@@ -24,6 +24,7 @@ import SectorAct from "./pages/SectorAct";
 import AltPage from "./pages/AltPage";
 import EuActVsGdpr from "./pages/EuActVsGdpr";
 import ActTimeline from "./pages/ActTimeline";
+import UsStateAct from "./pages/UsStateAct";
 import Dashboard from "./pages/Dashboard";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
@@ -379,6 +380,9 @@ function App() {
           <Route path="/gpai" component={GpaiObligations} />
           <Route path="/foundation-models" component={GpaiObligations} />
           <Route path="/penalties" component={Penalties} />
+          <Route path="/colorado-ai-act">{() => <UsStateAct state="colorado" />}</Route>
+          <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
+          <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
           <Route path="/connect" component={SocialConnect} />
           <Route path="/sovereign" component={SovereignHub} />
           <Route path="/me" component={SovereignHub} />
