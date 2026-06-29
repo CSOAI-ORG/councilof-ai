@@ -339,6 +339,36 @@ function App() {
                   <Route path="/sla" component={ServiceLevelAgreement} />
                   <Route path="/service-level-agreement" component={ServiceLevelAgreement} />
                   <Route path="/legal/sla" component={ServiceLevelAgreement} />
+                  
+                  {/* ===== CSOAI V2 MASTER ROUTES (Hermes lane - 27 new routes) ===== */}
+                  <Route path="/csoai-landing" component={CSOAILanding} />
+                  <Route path="/check" component={CSOAICheck} />
+                  <Route path="/verify" component={CSOAIVerify} />
+                  <Route path="/csoai-pricing" component={CSOAIPricing} />
+                  <Route path="/product" component={CSOAIProduct} />
+                  <Route path="/meok" component={CSOAIMeok} />
+                  <Route path="/sovereign-os" component={CSOAISovereignOS} />
+                  <Route path="/command-center" component={CSOAICommandCenter} />
+                  <Route path="/all-pages" component={CSOAIAllPages} />
+                  <Route path="/world" component={CSOAIWorld} />
+                  <Route path="/marketplace" component={CSOAIMarketplace} />
+                  <Route path="/pilots" component={CSOAIPilots} />
+                  <Route path="/mavis7-counter" component={CSOAIMavis7Counter} />
+                  <Route path="/iok-farm" component={CSOAIIOkFarm} />
+                  <Route path="/one-click-check" component={CSOAIOneClickCheck} />
+                  <Route path="/product-demo" component={CSOAIProductDemo} />
+                  <Route path="/ideal-demo" component={CSOAIdealDemo} />
+                  <Route path="/simulator" component={CSOAISimulationLab} />
+                  <Route path="/sovereign-ops" component={CSOAISovereignOps} />
+                  <Route path="/sov-world" component={CSOAISovWorld} />
+                  <Route path="/sov-integration" component={CSOAISovIntegration} />
+                  <Route path="/live-frontend" component={CSOAILiveFrontend} />
+                  <Route path="/live-frontend-bridge" component={CSOAILiveFrontendBridge} />
+                  <Route path="/live-frontend-final" component={CSOAILiveFrontendFinal} />
+                  <Route path="/v2-master" component={CSOAIV2Master} />
+                  <Route path="/csoai-home" component={CSOAIIndex} />
+                  <Route path="/sovereign-os-v2" component={SovereignOSPage} />
+
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
