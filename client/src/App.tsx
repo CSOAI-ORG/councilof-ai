@@ -178,6 +178,7 @@ import Readiness from "./pages/Readiness";
 import Agents from "./pages/Agents";
 import Academy from "./pages/Academy";
 import SovereignDock from "./components/SovereignDock";
+import SovSpace from "./pages/SovSpace";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
 import { frameworksdata } from "./data/frameworks-content";
@@ -575,6 +576,9 @@ function App() {
                   <Route path="/charter/article/:id" component={CharterArticle} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
+                  <Route path="/sov-space" component={SovSpace} />
+                  <Route path="/sovereign-space" component={SovSpace} />
+                  <Route path="/simulate" component={SovSpace} />
                   <Route component={NotFound} />
                   </Switch>
                 </main>
