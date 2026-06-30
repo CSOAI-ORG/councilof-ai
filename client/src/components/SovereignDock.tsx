@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 // work for you. The agent-first OS layer over every page. As SaaS gives way to
 // agents, this is the emergence: you command, the Sovereign acts.
 
-type Msg = { role: "you" | "sov"; text: string };
+type Msg = { role: "you" | "sov"; text: string; ctx?: boolean };
 
 const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/global-regulations", label: "Regulations & legislation" },
@@ -47,6 +47,31 @@ const QUICK: { label: string; href: string }[] = [
   { label: "Full OS", href: "/os" },
 ];
 
+type RegionInfo = { name: string; law: string; href: string };
+const REGIONS: { tz: RegExp; info: RegionInfo }[] = [
+  { tz: /Europe\//, info: { name: "the EU", law: "the EU AI Act", href: "/eu-ai-act" } },
+  { tz: /US\/|America\//, info: { name: "the US", law: "NIST AI RMF and US state AI laws", href: "/nist-ai-rmf" } },
+  { tz: /Asia\/(Shanghai|Chongqing|Harbin|Urumqi)/, info: { name: "China", law: "TC260", href: "/tc260" } },
+  { tz: /Australia\//, info: { name: "Australia", law: "ISO 42001", href: "/iso-42001" } },
+];
+function detectRegion(): RegionInfo {
+  try { var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; var hit = REGIONS.find((r) => r.tz.test(tz)); return hit ? hit.info : { name: "your region", law: "ISO 42001", href: "/iso-42001" }; }
+  catch (e) { return { name: "your region", law: "ISO 42001", href: "/iso-42001" }; }
+}
+const PAGECTX: { re: RegExp; here: string }[] = [
+  { re: /readiness|assessment/i, here: "the Readiness Assessment" },
+  { re: /pricing|payg/i, here: "Pricing" },
+  { re: /command-center|command/i, here: "the Command Center" },
+  { re: /^\/os|launch|enter/i, here: "the OS launcher" },
+  { re: /crosswalk/i, here: "Crosswalks" },
+  { re: /sovereign-town|town/i, here: "Sovereign Town" },
+  { re: /charter|covenant/i, here: "the Charter" },
+  { re: /watchdog/i, here: "Watchdog" },
+  { re: /evidence/i, here: "the Evidence Hub" },
+  { re: /distribution/i, here: "Distribution" },
+];
+function pageHere(): string { try { var p = window.location.pathname; var hit = PAGECTX.find((c) => c.re.test(p)); return hit ? hit.here : ""; } catch (e) { return ""; } }
+
 export default function SovereignDock() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -54,8 +79,19 @@ export default function SovereignDock() {
   const [listening, setListening] = useState(false);
   const [voiceOn, setVoiceOn] = useState(true);
   const endRef = useRef<HTMLDivElement | null>(null);
+  const __region = detectRegion();
 
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [msgs, open]);
+
+  useEffect(() => {
+    if (!open) return;
+    setMsgs((m) => {
+      if (m.some((x) => x.ctx)) return m;
+      var reg = detectRegion(); var here = pageHere();
+      var line = "I see you are in " + reg.name + " \u2014 " + reg.law + " likely applies, and I can map it across every other framework so you comply once." + (here ? " You are on " + here + " right now." : "") + " Tell me what to do and I will take you there.";
+      return m.concat({ role: "sov", text: line, ctx: true });
+    });
+  }, [open]);
 
   useEffect(() => {
     if (!voiceOn || msgs.length <= 1) return;
@@ -115,6 +151,7 @@ export default function SovereignDock() {
           </div>
 
           <div className="flex flex-wrap gap-1.5 border-b border-emerald-500/10 px-3 py-2">
+            <a href={__region.href} className="rounded-full border border-emerald-300/45 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/30">For {__region.name}</a>
             {QUICK.map((q) => (
               <a key={q.label} href={q.href} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</a>
             ))}
