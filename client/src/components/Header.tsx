@@ -21,6 +21,20 @@ import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 
 // Navigation structure with icons
 const navigation = [
+  {
+    name: "Sovereign OS",
+    href: "/sov-space",
+    icon: Globe2,
+    description: "Your AI OS",
+    submenu: [
+      { name: "Sov Space", href: "/sov-space", description: "Simulate and govern in real time" },
+      { name: "Governance Graph", href: "/graph", description: "The governed Google" },
+      { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
+      { name: "Start free", href: "/start", description: "Build your own AI" },
+      { name: "Plans and Pricing", href: "/plans", description: "Free to Enterprise" },
+      { name: "System Status", href: "/status", description: "Live transparency" },
+    ],
+  },
     {
       name: "Tools",
       icon: Shield,
@@ -419,9 +433,9 @@ export function Header() {
                     Sign In
                   </Button>
                 </Link>
-                <Link href="/signup">
+                <Link href="/start">
                   <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm">
-                    Get Started
+                    Start free
                   </Button>
                 </Link>
               </>
@@ -518,9 +532,9 @@ export function Header() {
                         Sign In
                       </Button>
                     </a>
-                    <a href="/signup" className="block">
+                    <a href="/start" className="block">
                       <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => setMobileMenuOpen(false)}>
-                        Get Started
+                        Start free
                       </Button>
                     </a>
                   </>

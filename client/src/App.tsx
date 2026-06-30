@@ -183,6 +183,7 @@ import BadgesPage from "./pages/BadgesPage";
 import RealWorldMap from "./pages/RealWorldMap";
 import PlansPage from "./pages/PlansPage";
 import OnboardOS from "./pages/OnboardOS";
+import GovGraph from "./pages/GovGraph";
 import OpenMedia from "./pages/OpenMedia";
 import StatusPage from "./pages/StatusPage";
 import Distribution from "./pages/Distribution";
@@ -598,6 +599,9 @@ function App() {
                   <Route path="/commons" component={OpenMedia} />
                   <Route path="/status" component={StatusPage} />
                   <Route path="/system" component={StatusPage} />
+                  <Route path="/graph" component={GovGraph} />
+                  <Route path="/governance-graph" component={GovGraph} />
+                  <Route path="/world-data" component={GovGraph} />
                   <Route component={NotFound} />
                   </Switch>
                 </main>
