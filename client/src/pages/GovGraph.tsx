@@ -1,39 +1,51 @@
 import { useEffect, useState } from "react";
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 const FW = [{ name: "EU AI Act", href: "/eu-ai-act-checklist" }, { name: "NIST AI RMF", href: "/nist-vs-eu-ai-act" }, { name: "ISO 42001", href: "/iso-42001-vs-eu-ai-act" }, { name: "GDPR", href: "/eu-ai-act-vs-gdpr" }];
+const EXAMPLES = ["Germany", "a hospital in Texas", "a fintech in Singapore", "OpenAI"];
 function jurisdiction(q: string) {
   const s = (q || "").toLowerCase();
   if (/\beu\b|europe|german|france|spain|ital|dublin|ireland|netherl|brussels|paris|berlin/.test(s)) return { region: "European Union", primary: "EU AI Act", href: "/eu-ai-act-checklist" };
-  if (/\bus\b|usa|america|california|texas|colorado|new york/.test(s)) return { region: "United States", primary: "NIST AI RMF + state laws", href: "/colorado-ai-act" };
+  if (/\bus\b|usa|america|california|texas|colorado|new york|openai/.test(s)) return { region: "United States", primary: "NIST AI RMF + state laws", href: "/colorado-ai-act" };
   if (/china|beijing|shanghai|shenzhen/.test(s)) return { region: "China", primary: "TC260", href: "/china-ai-law" };
+  if (/singapore/.test(s)) return { region: "Singapore", primary: "Singapore AI governance", href: "/singapore-ai-governance" };
   if (/\buk\b|britain|england|london|scotland/.test(s)) return { region: "United Kingdom", primary: "UK AI regulation", href: "/uk-ai-regulation" };
   return { region: "Global", primary: "ISO 42001", href: "/iso-42001-vs-eu-ai-act" };
 }
 export default function GovGraph() {
   const [q, setQ] = useState(""); const [res, setRes] = useState<any>(null); const [kn, setKn] = useState<any>(null); const [loading, setLoading] = useState(false);
   useEffect(() => { document.title = "Governance Graph - the governed Google | CSOAI"; }, []);
-  async function run() {
-    if (!q.trim()) return;
-    setRes({ q: q.trim(), j: jurisdiction(q) }); setKn(null); setLoading(true);
-    try { const r = await fetch(GW + "/knowledge?q=" + encodeURIComponent(q.trim())); if (r.ok) setKn(await r.json()); } catch (e) {}
+  async function run(query?: string) {
+    const term = (query !== undefined ? query : q).trim(); if (!term) return;
+    setQ(term); setRes({ q: term, j: jurisdiction(term) }); setKn(null); setLoading(true);
+    try { const r = await fetch(GW + "/knowledge?q=" + encodeURIComponent(term)); if (r.ok) setKn(await r.json()); } catch (e) {}
     setLoading(false);
   }
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
-      <section className="mx-auto max-w-3xl px-6 pt-14 pb-6 text-center">
-        <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Governance Graph</p>
-        <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">The governed Google.</h1>
-        <p className="mt-3 text-emerald-100/80">Ask about any company, place, or AI system. Live world knowledge meets the law, the frameworks, and a signed answer.</p>
-        <div className="mt-6 flex gap-2"><input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="e.g. Germany, or a hospital in Texas" className="flex-1 rounded-xl border border-emerald-500/25 bg-black/30 px-4 py-3 text-sm text-emerald-50 placeholder-emerald-300/30 focus:outline-none" /><button onClick={run} className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">{loading ? "..." : "Map it"}</button></div>
+      <section className="relative overflow-hidden border-b border-emerald-500/15">
+        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
+        <div className="relative mx-auto max-w-3xl px-6 pt-16 pb-10 text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Governance Graph</p>
+          <h1 className="mt-3 text-5xl sm:text-6xl font-black tracking-tight">The governed <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Google.</span></h1>
+          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">A search box tells you what something <i>is</i>. This tells you what the <b className="text-emerald-200">law requires</b> - jurisdiction, frameworks, and a path to a signed verdict. Live world data meets governance.</p>
+          <div className="mt-7 flex gap-2">
+            <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Ask about any company, place, or AI system..." className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-4 text-base text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
+            <button onClick={() => run()} className="rounded-xl bg-emerald-500 px-6 py-4 text-base font-bold text-[#03110b] hover:bg-emerald-400">{loading ? "..." : "Map it"}</button>
+          </div>
+          <div className="mt-3 flex flex-wrap justify-center gap-2">
+            {EXAMPLES.map((e) => (<button key={e} onClick={() => run(e)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-3 py-1 text-xs text-emerald-200/80 hover:bg-emerald-500/15">{e}</button>))}
+          </div>
+        </div>
       </section>
-      {res && (<section className="mx-auto max-w-3xl px-6 pb-10 space-y-4">
-        <div className="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-5"><div className="text-sm text-emerald-300/70">For "{res.q}"</div><div className="mt-1 text-xl font-bold">Jurisdiction: {res.j.region}</div><p className="mt-1 text-sm text-emerald-100/80">Primary regime: <a href={res.j.href} className="font-bold text-emerald-300 underline">{res.j.primary}</a>. Comply once and the Sovereign crosswalks it across every framework below.</p></div>
-        {kn && kn.facts && (kn.facts.label || kn.facts.population) && (<div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5"><div className="text-lg font-bold">{kn.facts.label || res.q}</div>{kn.facts.desc && <div className="text-sm text-emerald-300/70">{kn.facts.desc}</div>}<div className="mt-2 grid gap-1 sm:grid-cols-2 text-sm text-emerald-100/80">{kn.facts.population ? <div>Population: <span className="font-mono text-emerald-300">{Number(kn.facts.population).toLocaleString()}</span></div> : null}{kn.facts.founded ? <div>Founded: <span className="font-mono text-emerald-300">{kn.facts.founded}</span></div> : null}{kn.facts.website ? <div className="truncate">Official: <a href={kn.facts.website} className="text-emerald-300 underline">{kn.facts.website}</a></div> : null}{kn.facts.url ? <div>Wikidata: <a href={kn.facts.url} className="text-emerald-300 underline">entity</a></div> : null}</div><div className="mt-1 text-[10px] uppercase tracking-wide text-emerald-300/40">live: Wikipedia + Wikidata via os.meok.ai</div></div>)}
-        {kn && Array.isArray(kn.results) && kn.results.length > 0 && (<div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5"><div className="text-lg font-bold">Knowledge</div><div className="mt-3 space-y-2">{kn.results.slice(0, 4).map((it: any, i: number) => (<a key={i} href={it.url} target="_blank" rel="noopener" className="flex gap-3 rounded-xl border border-emerald-500/10 p-2 hover:bg-white/5">{it.thumb ? <img src={it.thumb} alt="" className="h-10 w-10 rounded object-cover" /> : null}<div><div className="text-sm font-semibold text-emerald-100">{it.title}</div><div className="text-xs text-emerald-300/60 line-clamp-2">{it.excerpt || it.desc}</div></div></a>))}</div></div>)}
-        <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5"><div className="text-lg font-bold">Frameworks that apply</div><div className="mt-3 flex flex-wrap gap-2">{FW.map((f) => (<a key={f.name} href={f.href} className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-sm text-emerald-100 hover:bg-emerald-500/15">{f.name}</a>))}</div></div>
-        <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 text-center"><div className="text-lg font-bold">Want a real, signed verdict?</div><p className="mt-1 text-sm text-emerald-100/70">Run it through the live 33-agent council - Ed25519 signed, Layer 0 ledgered.</p><div className="mt-3 flex justify-center gap-2"><a href="/sov-space" className="rounded-xl bg-emerald-500 px-5 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Run in Sov Space -&gt;</a><a href="/try" className="rounded-xl border border-emerald-400/40 px-5 py-2 text-sm font-semibold text-emerald-100 hover:bg-white/5">Ask the Council</a></div></div>
+      {res && (<section className="mx-auto max-w-3xl px-6 py-8 space-y-4">
+        <div className="rounded-2xl border border-emerald-400/40 bg-gradient-to-br from-emerald-500/15 to-transparent p-6"><div className="text-xs uppercase tracking-wide text-emerald-300/70">For "{res.q}"</div><div className="mt-1 text-2xl font-black">Jurisdiction: {res.j.region}</div><p className="mt-1 text-sm text-emerald-100/80">Primary regime <a href={res.j.href} className="font-bold text-emerald-300 underline">{res.j.primary}</a> - comply once, the Sovereign crosswalks it across every framework below.</p></div>
+        {kn && kn.facts && (kn.facts.label || kn.facts.population) && (<div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6"><div className="flex items-baseline justify-between"><div className="text-xl font-bold">{kn.facts.label || res.q}</div><span className="font-mono text-[10px] uppercase tracking-wide text-emerald-300/40">live - wikidata</span></div>{kn.facts.desc && <div className="text-sm text-emerald-300/70">{kn.facts.desc}</div>}<div className="mt-4 grid gap-3 sm:grid-cols-3">{kn.facts.population ? <div className="rounded-xl bg-black/30 p-3"><div className="text-2xl font-black text-emerald-300">{Number(kn.facts.population).toLocaleString()}</div><div className="text-[11px] uppercase tracking-wide text-emerald-300/50">population</div></div> : null}{kn.facts.founded ? <div className="rounded-xl bg-black/30 p-3"><div className="text-2xl font-black text-emerald-300">{kn.facts.founded}</div><div className="text-[11px] uppercase tracking-wide text-emerald-300/50">founded</div></div> : null}{kn.facts.website ? <a href={kn.facts.website} className="rounded-xl bg-black/30 p-3 hover:bg-black/50"><div className="truncate text-sm font-bold text-emerald-300">Official site</div><div className="truncate text-[11px] text-emerald-300/50">{kn.facts.website}</div></a> : null}</div></div>)}
+        {kn && Array.isArray(kn.results) && kn.results.length > 0 && (<div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6"><div className="text-lg font-bold">Knowledge</div><div className="mt-3 space-y-2">{kn.results.slice(0, 4).map((it: any, i: number) => (<a key={i} href={it.url} target="_blank" rel="noopener" className="flex gap-3 rounded-xl border border-emerald-500/10 p-2.5 hover:bg-white/5">{it.thumb ? <img src={it.thumb} alt="" className="h-11 w-11 rounded object-cover" /> : null}<div className="min-w-0"><div className="text-sm font-semibold text-emerald-100">{it.title}</div><div className="truncate text-xs text-emerald-300/60">{it.excerpt || it.desc}</div></div></a>))}</div></div>)}
+        <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6"><div className="text-lg font-bold">Frameworks that apply</div><div className="mt-3 flex flex-wrap gap-2">{FW.map((f) => (<a key={f.name} href={f.href} className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-1.5 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/20">{f.name}</a>))}</div></div>
+        <div className="rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-transparent p-6 text-center"><div className="text-xl font-bold">Get the signed verdict</div><p className="mt-1 text-sm text-emerald-100/70">Run it through the live 33-agent council - Ed25519 signed, Layer 0 ledgered.</p><div className="mt-4 flex justify-center gap-2"><a href="/sov-space" className="rounded-xl bg-emerald-500 px-6 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Run in Sov Space -&gt;</a><a href="/try" className="rounded-xl border border-emerald-400/40 px-6 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Ask the Council</a></div></div>
       </section>)}
-      <section className="mx-auto max-w-3xl px-6 pb-16"><p className="text-center text-xs text-emerald-300/50">Live world knowledge (Wikipedia + Wikidata) via os.meok.ai + CSOAI governance. Your data stays sovereign.</p></section>
+      {!res && (<section className="mx-auto max-w-4xl px-6 py-12"><div className="grid gap-4 sm:grid-cols-3">{[["Breadth", "Live world data - Wikipedia, Wikidata, and Google sources behind one query."], ["Law", "Jurisdiction + every applicable framework, mapped automatically."], ["Proof", "A path to a real Ed25519-signed council verdict - not just an answer."]].map((c) => (<div key={c[0]} className="rounded-2xl border border-emerald-500/15 bg-[#05140d] p-5"><div className="text-lg font-bold text-emerald-200">{c[0]}</div><p className="mt-1 text-sm text-emerald-100/70">{c[1]}</p></div>))}</div></section>)}
+      <section className="mx-auto max-w-3xl px-6 pb-16"><p className="text-center text-xs text-emerald-300/50">Live world knowledge via os.meok.ai + CSOAI governance. Your data stays sovereign. MIT-licensed core.</p></section>
     </div>
   );
 }
