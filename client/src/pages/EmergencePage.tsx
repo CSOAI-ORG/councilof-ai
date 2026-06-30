@@ -1,0 +1,55 @@
+import { useEffect, useRef, useState } from "react";
+export default function EmergencePage() {
+  const cv = useRef<HTMLCanvasElement | null>(null);
+  const chargeRef = useRef(0); const hatchedRef = useRef(false);
+  const [charge, setCharge] = useState(0); const [hatched, setHatched] = useState(false);
+  useEffect(() => { document.title = "Emergence - the living egg | CSOAI"; }, []);
+  function addCharge() { const n = Math.min(100, chargeRef.current + 12); chargeRef.current = n; setCharge(n); if (n >= 100 && !hatchedRef.current) { hatchedRef.current = true; setHatched(true); } }
+  useEffect(() => {
+    const c = cv.current; if (!c) return; const ctx = c.getContext("2d"); if (!ctx) return;
+    let raf = 0; const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    function size() { const r = c.getBoundingClientRect(); c.width = r.width * DPR; c.height = r.height * DPR; }
+    size(); window.addEventListener("resize", size);
+    const N = 460; const pts: number[][] = [];
+    for (let i = 0; i < N; i++) { const y = 1 - (i / (N - 1)) * 2; const rad = Math.sqrt(1 - y * y); const th = i * 2.399963; pts.push([Math.cos(th) * rad, y, Math.sin(th) * rad]); }
+    let t = 0;
+    function frame() {
+      t += 1; const w = c.width, h = c.height, cx = w / 2, cy = h / 2; const R = Math.min(w, h) * 0.32;
+      const chg = chargeRef.current / 100; const hd = hatchedRef.current; const col = hd ? "250,204,21" : "16,185,129";
+      ctx.clearRect(0, 0, w, h); ctx.fillStyle = "#03110b"; ctx.fillRect(0, 0, w, h);
+      const aur = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * (1.5 + 0.3 * Math.sin(t * 0.03)));
+      aur.addColorStop(0, "rgba(16,185,129," + (0.12 + 0.1 * chg) + ")"); aur.addColorStop(0.6, "rgba(" + col + "," + (0.08 + 0.28 * chg) + ")"); aur.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = aur; ctx.beginPath(); ctx.arc(cx, cy, R * 1.9, 0, Math.PI * 2); ctx.fill();
+      const ay = t * 0.004; const lit: number[][] = [];
+      for (let i = 0; i < pts.length; i++) { const x = pts[i][0], y = pts[i][1], z = pts[i][2]; const X = x * Math.cos(ay) - z * Math.sin(ay); const Z = x * Math.sin(ay) + z * Math.cos(ay); const sx = cx + X * R, sy = cy + y * R; const front = Z > 0; const day = (X + 1) / 2; const base = front ? (0.2 + 0.6 * day) : 0.07;
+        ctx.fillStyle = "rgba(" + col + "," + base.toFixed(2) + ")"; ctx.beginPath(); ctx.arc(sx, sy, (front ? 1.7 : 1.0) * DPR, 0, Math.PI * 2); ctx.fill(); if (front && day > 0.55) lit.push([sx, sy]); }
+      ctx.strokeStyle = "rgba(" + (hd ? "253,224,71" : "110,231,183") + "," + (0.05 + 0.12 * chg) + ")"; ctx.lineWidth = DPR;
+      for (let k = 0; k < 14 && lit.length > 2; k++) { const a = lit[(k * 7) % lit.length], b = lit[(k * 13 + 3) % lit.length]; if (a && b) { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.quadraticCurveTo((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 - 34 * DPR, b[0], b[1]); ctx.stroke(); } }
+      const core = ctx.createRadialGradient(cx, cy, 1, cx, cy, R * 0.55); core.addColorStop(0, "rgba(" + (hd ? "254,240,138" : "167,243,208") + "," + (0.35 + 0.4 * chg) + ")"); core.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = core; ctx.beginPath(); ctx.arc(cx, cy, R * 0.55, 0, Math.PI * 2); ctx.fill();
+      if (hd) { ctx.fillStyle = "rgba(254,240,138,0.95)"; ctx.font = (R * 0.55) + "px serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(String.fromCharCode(9673), cx, cy); }
+      raf = requestAnimationFrame(frame);
+    }
+    frame();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", size); };
+  }, []);
+  return (
+    <div className="min-h-screen bg-[#03110b] text-emerald-50 overflow-hidden">
+      <section className="relative">
+        <canvas ref={cv} className="block h-[72vh] w-full" />
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-10 text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - emergence</p>
+          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{hatched ? "Your Sovereign has emerged." : "The living egg."}</h1>
+          <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{hatched ? "From the mirror of the world, your AI character is born - it learned you, and now it acts for you." : "A glowing digital mirror of Earth - day, night, every connector lit. As your Sovereign learns you, the egg charges... and hatches."}</p>
+          <div className="pointer-events-auto mt-4 flex flex-wrap items-center justify-center gap-3 px-6">
+            {!hatched && <button onClick={addCharge} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Charge the emergence ({charge}%)</button>}
+            {hatched && <a href="/start" className="rounded-xl bg-amber-400 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-amber-300">Meet your Sovereign -&gt;</a>}
+            <a href="/world-3d" className="rounded-xl border border-emerald-400/40 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">Real-world globe -&gt;</a>
+          </div>
+        </div>
+      </section>
+      <section className="mx-auto max-w-3xl px-6 py-12 text-center">
+        <p className="text-sm text-emerald-100/70">The emergence mirror: the real world rendered as a sovereign digital twin. Over time it transforms from a shared planet into <b className="text-emerald-200">your</b> AI character - the hatch. The same egg pixel-streams from Unreal Engine 5 in the full OS.</p>
+      </section>
+    </div>
+  );
+}

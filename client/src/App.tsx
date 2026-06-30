@@ -184,6 +184,7 @@ import RealWorldMap from "./pages/RealWorldMap";
 import PlansPage from "./pages/PlansPage";
 import OnboardOS from "./pages/OnboardOS";
 import GovGraph from "./pages/GovGraph";
+import EmergencePage from "./pages/EmergencePage";
 import ToolCommons from "./pages/ToolCommons";
 import OpenMedia from "./pages/OpenMedia";
 import StatusPage from "./pages/StatusPage";
@@ -606,6 +607,9 @@ function App() {
                   <Route path="/tools" component={ToolCommons} />
                   <Route path="/tool-commons" component={ToolCommons} />
                   <Route path="/mcp-tools" component={ToolCommons} />
+                  <Route path="/emergence" component={EmergencePage} />
+                  <Route path="/egg" component={EmergencePage} />
+                  <Route path="/hatch" component={EmergencePage} />
                   <Route component={NotFound} />
                   </Switch>
                 </main>
