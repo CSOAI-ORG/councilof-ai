@@ -18,9 +18,10 @@ export default function PlansPage() {
   const meters: [string, string][] = [["Passport", "$0.10"], ["EU AI Act audit", "$0.25"], ["Council (BFT)", "$0.10"], ["Governance", "$0.50"], ["Sigil", "$0.01"], ["Defence", "$1.00"]];
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
-      <section className="mx-auto max-w-6xl px-6 pt-12 pb-6 text-center">
+      <section className="relative overflow-hidden border-b border-emerald-500/15 mx-auto max-w-6xl px-6 pt-16 pb-8 text-center">
+        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - plans</p>
-        <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">Own your AI. Own your data. Start free.</h1>
+        <h1 className="relative mt-3 text-5xl sm:text-6xl font-black tracking-tight">Own your AI. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Own your data.</span></h1>
         <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">An open-source Sovereign for everyone, a full governed stack when you need it. Transparent, EU AI Act-ready, UK-resident, MIT-licensed.</p>
         <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-[#05140d] p-1 text-sm">
           <button onClick={() => setAnnual(false)} className={(!annual ? "bg-emerald-500 text-[#03110b] " : "text-emerald-200 ") + "rounded-full px-4 py-1.5 font-bold"}>Monthly</button>
