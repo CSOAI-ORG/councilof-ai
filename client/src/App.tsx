@@ -182,6 +182,7 @@ import SovSpace from "./pages/SovSpace";
 import BadgesPage from "./pages/BadgesPage";
 import RealWorldMap from "./pages/RealWorldMap";
 import PlansPage from "./pages/PlansPage";
+import OnboardOS from "./pages/OnboardOS";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
 import { frameworksdata } from "./data/frameworks-content";
@@ -588,6 +589,9 @@ function App() {
                   <Route path="/real-world" component={RealWorldMap} />
                   <Route path="/plans" component={PlansPage} />
                   <Route path="/sovereign-pricing" component={PlansPage} />
+                  <Route path="/start" component={OnboardOS} />
+                  <Route path="/welcome" component={OnboardOS} />
+                  <Route path="/onboard" component={OnboardOS} />
                   <Route component={NotFound} />
                   </Switch>
                 </main>
