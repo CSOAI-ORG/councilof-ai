@@ -181,6 +181,7 @@ import SovereignDock from "./components/SovereignDock";
 import SovSpace from "./pages/SovSpace";
 import BadgesPage from "./pages/BadgesPage";
 import RealWorldMap from "./pages/RealWorldMap";
+import PlansPage from "./pages/PlansPage";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
 import { frameworksdata } from "./data/frameworks-content";
@@ -585,6 +586,8 @@ function App() {
                   <Route path="/authority" component={BadgesPage} />
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
+                  <Route path="/plans" component={PlansPage} />
+                  <Route path="/sovereign-pricing" component={PlansPage} />
                   <Route component={NotFound} />
                   </Switch>
                 </main>
