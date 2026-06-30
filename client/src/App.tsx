@@ -99,6 +99,7 @@ import DataProcessingAgreement from "./pages/legal/DataProcessingAgreement";
 import CookiePolicy from "./pages/legal/CookiePolicy";
 import ServiceLevelAgreement from "./pages/legal/ServiceLevelAgreement";
 import Council from "./pages/Council";
+import AiGovernanceHub from "./pages/AiGovernanceHub";
 import { AnalyticsProvider } from "./components/Analytics";
 
 function ScrollToTop() {
@@ -371,7 +372,9 @@ function App() {
 
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
-                  <Route component={NotFound} />
+                  <Route path="/ai-governance" component={AiGovernanceHub} />
+          <Route path="/ai-governance-guide" component={AiGovernanceHub} />
+          <Route component={NotFound} />
                   </Switch>
                 </main>
                 <Footer />
