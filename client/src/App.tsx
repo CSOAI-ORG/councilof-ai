@@ -372,7 +372,7 @@ function App() {
 
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
-                  <Route path="/ai-governance" component={AiGovernanceHub} />
+          <Route path="/ai-governance" component={AiGovernanceHub} />
           <Route path="/ai-governance-guide" component={AiGovernanceHub} />
           <Route component={NotFound} />
                   </Switch>
