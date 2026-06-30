@@ -183,6 +183,8 @@ import BadgesPage from "./pages/BadgesPage";
 import RealWorldMap from "./pages/RealWorldMap";
 import PlansPage from "./pages/PlansPage";
 import OnboardOS from "./pages/OnboardOS";
+import OpenMedia from "./pages/OpenMedia";
+import StatusPage from "./pages/StatusPage";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
 import { frameworksdata } from "./data/frameworks-content";
@@ -592,6 +594,10 @@ function App() {
                   <Route path="/start" component={OnboardOS} />
                   <Route path="/welcome" component={OnboardOS} />
                   <Route path="/onboard" component={OnboardOS} />
+                  <Route path="/open-media" component={OpenMedia} />
+                  <Route path="/commons" component={OpenMedia} />
+                  <Route path="/status" component={StatusPage} />
+                  <Route path="/system" component={StatusPage} />
                   <Route component={NotFound} />
                   </Switch>
                 </main>
