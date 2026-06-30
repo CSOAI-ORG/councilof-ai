@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { gatewayLive, runGovernance } from "../lib/sovereign-gateway";
 
-// Sovereign Space - the in-browser simulation of the CSOAI AI-OS. Feed data + text,
-// watch the 33-agent council deliberate in real time, and the Sovereign narrates and
-// speaks every step as it happens. This is the web-native preview of the immersive
-// Unreal Engine 5 world; the same flow pixel-streams from UE5 in the full OS.
-// You command -> the Sovereign acts -> Layer 0 signs.
+// Sovereign Space - the CSOAI AI-OS simulation. Feed data + text, watch the
+// 33-agent council deliberate, and the Sovereign narrates + speaks every step.
+// When VITE_SOV_GATEWAY is set it runs LIVE against the MEOK 59-MCP substrate
+// (council + audit + sigil); otherwise it runs the local simulation. The same
+// flow pixel-streams from Unreal Engine 5 in the full OS.
 
 type Step = { t: string; phase: number };
 const SAMPLE = "A hospital wants to deploy an AI triage model in the EU that ranks ER patients by urgency.";
@@ -32,6 +33,7 @@ export default function SovSpace() {
   const [voiceOn, setVoiceOn] = useState(true);
   const endRef = useRef<HTMLDivElement | null>(null);
   const timers = useRef<any[]>([]);
+  const live = gatewayLive();
 
   useEffect(() => { document.title = "Sovereign Space - simulate, experiment, govern | CSOAI"; }, []);
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [log]);
@@ -50,7 +52,6 @@ export default function SovSpace() {
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = "#03110b"; ctx.fillRect(0, 0, w, h);
       const R = Math.min(w, h) * 0.34;
-      // council ring
       for (let i = 0; i < N; i++) {
         const a = (i / N) * Math.PI * 2 + tick * 0.002;
         const x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R;
@@ -59,9 +60,7 @@ export default function SovSpace() {
         ctx.fillStyle = lit ? "#34d399" : "rgba(16,185,129,0.35)"; ctx.fill();
         if (ph >= 3) { ctx.strokeStyle = "rgba(16,185,129," + (0.05 + 0.05 * Math.sin(tick * 0.05 + i)) + ")"; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke(); }
       }
-      // data particles flowing in (phase 1+)
       if (ph >= 1) { for (let k = 0; k < 26; k++) { const p = ((tick * 4 + k * 30) % 300) / 300; const x = 20 * DPR + p * (cx - 20 * DPR); const y = cy + Math.sin(k + tick * 0.04) * 26 * DPR; ctx.fillStyle = "rgba(110,231,183," + (1 - p) + ")"; ctx.fillRect(x, y, 2.4 * DPR, 2.4 * DPR); } }
-      // sovereign core
       const pulse = 1 + 0.08 * Math.sin(tick * 0.08);
       const grd = ctx.createRadialGradient(cx, cy, 2, cx, cy, 46 * DPR * pulse);
       grd.addColorStop(0, ph >= 4 ? "#a7f3d0" : "#10b981"); grd.addColorStop(1, "rgba(4,120,87,0)");
@@ -76,18 +75,34 @@ export default function SovSpace() {
 
   function speak(t: string) { if (!voiceOn) return; try { const u = new SpeechSynthesisUtterance(t); u.rate = 1.04; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(v.name + " " + v.lang)); if (pick) u.voice = pick; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {} }
 
-  function run() {
+  function playSteps(steps: Step[], verdict?: string, signed?: boolean) {
+    let i = 0;
+    const play = () => {
+      if (i >= steps.length) {
+        phaseRef.current = 4;
+        if (verdict) setLog((l) => l.concat("Verdict: " + verdict + (signed ? " (signed)" : "")));
+        setRunning(false); setDone(true); return;
+      }
+      const st = steps[i++]; phaseRef.current = st.phase; setLog((l) => l.concat(st.t)); speak(st.t);
+      const id = setTimeout(play, 1050); timers.current.push(id);
+    };
+    play();
+  }
+
+  async function run() {
     timers.current.forEach(clearTimeout); timers.current = [];
     setLog([]); setDone(false); setRunning(true); phaseRef.current = 0;
-    const steps = buildRun(scenario);
-    steps.forEach((st, i) => {
-      const id = setTimeout(() => {
-        phaseRef.current = st.phase;
-        setLog((l) => l.concat(st.t)); speak(st.t);
-        if (i === steps.length - 1) { setRunning(false); setDone(true); }
-      }, 1100 * (i + 1));
-      timers.current.push(id);
-    });
+    if (live) {
+      try {
+        const result = await runGovernance(scenario, "");
+        const steps = (result.steps && result.steps.length) ? result.steps : buildRun(scenario);
+        playSteps(steps, result.verdict, result.signed);
+        return;
+      } catch (e) {
+        setLog((l) => l.concat("Live gateway unavailable - running local simulation."));
+      }
+    }
+    playSteps(buildRun(scenario), "Compliant with conditions - signed and ledgered.", true);
   }
   function reset() { timers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); }
 
@@ -102,6 +117,7 @@ export default function SovSpace() {
         <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20">
           <canvas ref={canvasRef} className="h-[420px] w-full block" />
           <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "verdict signed - Layer 0" : "sov space - idle"}</div>
+          <div className={"absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] " + (live ? "bg-emerald-500/20 text-emerald-200" : "bg-amber-500/15 text-amber-200/80")}>{live ? "LIVE - MEOK gateway" : "SIM - local"}</div>
         </div>
         <div className="flex flex-col rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
           <label className="text-xs font-bold text-emerald-200/80">Your experiment</label>
@@ -114,7 +130,7 @@ export default function SovSpace() {
           <div className="mt-3 flex-1 space-y-2 overflow-y-auto rounded-xl border border-emerald-500/10 bg-black/20 p-3 text-sm" style={{ minHeight: 180 }}>
             {log.length === 0 && <div className="text-emerald-300/40">The Sovereign will narrate here as your experiment runs.</div>}
             {log.map((m, i) => (<div key={i} className="flex gap-2"><span className="text-emerald-400">{String.fromCharCode(9673)}</span><span className="text-emerald-50/90">{m}</span></div>))}
-            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100"><b>Verdict:</b> Compliant with conditions - signed and ledgered. Open the Council to inspect, or run another.</div>}
+            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100"><b>Verdict:</b> signed and ledgered. Open the Council to inspect, or run another.</div>}
             <div ref={endRef} />
           </div>
         </div>
