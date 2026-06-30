@@ -579,6 +579,7 @@ function App() {
                   </Switch>
                 </main>
                 <Footer />
+                <SovereignDock />
               </div>
               <Toaster
                 position="top-right"
