@@ -179,6 +179,8 @@ import Agents from "./pages/Agents";
 import Academy from "./pages/Academy";
 import SovereignDock from "./components/SovereignDock";
 import SovSpace from "./pages/SovSpace";
+import BadgesPage from "./pages/BadgesPage";
+import RealWorldMap from "./pages/RealWorldMap";
 import Distribution from "./pages/Distribution";
 import McpFleet from "./pages/McpFleet";
 import { frameworksdata } from "./data/frameworks-content";
@@ -579,6 +581,10 @@ function App() {
                   <Route path="/sov-space" component={SovSpace} />
                   <Route path="/sovereign-space" component={SovSpace} />
                   <Route path="/simulate" component={SovSpace} />
+                  <Route path="/badges" component={BadgesPage} />
+                  <Route path="/authority" component={BadgesPage} />
+                  <Route path="/world-3d" component={RealWorldMap} />
+                  <Route path="/real-world" component={RealWorldMap} />
                   <Route component={NotFound} />
                   </Switch>
                 </main>
