@@ -3,8 +3,8 @@ export default function EmergencePage() {
   const cv = useRef<HTMLCanvasElement | null>(null);
   const chargeRef = useRef(0); const hatchedRef = useRef(false);
   const [charge, setCharge] = useState(0); const [hatched, setHatched] = useState(false);
-  useEffect(() => { document.title = "Emergence - the living egg | CSOAI"; }, []);
-  function addCharge() { const n = Math.min(100, chargeRef.current + 12); chargeRef.current = n; setCharge(n); if (n >= 100 && !hatchedRef.current) { hatchedRef.current = true; setHatched(true); } }
+  useEffect(() => { document.title = "Emergence - the living egg | CSOAI"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { hatchedRef.current = true; setHatched(true); } } } catch (e) {} }, []);
+  function addCharge() { const n = Math.min(100, chargeRef.current + 12); chargeRef.current = n; setCharge(n); try { localStorage.setItem("sov_charge", String(n)); } catch (e) {} if (n >= 100 && !hatchedRef.current) { hatchedRef.current = true; setHatched(true); } }
   useEffect(() => {
     const c = cv.current; if (!c) return; const ctx = c.getContext("2d"); if (!ctx) return;
     let raf = 0; const DPR = Math.min(window.devicePixelRatio || 1, 2);

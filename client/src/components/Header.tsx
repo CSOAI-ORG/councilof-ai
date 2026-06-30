@@ -29,6 +29,9 @@ const navigation = [
     submenu: [
       { name: "Sov Space", href: "/sov-space", description: "Simulate and govern in real time" },
       { name: "Governance Graph", href: "/graph", description: "The governed Google" },
+      { name: "Tool Commons", href: "/tool-commons", description: "377 governed MCP tools" },
+      { name: "Open Commons", href: "/commons", description: "Free Creative Commons media" },
+      { name: "Emergence", href: "/emergence", description: "The living egg" },
       { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
       { name: "Start free", href: "/start", description: "Build your own AI" },
       { name: "Plans and Pricing", href: "/plans", description: "Free to Enterprise" },
