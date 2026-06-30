@@ -184,6 +184,7 @@ import RealWorldMap from "./pages/RealWorldMap";
 import PlansPage from "./pages/PlansPage";
 import OnboardOS from "./pages/OnboardOS";
 import GovGraph from "./pages/GovGraph";
+import ToolCommons from "./pages/ToolCommons";
 import OpenMedia from "./pages/OpenMedia";
 import StatusPage from "./pages/StatusPage";
 import Distribution from "./pages/Distribution";
@@ -602,6 +603,9 @@ function App() {
                   <Route path="/graph" component={GovGraph} />
                   <Route path="/governance-graph" component={GovGraph} />
                   <Route path="/world-data" component={GovGraph} />
+                  <Route path="/tools" component={ToolCommons} />
+                  <Route path="/tool-commons" component={ToolCommons} />
+                  <Route path="/mcp-tools" component={ToolCommons} />
                   <Route component={NotFound} />
                   </Switch>
                 </main>
