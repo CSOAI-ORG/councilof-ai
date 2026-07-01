@@ -110,7 +110,23 @@ export default function SovereignDock() {
   const [listening, setListening] = useState(false);
   const [voiceOn, setVoiceOn] = useState(true);
   const [hz, setHz] = useState<any>(null);
+  const [brainOpen, setBrainOpen] = useState(false);
+  const [brainMode, setBrainMode] = useState<string>(() => { try { return localStorage.getItem("sov_brain_mode") || "hosted"; } catch (e) { return "hosted"; } });
   const endRef = useRef<HTMLDivElement | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
+
+  function onFiles(e: any) {
+    const fs = Array.from((e.target.files || []) as FileList); if (!fs.length) return;
+    setMsgs((m) => m.concat({ role: "you", text: "📎 " + fs.map((f) => f.name).join(", ") }));
+    setMsgs((m) => m.concat({ role: "sov", text: "Received " + fs.length + " file" + (fs.length > 1 ? "s" : "") + ". I'll review under Layer 0 — perception runs on my right brain (vision/VLM), reasoning on my left, and nothing leaves your governance boundary without a signed decision." }));
+    chargeSovereign(4); try { e.target.value = ""; } catch (er) {}
+  }
+  const BRAIN: Record<string, string> = {
+    offline: "Offline brain — a local open-source model runs on your own hardware. Fully sovereign, no data leaves you. I wrap it in BFT + Layer 0 so it still stays compliant.",
+    hosted: "Hosted brain — premium models, governed. I route your request to the best model (MoE, world model or VLM), the BFT council checks the answer, and every decision is signed.",
+    paygo: "Pay-as-you-go — you only pay per governed call. Same BFT + Layer 0 floor; ideal for bursty or trial use.",
+  };
+  function setBrain(mode: string) { setBrainMode(mode); try { localStorage.setItem("sov_brain_mode", mode); } catch (e) {} setMsgs((m) => m.concat({ role: "sov", text: BRAIN[mode] })); }
 
   useEffect(() => { fetchHealth().then(setHz); }, []);
 
@@ -223,8 +239,22 @@ export default function SovereignDock() {
             <div ref={endRef} />
           </div>
           <div className="border-t border-emerald-500/15 p-3">
-            <div className="flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-white/[0.04] px-2 py-1.5">
-              <button onClick={voice} aria-label="Speak to your Sovereign" className={"flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold " + (listening ? "bg-rose-500/30 text-rose-200 animate-pulse" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>MIC</button>
+            {brainOpen && (
+              <div className="mb-2 rounded-xl border border-emerald-400/25 bg-[#04120c] p-3">
+                <div className="text-[11px] font-bold text-emerald-100">Your Sovereign brain</div>
+                <p className="mt-1 text-[11px] leading-relaxed text-emerald-100/70">A sandwich: a <b className="text-emerald-200">left brain</b> (reasoning, tools, BFT compliance) and a <b className="text-emerald-200">right brain</b> (perception, vision/VLM). Route any model underneath — MoE, mixture-of-models, a world model, a VLM — and the Sovereign wraps it in the 33-agent BFT council + Layer 0 so whatever you plug in stays compliant and signed.</p>
+                <div className="mt-2 grid grid-cols-3 gap-1.5">
+                  {[["offline", "Offline"], ["hosted", "Hosted"], ["paygo", "PAYG"]].map(([id, label]) => (
+                    <button key={id} onClick={() => setBrain(id)} className={"rounded-lg px-2 py-1.5 text-[11px] font-bold " + (brainMode === id ? "bg-emerald-500 text-[#03110b]" : "border border-emerald-400/30 text-emerald-100 hover:bg-white/5")}>{label}</button>
+                  ))}
+                </div>
+              </div>
+            )}
+            <input ref={fileRef} type="file" multiple accept="image/*,application/pdf,.txt,.csv,.json,.docx" className="hidden" onChange={onFiles} />
+            <div className="flex items-center gap-1.5 rounded-xl border border-emerald-400/30 bg-white/[0.04] px-2 py-1.5">
+              <button onClick={() => fileRef.current && fileRef.current.click()} aria-label="Upload files or photos" title="Upload files / photos — governed under Layer 0" className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 text-lg font-bold text-emerald-200 hover:bg-emerald-500/25">+</button>
+              <button onClick={() => setBrainOpen((b) => !b)} aria-label="Sovereign brain setup" title="Brain setup — offline / hosted / PAYG" className={"flex h-8 w-8 items-center justify-center rounded-lg text-sm " + (brainOpen ? "bg-emerald-500/30 text-emerald-100" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>{"◉"}</button>
+              <button onClick={voice} aria-label="Speak to your Sovereign" className={"flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-bold " + (listening ? "bg-rose-500/30 text-rose-200 animate-pulse" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>MIC</button>
               <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") act(input); }} placeholder="Ask me anything..." className="flex-1 bg-transparent text-sm text-emerald-50 placeholder-emerald-300/40 focus:outline-none" />
               <button onClick={() => act(input)} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Send</button>
             </div>
