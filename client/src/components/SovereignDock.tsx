@@ -130,7 +130,7 @@ export default function SovereignDock() {
 
   useEffect(() => { fetchHealth().then(setHz); }, []);
 
-  useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [msgs, open]);
+  useEffect(() => { const el = endRef.current && (endRef.current.parentElement as HTMLElement | null); if (el) el.scrollTop = el.scrollHeight; }, [msgs, open]);
 
   useEffect(() => {
     if (!voiceOn || msgs.length <= 1) return;

@@ -173,8 +173,8 @@ export default function DemoOS() {
   const bridgeT = useRef<any[]>([]);
   const flewThisLine = useRef(false);
 
-  useEffect(() => { document.title = "The AI OS - live demo & tour | CSOAI"; return () => cleanup(); }, []);
-  useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [chat]);
+  useEffect(() => { document.title = "The AI OS - live demo & tour | CSOAI"; const prev = document.body.style.overflow; document.body.style.overflow = "hidden"; return () => { document.body.style.overflow = prev; cleanup(); }; }, []);
+  useEffect(() => { const el = endRef.current && (endRef.current.parentElement as HTMLElement | null); if (el) el.scrollTop = el.scrollHeight; }, [chat]);
 
   function cleanup() { try { window.speechSynthesis.cancel(); } catch (e) {} if (timer.current) clearTimeout(timer.current); if (typeT.current) clearInterval(typeT.current); bridgeT.current.forEach(clearTimeout); bridgeT.current = []; try { rec.current && rec.current.stop(); } catch (e) {} }
   function post(msg: any) { try { frame.current && frame.current.contentWindow && frame.current.contentWindow.postMessage(msg, "*"); } catch (e) {} }
