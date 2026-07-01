@@ -5,6 +5,7 @@
  */
 
 import { Link } from "wouter";
+import { startTour } from "../lib/demoTour";
 import { motion } from "framer-motion";
 import {
   Shield,
@@ -323,6 +324,7 @@ export default function NewHomeV2() {
                     <div className="mb-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link href="/start"><Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">Start free - build your own AI</Button></Link>
             <Link href="/sov-space"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">Try Sov Space</Button></Link>
+            <Button size="lg" variant="outline" onClick={() => { startTour(); window.location.assign("/"); }} className="border-2 border-emerald-400/50 text-emerald-100 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">▶ Watch the live demo</Button>
           </div>
 
           {/* Choose Your Path - Role-based CTAs */}
