@@ -80,21 +80,21 @@ export default function Login() {
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Welcome Back to the Future of AI Safety
+            Welcome back to your Sovereign
           </h1>
 
           <p className="text-lg text-gray-600 mb-8">
-            Join certified AI Safety Analysts protecting humanity from AI risks while
-            building rewarding careers.
+            Sign in to your AI governance operating system — your Sovereign, the live governance
+            graph, and the signing council are right where you left them.
           </p>
 
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-gray-900">Access Your Training</h3>
+                <h3 className="font-semibold text-gray-900">Open your OS</h3>
                 <p className="text-sm text-gray-600">
-                  Continue your courses and track progress toward certification
+                  Jump back into the launchpad — every governance tool on one Layer 0 floor
                 </p>
               </div>
             </div>
@@ -102,9 +102,9 @@ export default function Login() {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-gray-900">Manage AI Systems</h3>
+                <h3 className="font-semibold text-gray-900">Govern any AI system</h3>
                 <p className="text-sm text-gray-600">
-                  Monitor compliance and run assessments with our 33-Agent Council
+                  Map jurisdictions, run assessments and seal signed verdicts with the BFT Council
                 </p>
               </div>
             </div>
@@ -112,9 +112,9 @@ export default function Login() {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-gray-900">Earn Certifications</h3>
+                <h3 className="font-semibold text-gray-900">Provable, not promised</h3>
                 <p className="text-sm text-gray-600">
-                  Get recognized credentials that employers worldwide trust
+                  Every action Ed25519-signed to Layer 0 — verifiable offline, anytime
                 </p>
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function Login() {
             </div>
             <CardTitle className="text-2xl">Sign In to CSOAI</CardTitle>
             <CardDescription>
-              Access your AI Safety dashboard
+              Access your Sovereign OS
             </CardDescription>
           </CardHeader>
 
