@@ -148,6 +148,20 @@ if(viewer){
       point:{pixelSize:2.4, color:Cesium.Color.fromCssColorString('#a7f3d0').withAlpha(.8)}});
   }
 
+  // ----- Satellites (orbital ring at ~780km), hidden by default -----
+  for(var st=0; st<40; st++){
+    var slon=-180+st*9, slat=Math.sin(st*0.6)*58;
+    viewer.entities.add({ layerTag:'sats', show:false,
+      position:Cesium.Cartesian3.fromDegrees(slon, slat, 780000),
+      point:{pixelSize:4.5, color:Cesium.Color.fromCssColorString('#7dd3fc'), outlineColor:Cesium.Color.WHITE, outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(2e6,1.2,4e7,.4)} });
+  }
+  // ----- Power plants / critical infrastructure, hidden by default -----
+  [[-0.9,51.4],[2.9,49.8],[8.4,49.0],[139.9,35.5],[121.5,31.0],[-77.2,38.9],[-87.6,41.5],[-118.2,34.0],[77.6,13.0],[55.3,25.3],[151.2,-33.6],[-46.5,-23.6],[3.9,6.4],[-79.4,43.6],[-95.4,29.7],[37.6,55.7]].forEach(function(pp){
+    viewer.entities.add({ layerTag:'plants', show:false,
+      position:Cesium.Cartesian3.fromDegrees(pp[0],pp[1]),
+      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#f59e0b'), outlineColor:Cesium.Color.fromCssColorString('#78350f'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)} });
+  });
+
   // layer toggles
   document.querySelectorAll('.lyr').forEach(function(el){
     el.onclick=function(){ var tag=el.dataset.layer, sw=el.querySelector('.sw'), on=!sw.classList.contains('on'); sw.classList.toggle('on',on);

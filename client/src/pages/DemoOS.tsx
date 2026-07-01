@@ -15,6 +15,10 @@ type Step = { say: string; wins?: Win[]; fly?: { lng: number; lat: number; heigh
 const STEPS: Step[] = [
   { say: "Welcome. This is your CSOAI AI Operating System - live, on the world. I'm your Sovereign, and I'll show you everything. Just watch, and interrupt me any time." },
   { say: "First, let me see where you are.", fly: { lng: 0, lat: 20, height: 20000000 } },
+  { say: "Watch - I can drop into any real place on Earth. Here's London, live, from orbit down to the street.", fly: { lng: -0.118, lat: 51.509, height: 15000 } },
+  { say: "Now up to orbit - every satellite and signal, mapped and governed.", fly: { lng: -0.118, lat: 40, height: 22000000 }, layer: { tag: "sats", on: true } },
+  { say: "Across to New York - the OS sees the whole real world, wherever you are.", fly: { lng: -74.0, lat: 40.71, height: 16000 }, full: true },
+  { say: "And up to Canada - Toronto. Critical infrastructure and power, all live on the governed map.", fly: { lng: -79.38, lat: 43.65, height: 16000 }, layer: { tag: "plants", on: true }, full: true },
   { say: "Here's the Governance Graph. Name any company, place or AI system and I map the jurisdiction and every framework that applies.", wins: [{ title: "Governance Graph", src: "/graph?demo=a%20hospital%20in%20Texas", slot: "tr" }], fly: { lng: -99, lat: 31, height: 2600000 } },
   { say: "Now the Council. Describe an AI system and five agents deliberate, then seal a signed verdict.", wins: [{ title: "The Council", src: "/try?demo=We%20use%20AI%20to%20screen%20job%20applicants", slot: "tr" }], fly: { lng: 4.3, lat: 50.8, height: 2600000 } },
   { say: "This is our public Watchdog - humans, agents, humanoids and systems report incidents, and the world heat-maps by problem layer.", wins: [{ title: "Global AI Watchdog", src: "/watchdog-map", slot: "c" }], layer: { tag: "nodes", on: true } },
@@ -49,6 +53,7 @@ export default function DemoOS() {
   const [geoCity, setGeoCity] = useState("");
   const [geoLabel, setGeoLabel] = useState("");
   const [title, setTitle] = useState("");
+  const [ending, setEnding] = useState(false);
 
   const frame = useRef<HTMLIFrameElement | null>(null);
   const timer = useRef<any>(null);
@@ -126,8 +131,8 @@ export default function DemoOS() {
   function advance(idx: number) { const n = idx + 1; setI(n); runStep(n); }
   function next() { if (timer.current) clearTimeout(timer.current); try { window.speechSynthesis.cancel(); } catch (e) {} advance(i); }
 
-  function finish() { closeWins(); post({ cmd: "home", duration: 2.5 }); say("sov", "That's the tour. Jump in - Start free, or ask me anything."); stopRec(); setMode(null); setI(-1); setTitle(""); }
-  function stop() { cleanup(); setMode(null); setI(-1); setWins([]); setWinsShow(false); setTitle(""); setGeoLabel(""); post({ cmd: "home", duration: 2 }); }
+  function finish() { if (timer.current) clearTimeout(timer.current); closeWins(); post({ cmd: "home", duration: 2.5 }); setPaused(false); setEnding(true); setTitle("Where would you like to start?"); narrate("So - where would you like to start? I can scan your area, run a live scenario, show you governance, or explore the globe. Just tap - or tell me."); }
+  function stop() { cleanup(); setMode(null); setI(-1); setWins([]); setWinsShow(false); setTitle(""); setGeoLabel(""); setEnding(false); post({ cmd: "home", duration: 2 }); }
 
   function onBargeIn(said: string) { if (timer.current) clearTimeout(timer.current); try { window.speechSynthesis.cancel(); } catch (e) {} setPaused(true); say("you", said); answer(said); }
   function interrupt() {
@@ -195,11 +200,18 @@ export default function DemoOS() {
             {chat.map((m) => (<div key={m.id} className={m.who === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[92%] rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.t}</div>))}
             <div ref={endRef} />
           </div>
-          <div className="flex items-center gap-2 border-t border-emerald-500/15 p-3">
-            {!paused ? (
-              <button onClick={interrupt} className={"flex-1 rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "🎙 Just speak - I'm listening" : "🎙 Interrupt & ask")}</button>
+          <div className="border-t border-emerald-500/15 p-3">
+            {ending ? (
+              <div className="grid grid-cols-2 gap-2">
+                <a href="/world" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Scan my area</a>
+                <a href="/sov-space" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Run a live scenario</a>
+                <a href="/graph" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Show governance</a>
+                <a href="/os" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS ▶</a>
+              </div>
+            ) : !paused ? (
+              <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "🎙 Just speak - I'm listening" : "🎙 Interrupt & ask")}</button>
             ) : (
-              <button onClick={resume} className="flex-1 rounded-xl bg-emerald-500 px-3 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Resume tour ▶</button>
+              <button onClick={resume} className="w-full rounded-xl bg-emerald-500 px-3 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Resume tour ▶</button>
             )}
           </div>
         </div>
