@@ -24,6 +24,9 @@ const EXAMPLES = [
   "We run facial recognition in a public space. Is that allowed?",
 ];
 
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+async function sha256Hex(s: string): Promise<string> { try { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join(""); } catch (e) { return ""; } }
+
 type Domain = { key: string; label: string; tier: "Prohibited" | "High-risk" | "Limited" | "Minimal"; frameworks: string[]; why: string };
 
 function classify(q: string): Domain {
@@ -75,6 +78,9 @@ export default function TryCouncil() {
   const [shown, setShown] = useState(0);
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [liveLines, setLiveLines] = useState<Record<string, string>>({});
+  const [liveState, setLiveState] = useState<"idle" | "running" | "done">("idle");
+  const [sig, setSig] = useState("");
 
   function ask(question: string) {
     const text = question.trim();
@@ -84,7 +90,23 @@ export default function TryCouncil() {
     setResult(d);
     setShown(0);
     setSent(false);
+    setLiveLines({}); setLiveState("idle"); setSig("");
     AGENTS.forEach((_, i) => setTimeout(() => setShown((n) => Math.max(n, i + 1)), 450 * (i + 1)));
+  }
+
+  async function convene() {
+    if (!result) return;
+    setLiveState("running"); setLiveLines({}); setSig("");
+    await Promise.all(AGENTS.map(async (a) => {
+      try {
+        const prompt = "You are the " + a.name + ", the AI-governance council member who " + a.role + ". In no more than 2 sentences, give your distinct view on this system: \"" + q + "\". Working classification: " + result.tier + " (" + result.label + "); frameworks: " + result.frameworks.join(", ") + ". Speak in your role's voice, no preamble.";
+        const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: prompt }) });
+        if (r.ok) { const j = await r.json(); if (j && j.response && j.model !== "idle") setLiveLines((m) => ({ ...m, [a.id]: String(j.response) })); }
+      } catch (e) {}
+    }));
+    const ts = new Date().toISOString();
+    const digest = await sha256Hex(q + "|" + result.tier + "|" + result.frameworks.join(",") + "|" + ts);
+    setSig(digest.slice(0, 40)); setLiveState("done");
   }
 
   return (
@@ -141,7 +163,7 @@ export default function TryCouncil() {
                     <span className="font-bold text-gray-900">{a.name}</span>
                     <span className="text-xs text-gray-400">{a.role}</span>
                   </div>
-                  <p className="mt-2 text-sm text-gray-700 leading-snug">{i < shown ? agentLine(a, result) : ""}</p>
+                  <p className="mt-2 text-sm text-gray-700 leading-snug">{liveState !== "idle" ? (liveLines[a.id] || (liveState === "running" ? "deliberating live…" : agentLine(a, result))) : (i < shown ? agentLine(a, result) : "")}{liveLines[a.id] ? <span className="ml-1 align-middle font-mono text-[9px] uppercase tracking-wide text-emerald-600">live</span> : null}</p>
                 </div>
               ))}
             </div>
@@ -150,6 +172,9 @@ export default function TryCouncil() {
               <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
                 <div className="font-bold text-emerald-900">Consensus reached — Byzantine-fault-tolerant vote</div>
                 <p className="mt-1 text-sm text-emerald-800">The council agrees: <strong>{result.tier}</strong>. {result.tier === "High-risk" ? "Begin a conformity programme against the six EU AI Act duties (Art. 9-15) before the August 2026 deadline." : result.tier === "Prohibited" ? "Do not deploy — redesign the use case." : "Apply the transparency duties now and re-assess at every material change."}</p>
+                {liveState === "idle" && <button onClick={convene} className="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800">Convene the live 5-agent council →</button>}
+                {liveState === "running" && <div className="mt-3 text-sm text-emerald-700">The five agents are deliberating live over the gateway…</div>}
+                {sig && <div className="mt-3 rounded-lg bg-white/70 p-2 font-mono text-[10px] text-emerald-800 break-all">Verdict sealed · Layer 0 ledger hash (SHA-256): {sig}</div>}
                 {!sent ? (
                   <div className="mt-4 flex flex-wrap items-center gap-2">
                     <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="you@company.com"
