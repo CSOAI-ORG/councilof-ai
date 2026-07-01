@@ -84,6 +84,7 @@ function Detail({ f }: { f: HiveFramework }) {
           <a href={"/sov-space?demo=" + simQ} className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">▶ Run a compliance simulation</a>
           <a href="/readiness-assessment" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Get compliant — 2-min check</a>
           <a href="/academy" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Get trained</a>
+          <a href="/system-card" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card</a>
           <a href={"/frameworks/" + f.slug} className="rounded-full border border-emerald-400/25 px-3 py-1.5 text-xs text-emerald-200/80 hover:bg-white/5">Full clause-by-clause crosswalk →</a>
         </div>
       </div>
