@@ -1,4 +1,21 @@
 import { useEffect, useRef, useState } from "react";
+import { chargeSovereign } from "../lib/sovCharge";
+
+const GLOBE_GW = "https://os.meok.ai/api";
+const PLACE_HINTS: { re: RegExp; id: string }[] = [
+  { re: /\beu\b|europe|brussels|german|france|spain|italy|ireland/i, id: "euaa" },
+  { re: /fedramp|oscal|\bdc\b|washington/i, id: "fedramp" },
+  { re: /\bus\b|usa|america|nist/i, id: "nist" },
+  { re: /california|ccpa|cpra|sacramento/i, id: "ccpa" },
+  { re: /new york|\bnyc\b|ll144/i, id: "nyc" },
+  { re: /\buk\b|britain|london|england/i, id: "uk" },
+  { re: /canada|aida|ottawa/i, id: "aida" },
+  { re: /china|beijing|pipl/i, id: "pipl" },
+  { re: /singapore/i, id: "sg" },
+];
+const GLOBE_IND = ["healthcare", "hospital", "clinical", "fintech", "finance", "banking", "insurance", "hr", "hiring", "recruiting", "education", "retail", "defense", "government", "pharma", "biotech", "energy", "telecom", "legal", "gaming", "crypto"];
+async function globeChat(msg: string): Promise<string> { try { const r = await fetch(GLOBE_GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: msg }) }); if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") return String(d.response); } } catch (e) {} return ""; }
+async function globeGovern(q: string): Promise<any> { try { const r = await fetch(GLOBE_GW + "/govern?q=" + encodeURIComponent(q)); if (r.ok) { const d = await r.json(); if (d && d.matched) return d; } } catch (e) {} return null; }
 
 // WorldGlobe - a living, layered, zero-dependency world globe. Auto-rotates (pure SVG
 // orthographic projection), pins every framework temple at its real lat/long, layers
@@ -43,7 +60,25 @@ export default function WorldGlobe() {
   const [spin, setSpin] = useState(true);
   const [layers, setLayers] = useState<{ fw: boolean; council: boolean }>({ fw: true, council: false });
   const [sel, setSel] = useState<Pin | null>(null);
+  const [ask, setAsk] = useState("");
+  const [ans, setAns] = useState("");
+  const [asking, setAsking] = useState(false);
   const raf = useRef<number | null>(null);
+
+  async function runAsk() {
+    const t = ask.trim(); if (!t) return;
+    setAsking(true); setAns(""); chargeSovereign(6);
+    // fly the globe to the matching framework pin
+    const hint = PLACE_HINTS.find((h) => h.re.test(t));
+    const pin = hint ? FRAMEWORKS.find((p) => p.id === hint.id) : null;
+    if (pin) { setLayers((l) => ({ ...l, fw: true })); setSel(pin); setSpin(false); setRot((((-pin.lng) % 360) + 360) % 360); }
+    const ind = GLOBE_IND.find((w) => new RegExp("\\b" + w + "\\b", "i").test(t));
+    const [c, gov] = await Promise.all([globeChat(t), ind ? globeGovern(ind) : Promise.resolve(null)]);
+    let out = c || "";
+    if (gov && gov.frameworks) out += (out ? "\n\n" : "") + "Governance stack for " + gov.industry + ": " + gov.frameworks.map((f: any) => f.name).join(", ") + ". Layer 0 signed.";
+    setAns(out || "I could not reach the Sovereign just now - try a place or a sector.");
+    setAsking(false);
+  }
   useEffect(() => {
     if (!spin) return;
     const id = window.setInterval(() => setRot((r) => (r + 0.4) % 360), 40);
@@ -108,6 +143,14 @@ export default function WorldGlobe() {
               </div>
             </div>
           )}
+          <div className="mt-5 border-t border-white/10 pt-4">
+            <label className="text-[11px] uppercase tracking-wide text-emerald-300/60">Ask the Sovereign about the world</label>
+            <div className="mt-2 flex gap-2">
+              <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="e.g. what governs a hospital AI in Germany?" className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-emerald-400 focus:outline-none" />
+              <button onClick={runAsk} disabled={asking} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-60">{asking ? "…" : "Ask"}</button>
+            </div>
+            {ans && <div className="mt-3 max-h-52 overflow-y-auto whitespace-pre-wrap rounded-lg bg-black/30 px-3 py-2 text-sm leading-relaxed text-white/85">{ans}</div>}
+          </div>
         </div>
       </section>
     </div>
