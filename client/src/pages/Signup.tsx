@@ -13,6 +13,13 @@ import { Shield, ArrowRight, CheckCircle2, Star, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
+const PLAN_INFO: Record<string, { label: string; blurb: string; accent: 'amber' | 'emerald' }> = {
+  operator: { label: 'Operator — Defence-grade', blurb: 'ONE OS live agent + humanoid tracking, pre-emptive rogue-swarm stop, Emergence dome & Watchdog console. $249/mo.', accent: 'amber' },
+  pro: { label: 'Pro', blurb: 'Premium hosted models, EU AI Act audit, BFT council & real-world Sov Space. From $82.50/mo.', accent: 'emerald' },
+  team: { label: 'Team', blurb: 'Everything in Pro per seat, SSO + SCIM, shared council & audit logs.', accent: 'emerald' },
+  enterprise: { label: 'Enterprise', blurb: 'Full EU AI Act audit suite, dedicated council + defence, data residency & SLA.', accent: 'emerald' },
+};
+
 export default function Signup() {
   const [, setLocation] = useLocation();
   const { user, signup, loading } = useAuth();
@@ -21,6 +28,16 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [plan, setPlan] = useState('');
+
+  // Capture the intended plan / credits pack from the pricing CTAs so it survives signup.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const p = (q.get('plan') || '').toLowerCase();
+    const credits = (q.get('credits') || '').toLowerCase();
+    if (p && PLAN_INFO[p]) { setPlan(p); try { localStorage.setItem('sov_intended_plan', p); } catch (e) {} }
+    if (credits) { try { localStorage.setItem('sov_intended_credits', credits); } catch (e) {} }
+  }, []);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -140,22 +157,33 @@ export default function Signup() {
             <div className="mx-auto mb-4 h-16 w-16 bg-green-100 rounded-full flex items-center justify-center">
               <Shield className="h-8 w-8 text-green-600" />
             </div>
-            <CardTitle className="text-2xl">Create Your Free Account</CardTitle>
+            <CardTitle className="text-2xl">{plan && PLAN_INFO[plan] ? 'Create your account' : 'Create Your Free Account'}</CardTitle>
             <CardDescription>
-              Start learning in under 60 seconds
+              {plan && PLAN_INFO[plan] ? 'One step from your ' + PLAN_INFO[plan].label.split(' — ')[0] + ' plan' : 'Own your AI, own your data — in under 60 seconds'}
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-blue-900 mb-2">What's Included (Free):</h3>
-              <ul className="space-y-1 text-sm text-blue-800">
-                <li>✓ Access to 3 foundation courses</li>
-                <li>✓ Progress tracking dashboard</li>
-                <li>✓ Community forum access</li>
-                <li>✓ Certificate upon completion</li>
-              </ul>
-            </div>
+            {plan && PLAN_INFO[plan] ? (
+              <div className={"rounded-lg p-4 border " + (PLAN_INFO[plan].accent === 'amber' ? 'bg-amber-50 border-amber-300' : 'bg-emerald-50 border-emerald-300')}>
+                <div className="flex items-center justify-between">
+                  <h3 className={"font-bold " + (PLAN_INFO[plan].accent === 'amber' ? 'text-amber-900' : 'text-emerald-900')}>Selected plan: {PLAN_INFO[plan].label}</h3>
+                  <a href="/pricing" className="text-xs text-gray-500 hover:underline">change</a>
+                </div>
+                <p className={"mt-1 text-sm " + (PLAN_INFO[plan].accent === 'amber' ? 'text-amber-800' : 'text-emerald-800')}>{PLAN_INFO[plan].blurb}</p>
+                <p className="mt-2 text-xs text-gray-500">Create your account first — you'll confirm billing on the next step. No charge today.</p>
+              </div>
+            ) : (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="font-semibold text-blue-900 mb-2">What's Included (Free):</h3>
+                <ul className="space-y-1 text-sm text-blue-800">
+                  <li>✓ Your Sovereign on a free open-source model</li>
+                  <li>✓ You own and export your data</li>
+                  <li>✓ Layer 0 signing</li>
+                  <li>✓ Community council demos</li>
+                </ul>
+              </div>
+            )}
 
             <form onSubmit={handleSignup} className="space-y-4">
               <div className="space-y-2">
