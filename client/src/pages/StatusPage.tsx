@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_SOV_GATEWAY) || "";
+import { fetchHealth, fetchToolCount, SovHealth } from "../lib/sovHealth";
+
 const CORE: { name: string; state: string }[] = [
   { name: "Byzantine Council (BFT consensus)", state: "operational" },
   { name: "Compliance engine (30 frameworks)", state: "operational" },
@@ -10,24 +11,100 @@ const CORE: { name: string; state: string }[] = [
   { name: "Sovereign Charter", state: "expanding" },
 ];
 const DOT: Record<string, string> = { operational: "bg-emerald-400", monitoring: "bg-amber-400", expanding: "bg-sky-400" };
+
+const PROTO_LABEL: Record<string, string> = {
+  "/api/sign": "Sign - Ed25519 attestation",
+  "/api/verify": "Verify - signature + chain",
+  "/api/bridge": "Legacy Bridge - COBOL/mainframe",
+  "/api/govern": "Govern - framework mapping",
+  "/api/chat": "Chat - reasoning brain",
+  "/api/knowledge": "Knowledge - live world data",
+  "/api/tools": "Tool Commons - governed MCP",
+  "/api/media": "Media - governed assets",
+  "/api/badge": "Badge - trust credential",
+  "/api/avatar": "Avatar - Sovereign presence",
+  "/api/social": "Social - governed posting",
+};
+
+function Stat({ label, value, ok }: { label: string; value: string; ok?: boolean }) {
+  return (
+    <div className="rounded-xl border border-emerald-500/15 bg-black/25 px-3 py-2">
+      <div className="text-[10px] uppercase tracking-wide text-emerald-300/50">{label}</div>
+      <div className={"font-mono text-sm font-bold " + (ok === false ? "text-amber-300" : "text-emerald-300")}>{value}</div>
+    </div>
+  );
+}
+
 export default function StatusPage() {
-  const [live, setLive] = useState<any>(null);
-  useEffect(() => { document.title = "System Status | CSOAI"; if (/^https?:\/\//.test(GW)) { fetch(GW.replace(/\/$/, "") + "/health").then((r) => (r.ok ? r.json() : null)).then(setLive).catch(() => {}); } }, []);
+  const [live, setLive] = useState<SovHealth | null>(null);
+  const [tools, setTools] = useState<number | null>(null);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    document.title = "System Status - SOV3 brain live | CSOAI";
+    fetchHealth().then((h) => { setLive(h); setChecked(true); });
+    fetchToolCount().then(setTools);
+  }, []);
+
+  const connected = !!(live && live.ok);
   const allOk = CORE.filter((c) => c.state === "operational").length;
+  const protos = (live && Array.isArray(live.tools)) ? live.tools : [];
+  const brain = (live && live.brain) || {};
+
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <section className="relative overflow-hidden border-b border-emerald-500/15">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
-        <div className="relative mx-auto max-w-3xl px-6 pt-16 pb-10 text-center">
+        <div className="relative mx-auto max-w-4xl px-6 pt-16 pb-10 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - system status</p>
           <h1 className="mt-3 text-5xl sm:text-6xl font-black tracking-tight">We publish our <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">own status.</span></h1>
-          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">An AI-governance company should be the most transparent system you run. {allOk} core systems operational; data layers expanding; ledger under continuous integrity monitoring.</p>
+          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">An AI-governance company should be the most transparent system you run. {allOk} core systems operational; the shared Sovereign brain checked live below.</p>
         </div>
       </section>
-      <section className="mx-auto max-w-3xl px-6 py-10 space-y-3">
+
+      <section className="mx-auto max-w-4xl px-6 pt-8">
+        <div className={"rounded-2xl border p-5 " + (connected ? "border-emerald-400/50 bg-gradient-to-br from-emerald-500/15 to-transparent" : checked ? "border-amber-400/40 bg-amber-500/5" : "border-emerald-500/20 bg-[#05140d]")}>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="relative flex h-3 w-3">
+              {connected && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />}
+              <span className={"relative inline-flex h-3 w-3 rounded-full " + (connected ? "bg-emerald-400" : checked ? "bg-amber-400" : "bg-gray-500")} />
+            </span>
+            <span className="text-lg font-black">{connected ? "SOV3 brain - CONNECTED" : checked ? "SOV3 brain - reachable, degraded" : "Checking the SOV3 brain..."}</span>
+            {live && live.version && <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 font-mono text-[11px] text-emerald-300">v{live.version}</span>}
+            <span className="ml-auto font-mono text-[11px] text-emerald-300/60">{live && live.service ? live.service : "os.meok.ai"}</span>
+          </div>
+          <div className="mt-3 grid gap-2 sm:grid-cols-4 text-sm">
+            <Stat label="Surface of" value={(live && live.surface_of ? live.surface_of.join(" - ") : "meok - csoai - defoneos")} />
+            <Stat label="Governed tools" value={tools != null ? tools.toLocaleString() : "377"} />
+            <Stat label="Orchestrator" value={brain.orchestrator ? "live" : "-"} ok={!!brain.orchestrator} />
+            <Stat label="OpenAI-compat" value={brain.openai_compat ? "live" : "-"} ok={!!brain.openai_compat} />
+            <Stat label="Groq" value={brain.groq ? "on" : "-"} ok={!!brain.groq} />
+            <Stat label="Anthropic" value={brain.anthropic ? "on" : "-"} ok={!!brain.anthropic} />
+            <Stat label="Sigil" value={(live && live.governance && live.governance.sigil) || "ed25519"} />
+            <Stat label="Care floor" value={live && live.governance && live.governance.care_floor != null ? String(live.governance.care_floor) : "0.95"} />
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-4xl px-6 pt-6">
+        <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Layer 0 protocols - {connected ? "aligned & live" : "expected"}</h2>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {(protos.length ? protos : Object.keys(PROTO_LABEL)).map((p) => (
+            <div key={p} className="flex items-center justify-between rounded-xl border border-emerald-500/20 bg-[#05140d] px-4 py-3">
+              <span className="text-sm font-semibold text-emerald-100">{PROTO_LABEL[p] || p}</span>
+              <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wide text-emerald-200/70">
+                <span className={"h-2.5 w-2.5 rounded-full " + (connected ? "bg-emerald-400" : "bg-gray-500")} />{connected ? "live" : "..."}
+              </span>
+            </div>
+          ))}
+          {brain.orchestrator && (<div className="flex items-center justify-between rounded-xl border border-emerald-400/30 bg-emerald-500/5 px-4 py-3"><span className="text-sm font-semibold text-emerald-100">Orchestrator - tool-calling brain</span><span className="flex items-center gap-2 font-mono text-[11px] uppercase text-emerald-200/70"><span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />live</span></div>)}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-4xl px-6 py-10 space-y-3">
+        <h2 className="mb-1 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Core systems</h2>
         {CORE.map((c) => (<div key={c.name} className="flex items-center justify-between rounded-2xl border border-emerald-500/20 bg-[#05140d] px-5 py-4"><span className="text-sm font-semibold text-emerald-100">{c.name}</span><span className="flex items-center gap-2 text-xs font-mono uppercase tracking-wide text-emerald-200/70"><span className={"h-2.5 w-2.5 rounded-full " + (DOT[c.state] || "bg-gray-400")} />{c.state}</span></div>))}
-        {live && live.components && (<div className="mt-4 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-transparent p-5"><div className="text-sm font-bold text-emerald-200">Live substrate ({live.status || "connected"})</div><div className="mt-2 grid gap-1 sm:grid-cols-2 text-xs text-emerald-100/80">{Object.keys(live.components).map((k) => (<div key={k} className="flex justify-between"><span>{k}</span><span className="font-mono text-emerald-300">{String(live.components[k])}</span></div>))}</div></div>)}
-        <p className="pt-4 text-center text-xs text-emerald-300/50">{/^https?:\/\//.test(GW) ? "Connected to the live Sovereign substrate." : "Connects to the live substrate when configured."} Every verdict Ed25519-signed, Layer 0 ledgered.</p>
+        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the shared Sovereign brain (SOV3) - the same substrate behind MEOK, CSOAI and DEFONEOS." : "The Sovereign brain is reached live from your browser."} Every verdict Ed25519-signed, Layer 0 ledgered.</p>
       </section>
     </div>
   );
