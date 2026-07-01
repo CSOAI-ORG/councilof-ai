@@ -141,6 +141,8 @@
     <div class="row"><span>MCP tools mapped</span><span class="v" id="p-tools">—</span></div>
     <div class="row"><span>Next deadline</span><span class="v" id="p-dl">—</span></div>
   </div>
+  <button id="p-ask" style="margin-top:12px;width:100%;padding:9px;border:0;border-radius:9px;background:#34d399;color:#04110b;font:700 11px/1 var(--mono);letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Ask the Sovereign about this jurisdiction</button>
+  <div id="p-ans" style="margin-top:10px;font:400 13px/1.5 system-ui;color:#cfe8de;white-space:pre-wrap;max-height:180px;overflow:auto"></div>
 </div>
 
 <div id="legend">
@@ -207,8 +209,10 @@ function showPanel(p){
   document.getElementById('p-fw').innerHTML=fw.map(f=>`<span class="pill" style="background:rgba(59,154,216,.14);color:#7fc1ee">${f}</span>`).join('');
   document.getElementById('p-l0').innerHTML=l0.map(l=>`<span class="pill" style="background:rgba(167,139,250,.14);color:#c4b5fd">L0‑${l} ${LNAME[l]||''}</span>`).join('');
   document.getElementById('p-sov').textContent=p.sov;document.getElementById('p-tools').textContent=p.tools;document.getElementById('p-dl').textContent=p.dl;
+  window.__sovCountry=p.n;var _a=document.getElementById('p-ans');if(_a)_a.textContent='';
 }
 document.getElementById('px').onclick=()=>document.getElementById('panel').classList.remove('show');
+document.getElementById('p-ask').onclick=function(){var n=window.__sovCountry||'this jurisdiction';var el=document.getElementById('p-ans');el.textContent='Reasoning over live governance…';if(window.sovereign&&window.sovereign.ask){window.sovereign.ask('What governs AI in '+n+'? Give the applicable frameworks and the key obligations, in 3 sentences.').then(function(r){el.textContent=(r&&r.say)?r.say:'The Sovereign is unavailable right now — open it bottom-right to ask.';}).catch(function(){el.textContent='The Sovereign is unavailable right now — open it bottom-right to ask.';});}else{el.textContent='Loading the Sovereign… open it bottom-right and ask about '+n+'.';}};
 document.querySelectorAll('.lyr').forEach(el=>{el.onclick=()=>{const id=el.dataset.layer;const sw=el.querySelector('.sw');const on=!sw.classList.contains('on');sw.classList.toggle('on',on);const ids=id==='jur'?['jur','jur-label']:id==='sov'?['sov']:[id];ids.forEach(L=>{if(map.getLayer(L))map.setLayoutProperty(L,'visibility',on?'visible':'none');});};});
 const jdiv=document.getElementById('jumps');
 JUMP.forEach(([flag,name])=>{const b=document.createElement('div');b.className='jb';b.textContent=flag;b.title=name;b.onclick=()=>{const n=NODES.find(x=>x.n===name);if(n)map.flyTo({center:n.c,zoom:3.4,speed:1.2});setTimeout(()=>{const n2=NODES.find(x=>x.n===name);if(n2)showPanel({...n2,fw:n2.fw.join('|'),l0:n2.l0.join('')});},700);};jdiv.appendChild(b);});
