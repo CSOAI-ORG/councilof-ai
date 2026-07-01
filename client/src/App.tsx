@@ -516,7 +516,8 @@ function App() {
                   <Route path="/scorecard/:systemId" component={ComplianceScorecard} />
                   <Route path="/knowledge-base" component={KnowledgeBase} />
                   <Route path="/enterprise-onboarding" component={EnterpriseOnboarding} />
-                  <Route path="/pricing" component={Pricing} />
+                  <Route path="/pricing" component={PlansPage} />
+                  <Route path="/pricing-legacy" component={Pricing} />
                   <Route path="/leaderboard" component={WatchdogLeaderboard} />
                   <Route path="/regulator" component={RegulatorDashboard} />
                   <Route path="/blog" component={Blog} />
