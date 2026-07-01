@@ -64,7 +64,7 @@ export default function DemoOS() {
     const id = ++idc.current; setChat((c) => c.concat({ id, who: "sov", t: "" }));
     const words = text.split(" "); let k = 0;
     if (typeT.current) clearInterval(typeT.current);
-    typeT.current = setInterval(() => { k++; const part = words.slice(0, k).join(" "); setChat((c) => c.map((m) => (m.id === id ? { ...m, t: part } : m))); if (k >= words.length && typeT.current) clearInterval(typeT.current); }, 85);
+    typeT.current = setInterval(() => { k++; const done = k >= words.length; const part = words.slice(0, k).join(" ") + (done ? "" : " ▍"); setChat((c) => c.map((m) => (m.id === id ? { ...m, t: part } : m))); if (done && typeT.current) clearInterval(typeT.current); }, 85);
     speak(text);
   }
   function speak(t: string) {
