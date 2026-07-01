@@ -32,6 +32,8 @@ const STEPS: Step[] = [
   { say: "Own your AI. Own your data. Start free, scale when you need. That's your OS - and I'm always right here. Ask me anything, any time.", wins: [{ title: "Plans", src: "/pricing", slot: "tr" }], home: true },
 ];
 
+const BOOT = ["Establishing governed link", "Loading Sovereign Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "33-agent BFT council online", "Care-floor engaged"];
+
 function slotStyle(slot: Slot, solo: boolean): any {
   if (solo && slot === "tr") return { right: 24, top: 72, width: "46%", maxWidth: 560, height: "54vh" };
   if (slot === "tr") return { right: 20, top: 72, width: "38%", maxWidth: 460, height: "40vh" };
@@ -54,6 +56,14 @@ export default function DemoOS() {
   const [geoLabel, setGeoLabel] = useState("");
   const [title, setTitle] = useState("");
   const [ending, setEnding] = useState(false);
+  const [booting, setBooting] = useState(true);
+  const [bootN, setBootN] = useState(0);
+
+  useEffect(() => {
+    const iv = setInterval(() => setBootN((n) => n + 1), 480);
+    const done = setTimeout(() => { clearInterval(iv); setBooting(false); }, 480 * (BOOT.length + 1) + 600);
+    return () => { clearInterval(iv); clearTimeout(done); };
+  }, []);
 
   const frame = useRef<HTMLIFrameElement | null>(null);
   const timer = useRef<any>(null);
@@ -153,7 +163,17 @@ export default function DemoOS() {
       <iframe ref={frame} src="/globe3d.html" title="globe" className="absolute inset-0 h-full w-full border-0" />
       <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(1200px 640px at 50% 120%, rgba(3,8,14,.72), transparent 60%)" }} />
 
-      {mode === null && i === -1 && (
+      {booting && (
+        <div className="absolute inset-0 z-40 flex flex-col items-center justify-center px-6" style={{ background: "#02060c", backgroundImage: "radial-gradient(1.5px 1.5px at 20% 30%, rgba(125,211,252,.5), transparent), radial-gradient(1.5px 1.5px at 70% 60%, rgba(167,243,208,.45), transparent), radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,.35), transparent), radial-gradient(1.5px 1.5px at 85% 25%, rgba(125,211,252,.4), transparent), radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,.3), transparent)" }}>
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/10 text-3xl text-emerald-300" style={{ boxShadow: "0 0 44px rgba(16,185,129,.4)" }}>{"◉"}</div>
+          <div className="font-mono text-[11px] uppercase tracking-[4px] text-emerald-300/70">CSOAI {"·"} Sovereign {"·"} Governance {"·"} Layer 0</div>
+          <div className="mt-6 w-full max-w-sm space-y-1.5 font-mono text-xs">
+            {BOOT.map((l, k) => (<div key={k} className={"flex items-center justify-between " + (k < bootN ? "text-emerald-200" : "text-emerald-300/25")}><span>{l}</span><span>{k < bootN ? "✓" : "…"}</span></div>))}
+          </div>
+        </div>
+      )}
+
+      {mode === null && i === -1 && !booting && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#03080e]/70 backdrop-blur-sm px-6 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI - the AI operating system</p>
           <h1 className="mt-3 text-4xl sm:text-6xl font-black tracking-tight">See the OS <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">run itself.</span></h1>
