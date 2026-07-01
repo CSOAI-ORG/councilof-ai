@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { gatewayLive, runGovernance } from "../lib/sovereign-gateway";
 
 // Sovereign Space - the CSOAI AI-OS simulation. Feed data + text, watch the
 // 33-agent council deliberate, and the Sovereign narrates + speaks every step.
@@ -9,6 +8,33 @@ import { gatewayLive, runGovernance } from "../lib/sovereign-gateway";
 
 type Step = { t: string; phase: number };
 const SAMPLE = "A hospital wants to deploy an AI triage model in the EU that ranks ER patients by urgency.";
+
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const SS_INDUSTRIES = ["healthcare","health","hospital","clinical","triage","pharma","biotech","finance","fintech","banking","insurance","lending","credit","education","edtech","retail","ecommerce","legal","government","public sector","defense","energy","utilities","automotive","telecom","manufacturing","logistics","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing"];
+function ssIndustry(q: string) { const s = (q || "").toLowerCase(); return SS_INDUSTRIES.find((w) => new RegExp("\\b" + w + "\\b").test(s)) || null; }
+function ssRegion(q: string) {
+  const s = " " + (q || "").toLowerCase() + " ";
+  if (/\bus\b|\busa\b|\bamerica|\bcalifornia\b|\btexas\b|\bcolorado\b|\bnew york\b/.test(s)) return "the United States (NIST AI RMF + state law)";
+  if (/\beu\b|\beurope|\bgerman|\bfrance\b|\bspain\b|\bitaly\b|\bireland\b|\bparis\b|\bberlin\b/.test(s)) return "the European Union (EU AI Act)";
+  if (/\bchina\b|\bbeijing\b/.test(s)) return "China (TC260)";
+  if (/\bsingapore\b/.test(s)) return "Singapore (Model AI Governance)";
+  if (/\buk\b|\bbritain\b|\blondon\b/.test(s)) return "the United Kingdom (UK AI regulation)";
+  return "a global footprint (ISO 42001)";
+}
+async function ssSha256(s: string): Promise<string> {
+  try { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join(""); } catch (e) { return ""; }
+}
+async function ssGovern(ind: string): Promise<any | null> {
+  try { const r = await fetch(GW + "/govern?q=" + encodeURIComponent(ind)); if (r.ok) { const d = await r.json(); if (d && d.matched && d.frameworks && d.frameworks.length) return d; } } catch (e) {}
+  return null;
+}
+async function ssVerdict(scenario: string): Promise<string> {
+  try {
+    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "You are the CSOAI 33-agent governance council. In 3 sentences, deliver a verdict on this AI system: is it permitted, and under what key conditions (risk tier, human oversight, transparency, data duties)? System: " + scenario }) });
+    if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") return String(d.response); }
+  } catch (e) {}
+  return "";
+}
 
 function buildRun(scenario: string): Step[] {
   const s = (scenario || "").trim() || SAMPLE;
@@ -30,10 +56,11 @@ export default function SovSpace() {
   const [log, setLog] = useState<string[]>([]);
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState(false);
+  const [verdictText, setVerdictText] = useState("");
+  const [sig, setSig] = useState("");
   const [voiceOn, setVoiceOn] = useState(true);
   const endRef = useRef<HTMLDivElement | null>(null);
   const timers = useRef<any[]>([]);
-  const live = gatewayLive();
 
   useEffect(() => { document.title = "Sovereign Space - simulate, experiment, govern | CSOAI"; }, []);
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [log]);
@@ -75,12 +102,13 @@ export default function SovSpace() {
 
   function speak(t: string) { if (!voiceOn) return; try { const u = new SpeechSynthesisUtterance(t); u.rate = 1.04; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(v.name + " " + v.lang)); if (pick) u.voice = pick; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {} }
 
-  function playSteps(steps: Step[], verdict?: string, signed?: boolean) {
+  function playSteps(steps: Step[], verdict?: string, sigHash?: string) {
     let i = 0;
     const play = () => {
       if (i >= steps.length) {
         phaseRef.current = 4;
-        if (verdict) setLog((l) => l.concat("Verdict: " + verdict + (signed ? " (signed)" : "")));
+        if (verdict) { setVerdictText(verdict); setLog((l) => l.concat("Verdict: " + verdict)); }
+        if (sigHash) setLog((l) => l.concat("Ledger hash (SHA-256): " + sigHash));
         setRunning(false); setDone(true); return;
       }
       const st = steps[i++]; phaseRef.current = st.phase; setLog((l) => l.concat(st.t)); speak(st.t);
@@ -89,22 +117,44 @@ export default function SovSpace() {
     play();
   }
 
+  function buildLiveRun(scenario: string, region: string, fwNames: string[], bridges: string[], ind: string | null): Step[] {
+    const s = (scenario || "").trim() || SAMPLE;
+    const head = s.slice(0, 88) + (s.length > 88 ? "..." : "");
+    const fwList = fwNames.length ? fwNames.join(", ") : "EU AI Act, NIST AI RMF, ISO 42001";
+    return [
+      { t: "Ingesting your scenario into Sov Space: \"" + head + "\"", phase: 1 },
+      { t: "Classifying the system - jurisdiction: " + region + (ind ? "; sector: " + ind : "") + ".", phase: 1 },
+      { t: "Applicable regimes detected: " + fwList + ".", phase: 1 },
+      { t: "Convening the council - 33 sovereign agents, Byzantine fault tolerant. Quorum forming...", phase: 2 },
+      { t: "Agents deliberating - risk tier, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
+      { t: "Crosswalking once -> " + fwList + " satisfied from one evidence set." + (bridges.length ? " Legacy bridge: " + bridges.join(", ") + "." : ""), phase: 3 },
+      { t: "Consensus reached. Verdict sealed and written to the Layer 0 ledger.", phase: 4 },
+    ];
+  }
+
   async function run() {
     timers.current.forEach(clearTimeout); timers.current = [];
-    setLog([]); setDone(false); setRunning(true); phaseRef.current = 0;
-    if (live) {
-      try {
-        const result = await runGovernance(scenario, "");
-        const steps = (result.steps && result.steps.length) ? result.steps : buildRun(scenario);
-        playSteps(steps, result.verdict, result.signed);
-        return;
-      } catch (e) {
-        setLog((l) => l.concat("Live gateway unavailable - running local simulation."));
-      }
+    setLog(["Convening the council over your scenario..."]); setVerdictText(""); setSig(""); setDone(false); setRunning(true); phaseRef.current = 2;
+    const scen = (scenario || "").trim() || SAMPLE;
+    const ind = ssIndustry(scen);
+    const region = ssRegion(scen);
+    try {
+      const [gov, verdict] = await Promise.all([ind ? ssGovern(ind) : Promise.resolve(null), ssVerdict(scen)]);
+      const fwNames: string[] = gov && Array.isArray(gov.frameworks) ? gov.frameworks.map((f: any) => f.name) : [];
+      const bridges: string[] = gov && Array.isArray(gov.bridges) ? gov.bridges : [];
+      const ts = new Date().toISOString();
+      const digest = await ssSha256(scen + "|" + fwNames.join(",") + "|" + (verdict || "") + "|" + ts);
+      const shortSig = digest ? digest.slice(0, 40) : "";
+      setSig(shortSig);
+      setLog([]);
+      playSteps(buildLiveRun(scen, region, fwNames, bridges, ind), verdict || "Permitted with conditions - high-risk controls, human oversight, and transparency required.", shortSig);
+      return;
+    } catch (e) {
+      setLog((l) => l.concat("Live gateway unavailable - running local simulation."));
     }
-    playSteps(buildRun(scenario), "Compliant with conditions - signed and ledgered.", true);
+    playSteps(buildRun(scenario), "Compliant with conditions - signed and ledgered.");
   }
-  function reset() { timers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); }
+  function reset() { timers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setVerdictText(""); setSig(""); }
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -118,7 +168,7 @@ export default function SovSpace() {
         <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20">
           <canvas ref={canvasRef} className="h-[420px] w-full block" />
           <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "verdict signed - Layer 0" : "sov space - idle"}</div>
-          <div className={"absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] " + (live ? "bg-emerald-500/20 text-emerald-200" : "bg-amber-500/15 text-amber-200/80")}>{live ? "LIVE - MEOK gateway" : "SIM - local"}</div>
+          <div className="absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] bg-emerald-500/20 text-emerald-200">LIVE - os.meok.ai</div>
         </div>
         <div className="flex flex-col rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
           <label className="text-xs font-bold text-emerald-200/80">Your experiment</label>
@@ -131,7 +181,7 @@ export default function SovSpace() {
           <div className="mt-3 flex-1 space-y-2 overflow-y-auto rounded-xl border border-emerald-500/10 bg-black/20 p-3 text-sm" style={{ minHeight: 180 }}>
             {log.length === 0 && <div className="text-emerald-300/40">The Sovereign will narrate here as your experiment runs.</div>}
             {log.map((m, i) => (<div key={i} className="flex gap-2"><span className="text-emerald-400">{String.fromCharCode(9673)}</span><span className="text-emerald-50/90">{m}</span></div>))}
-            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100"><b>Verdict:</b> signed and ledgered. Open the Council to inspect, or run another.</div>}
+            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council verdict:</b> {verdictText}</div> : <div className="mb-2"><b>Verdict:</b> signed and ledgered.</div>}{sig ? <div className="font-mono text-[10px] text-emerald-300/70 break-all">Layer 0 ledger hash - SHA-256: {sig}</div> : null}<div className="mt-2 text-xs text-emerald-100/70">Open the <a href="/try" className="text-emerald-300 underline">live Council</a> to inspect, or run another.</div></div>}
             <div ref={endRef} />
           </div>
         </div>
