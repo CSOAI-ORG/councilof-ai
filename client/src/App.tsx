@@ -82,6 +82,7 @@ import FrameworkHive from "./pages/FrameworkHive";
 import SystemCard from "./pages/SystemCard";
 import Ecosystem from "./pages/Ecosystem";
 import Protect from "./pages/Protect";
+import Ontology from "./pages/Ontology";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import BulkAISystemImport from "./pages/BulkAISystemImport";
 import Jobs from "./pages/Jobs";
@@ -343,6 +344,7 @@ function App() {
                   <Route path="/protect" component={Protect} />
                   <Route path="/personal-protection" component={Protect} />
                   <Route path="/deepfake-protection" component={Protect} />
+                  <Route path="/ontology" component={Ontology} />
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />

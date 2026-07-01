@@ -85,7 +85,7 @@ export default function WorldGlobe() {
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setAsk(d); const t = setTimeout(() => runAsk(d), 700); return () => clearTimeout(t); } }, []);
   const [rot, setRot] = useState(0);
   const [spin, setSpin] = useState(true);
-  const [layers, setLayers] = useState<{ fw: boolean; council: boolean; watchdog: boolean }>({ fw: true, council: false, watchdog: false });
+  const [layers, setLayers] = useState<{ fw: boolean; council: boolean; watchdog: boolean; ontology: boolean }>({ fw: true, council: false, watchdog: false, ontology: false });
   const wc = watchCounts();
   const wmax = Math.max(1, ...WATCH_HUBS.map((h) => wc[h.id] || 0));
   const [sel, setSel] = useState<Pin | null>(null);
@@ -145,6 +145,7 @@ export default function WorldGlobe() {
           <button onClick={() => setLayers((l) => ({ ...l, fw: !l.fw }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.fw ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Frameworks</button>
           <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>BFT Council</button>
           <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Watchdog heat</button>
+          <button onClick={() => setLayers((l) => ({ ...l, ontology: !l.ontology, fw: true }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.ontology ? "border-violet-400 bg-violet-600 text-white" : "border-white/20 text-white/60")}>Ontology</button>
           <button onClick={() => setSpin((s) => !s)} className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10">{spin ? "Pause" : "Spin"}</button>
           <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Sovereign responding…" : threat === "stopped" ? "◉ Stopped — signed" : "⚠ Rogue swarm → watch it stop"}</button>
         </div>
@@ -159,6 +160,11 @@ export default function WorldGlobe() {
             </defs>
             <circle cx={CX} cy={CY} r={R} fill="url(#ocean)" stroke="#134e4a" strokeWidth={1.5} />
             {grat.map((g, i) => <circle key={i} cx={g.x} cy={g.y} r={1.1} fill="#5eead4" opacity={0.25} />)}
+            {layers.ontology && FRAMEWORKS.map((a, ai) => {
+              const qa = project(a.lat, a.lng, rot); if (!qa.front) return null;
+              const near = FRAMEWORKS.map((b, bi) => ({ b, bi, d: (a.lat - b.lat) ** 2 + (a.lng - b.lng) ** 2 })).filter((x) => x.bi !== ai).sort((x, y) => x.d - y.d).slice(0, 2);
+              return near.map((n) => { const qb = project(n.b.lat, n.b.lng, rot); if (!qb.front) return null; return <line key={ai + "-" + n.bi} x1={qa.x} y1={qa.y} x2={qb.x} y2={qb.y} stroke="#a78bfa" strokeWidth={0.8} opacity={0.42} />; });
+            })}
             {pins.map((p) => {
               const q = project(p.lat, p.lng, rot); if (!q.front) return null;
               const on = sel && sel.id === p.id; const sc = 0.6 + q.depth * 0.6;
