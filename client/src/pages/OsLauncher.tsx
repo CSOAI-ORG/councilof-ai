@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { chargeSovereign } from "../lib/sovCharge";
+
+const OS_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 
 // OpenGridWorks OS — the unified launcher. One surface where an end user opens every
 // CSOAI governance tool working together: the live Sovereign Town heartbeat, the Layer 0
@@ -7,7 +10,13 @@ import { useEffect, useMemo, useState } from "react";
 type App = { name: string; desc: string; href: string; glyph: string; tone: string; ext?: boolean };
 
 const APPS: App[] = [
-  { name: "Try the Council", desc: "30-second WOW — type a compliance question, watch 5 AI agents debate it, get a risk verdict. The front door.", href: "/try", glyph: "◆", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
+  { name: "Try the Council", desc: "30-second WOW — type a compliance question, watch 5 AI agents debate it live, get a signed verdict. The front door.", href: "/try", glyph: "◆", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
+  { name: "Governance Graph", desc: "The governed Google — ask about any company, place or AI system and get jurisdiction, live framework stack and a reasoned read.", href: "/graph", glyph: "❖", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
+  { name: "Sov Space", desc: "Simulate a real-world governance experiment — the council deliberates live and seals a signed verdict with a ledger hash.", href: "/sov-space", glyph: "◈", tone: "from-emerald-500/25 to-sky-400/10 border-emerald-400/35" },
+  { name: "Tool Commons", desc: "Search 377 governed MCP tools — copy a pip install, wire it into your stack, Layer 0 covered.", href: "/tool-commons", glyph: "⊟", tone: "from-cyan-500/20 to-emerald-400/5 border-cyan-400/30" },
+  { name: "Open Commons", desc: "Creative-Commons media search, keyless — build in the open.", href: "/commons", glyph: "◐", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
+  { name: "Emergence", desc: "The living egg — your Sovereign learns you as you use the OS, then hatches into your AI character.", href: "/emergence", glyph: "◍", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30" },
+  { name: "System Status", desc: "The transparency board — every core system, live.", href: "/status", glyph: "◉", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
   { name: "Rediscovered, Not Invented", desc: "The 4,000-year lineage — every CSOAI system mapped to the ancient original that ran empires.", href: "/lineage", glyph: "𓉴", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30" },
   { name: "Relevance Map", desc: "What governs what — pick your industry, see the relevant CSOAI bridges, frameworks and gaps.", href: "/map", glyph: "◌", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
   { name: "Framework Temples", desc: "Each regulation a temple at its real-world seat — step inside for the visual breakdown.", href: "/temples", glyph: "卂", tone: "from-amber-500/20 to-teal-400/5 border-amber-400/30" },
@@ -54,6 +63,19 @@ export default function OsLauncher() {
   const [ung, setUng] = useState(121043036);
   const [live, setLive] = useState(false);
   const [ring, setRing] = useState(0);
+  const [ask, setAsk] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [asking, setAsking] = useState(false);
+
+  async function runAsk() {
+    const t = ask.trim(); if (!t) return;
+    setAsking(true); setAnswer(""); chargeSovereign(4);
+    try {
+      const r = await fetch(OS_GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: t }) });
+      if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") setAnswer(String(d.response)); }
+    } catch (e) {}
+    setAsking(false);
+  }
 
   useEffect(() => {
     document.title = "OpenGridWorks OS — CSOAI";
@@ -99,6 +121,13 @@ export default function OsLauncher() {
               Every CSOAI tool, one surface. Watch the governed‑vs‑ungoverned moat in real time, then launch any
               app — all standing on one signed Layer 0 floor, externally anchored to Bitcoin.
             </p>
+            <div className="mt-6">
+              <div className="flex gap-2">
+                <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="Ask your Sovereign anything — or press ⌘K to command the OS" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-3.5 text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
+                <button onClick={runAsk} className="rounded-xl bg-emerald-500 px-6 py-3.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60" disabled={asking}>{asking ? "Reasoning…" : "Ask"}</button>
+              </div>
+              {answer && <div className="mt-3 whitespace-pre-wrap rounded-xl border border-emerald-400/25 bg-white/[0.03] px-4 py-3 text-sm leading-relaxed text-emerald-50/90">{answer}</div>}
+            </div>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href="/certification" className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get certified →</a>
               <a href="/globe.html" className="rounded-lg border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Launch the globe</a>
