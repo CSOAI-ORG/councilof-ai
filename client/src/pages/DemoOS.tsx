@@ -31,7 +31,7 @@ function intersect(a: DOMRect, b: DOMRect) { return !(a.right < b.left || a.left
 export default function DemoOS() {
   const [mode, setMode] = useState<null | "demo" | "full">(null);
   const [i, setI] = useState(-1);
-  const [chat, setChat] = useState<{ who: "sov" | "you"; t: string }[]>([]);
+  const [chat, setChat] = useState<{ id: number; who: "sov" | "you"; t: string }[]>([]);
   const [win, setWin] = useState<Step["win"] | null>(null);
   const [winShow, setWinShow] = useState(false);
   const [winPos, setWinPos] = useState<Pos>("tr");
@@ -51,13 +51,22 @@ export default function DemoOS() {
   const speaking = useRef(false);
   const rec = useRef<any>(null);
   const modeRef = useRef<"demo" | "full">("demo");
+  const idc = useRef(0);
+  const typeT = useRef<any>(null);
 
   useEffect(() => { document.title = "The AI OS - live demo & tour | CSOAI"; return () => cleanup(); }, []);
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [chat]);
 
-  function cleanup() { try { window.speechSynthesis.cancel(); } catch (e) {} if (timer.current) clearTimeout(timer.current); try { rec.current && rec.current.stop(); } catch (e) {} }
+  function cleanup() { try { window.speechSynthesis.cancel(); } catch (e) {} if (timer.current) clearTimeout(timer.current); if (typeT.current) clearInterval(typeT.current); try { rec.current && rec.current.stop(); } catch (e) {} }
   function post(msg: any) { try { frame.current && frame.current.contentWindow && frame.current.contentWindow.postMessage(msg, "*"); } catch (e) {} }
-  function say(who: "sov" | "you", t: string) { setChat((c) => c.concat({ who, t })); }
+  function say(who: "sov" | "you", t: string) { const id = ++idc.current; setChat((c) => c.concat({ id, who, t })); return id; }
+  function narrate(text: string) {
+    const id = ++idc.current; setChat((c) => c.concat({ id, who: "sov", t: "" }));
+    const words = text.split(" "); let k = 0;
+    if (typeT.current) clearInterval(typeT.current);
+    typeT.current = setInterval(() => { k++; const part = words.slice(0, k).join(" "); setChat((c) => c.map((m) => (m.id === id ? { ...m, t: part } : m))); if (k >= words.length && typeT.current) clearInterval(typeT.current); }, 85);
+    speak(text);
+  }
   function speak(t: string) {
     try { const u = new SpeechSynthesisUtterance(t); u.rate = 1.04; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(v.name + " " + v.lang)); if (pick) u.voice = pick; u.onstart = () => { speaking.current = true; }; u.onend = () => { speaking.current = false; }; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {}
   }
@@ -114,7 +123,7 @@ export default function DemoOS() {
     const arr = stepsRef.current; if (idx >= arr.length) { finish(); return; }
     const s = arr[idx];
     setTitle(s.win ? s.win.title : s.say.split(" - ")[0].slice(0, 42));
-    say("sov", s.say); speak(s.say);
+    narrate(s.say);
     if (s.fly) post({ cmd: "flyTo", ...s.fly, duration: 2.2 });
     if (s.layer) post({ cmd: "layer", ...s.layer });
     if (s.home) post({ cmd: "home", duration: 2.5 });
@@ -143,7 +152,7 @@ export default function DemoOS() {
   }
   async function answer(q: string) {
     setListening(false); say("sov", "…");
-    try { const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: q + " (Be concise - the user is on a live tour of the CSOAI AI OS.)" }) }); if (r.ok) { const d = await r.json(); if (d && d.response) { setChat((c) => c.slice(0, -1).concat({ who: "sov", t: String(d.response) })); speak(String(d.response)); } } } catch (e) {}
+    try { const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: q + " (Be concise - the user is on a live tour of the CSOAI AI OS.)" }) }); if (r.ok) { const d = await r.json(); if (d && d.response) { setChat((c) => c.slice(0, -1).concat({ id: ++idc.current, who: "sov", t: String(d.response) })); speak(String(d.response)); } } } catch (e) {}
   }
   function resume() { setPaused(false); say("sov", "Back to the tour."); runStep(Math.max(0, i)); }
 
@@ -204,7 +213,7 @@ export default function DemoOS() {
             <button onClick={stop} className="rounded-lg px-2 py-1 text-[11px] text-emerald-300/60 hover:bg-white/5">End</button>
           </div>
           <div className="max-h-[38vh] space-y-2 overflow-y-auto px-4 py-3">
-            {chat.map((m, k) => (<div key={k} className={m.who === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[92%] rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.t}</div>))}
+            {chat.map((m) => (<div key={m.id} className={m.who === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[92%] rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.t}</div>))}
             <div ref={endRef} />
           </div>
           <div className="flex items-center gap-2 border-t border-emerald-500/15 p-3">
