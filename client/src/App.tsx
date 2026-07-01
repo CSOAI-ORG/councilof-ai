@@ -80,6 +80,7 @@ import Signup from "./pages/Signup";
 import Welcome from "./pages/Welcome";
 import FrameworkHive from "./pages/FrameworkHive";
 import SystemCard from "./pages/SystemCard";
+import Ecosystem from "./pages/Ecosystem";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import BulkAISystemImport from "./pages/BulkAISystemImport";
 import Jobs from "./pages/Jobs";
@@ -336,6 +337,8 @@ function App() {
                   <Route path="/system-card" component={SystemCard} />
                   <Route path="/assurance" component={SystemCard} />
                   <Route path="/systemcard" component={SystemCard} />
+                  <Route path="/safe-space" component={Ecosystem} />
+                  <Route path="/governance-commons" component={Ecosystem} />
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
