@@ -187,6 +187,14 @@ export default function TryCouncil() {
                 ) : (
                   <div className="mt-4 rounded-xl bg-white p-3 text-sm text-emerald-800">Saved. Your full 13-framework gap report is queued — it's generated and delivered once the Council backend is live. You'll be first in line.</div>
                 )}
+                <div className="mt-5 border-t border-emerald-200 pt-4">
+                  <div className="text-xs font-bold uppercase tracking-wide text-emerald-700">Carry this verdict across the OS</div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <a href={"/hive?q=" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Open the Framework Hive →</a>
+                    <a href="/system-card" className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-800 hover:bg-amber-100">Get a signed System Card →</a>
+                    <a href={"/graph?demo=" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">See it on the Governance Graph →</a>
+                  </div>
+                </div>
               </div>
             )}
           </>
