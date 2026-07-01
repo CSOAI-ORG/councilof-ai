@@ -65,6 +65,12 @@ function watchCounts(): Record<string, number> {
 const THREAT_ORIGIN = { lat: 51.5, lng: -0.12 };
 const THREAT_PTS = Array.from({ length: 16 }, (_, i) => ({ dlat: Math.sin(i * 1.3) * 3.4, dlng: Math.cos(i * 0.9) * 4.6 }));
 
+// Map globe framework pins to their Framework Hive entry (everything collected).
+const HIVE_SLUG: Record<string, string> = {
+  euaa: "eu-ai-act", gdpr: "gdpr", coe: "council-of-europe-ai-convention", oecd: "oecd-ai-principles",
+  iso: "iso-42001", nist: "nist-ai-rmf", uk: "uk-aisi", sg: "singapore-agentic-ai",
+};
+
 const R = 240, CX = 300, CY = 300;
 function project(lat: number, lng: number, rot: number) {
   const la = (lat * Math.PI) / 180, lo = ((lng + rot) * Math.PI) / 180;
@@ -195,7 +201,8 @@ export default function WorldGlobe() {
               <div className="text-[11px] uppercase tracking-wide text-emerald-300/70">{sel.region}</div>
               <div className="mt-1 text-xl font-black" style={{ color: "#a7f3d0" }}>{sel.name}</div>
               <p className="mt-2 text-sm text-white/75 leading-relaxed">{sel.note}</p>
-              <a href={sel.href} className="mt-4 inline-block rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-500">Open in the OS -&gt;</a>
+              {HIVE_SLUG[sel.id] && <a href={"/hive/" + HIVE_SLUG[sel.id]} className="mt-4 mr-2 inline-block rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-500">Open the hive -&gt;</a>}
+              <a href={sel.href} className={"mt-4 inline-block rounded-xl px-4 py-2 text-sm font-bold " + (HIVE_SLUG[sel.id] ? "border border-emerald-400/40 text-emerald-100 hover:bg-white/5" : "bg-emerald-600 text-white hover:bg-emerald-500")}>Details -&gt;</a>
               <button onClick={() => { setSel(null); setSpin(true); }} className="ml-2 text-sm text-white/50 hover:text-white/80">resume spin</button>
             </div>
           ) : (
