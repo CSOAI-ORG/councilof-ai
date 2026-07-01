@@ -371,7 +371,7 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
 
-            {/* OpenGridWorks OS launcher */}
+            {/* CSOAI OS launcher */}
             <a
               href="/os"
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"

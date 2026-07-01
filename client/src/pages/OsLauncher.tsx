@@ -5,7 +5,7 @@ const OS_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https:
 const OS_APP_ROUTES: Record<string, string> = { revenue: "/pricing", pricing: "/pricing", plans: "/pricing", king: "/try", council: "/try", try: "/try", setup: "/start", onboard: "/start", graph: "/graph", knowledge: "/graph", space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", tools: "/tool-commons", commons: "/commons", status: "/status", os: "/os", emergence: "/emergence", egg: "/emergence", certification: "/certification", academy: "/academy", evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator", layer0: "/layer0", distribution: "/distribution" };
 function osRoute(a: any): string | null { if (!a || !a.command) return null; if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url); if (a.command === "open_app" && a.args && a.args.id) return OS_APP_ROUTES[String(a.args.id).toLowerCase()] || null; if (a.command === "govern") return "/graph"; return null; }
 
-// OpenGridWorks OS — the unified launcher. One surface where an end user opens every
+// CSOAI OS — the unified launcher. One surface where an end user opens every
 // CSOAI governance tool working together: the live Sovereign Town heartbeat, the Layer 0
 // status, and a launchpad of every app. This is os.csoai.org's home.
 
@@ -94,7 +94,7 @@ export default function OsLauncher() {
   }
 
   useEffect(() => {
-    document.title = "OpenGridWorks OS — CSOAI";
+    document.title = "CSOAI OS — the AI governance operating system";
     fetch("https://proofof-site.vercel.app/sovereign-town/status.json", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
@@ -117,7 +117,7 @@ export default function OsLauncher() {
       <header className="flex flex-wrap items-center gap-4 border-b border-emerald-500/15 px-6 py-3 backdrop-blur">
         <div className="flex items-center gap-2 font-semibold">
           <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 12px #34d399" }} />
-          OpenGridWorks <span className="text-emerald-300/70 font-mono text-[11px] uppercase tracking-[2px]">OS</span>
+          CSOAI <span className="text-emerald-300/70 font-mono text-[11px] uppercase tracking-[2px]">OS</span>
         </div>
         <div className="ml-auto flex flex-wrap items-center gap-5 font-mono text-xs">
           <span className="text-emerald-300/80">{live ? "● LIVE" : "○ snapshot"}</span>
