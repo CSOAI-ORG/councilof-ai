@@ -180,6 +180,7 @@ import Academy from "./pages/Academy";
 import SovereignDock from "./components/SovereignDock";
 import DemoTour from "./components/DemoTour";
 import WatchdogMap from "./pages/WatchdogMap";
+import DemoOS from "./pages/DemoOS";
 import SovSpace from "./pages/SovSpace";
 import BadgesPage from "./pages/BadgesPage";
 import RealWorldMap from "./pages/RealWorldMap";
@@ -363,6 +364,9 @@ function App() {
             <Route path="/policy-generator" component={PolicyGenerator} />
             <Route path="/mcp-fleet" component={McpFleet} />
             <Route path="/os" component={OsLauncher} />
+            <Route path="/demo" component={DemoOS} />
+            <Route path="/os-demo" component={DemoOS} />
+            <Route path="/tour" component={DemoOS} />
           <Route path="/enter" component={OsEnter} />
           <Route path="/tour" component={SovereignTour} />
           <Route path="/academy" component={SovereignAcademy} />

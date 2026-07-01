@@ -181,6 +181,18 @@ if(viewer){
 
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
   setTimeout(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; },3500);
+
+  // Drive API - the CSOAI demo/tour controls the camera + layers via postMessage.
+  window.addEventListener('message', function(ev){
+    try {
+      var m = ev.data || {}; if (typeof m !== 'object' || !viewer) return;
+      if (m.cmd === 'flyTo') { spinning = false; viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(Number(m.lng), Number(m.lat), Number(m.height)||2600000), duration: Number(m.duration)||2.0 }); }
+      else if (m.cmd === 'layer') { viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag) ent.show = !!m.on; }); }
+      else if (m.cmd === 'spin') { spinning = !!m.on; }
+      else if (m.cmd === 'home') { spinning = (m.on !== false); viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(20,28,26000000), duration: Number(m.duration)||2.2 }); }
+    } catch(e){}
+  });
+  try { parent.postMessage({ sovGlobeReady: true }, '*'); } catch(e){}
 }
 </script>
 <script>window.SOVEREIGN_CONFIG={brand:'CSOAI',accent:'#34d399',endpoint:'https://os.meok.ai/api',sections:[{label:'The OS',href:'/os'},{label:'Governance Graph',href:'/graph'},{label:'Sov Space',href:'/sov-space'},{label:'Try the Council',href:'/try'},{label:'Plans',href:'/pricing'},{label:'Status',href:'/status'}]};</script><script src="https://os.meok.ai/sovereign-embed.js" defer></script>
