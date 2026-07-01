@@ -169,7 +169,7 @@ export default function SovSpace() {
         <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20">
           <canvas ref={canvasRef} className="h-[420px] w-full block" />
           <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "verdict signed - Layer 0" : "sov space - idle"}</div>
-          <div className="absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] bg-emerald-500/20 text-emerald-200">LIVE - os.meok.ai</div>
+          <div className="absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] bg-emerald-500/20 text-emerald-200">LIVE - Sovereign gateway</div>
         </div>
         <div className="flex flex-col rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
           <label className="text-xs font-bold text-emerald-200/80">Your experiment</label>
