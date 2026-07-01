@@ -148,13 +148,13 @@ export default function DemoOS() {
   const [ending, setEnding] = useState(false);
   const [booting, setBooting] = useState(true);
   const [bootN, setBootN] = useState(0);
-  const [gate, setGate] = useState(true);
+  const [gate, setGate] = useState(false);
 
   async function allowVoice() { try { await (navigator as any).mediaDevices.getUserMedia({ audio: true }); } catch (e) {} setGate(false); }
 
   useEffect(() => {
-    const iv = setInterval(() => setBootN((n) => n + 1), 480);
-    const done = setTimeout(() => { clearInterval(iv); setBooting(false); }, 480 * (BOOT.length + 1) + 600);
+    const iv = setInterval(() => setBootN((n) => n + 1), 360);
+    const done = setTimeout(() => { clearInterval(iv); setBooting(false); setTimeout(() => { if (i === -1) start("demo"); }, 300); }, 360 * (BOOT.length + 1) + 400);
     return () => { clearInterval(iv); clearTimeout(done); };
   }, []);
 
@@ -302,16 +302,11 @@ export default function DemoOS() {
         </div>
       )}
 
-      {mode === null && i === -1 && !booting && !gate && (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#03080e]/70 backdrop-blur-sm px-6 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI - the AI operating system</p>
-          <h1 className="mt-3 text-4xl sm:text-6xl font-black tracking-tight">See the OS <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">run itself.</span></h1>
-          <p className="mt-4 max-w-xl text-emerald-100/80">The Sovereign flies the globe, opens the tools, and explains it all - by voice and in chat. Speak any time and it listens.</p>
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <button onClick={() => start("demo")} className="rounded-xl bg-emerald-500 px-7 py-3.5 text-base font-bold text-[#03110b] hover:bg-emerald-400">▶ Quick demo (~2 min)</button>
-            <button onClick={() => start("full")} className="rounded-xl border border-emerald-400/50 px-7 py-3.5 text-base font-semibold text-emerald-100 hover:bg-emerald-500/10">Full guided tour (~6 min)</button>
-          </div>
-          <a href="/os" className="mt-4 text-xs text-emerald-300/60 hover:text-emerald-200">Skip - take me straight into the OS →</a>
+      {mode === null && i === -1 && !booting && (
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#03080e]/55 backdrop-blur-sm px-6 text-center">
+          <div className="h-12 w-12 animate-pulse rounded-full border border-emerald-300/40 bg-emerald-500/10" style={{ boxShadow: "0 0 40px rgba(16,185,129,.4)" }} />
+          <p className="mt-5 font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Your Sovereign is taking over…</p>
+          <p className="mt-2 text-sm text-emerald-100/70">🎙 Speak or tap any time to interrupt.</p>
         </div>
       )}
 
@@ -320,7 +315,8 @@ export default function DemoOS() {
           <span className="h-2 w-2 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 8px #34d399" }} />
           <span className="text-xs font-bold text-emerald-100">{title || "CSOAI Sovereign OS"}</span>
           <span className="hidden sm:flex items-center gap-1">{stepsRef.current.map((_, k) => (<span key={k} className={"h-1.5 rounded-full transition-all " + (k === i ? "w-4 bg-emerald-400" : k < i ? "w-1.5 bg-emerald-500/60" : "w-1.5 bg-white/15")} />))}</span>
-          {!paused && !ending && <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-[1.5px] text-emerald-300/50"><span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />auto</span>}
+          {!paused && !ending && <button onClick={interrupt} title="Tap or speak to interrupt" className="flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-[1.5px] text-emerald-300/70 hover:bg-white/5"><span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />🎙 tap or speak</button>}
+          {mode === "demo" && !ending && <button onClick={() => { stepsRef.current = STEPS; setMode("full"); modeRef.current = "full"; }} title="Switch to the full tour" className="rounded-full px-2 py-0.5 text-[10px] font-bold text-emerald-300/60 hover:bg-white/5">full tour</button>}
         </div>
       )}
 
