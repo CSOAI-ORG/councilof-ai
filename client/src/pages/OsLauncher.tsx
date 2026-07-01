@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 
 const OS_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const OS_APP_ROUTES: Record<string, string> = { revenue: "/pricing", pricing: "/pricing", plans: "/pricing", king: "/try", council: "/try", try: "/try", setup: "/start", onboard: "/start", graph: "/graph", knowledge: "/graph", space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", tools: "/tool-commons", commons: "/commons", status: "/status", os: "/os", emergence: "/emergence", egg: "/emergence", certification: "/certification", academy: "/academy", evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator", layer0: "/layer0", distribution: "/distribution" };
+function osRoute(a: any): string | null { if (!a || !a.command) return null; if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url); if (a.command === "open_app" && a.args && a.args.id) return OS_APP_ROUTES[String(a.args.id).toLowerCase()] || null; if (a.command === "govern") return "/graph"; return null; }
 
 // OpenGridWorks OS — the unified launcher. One surface where an end user opens every
 // CSOAI governance tool working together: the live Sovereign Town heartbeat, the Layer 0
@@ -70,6 +72,17 @@ export default function OsLauncher() {
   async function runAsk() {
     const t = ask.trim(); if (!t) return;
     setAsking(true); setAnswer(""); chargeSovereign(4);
+    // Orchestrate first: the OS home speaks AND opens the right app.
+    try {
+      const r = await fetch(OS_GW + "/orchestrate", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: t, context: { path: "/os", title: "OS launcher" } }) });
+      if (r.ok) { const d = await r.json(); if (d && (d.say || d.actions)) {
+        const route = (Array.isArray(d.actions) ? d.actions : []).map(osRoute).find(Boolean) as string | undefined;
+        if (d.say) setAnswer(String(d.say));
+        if (route) { setTimeout(() => { if (/^https?:\/\//.test(route)) window.open(route, "_blank"); else window.location.assign(route); }, 900); setAsking(false); return; }
+        if (d.say) { setAsking(false); return; }
+      } }
+    } catch (e) {}
+    // Fallback: rich reasoned answer.
     try {
       const r = await fetch(OS_GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: t }) });
       if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") setAnswer(String(d.response)); }
