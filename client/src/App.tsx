@@ -626,7 +626,6 @@ function App() {
                   },
                 }}
               />
-              <SovereignDock />
             </TooltipProvider>
           </AnalyticsProvider>
         </AuthProvider>

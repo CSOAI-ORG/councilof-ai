@@ -41,6 +41,25 @@ const QUICK: { label: string; href: string }[] = [
   { label: "Full OS", href: "/os" },
 ];
 
+const GW = "https://os.meok.ai/api";
+const INDUSTRIES = ["healthcare","health","hospital","clinical","finance","fintech","banking","insurance","education","edtech","retail","ecommerce","legal","law firm","government","public sector","defense","energy","utilities","automotive","telecom","pharma","biotech","manufacturing","logistics","supply chain","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing","advertising"];
+
+async function askChat(msg: string): Promise<string | null> {
+  try {
+    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: msg }) });
+    if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") return String(d.response); }
+  } catch (e) {}
+  return null;
+}
+
+async function askGovern(q: string): Promise<any | null> {
+  try {
+    const r = await fetch(GW + "/govern?q=" + encodeURIComponent(q));
+    if (r.ok) { const d = await r.json(); if (d && d.matched && d.frameworks && d.frameworks.length) return d; }
+  } catch (e) {}
+  return null;
+}
+
 export default function SovereignDock() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -64,7 +83,13 @@ export default function SovereignDock() {
     if (!t) return;
     setMsgs((m) => m.concat({ role: "you", text: t }));
     setInput("");
-    const hit = ROUTES.find((r) => r.re.test(t));
+    // Only treat input as a navigation command when it's an explicit nav verb or a
+    // short topic phrase - never when the user is asking a question (answer those).
+    const words = t.split(/\s+/).length;
+    const questionLike = /\?/.test(t) || /^(is|are|what|how|does|do|can|could|should|would|why|when|which|who|will|explain|tell me|define|describe|list)\b/i.test(t);
+    const navVerb = /^(open|go to|goto|show me|show|take me|navigate|launch|bring up|jump to|visit)\b/i.test(t);
+    const wantsNav = navVerb || (!questionLike && words <= 4);
+    const hit = wantsNav ? ROUTES.find((r) => r.re.test(t)) : null;
     const know = KNOWLEDGE.find((k) => k.re.test(t));
     if (know && !hit) { setMsgs((m) => m.concat({ role: "sov", text: know.a })); return; }
     if (hit) {
@@ -72,18 +97,28 @@ export default function SovereignDock() {
       setTimeout(() => { window.location.assign(hit.href); }, 650);
       return;
     }
-    setMsgs((m) => m.concat({ role: "sov", text: "Let me look that up..." }));
+    setMsgs((m) => m.concat({ role: "sov", text: "Reasoning over live governance data…" }));
+    // Reason via the live Sovereign gateway; in parallel map the industry to its framework stack.
+    const ind = INDUSTRIES.find((w) => new RegExp("\\b" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i").test(t));
+    const [answer, gov] = await Promise.all([askChat(t), ind ? askGovern(ind) : Promise.resolve(null)]);
+    let out = answer || "";
+    if (gov) {
+      const names = gov.frameworks.map((f: any) => f.name).join(", ");
+      out += (out ? "\n\n" : "") + "⚖️ Governance stack for " + gov.industry + ": " + names + "." + (gov.bridges && gov.bridges.length ? " Legacy bridge: " + gov.bridges.join(", ") + "." : "") + " Every governed action is Layer 0 signed.";
+    }
+    if (out) { setMsgs((m) => m.concat({ role: "sov", text: out })); return; }
+    // Fallback: entity facts from the knowledge endpoint.
     try {
-      const r = await fetch("https://os.meok.ai/api/knowledge?q=" + encodeURIComponent(t));
+      const r = await fetch(GW + "/knowledge?q=" + encodeURIComponent(t));
       if (r.ok) {
         const d = await r.json();
         let ans = "";
         if (d && d.facts && (d.facts.desc || d.facts.label)) ans = (d.facts.label ? d.facts.label + " - " : "") + (d.facts.desc || "") + (d.facts.population ? " (population " + Number(d.facts.population).toLocaleString() + ")" : "") + ".";
         if (!ans && d && d.results && d.results[0]) ans = d.results[0].excerpt || d.results[0].desc || "";
-        if (ans) { setMsgs((m) => m.concat({ role: "sov", text: ans + " Want the governance view? Open the Governance Graph or ask the Council." })); return; }
+        if (ans) { setMsgs((m) => m.concat({ role: "sov", text: ans + " Want the governance view? Open the Governance Graph." })); return; }
       }
     } catch (e) {}
-    setMsgs((m) => m.concat({ role: "sov", text: "I could not reach live knowledge just now - try: regulations, crosswalks, evidence, certify, or open the Governance Graph." }));
+    setMsgs((m) => m.concat({ role: "sov", text: "I could not reach live reasoning just now - try: regulations, crosswalks, evidence, certify, or open the Governance Graph." }));
   }
 
   function voice() {
@@ -121,7 +156,7 @@ export default function SovereignDock() {
             {QUICK.map((q) => (<a key={q.label} href={q.href} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</a>))}
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-            {msgs.map((m, i) => (<div key={i} className={m.role === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[90%] rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.text}</div>))}
+            {msgs.map((m, i) => (<div key={i} className={m.role === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[90%] whitespace-pre-wrap rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.text}</div>))}
             <div ref={endRef} />
           </div>
           <div className="border-t border-emerald-500/15 p-3">
