@@ -95,36 +95,29 @@ export default function Signup() {
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Start Your AI Safety Career Today
+            Own your AI. Own your data.
           </h1>
 
           <p className="text-lg text-gray-600 mb-8">
-            Join the global movement of AI Safety Analysts. Get certified, earn credentials, and
-            protect humanity from AI risks.
+            CSOAI is the sovereign AI governance operating system — your own Sovereign, a live
+            governance graph, a signing council, and every framework crosswalked on one Layer 0 floor.
           </p>
 
           <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Star className="h-5 w-5 text-green-600 fill-green-600" />
-              <Star className="h-5 w-5 text-green-600 fill-green-600" />
-              <Star className="h-5 w-5 text-green-600 fill-green-600" />
-              <Star className="h-5 w-5 text-green-600 fill-green-600" />
-              <Star className="h-5 w-5 text-green-600 fill-green-600" />
-            </div>
             <p className="text-sm text-green-900 font-medium mb-2">
-              "CSOAI certification opened doors I didn't know existed. Within 3 months, I landed a
-              $120K AI Safety Analyst role."
+              "Comply once and it crosswalks everywhere — EU AI Act, NIST, ISO 42001, PIPL. The Council
+              signs every decision to Layer 0, so it's provable, not promised."
             </p>
-            <p className="text-xs text-green-700">— Sarah Chen, Certified AI Safety Analyst</p>
+            <p className="text-xs text-green-700">— Why teams pick the Sovereign OS</p>
           </div>
 
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-gray-900">15+ Professional Courses</h3>
+                <h3 className="font-semibold text-gray-900">Your own Sovereign</h3>
                 <p className="text-sm text-gray-600">
-                  Comprehensive training on EU AI Act, NIST, TC260, and more
+                  An AI that governs with you — free open-source base, premium hosted models on Pro.
                 </p>
               </div>
             </div>
@@ -132,9 +125,9 @@ export default function Signup() {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-gray-900">Globally Recognized Certificates</h3>
+                <h3 className="font-semibold text-gray-900">Signed to Layer 0</h3>
                 <p className="text-sm text-gray-600">
-                  University-grade credentials trusted by employers worldwide
+                  Every verdict Ed25519-signed and verifiable offline — EU AI Act Article 50 transparent.
                 </p>
               </div>
             </div>
@@ -142,9 +135,9 @@ export default function Signup() {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-gray-900">100% Independent</h3>
+                <h3 className="font-semibold text-gray-900">100% independent</h3>
                 <p className="text-sm text-gray-600">
-                  No ties to OpenAI, Google, Microsoft, or any AI vendor
+                  Yours to own and export — no lock-in to any AI vendor. MIT-licensed core, UK-resident.
                 </p>
               </div>
             </div>
