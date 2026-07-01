@@ -181,6 +181,7 @@ import SovereignDock from "./components/SovereignDock";
 import DemoTour from "./components/DemoTour";
 import WatchdogMap from "./pages/WatchdogMap";
 import DemoOS from "./pages/DemoOS";
+import PocShowcase from "./pages/PocShowcase";
 import SovSpace from "./pages/SovSpace";
 import BadgesPage from "./pages/BadgesPage";
 import RealWorldMap from "./pages/RealWorldMap";
@@ -491,6 +492,9 @@ function App() {
                   <Route path="/watchdog-map" component={WatchdogMap} />
                   <Route path="/heatmap" component={WatchdogMap} />
                   <Route path="/watchdog-heatmap" component={WatchdogMap} />
+                  <Route path="/poc" component={PocShowcase} />
+                  <Route path="/humanoids-poc" component={PocShowcase} />
+                  <Route path="/one-os" component={PocShowcase} />
                   <Route path="/reports" component={Reports} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/settings/billing" component={Billing} />

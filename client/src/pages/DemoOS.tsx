@@ -28,6 +28,10 @@ const STEPS: Step[] = [
   { say: "Here's the whole OS at a glance - the Graph, the Council and the Watchdog, all open together, tiled like a real desktop, all on one brain.", wins: [{ title: "Governance Graph", src: "/graph?demo=a%20fintech%20in%20Singapore", slot: "tl" }, { title: "The Council", src: "/try?demo=a%20facial%20recognition%20system%20in%20public", slot: "tr" }, { title: "Global Watchdog", src: "/watchdog-map", slot: "br" }], full: true },
   { say: "Every framework lives where it's made - the EU AI Act in Brussels, NIST near Washington, PIPL in Beijing. Comply once, and I crosswalk it everywhere.", full: true, fly: { lng: 116.4, lat: 39.9, height: 2600000 } },
   { say: "Now - the emergence dome. As you use the OS, your Sovereign learns you, and this living mirror of the world charges and hatches into your own AI character. Step inside.", wins: [{ title: "Emergence - the living dome", src: "/emergence", slot: "c" }], fly: { lng: 0, lat: 15, height: 16000000 } },
+  { say: "Now the proof. This is ONE OS for agents AND humanoids - I track every single one, live and global.", layer: { tag: "humanoids", on: true }, fly: { lng: 10, lat: 25, height: 26000000 } },
+  { say: "I map their environments by WiFi sensing, LoRa and Bluetooth mesh - consent-first, no cameras - and every humanoid runs PDCA, simulating outcomes to pick the governed path.", full: true },
+  { say: "Watch - a swarm turns rogue, about to ungovern.", layer: { tag: "threat", on: true }, fly: { lng: -0.1, lat: 51.5, height: 1400000 } },
+  { say: "I see it before it happens - and I stop it. Halt, quarantine, re-govern. Signed to Layer 0. Run it yourself.", wins: [{ title: "ONE OS - agents & humanoids POC", src: "/poc", slot: "c" }], layer: { tag: "threat", on: false } },
   { say: "Full transparency: the Sovereign brain and every Layer 0 protocol, checked live.", wins: [{ title: "System Status", src: "/status", slot: "tr" }], full: true, home: true },
   { say: "Own your AI. Own your data. Start free, scale when you need. That's your OS - and I'm always right here. Ask me anything, any time.", wins: [{ title: "Plans", src: "/pricing", slot: "tr" }], home: true },
 ];
