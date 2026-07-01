@@ -70,6 +70,8 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <div class="lyr" data-layer="cyber"><span class="sw"><i></i></span><span class="nm">Cyber / CNI<small>defenders + threats</small></span></div>
   <div class="lyr" data-layer="threat"><span class="sw"><i></i></span><span class="nm">Threat swarm<small>rogue agents/humanoids</small></span></div>
   <div class="lyr" data-layer="humanoids"><span class="sw"><i></i></span><span class="nm">Humanoid fleet<small>live-tracked</small></span></div>
+  <div class="lyr" data-layer="robotics"><span class="sw"><i></i></span><span class="nm">Robotics R&D<small>humanoid hubs</small></span></div>
+  <div class="lyr" data-layer="intel"><span class="sw"><i></i></span><span class="nm">AI security / trending<small>intel + news hubs</small></span></div>
   <div class="lyr" data-layer="sats"><span class="sw"><i></i></span><span class="nm">Satellites<small>orbital</small></span></div>
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
@@ -114,6 +116,8 @@ var FW=[
 var GOV=[['USA',-77.04,38.9],['EU',4.35,50.85],['UK',-0.12,51.5],['China',116.4,39.9],['Canada',-75.7,45.4],['Australia',149.1,-35.3],['Japan',139.7,35.7],['Korea',126.98,37.57],['India',77.2,28.6],['Brazil',-47.9,-15.8],['UAE',54.4,24.5],['Singapore',103.8,1.35],['Germany',13.4,52.5],['France',2.35,48.85],['Saudi',46.7,24.7]];
 var FORTUNE=[['Walmart',-94.2,36.4],['Amazon',-122.3,47.6],['Apple',-122.0,37.3],['Microsoft',-122.1,47.6],['Alphabet',-122.08,37.4],['ExxonMobil',-96.9,32.9],['JPMorgan',-74.0,40.7],['Berkshire',-95.9,41.3],['UnitedHealth',-93.5,44.9],['Meta',-122.15,37.48],['Tesla',-97.7,30.3],['Nvidia',-121.95,37.35],['Toyota',137.15,35.08],['Volkswagen',10.8,52.4],['Samsung',127.0,37.28],['Aramco',50.1,26.3],['Shell',-0.1,51.5],['TSMC',120.97,24.8],['Tencent',114.06,22.54],['Reliance',72.87,19.07],['Nestle',6.84,46.46],['BHP',144.96,-37.8],['Petrobras',-43.2,-22.9],['JPM-London',-0.09,51.51]];
 var CYBER=[['CISA',-77.09,38.88],['ENISA',23.73,37.98],['NCSC-UK',-0.13,51.5],['BSI-DE',7.1,50.73],['ANSSI-FR',2.31,48.86],['China',116.4,39.9],['Russia',37.6,55.75],['Israel',34.78,32.08],['DPRK',125.75,39.03],['Iran',51.39,35.69],['Ukraine',30.52,50.45],['Estonia',24.75,59.44]];
+var ROBOTICS=[['Boston',-71.06,42.36],['Bay Area',-122.14,37.44],['Austin',-97.74,30.27],['Tokyo',139.69,35.68],['Seoul',126.98,37.57],['Shenzhen',114.06,22.54],['Zurich',8.54,47.37],['Shanghai',121.47,31.23],['Munich',11.58,48.14],['Waterloo',-80.52,43.46],['Oslo',10.75,59.91],['Pisa',10.4,43.72]];
+var INTEL=[['SF Bay',-122.27,37.8],['London',-0.12,51.5],['Tel Aviv',34.78,32.08],['Bengaluru',77.59,12.97],['Beijing',116.4,39.9],['Singapore',103.8,1.35],['Toronto',-79.38,43.65],['Paris',2.35,48.86],['Berlin',13.4,52.5],['Dubai',55.27,25.2],['Austin',-97.74,30.27],['Seattle',-122.33,47.6]];
 
 try{ Cesium.Ion.defaultAccessToken=''; }catch(e){}
 var viewer;
@@ -218,6 +222,19 @@ if(viewer){
       point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#f43f5e'), outlineColor:Cesium.Color.WHITE, outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)} });
     viewer.entities.add({ layerTag:'cyber', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],20000),
       ellipse:{ semiMinorAxis:180000, semiMajorAxis:180000, height:20000, material:Cesium.Color.fromCssColorString('#f43f5e').withAlpha(0.12) } });
+  });
+
+  // ----- Robotics / humanoid R&D hubs, hidden by default -----
+  ROBOTICS.forEach(function(c){
+    viewer.entities.add({ layerTag:'robotics', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],10000),
+      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#a78bfa'), outlineColor:Cesium.Color.fromCssColorString('#3b0764'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)} });
+  });
+  // ----- AI security / intel / trending hubs, hidden by default -----
+  INTEL.forEach(function(c){
+    viewer.entities.add({ layerTag:'intel', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],15000),
+      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#fb923c'), outlineColor:Cesium.Color.WHITE, outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)} });
+    viewer.entities.add({ layerTag:'intel', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],15000),
+      ellipse:{ semiMinorAxis:160000, semiMajorAxis:160000, height:15000, material:Cesium.Color.fromCssColorString('#fb923c').withAlpha(0.10) } });
   });
 
   // layer toggles
