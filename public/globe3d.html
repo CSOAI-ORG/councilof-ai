@@ -20,6 +20,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
     background:linear-gradient(180deg,rgba(3,6,12,.96),rgba(3,6,12,.1));border-bottom:1px solid var(--line);backdrop-filter:blur(7px)}
   .brand{display:flex;align-items:center;gap:9px;font-weight:600;white-space:nowrap}
   .dot{width:9px;height:9px;border-radius:50%;background:var(--em);box-shadow:0 0 12px var(--em)}
+  @keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
   .brand small{color:var(--mut);font:400 11px/1 var(--mono);letter-spacing:1.4px;text-transform:uppercase}
   .beta{font:600 9px/1 var(--mono);color:#03110b;background:var(--em2);padding:3px 6px;border-radius:5px;letter-spacing:1px}
   .stats{margin-left:auto;display:flex;gap:18px;font-family:var(--mono)}
@@ -54,7 +55,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <div class="stats">
     <div class="stat"><b>177</b><span>Jurisdictions</span></div>
     <div class="stat"><b>12</b><span>Sovereign nodes</span></div>
-    <div class="stat"><b>290</b><span>MCP nodes</span></div>
+    <div class="stat"><b id="s-tools">290</b><span>Governed tools</span></div>
     <div class="stat sov"><b id="s-ung">121M</b><span>Ungoverned crimes</span></div>
     <div class="stat sov"><b id="s-ep">1.45B</b><span>Signed episodes</span></div>
   </div>
@@ -84,9 +85,14 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <div id="jumps"></div>
 </div>
 
-<div id="legend">
-  <span><i style="background:#e2574c"></i>Binding</span><span><i style="background:#f5b942"></i>Emerging</span>
-  <span><i style="background:#3b9ad8"></i>Voluntary</span><span><i style="background:#34d399"></i>Agent</span>
+<div id="legend" style="flex-wrap:wrap;max-width:64vw">
+  <span><i style="background:#ef4444"></i>Frameworks / law</span>
+  <span><i style="background:#e7f6ef;box-shadow:inset 0 0 0 1px #0d9488"></i>Governments</span>
+  <span><i style="background:#38bdf8"></i>Fortune 500</span>
+  <span><i style="background:#f43f5e"></i>Cyber / CNI</span>
+  <span><i style="background:#a78bfa"></i>Robotics / ontology</span>
+  <span><i style="background:#fb923c"></i>AI-security</span>
+  <span><i style="background:#6ee7b7"></i>Humanoids / agents</span>
 </div>
 <a id="back" href="/globe.html">← 2.5D map view</a>
 
@@ -291,6 +297,19 @@ if(viewer){
   fetch('https://proofof-site.vercel.app/sovereign-town/status.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
     if(typeof d.cum_episodes==='number')document.getElementById('s-ep').textContent=fmt(d.cum_episodes)+'+';
     if(typeof d.ungoverned_crimes==='number')document.getElementById('s-ung').textContent=fmt(d.ungoverned_crimes)+'+';
+  }).catch(function(){});
+
+  // Live Sovereign brain — pull real Layer 0 health so the globe shows a live pulse + tool count.
+  fetch('https://os.meok.ai/api/health',{cache:'no-store'}).then(function(r){return r.json();}).then(function(h){
+    if(h && (h.ok || h.service)){
+      var br = document.querySelector('.brand small'); if(br) br.textContent = '3D Governance Earth · LIVE';
+      var dot = document.querySelector('.brand .dot'); if(dot){ dot.style.animation='pulseDot 1.4s infinite'; }
+    }
+  }).catch(function(){});
+  // real governed-tool count from the live catalog
+  fetch('https://os.meok.ai/api/tools',{cache:'no-store'}).then(function(r){return r.json();}).then(function(t){
+    var n = (t && (t.total || t.count)) || (Array.isArray(t) ? t.length : 0);
+    if(n && n > 50) document.getElementById('s-tools').textContent = n;
   }).catch(function(){});
 
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
