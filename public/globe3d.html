@@ -216,6 +216,22 @@ if(viewer){
       else if (m.cmd === 'layer') { viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag) ent.show = !!m.on; }); }
       else if (m.cmd === 'spin') { spinning = !!m.on; }
       else if (m.cmd === 'home') { spinning = (m.on !== false); viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(20,28,26000000), duration: Number(m.duration)||2.2 }); }
+      else if (m.cmd === 'neutralize') {
+        // Sovereign stops the rogue swarm ON the globe: red threat cluster → emerald governed.
+        spinning = false;
+        var gov = Cesium.Color.fromCssColorString('#34d399');
+        var govOut = Cesium.Color.fromCssColorString('#065f46');
+        viewer.entities.values.forEach(function(ent){ if (ent.layerTag === 'threat' && ent.point) { ent.point.color = gov; ent.point.outlineColor = govOut; ent.point.pixelSize = 3; ent.point.show = true; } });
+        // Governed ring flash over the threat origin (London demo coords).
+        var ring = viewer.entities.add({ layerTag:'threat', position: Cesium.Cartesian3.fromDegrees(-0.1, 51.5, 30000),
+          ellipse: { semiMinorAxis: 30000, semiMajorAxis: 30000, height: 30000, material: gov.withAlpha(0.18), outline: true, outlineColor: gov } });
+        var grow = 30000, iv = setInterval(function(){ grow += 45000; if (grow > 900000) { clearInterval(iv); return; } ring.ellipse.semiMinorAxis = grow; ring.ellipse.semiMajorAxis = grow; ring.ellipse.material = gov.withAlpha(Math.max(0, 0.18 * (1 - grow/900000))); }, 40);
+      }
+      else if (m.cmd === 'rearm') {
+        // reset threat cluster back to red (for replaying the scenario)
+        var red = Cesium.Color.fromCssColorString('#ef4444');
+        viewer.entities.values.forEach(function(ent){ if (ent.layerTag === 'threat' && ent.point) { ent.point.color = red; ent.point.outlineColor = Cesium.Color.WHITE; ent.point.pixelSize = 5; } });
+      }
     } catch(e){}
   });
   try { parent.postMessage({ sovGlobeReady: true }, '*'); } catch(e){}

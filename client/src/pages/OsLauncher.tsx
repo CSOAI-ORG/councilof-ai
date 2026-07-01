@@ -9,7 +9,7 @@ function osRoute(a: any): string | null { if (!a || !a.command) return null; if 
 // CSOAI governance tool working together: the live Sovereign Town heartbeat, the Layer 0
 // status, and a launchpad of every app. This is os.csoai.org's home.
 
-type App = { name: string; desc: string; href: string; glyph: string; tone: string; ext?: boolean };
+type App = { name: string; desc: string; href: string; glyph: string; tone: string; ext?: boolean; pro?: boolean };
 
 const APPS: App[] = [
   { name: "Try the Council", desc: "30-second WOW — type a compliance question, watch 5 AI agents debate it live, get a signed verdict. The front door.", href: "/try", glyph: "◆", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
@@ -18,10 +18,10 @@ const APPS: App[] = [
   { name: "Sov Space", desc: "Simulate a real-world governance experiment — the council deliberates live and seals a signed verdict with a ledger hash.", href: "/sov-space", glyph: "◈", tone: "from-emerald-500/25 to-sky-400/10 border-emerald-400/35" },
   { name: "Tool Commons", desc: "Search 377 governed MCP tools — copy a pip install, wire it into your stack, Layer 0 covered.", href: "/tool-commons", glyph: "⊟", tone: "from-cyan-500/20 to-emerald-400/5 border-cyan-400/30" },
   { name: "Open Commons", desc: "Creative-Commons media search, keyless — build in the open.", href: "/commons", glyph: "◐", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
-  { name: "Emergence", desc: "The living egg — your Sovereign learns you as you use the OS, then hatches into your AI character.", href: "/emergence", glyph: "◍", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30" },
+  { name: "Emergence", desc: "The living egg — your Sovereign learns you as you use the OS, then hatches into your AI character.", href: "/emergence", glyph: "◍", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30", pro: true },
   { name: "System Status", desc: "The transparency board — every core system, live.", href: "/status", glyph: "◉", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
   { name: "Global AI Watchdog", desc: "The public watchdog for humans, agents, humanoids and systems — report a signal, watch the world heat-map by problem layer, live.", href: "/watchdog-map", glyph: "◎", tone: "from-rose-500/20 to-amber-400/5 border-rose-400/30" },
-  { name: "ONE OS — agents & humanoids", desc: "The proof of concept: live-track every agent and humanoid, PDCA auto-simulation, and watch the Sovereign stop a rogue swarm before it ungoverns — signed.", href: "/poc", glyph: "⬢", tone: "from-emerald-500/25 to-rose-400/10 border-emerald-400/35" },
+  { name: "ONE OS — agents & humanoids", desc: "The proof of concept: live-track every agent and humanoid, PDCA auto-simulation, and watch the Sovereign stop a rogue swarm before it ungoverns — signed.", href: "/poc", glyph: "⬢", tone: "from-emerald-500/25 to-rose-400/10 border-emerald-400/35", pro: true },
   { name: "Rediscovered, Not Invented", desc: "The 4,000-year lineage — every CSOAI system mapped to the ancient original that ran empires.", href: "/lineage", glyph: "𓉴", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30" },
   { name: "Relevance Map", desc: "What governs what — pick your industry, see the relevant CSOAI bridges, frameworks and gaps.", href: "/map", glyph: "◌", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
   { name: "Framework Temples", desc: "Each regulation a temple at its real-world seat — step inside for the visual breakdown.", href: "/temples", glyph: "卂", tone: "from-amber-500/20 to-teal-400/5 border-amber-400/30" },
@@ -176,6 +176,7 @@ export default function OsLauncher() {
               {...(a.ext ? {} : {})}
               className={`group relative overflow-hidden rounded-2xl border bg-gradient-to-br ${a.tone} p-5 transition hover:scale-[1.015] hover:shadow-[0_0_30px_-8px_rgba(16,185,129,0.35)]`}
             >
+              {a.pro && <span title="Operator tier — advanced / defence-grade capability" className="absolute right-3 top-3 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[1.5px] text-amber-200/90">Operator · Pro</span>}
               <div className="flex items-start gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/30 text-xl text-emerald-200">{a.glyph}</div>
                 <div className="flex-1">

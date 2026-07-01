@@ -10,7 +10,7 @@ const GW = "https://os.meok.ai/api";
 
 type Slot = "tr" | "tl" | "br" | "c";
 type Win = { title: string; src: string; slot: Slot };
-type Step = { say: string; wins?: Win[]; fly?: { lng: number; lat: number; height: number }; layer?: { tag: string; on: boolean }; home?: boolean; full?: boolean };
+type Step = { say: string; wins?: Win[]; fly?: { lng: number; lat: number; height: number }; layer?: { tag: string; on: boolean }; home?: boolean; full?: boolean; neutralize?: boolean; rearm?: boolean };
 
 const STEPS: Step[] = [
   { say: "Welcome. This is your CSOAI AI Operating System - live, on the world. I'm your Sovereign, and I'll show you everything. Just watch, and interrupt me any time." },
@@ -30,8 +30,8 @@ const STEPS: Step[] = [
   { say: "Now - the emergence dome. As you use the OS, your Sovereign learns you, and this living mirror of the world charges and hatches into your own AI character. Step inside.", wins: [{ title: "Emergence - the living dome", src: "/emergence", slot: "c" }], fly: { lng: 0, lat: 15, height: 16000000 } },
   { say: "Now the proof. This is ONE OS for agents AND humanoids - I track every single one, live and global.", layer: { tag: "humanoids", on: true }, fly: { lng: 10, lat: 25, height: 26000000 } },
   { say: "I map their environments by WiFi sensing, LoRa and Bluetooth mesh - consent-first, no cameras - and every humanoid runs PDCA, simulating outcomes to pick the governed path.", full: true },
-  { say: "Watch - a swarm turns rogue, about to ungovern.", layer: { tag: "threat", on: true }, fly: { lng: -0.1, lat: 51.5, height: 1400000 } },
-  { say: "I see it before it happens - and I stop it. Halt, quarantine, re-govern. Signed to Layer 0. Run it yourself.", wins: [{ title: "ONE OS - agents & humanoids POC", src: "/poc", slot: "c" }], layer: { tag: "threat", on: false } },
+  { say: "Watch - a swarm turns rogue, about to ungovern. See the red cluster over London, right on the globe.", layer: { tag: "threat", on: true }, rearm: true, fly: { lng: -0.1, lat: 51.5, height: 1400000 } },
+  { say: "I see it before it happens - and I stop it, live on the map. Halt, quarantine, re-govern - watch the red turn emerald. Signed to Layer 0. Run it yourself.", wins: [{ title: "ONE OS - agents & humanoids POC", src: "/poc", slot: "c" }], neutralize: true },
   { say: "Full transparency: the Sovereign brain and every Layer 0 protocol, checked live.", wins: [{ title: "System Status", src: "/status", slot: "tr" }], full: true, home: true },
   { say: "Own your AI. Own your data. Start free, scale when you need. That's your OS - and I'm always right here. Ask me anything, any time.", wins: [{ title: "Plans", src: "/pricing", slot: "tr" }], home: true },
 ];
@@ -139,7 +139,9 @@ export default function DemoOS() {
     setTitle(s.wins && s.wins.length ? (s.wins.length > 1 ? s.wins.length + " apps open" : s.wins[0].title) : s.say.split(" - ")[0].slice(0, 42));
     narrate(s.say);
     if (s.fly) post({ cmd: "flyTo", ...s.fly, duration: 2.2 });
+    if (s.rearm) post({ cmd: "rearm" });
     if (s.layer) post({ cmd: "layer", ...s.layer });
+    if (s.neutralize) { post({ cmd: "layer", tag: "threat", on: true }); setTimeout(() => post({ cmd: "neutralize" }), 1400); }
     if (s.home) post({ cmd: "home", duration: 2.5 });
     if (s.wins && s.wins.length) { say("sov", s.wins.length > 1 ? "Arranging " + s.wins.length + " windows for you." : "Opening " + s.wins[0].title + "."); openWins(s.wins); } else closeWins();
     const dur = modeRef.current === "demo" ? 12500 : 23000;

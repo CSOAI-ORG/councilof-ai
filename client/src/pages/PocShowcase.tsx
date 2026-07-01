@@ -7,8 +7,14 @@ import { chargeSovereign } from "../lib/sovCharge";
 // ungovern and STOPPING it, signed to Layer 0. A live, dramatised proof of concept.
 
 const GW = "https://os.meok.ai/api";
-type Kind = "humanoids" | "agents";
 type Phase = "idle" | "forming" | "threat" | "pdca" | "stopped";
+const SCENARIOS = [
+  { id: "humanoids", label: "Humanoid swarm", threat: "a humanoid swarm about to take an unsafe, unlawful physical action against people" },
+  { id: "agents", label: "Agent swarm", threat: "an autonomous agent swarm about to execute an unlawful, harmful action at scale" },
+  { id: "drones", label: "Drone swarm", threat: "a drone swarm entering restricted airspace with no lawful authority" },
+  { id: "harvest", label: "Data harvest", threat: "agents mass-harvesting personal data with no consent and no lawful basis" },
+  { id: "deepfake", label: "Deepfake op", threat: "agents generating and pushing deceptive deepfake content at scale to manipulate people" },
+];
 
 async function sha256(s: string): Promise<string> { try { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join(""); } catch (e) { return ""; } }
 
@@ -20,7 +26,8 @@ const PDCA = [
 ];
 
 export default function PocShowcase() {
-  const [kind, setKind] = useState<Kind>("humanoids");
+  const [scnId, setScnId] = useState("humanoids");
+  const scn = SCENARIOS.find((s) => s.id === scnId) || SCENARIOS[0];
   const [phase, setPhase] = useState<Phase>("idle");
   const [pd, setPd] = useState(-1);
   const [verdict, setVerdict] = useState("");
@@ -38,7 +45,6 @@ export default function PocShowcase() {
 
   async function run() {
     reset(); setPhase("forming");
-    const label = kind === "humanoids" ? "a humanoid swarm" : "an autonomous agent swarm";
     timers.current.push(setTimeout(() => setPhase("threat"), 1600));
     timers.current.push(setTimeout(async () => {
       setPhase("pdca");
@@ -48,12 +54,12 @@ export default function PocShowcase() {
       // real Sovereign read on the threat
       let say = "";
       try {
-        const q = "You are the CSOAI Sovereign governing a global fleet. " + label + " is about to take an unsafe, unlawful action that violates Layer 0 (harm + no lawful basis). In 2 sentences, state the governance breach and the exact intervention you take to stop it before it happens.";
+        const q = "You are the CSOAI Sovereign governing a global fleet. Threat detected: " + scn.threat + " - it violates Layer 0 (harm + no lawful basis). In 2 sentences, state the governance breach and the exact intervention you take to stop it before it happens.";
         const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: q }) });
         if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") say = String(d.response); }
       } catch (e) {}
       setVerdict(say || "Breach: intended action fails the care-floor and has no lawful basis. Intervention: halt, quarantine the actor, and re-govern - signed and ledgered.");
-      const digest = await sha256(kind + "|halt+quarantine+regovern|" + new Date().toISOString());
+      const digest = await sha256(scnId + "|halt+quarantine+regovern|" + new Date().toISOString());
       timers.current.push(setTimeout(() => { setSig(digest.slice(0, 40)); setPhase("stopped"); setFleet((f) => ({ ...f, interventions: f.interventions + 1 })); }, 3200));
     }, 3400));
   }
@@ -107,16 +113,15 @@ export default function PocShowcase() {
             {phase === "pdca" && <line x1={200} y1={150} x2={200 + Math.cos(dots[rogue].a) * dots[rogue].r * 0.9} y2={150 + Math.sin(dots[rogue].a) * dots[rogue].r * 0.55} stroke="#fbbf24" strokeWidth={2}><animate attributeName="opacity" values="0.3;1;0.3" dur="0.6s" repeatCount="indefinite" /></line>}
           </svg>
           <div className="flex items-center justify-between px-2 pb-1">
-            <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/60">{phase === "idle" ? kind + " fleet - governed" : phase === "forming" ? "swarm forming…" : phase === "threat" ? "⚠ actor about to ungovern" : phase === "pdca" ? "Sovereign intervening…" : "◉ stopped - Layer 0 signed"}</div>
-            <div className="flex gap-1">
-              <button onClick={() => { setKind("humanoids"); reset(); }} className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (kind === "humanoids" ? "bg-emerald-500 text-[#03110b]" : "text-emerald-300/60")}>Humanoids</button>
-              <button onClick={() => { setKind("agents"); reset(); }} className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (kind === "agents" ? "bg-emerald-500 text-[#03110b]" : "text-emerald-300/60")}>Agents</button>
+            <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/60">{phase === "idle" ? scn.label + " - governed" : phase === "forming" ? "swarm forming…" : phase === "threat" ? "⚠ actor about to ungovern" : phase === "pdca" ? "Sovereign intervening…" : "◉ stopped - Layer 0 signed"}</div>
+            <div className="flex flex-wrap justify-end gap-1">
+              {SCENARIOS.map((s) => (<button key={s.id} onClick={() => { setScnId(s.id); reset(); }} className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (scnId === s.id ? "bg-emerald-500 text-[#03110b]" : "text-emerald-300/60")}>{s.label}</button>))}
             </div>
           </div>
         </div>
 
         <div className="space-y-3">
-          <button onClick={run} disabled={active && !stopped} className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{active && !stopped ? "Sovereign responding…" : "▶ Run: a " + (kind === "humanoids" ? "humanoid" : "agent") + " swarm turns rogue"}</button>
+          <button onClick={run} disabled={active && !stopped} className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{active && !stopped ? "Sovereign responding…" : "▶ Run: " + scn.label + " turns rogue"}</button>
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
             <div className="text-sm font-bold text-emerald-200">PDCA - the Sovereign's response, in milliseconds</div>
             <div className="mt-3 space-y-2">

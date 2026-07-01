@@ -1,0 +1,10 @@
+import { chromium } from "playwright";
+const b=await chromium.launch();const p=await(await b.newContext({viewport:{width:1300,height:1000}})).newPage();
+const net=[];p.on("response",r=>{if(/sovereign-embed\.js|api\/(orchestrate|chat)/.test(r.url()))net.push(r.url().split("/").pop().split("?")[0]+":"+r.status());});
+await p.goto("http://localhost:4173/globe.html",{waitUntil:"domcontentloaded"});await p.waitForTimeout(3500);
+const mounted=await p.evaluate(()=>!!window.__SOVEREIGN_EMBED__);
+const orb=await p.evaluate(()=>{const all=[...document.querySelectorAll("*")];return all.some(e=>/[🐉]/.test(e.textContent||"")&&e.children.length<3)||!!document.querySelector("[class*=sovereign],[id*=sovereign]");});
+console.log("embed mounted (window.__SOVEREIGN_EMBED__):",mounted);
+console.log("orb/dock element present:",orb);
+console.log("network:",net.join(", ")||"(none)");
+await b.close();
