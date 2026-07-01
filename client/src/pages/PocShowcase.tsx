@@ -131,6 +131,10 @@ export default function PocShowcase() {
               {SCENARIOS.map((s) => (<button key={s.id} onClick={() => { setScnId(s.id); reset(); }} className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (scnId === s.id ? "bg-emerald-500 text-[#03110b]" : "text-emerald-300/60")}>{s.label}</button>))}
             </div>
           </div>
+          <div className="mt-2 overflow-hidden rounded-xl border border-emerald-500/15">
+            <div className="flex items-center justify-between bg-[#04120c] px-2 py-1 font-mono text-[9px] uppercase tracking-wide text-emerald-300/60"><span>◉ public street cam — the Sovereign sees the real world</span><span className="text-emerald-300/40">consent-first · no facial recognition</span></div>
+            <iframe src={"/livecam.html?loc=" + encodeURIComponent(scn.label + " zone")} title="public cam" className="w-full border-0" style={{ height: 150 }} />
+          </div>
         </div>
 
         <div className="space-y-3">
