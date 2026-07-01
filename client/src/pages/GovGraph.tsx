@@ -18,6 +18,7 @@ function jurisdiction(q: string) {
 export default function GovGraph() {
   const [q, setQ] = useState(""); const [res, setRes] = useState<any>(null); const [kn, setKn] = useState<any>(null); const [gov, setGov] = useState<any>(null); const [read, setRead] = useState(""); const [loading, setLoading] = useState(false);
   useEffect(() => { document.title = "Governance Graph - the governed Google | CSOAI"; }, []);
+  useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { const t = setTimeout(() => run(d), 500); return () => clearTimeout(t); } }, []);
   async function run(query?: string) {
     const term = (query !== undefined ? query : q).trim(); if (!term) return;
     setQ(term); setRes({ q: term, j: jurisdiction(term) }); setKn(null); setGov(null); setRead(""); setLoading(true); chargeSovereign(6);

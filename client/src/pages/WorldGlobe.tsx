@@ -56,6 +56,7 @@ function project(lat: number, lng: number, rot: number) {
 
 export default function WorldGlobe() {
   useEffect(() => { document.title = "The Sovereign Globe - AI governance, layered on the world | CSOAI"; }, []);
+  useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setAsk(d); const t = setTimeout(() => runAsk(d), 700); return () => clearTimeout(t); } }, []);
   const [rot, setRot] = useState(0);
   const [spin, setSpin] = useState(true);
   const [layers, setLayers] = useState<{ fw: boolean; council: boolean }>({ fw: true, council: false });
@@ -65,8 +66,9 @@ export default function WorldGlobe() {
   const [asking, setAsking] = useState(false);
   const raf = useRef<number | null>(null);
 
-  async function runAsk() {
-    const t = ask.trim(); if (!t) return;
+  async function runAsk(override?: string) {
+    const t = (override ?? ask).trim(); if (!t) return;
+    if (override) setAsk(override);
     setAsking(true); setAns(""); chargeSovereign(6);
     // fly the globe to the matching framework pin
     const hint = PLACE_HINTS.find((h) => h.re.test(t));
@@ -147,7 +149,7 @@ export default function WorldGlobe() {
             <label className="text-[11px] uppercase tracking-wide text-emerald-300/60">Ask the Sovereign about the world</label>
             <div className="mt-2 flex gap-2">
               <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="e.g. what governs a hospital AI in Germany?" className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-emerald-400 focus:outline-none" />
-              <button onClick={runAsk} disabled={asking} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-60">{asking ? "…" : "Ask"}</button>
+              <button onClick={() => runAsk()} disabled={asking} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-60">{asking ? "…" : "Ask"}</button>
             </div>
             {ans && <div className="mt-3 max-h-52 overflow-y-auto whitespace-pre-wrap rounded-lg bg-black/30 px-3 py-2 text-sm leading-relaxed text-white/85">{ans}</div>}
           </div>

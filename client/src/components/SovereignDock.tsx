@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import { fetchHealth } from "../lib/sovHealth";
+import { startTour } from "../lib/demoTour";
 
 // SovereignDock - the persistent right-hand AI OS sidebar. Speak or type and it
 // acts: routes you to the right surface, answers from the framework knowledge
@@ -210,6 +211,7 @@ export default function SovereignDock() {
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>
           </div>
           <div className="flex flex-wrap gap-1.5 border-b border-emerald-500/10 px-3 py-2">
+            <button onClick={() => { startTour(); window.location.assign("/"); }} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Live tour</button>
             <button onClick={() => act("explain this page and what I can do here")} className="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold text-emerald-100 hover:bg-emerald-500/30">Explain this page</button>
             {QUICK.map((q) => (<a key={q.label} href={q.href} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</a>))}
           </div>

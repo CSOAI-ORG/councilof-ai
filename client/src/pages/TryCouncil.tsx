@@ -74,6 +74,7 @@ function agentLine(a: Agent, d: Domain): string {
 
 export default function TryCouncil() {
   useEffect(() => { document.title = "Try the AI Governance Council — CSOAI"; }, []);
+  useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { const t = setTimeout(() => ask(d), 500); return () => clearTimeout(t); } }, []);
   const [q, setQ] = useState("");
   const [result, setResult] = useState<Domain | null>(null);
   const [shown, setShown] = useState(0);
