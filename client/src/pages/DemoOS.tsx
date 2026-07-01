@@ -235,9 +235,6 @@ export default function DemoOS() {
   function openWins(list: Win[]) {
     setWinsShow(false); setWins(list);
     requestAnimationFrame(() => requestAnimationFrame(() => setWinsShow(true)));
-    setTimeout(() => {
-      try { if (win0Ref.current && chatRef.current && intersect(win0Ref.current.getBoundingClientRect(), chatRef.current.getBoundingClientRect())) { say("sov", "That's covering our chat - let me move it aside for you."); speak("Let me move that aside for you."); setWins((w) => w.map((x, idx) => (idx === 0 ? { ...x, slot: "tr" } : x))); } } catch (e) {}
-    }, 900);
   }
   function closeWins() { setWinsShow(false); setTimeout(() => setWins([]), 320); }
 

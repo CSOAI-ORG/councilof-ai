@@ -309,6 +309,20 @@ function App() {
     return <WidgetRouter />;
   }
 
+  // Immersive full-bleed routes — the live demo/tour takes over the whole screen (no header/footer).
+  if (location === '/demo' || location === '/os-demo' || location === '/tour') {
+    return (
+      <ErrorBoundary>
+        <ThemeProvider defaultTheme="dark">
+          <TooltipProvider>
+            <DemoOS />
+            <Toaster position="top-right" />
+          </TooltipProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    );
+  }
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
