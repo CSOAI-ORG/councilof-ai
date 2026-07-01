@@ -45,6 +45,22 @@ const COUNCIL: Pin[] = [
   { id: "speaker", name: "Council Speaker", region: "Council", lat: 0, lng: 0, color: "#0f766e", href: "/try", note: "Neutral facilitation." },
 ];
 
+// Watchdog heat hubs (shared with /watchdog-map) - integrated as a globe overlay.
+const WATCH_HUBS: { id: string; lat: number; lng: number; base: number }[] = [
+  { id: "eu", lat: 50.85, lng: 4.35, base: 51 }, { id: "uk", lat: 51.5, lng: -0.12, base: 34 },
+  { id: "us-dc", lat: 38.9, lng: -77.04, base: 47 }, { id: "us-sf", lat: 37.77, lng: -122.42, base: 44 },
+  { id: "us-ny", lat: 40.71, lng: -74.0, base: 41 }, { id: "br", lat: -23.55, lng: -46.63, base: 29 },
+  { id: "ng", lat: 6.52, lng: 3.37, base: 26 }, { id: "ae", lat: 25.2, lng: 55.27, base: 26 },
+  { id: "in", lat: 28.61, lng: 77.2, base: 43 }, { id: "cn", lat: 39.9, lng: 116.4, base: 55 },
+  { id: "jp", lat: 35.68, lng: 139.69, base: 29 }, { id: "sg", lat: 1.35, lng: 103.8, base: 24 },
+  { id: "au", lat: -33.87, lng: 151.21, base: 25 }, { id: "ca", lat: 43.65, lng: -79.38, base: 30 },
+];
+function watchCounts(): Record<string, number> {
+  const c: Record<string, number> = {}; WATCH_HUBS.forEach((h) => { c[h.id] = h.base; });
+  try { const rs = JSON.parse(localStorage.getItem("sov_watchdog_reports") || "[]"); (rs as any[]).forEach((r) => { if (c[r.hub] != null) c[r.hub] += 1; }); } catch (e) {}
+  return c;
+}
+
 const R = 240, CX = 300, CY = 300;
 function project(lat: number, lng: number, rot: number) {
   const la = (lat * Math.PI) / 180, lo = ((lng + rot) * Math.PI) / 180;
@@ -59,7 +75,9 @@ export default function WorldGlobe() {
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setAsk(d); const t = setTimeout(() => runAsk(d), 700); return () => clearTimeout(t); } }, []);
   const [rot, setRot] = useState(0);
   const [spin, setSpin] = useState(true);
-  const [layers, setLayers] = useState<{ fw: boolean; council: boolean }>({ fw: true, council: false });
+  const [layers, setLayers] = useState<{ fw: boolean; council: boolean; watchdog: boolean }>({ fw: true, council: false, watchdog: false });
+  const wc = watchCounts();
+  const wmax = Math.max(1, ...WATCH_HUBS.map((h) => wc[h.id] || 0));
   const [sel, setSel] = useState<Pin | null>(null);
   const [ask, setAsk] = useState("");
   const [ans, setAns] = useState("");
@@ -100,6 +118,7 @@ export default function WorldGlobe() {
         <div className="mt-4 flex flex-wrap gap-2">
           <button onClick={() => setLayers((l) => ({ ...l, fw: !l.fw }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.fw ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Frameworks</button>
           <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>BFT Council</button>
+          <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Watchdog heat</button>
           <button onClick={() => setSpin((s) => !s)} className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10">{spin ? "Pause" : "Spin"}</button>
         </div>
       </section>
@@ -123,6 +142,17 @@ export default function WorldGlobe() {
                 </g>
               );
             })}
+            {layers.watchdog && WATCH_HUBS.map((h) => {
+              const q = project(h.lat, h.lng, rot); if (!q.front) return null;
+              const n = wc[h.id] || 0; const t = n / wmax; const sc = 0.6 + q.depth * 0.6; const rad = (5 + t * 22) * sc;
+              return (
+                <g key={"w-" + h.id}>
+                  <circle cx={q.x} cy={q.y} r={rad} fill={"rgba(245,158,11," + (0.10 + 0.30 * t).toFixed(2) + ")"} />
+                  <circle cx={q.x} cy={q.y} r={rad * 0.5} fill={"rgba(239,68,68," + (0.15 + 0.35 * t).toFixed(2) + ")"} />
+                  <circle cx={q.x} cy={q.y} r={2.4 * sc} fill="#fbbf24" />
+                </g>
+              );
+            })}
           </svg>
         </div>
         <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 min-h-[260px]">
@@ -142,6 +172,7 @@ export default function WorldGlobe() {
                 <a href="/meok-law" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">MEOK Law -&gt;</a>
                 <a href="/regions" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">By region -&gt;</a>
                 <a href="/temples" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">Temples -&gt;</a>
+                <a href="/watchdog-map" className="rounded-lg border border-amber-400/30 px-3 py-1.5 font-semibold text-amber-200 hover:bg-white/10">Watchdog heat-map -&gt;</a>
               </div>
             </div>
           )}
