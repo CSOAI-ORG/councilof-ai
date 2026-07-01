@@ -68,7 +68,9 @@ export default function Signup() {
     try {
       await signup(email, password, name);
       toast.success('Account created successfully!');
-      setLocation('/dashboard');
+      let hasIntent = false;
+      try { hasIntent = !!(localStorage.getItem('sov_intended_plan') || localStorage.getItem('sov_intended_credits')); } catch (e) {}
+      setLocation(hasIntent ? '/welcome' : '/dashboard');
     } catch (error) {
       toast.error('Signup failed. Please try again.');
     } finally {

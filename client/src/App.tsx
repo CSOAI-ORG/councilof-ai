@@ -77,6 +77,7 @@ import Careers from "./pages/Careers";
 import NewHomeV2 from "./pages/NewHome-v2";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Welcome from "./pages/Welcome";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import BulkAISystemImport from "./pages/BulkAISystemImport";
 import Jobs from "./pages/Jobs";
@@ -327,6 +328,7 @@ function App() {
                   <Route path="/" component={NewHomeV2} />
                   <Route path="/login" component={Login} />
                   <Route path="/signup" component={Signup} />
+                  <Route path="/welcome" component={Welcome} />
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />

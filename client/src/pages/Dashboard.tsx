@@ -130,7 +130,7 @@ export default function Dashboard() {
           <div>
             <h1 className="text-2xl font-semibold font-primary">Dashboard</h1>
             <p className="text-muted-foreground text-sm">
-              Western TC260 - AI Safety Governance for Humanity
+              Your Sovereign OS — governance across every framework, signed to Layer 0
             </p>
           </div>
           <div className="flex items-center gap-2">

@@ -61,7 +61,7 @@ const navItems = [
   { path: "/watchdog", label: "The Watchdog", icon: Eye },
   { path: "/reports", label: "Reports", icon: FileText },
   { path: "/training", label: "Training", icon: GraduationCap },
-  { path: "/workbench", label: "Analyst Workbench", icon: Briefcase },
+  { path: "/workbench", label: "Governance Workbench", icon: Briefcase },
   { path: "/admin", label: "Admin Panel", icon: ShieldCheck },
   { path: "/api-docs", label: "API Docs", icon: Code },
   { path: "/api-keys", label: "API Keys", icon: Key },

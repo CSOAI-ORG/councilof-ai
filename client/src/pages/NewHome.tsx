@@ -302,7 +302,7 @@ export default function NewHome() {
                 ))}
               </div>
               <p className="text-gray-700 mb-4">
-                "CSOAI certification opened doors I didn't know existed. Within 3 months, I landed a $120K AI Safety Analyst role at a Fortune 500 company. The training was comprehensive and the community support was incredible."
+                "CSOAI gave our team a shared language for AI governance. We map every system to the frameworks that apply and seal each decision to Layer 0 — comprehensive, and provable when auditors ask."
               </p>
               <Badge className="bg-green-100 text-green-800">Certified in 2024</Badge>
             </Card>
