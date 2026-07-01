@@ -41,7 +41,7 @@ export default function StatusPage() {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    document.title = "System Status - SOV3 brain live | CSOAI";
+    document.title = "System Status - the Sovereign OS, live | CSOAI";
     fetchHealth().then((h) => { setLive(h); setChecked(true); });
     fetchToolCount().then(setTools);
   }, []);
@@ -58,7 +58,7 @@ export default function StatusPage() {
         <div className="relative mx-auto max-w-4xl px-6 pt-16 pb-10 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - system status</p>
           <h1 className="mt-3 text-5xl sm:text-6xl font-black tracking-tight">We publish our <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">own status.</span></h1>
-          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">An AI-governance company should be the most transparent system you run. {allOk} core systems operational; the shared Sovereign brain checked live below.</p>
+          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">An AI-governance company should be the most transparent system you run. {allOk} core systems operational; the Sovereign brain checked live below.</p>
         </div>
       </section>
 
@@ -69,12 +69,12 @@ export default function StatusPage() {
               {connected && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />}
               <span className={"relative inline-flex h-3 w-3 rounded-full " + (connected ? "bg-emerald-400" : checked ? "bg-amber-400" : "bg-gray-500")} />
             </span>
-            <span className="text-lg font-black">{connected ? "SOV3 brain - CONNECTED" : checked ? "SOV3 brain - reachable, degraded" : "Checking the SOV3 brain..."}</span>
+            <span className="text-lg font-black">{connected ? "Sovereign brain - CONNECTED" : checked ? "Sovereign brain - reachable, degraded" : "Checking the Sovereign brain..."}</span>
             {live && live.version && <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 font-mono text-[11px] text-emerald-300">v{live.version}</span>}
-            <span className="ml-auto font-mono text-[11px] text-emerald-300/60">{live && live.service ? live.service : "os.meok.ai"}</span>
+            <span className="ml-auto font-mono text-[11px] text-emerald-300/60">CSOAI Sovereign OS</span>
           </div>
           <div className="mt-3 grid gap-2 sm:grid-cols-4 text-sm">
-            <Stat label="Surface of" value={(live && live.surface_of ? live.surface_of.join(" - ") : "meok - csoai - defoneos")} />
+            <Stat label="Substrate" value="Layer 0" />
             <Stat label="Governed tools" value={tools != null ? tools.toLocaleString() : "377"} />
             <Stat label="Orchestrator" value={brain.orchestrator ? "live" : "-"} ok={!!brain.orchestrator} />
             <Stat label="OpenAI-compat" value={brain.openai_compat ? "live" : "-"} ok={!!brain.openai_compat} />
@@ -104,7 +104,7 @@ export default function StatusPage() {
       <section className="mx-auto max-w-4xl px-6 py-10 space-y-3">
         <h2 className="mb-1 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Core systems</h2>
         {CORE.map((c) => (<div key={c.name} className="flex items-center justify-between rounded-2xl border border-emerald-500/20 bg-[#05140d] px-5 py-4"><span className="text-sm font-semibold text-emerald-100">{c.name}</span><span className="flex items-center gap-2 text-xs font-mono uppercase tracking-wide text-emerald-200/70"><span className={"h-2.5 w-2.5 rounded-full " + (DOT[c.state] || "bg-gray-400")} />{c.state}</span></div>))}
-        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the shared Sovereign brain (SOV3) - the same substrate behind MEOK, CSOAI and DEFONEOS." : "The Sovereign brain is reached live from your browser."} Every verdict Ed25519-signed, Layer 0 ledgered.</p>
+        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the Sovereign brain that powers the CSOAI OS." : "The Sovereign brain is reached live from your browser."} Every verdict Ed25519-signed, Layer 0 ledgered.</p>
       </section>
     </div>
   );

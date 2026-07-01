@@ -204,7 +204,7 @@ export default function SovereignDock() {
             <div className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-lg">{"\u25C9"}</div>
             <div className="flex-1">
               <div className="text-sm font-bold text-emerald-100">Your Sovereign</div>
-              <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">{hz && hz.ok && <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 align-middle" style={{ boxShadow: "0 0 6px #34d399" }} />}{hz && hz.ok ? "SOV3 v" + (hz.version || "3.0.0") + " connected" : "CSOAI OS agent-first"}</div>
+              <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">{hz && hz.ok && <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 align-middle" style={{ boxShadow: "0 0 6px #34d399" }} />}{hz && hz.ok ? "Sovereign - connected" : "CSOAI OS - agent-first"}</div>
             </div>
             <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} aria-label="Toggle voice" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{voiceOn ? "On" : "Off"}</button>
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>
