@@ -83,7 +83,7 @@ function getScreenContext(): any {
   try {
     const h1 = (document.querySelector("h1")?.textContent || "").replace(/\s+/g, " ").trim().slice(0, 120);
     const excerpt = (document.body?.innerText || "").replace(/\s+/g, " ").trim().slice(0, 500);
-    return { path: location.pathname, title: (document.title || "").slice(0, 90), heading: h1, excerpt };
+    return { path: location.pathname, title: (document.title || "").slice(0, 90), heading: h1, excerpt, property: "csoai", citizen: "csoai-web" };
   } catch (e) { return { path: "/", title: "", heading: "", excerpt: "" }; }
 }
 function routeForAction(a: any): string | null {

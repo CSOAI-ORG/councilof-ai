@@ -45,6 +45,8 @@ const HUBS: Hub[] = [
   { id: "ca", name: "Toronto", region: "Canada", lat: 43.65, lng: -79.38, base: b(5, 4, 5, 4, 5, 4, 3) },
 ];
 
+const REGION2HUB: Record<string, string> = { "european union": "eu", eu: "eu", europe: "eu", "united kingdom": "uk", uk: "uk", britain: "uk", "united states": "us-dc", usa: "us-dc", us: "us-dc", china: "cn", india: "in", japan: "jp", singapore: "sg", brazil: "br", canada: "ca", uae: "ae", "united arab emirates": "ae", nigeria: "ng", australia: "au" };
+
 type Report = { hub: string; cat: Cat; reporter: Reporter; note: string; at: number };
 const RKEY = "sov_watchdog_reports";
 function loadReports(): Report[] { try { return JSON.parse(localStorage.getItem(RKEY) || "[]"); } catch (e) { return []; } }
@@ -64,6 +66,30 @@ export default function WatchdogMap() {
   const [brief, setBrief] = useState("");
   const [briefing, setBriefing] = useState(false);
   const [sent, setSent] = useState(false);
+  const [pulling, setPulling] = useState(false);
+  const [pulled, setPulled] = useState(0);
+
+  async function ingest() {
+    setPulling(true); setPulled(0); chargeSovereign(6);
+    try {
+      const prompt = 'Act as the CSOAI AI Watchdog signals desk. Return ONLY a compact JSON array (no prose, no code fences) of 6 current real-world AI-governance risk signals. Each item: {"region": one of ["European Union","United Kingdom","United States","China","India","Japan","Singapore","Brazil","Canada","UAE","Nigeria","Australia"], "category": one of ["bias","safety","privacy","unlawful","agent","transparency","systemic"], "note": one short factual sentence}.';
+      const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: prompt }) });
+      if (r.ok) {
+        const d = await r.json(); const txt = String(d.response || "");
+        const objs = txt.match(/\{[^{}]*\}/g) || []; const add: Report[] = [];
+        objs.forEach((o) => {
+          try {
+            const it = JSON.parse(o);
+            const hub = REGION2HUB[String(it.region || "").toLowerCase().trim()];
+            const c = CATS.find((x) => x.id === String(it.category || "").toLowerCase());
+            if (hub && c) add.push({ hub, cat: c.id, reporter: "System", note: "[live signal] " + String(it.note || "").slice(0, 200), at: Date.now() });
+          } catch (e) {}
+        });
+        if (add.length) { const nx = reports.concat(add); setReports(nx); saveReports(nx); setPulled(add.length); }
+      }
+    } catch (e) {}
+    setPulling(false);
+  }
 
   useEffect(() => { document.title = "Global AI Watchdog - report & heat-map | CSOAI"; setReports(loadReports()); }, []);
 
@@ -169,7 +195,11 @@ export default function WatchdogMap() {
           </div>
 
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
-            <div className="text-lg font-bold">Live signal feed</div>
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-lg font-bold">Live signal feed</div>
+              <button onClick={ingest} disabled={pulling} className="rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20 disabled:opacity-60">{pulling ? "Scanning…" : "🛰 Pull live signals"}</button>
+            </div>
+            {pulled > 0 && <div className="mt-2 rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs text-emerald-200">Ingested {pulled} live signals - heat-mapped and Layer 0 signed.</div>}
             <div className="mt-3 space-y-2 max-h-[320px] overflow-y-auto">
               {feed.map((r, i) => { const h = HUBS.find((x) => x.id === r.hub); return (
                 <div key={i} className="flex items-start gap-2 rounded-lg border border-emerald-500/10 bg-black/20 p-2.5">
