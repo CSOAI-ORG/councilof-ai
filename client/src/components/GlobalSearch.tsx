@@ -51,6 +51,9 @@ import {
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { chargeSovereign } from '@/lib/sovCharge';
+
+const SOV_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || 'https://os.meok.ai/api';
 
 // Types
 interface SearchResult {
@@ -380,6 +383,8 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [aiAnswer, setAiAnswer] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
   const [, setLocation] = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -549,9 +554,23 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
     }
   }, [selectedIndex]);
 
-  // Reset selected index when results change
+  // Reset selected index (and any AI answer) when the query changes
   useEffect(() => {
     setSelectedIndex(0);
+    setAiAnswer('');
+    setAiLoading(false);
+  }, [query]);
+
+  // Ask the Sovereign - fuse live governance reasoning into the command bar
+  const askSovereign = useCallback(async () => {
+    const t = query.trim();
+    if (!t) return;
+    setAiLoading(true); setAiAnswer(''); chargeSovereign(4);
+    try {
+      const r = await fetch(SOV_GW + '/chat', { method: 'POST', headers: { 'content-type': 'text/plain' }, body: JSON.stringify({ message: t }) });
+      if (r.ok) { const j = await r.json(); if (j && j.response && j.model !== 'idle') setAiAnswer(String(j.response)); }
+    } catch (e) {}
+    setAiLoading(false);
   }, [query]);
 
   return (
@@ -574,7 +593,7 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Search pages, articles, training, frameworks..."
+            placeholder="Search the OS, or ask the Sovereign anything…"
             className="flex-1 text-base outline-none bg-transparent placeholder:text-gray-400"
           />
           {query && (
@@ -593,6 +612,23 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
 
         {/* Results */}
         <div ref={resultsRef} className="max-h-[60vh] overflow-y-auto p-2">
+          {query.trim().length >= 3 && (
+            <div className="mb-2 rounded-lg border border-emerald-200 bg-emerald-50/60 p-2">
+              <button onClick={askSovereign} className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left hover:bg-emerald-100/60">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
+                  <Brain className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-semibold text-emerald-900">Ask the Sovereign{aiLoading ? '…' : ''}</div>
+                  <div className="truncate text-xs text-emerald-700/70">Reason live over governance — “{query.trim()}”</div>
+                </div>
+                <CornerDownLeft className="h-4 w-4 flex-shrink-0 text-emerald-500" />
+              </button>
+              {aiAnswer && (
+                <div className="mt-1 max-h-56 overflow-y-auto whitespace-pre-wrap rounded-md bg-white px-3 py-2 text-sm leading-relaxed text-gray-700">{aiAnswer}</div>
+              )}
+            </div>
+          )}
           <AnimatePresence mode="wait">
             {flatResults.length === 0 && query ? (
               <motion.div
