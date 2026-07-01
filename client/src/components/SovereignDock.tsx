@@ -61,6 +61,43 @@ async function askGovern(q: string): Promise<any | null> {
   return null;
 }
 
+// SOV3 shared brain: /orchestrate returns {say, actions}. The Sovereign SEES the
+// page (getScreenContext), THINKS via os.meok.ai, then ACTS - opening OS surfaces.
+const APP_ROUTES: Record<string, string> = {
+  revenue: "/pricing", pricing: "/pricing", plans: "/pricing", billing: "/pricing",
+  king: "/try", council: "/try", try: "/try", vote: "/try", bft: "/try",
+  setup: "/start", onboard: "/start", start: "/start", welcome: "/start",
+  graph: "/graph", knowledge: "/graph", search: "/graph",
+  space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", experiment: "/sov-space", sovspace: "/sov-space",
+  tools: "/tool-commons", mcp: "/tool-commons", commons: "/commons", media: "/commons",
+  status: "/status", system: "/status", os: "/os", home: "/os", grid: "/os",
+  emergence: "/emergence", egg: "/emergence",
+  certification: "/certification", cert: "/certification", academy: "/academy",
+  evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
+  layer0: "/layer0", distribution: "/distribution", command: "/command-center",
+};
+function getScreenContext(): any {
+  try {
+    const h1 = (document.querySelector("h1")?.textContent || "").replace(/\s+/g, " ").trim().slice(0, 120);
+    const excerpt = (document.body?.innerText || "").replace(/\s+/g, " ").trim().slice(0, 500);
+    return { path: location.pathname, title: (document.title || "").slice(0, 90), heading: h1, excerpt };
+  } catch (e) { return { path: "/", title: "", heading: "", excerpt: "" }; }
+}
+function routeForAction(a: any): string | null {
+  if (!a || !a.command) return null;
+  if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url);
+  if (a.command === "open_app" && a.args && a.args.id) return APP_ROUTES[String(a.args.id).toLowerCase()] || null;
+  if (a.command === "govern") return "/graph";
+  return null;
+}
+async function orchestrate(message: string, context: any): Promise<{ say: string; actions: any[] } | null> {
+  try {
+    const r = await fetch(GW + "/orchestrate", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message, context }) });
+    if (r.ok) { const d = await r.json(); if (d && (d.say || d.actions)) return { say: String(d.say || ""), actions: Array.isArray(d.actions) ? d.actions : [] }; }
+  } catch (e) {}
+  return null;
+}
+
 export default function SovereignDock() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -98,6 +135,20 @@ export default function SovereignDock() {
       setMsgs((m) => m.concat({ role: "sov", text: "Opening " + hit.label + " - taking you there now." }));
       setTimeout(() => { window.location.assign(hit.href); }, 650);
       return;
+    }
+    // SOV3: the Sovereign is page-aware. For a command or an "explain this page"
+    // request, orchestrate over the live brain - it speaks and opens the right surface.
+    const ctx = getScreenContext();
+    const commandLike = navVerb || /\bexplain (this|the) page\b|\bwhat can i do here\b|\bwhere am i\b|\bhelp me (here|with this)\b|\bwhat is this page\b|\bwalk me through\b|\btake me\b|\bopen \b/i.test(t);
+    if (commandLike) {
+      setMsgs((m) => m.concat({ role: "sov", text: "On it…" }));
+      const o = await orchestrate(t, ctx);
+      if (o && (o.say || o.actions.length)) {
+        const route = o.actions.map(routeForAction).find(Boolean) as string | undefined;
+        setMsgs((m) => m.concat({ role: "sov", text: o.say || (route ? "Opening that for you." : "Done.") }));
+        if (route) setTimeout(() => { if (/^https?:\/\//.test(route)) window.open(route, "_blank"); else window.location.assign(route); }, 950);
+        return;
+      }
     }
     setMsgs((m) => m.concat({ role: "sov", text: "Reasoning over live governance data…" }));
     // Reason via the live Sovereign gateway; in parallel map the industry to its framework stack.
@@ -155,6 +206,7 @@ export default function SovereignDock() {
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>
           </div>
           <div className="flex flex-wrap gap-1.5 border-b border-emerald-500/10 px-3 py-2">
+            <button onClick={() => act("explain this page and what I can do here")} className="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold text-emerald-100 hover:bg-emerald-500/30">Explain this page</button>
             {QUICK.map((q) => (<a key={q.label} href={q.href} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</a>))}
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
