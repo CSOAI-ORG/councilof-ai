@@ -178,7 +178,6 @@ import Readiness from "./pages/Readiness";
 import Agents from "./pages/Agents";
 import Academy from "./pages/Academy";
 import SovereignDock from "./components/SovereignDock";
-import { GlobalSearch } from "./components/GlobalSearch";
 import SovSpace from "./pages/SovSpace";
 import BadgesPage from "./pages/BadgesPage";
 import RealWorldMap from "./pages/RealWorldMap";
@@ -617,7 +616,6 @@ function App() {
                 </main>
                 <Footer />
                 <SovereignDock />
-                <GlobalSearch />
               </div>
               <Toaster
                 position="top-right"
