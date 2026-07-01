@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { chargeSovereign } from "../lib/sovCharge";
 
 // TryCouncil — the 30-second WOW. The world's first AI Governance Council, live.
 // Type a compliance question; five specialised agents (Oracle, Skeptic, Architect,
@@ -96,7 +97,7 @@ export default function TryCouncil() {
 
   async function convene() {
     if (!result) return;
-    setLiveState("running"); setLiveLines({}); setSig("");
+    setLiveState("running"); setLiveLines({}); setSig(""); chargeSovereign(10);
     await Promise.all(AGENTS.map(async (a) => {
       try {
         const prompt = "You are the " + a.name + ", the AI-governance council member who " + a.role + ". In no more than 2 sentences, give your distinct view on this system: \"" + q + "\". Working classification: " + result.tier + " (" + result.label + "); frameworks: " + result.frameworks.join(", ") + ". Speak in your role's voice, no preamble.";

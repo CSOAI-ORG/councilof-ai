@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { chargeSovereign } from "../lib/sovCharge";
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 const FW = [{ name: "EU AI Act", href: "/eu-ai-act-checklist" }, { name: "NIST AI RMF", href: "/nist-vs-eu-ai-act" }, { name: "ISO 42001", href: "/iso-42001-vs-eu-ai-act" }, { name: "GDPR", href: "/eu-ai-act-vs-gdpr" }];
 const EXAMPLES = ["a hospital in Texas", "a fintech in Singapore", "an HR recruiting tool", "Germany"];
@@ -19,7 +20,7 @@ export default function GovGraph() {
   useEffect(() => { document.title = "Governance Graph - the governed Google | CSOAI"; }, []);
   async function run(query?: string) {
     const term = (query !== undefined ? query : q).trim(); if (!term) return;
-    setQ(term); setRes({ q: term, j: jurisdiction(term) }); setKn(null); setGov(null); setRead(""); setLoading(true);
+    setQ(term); setRes({ q: term, j: jurisdiction(term) }); setKn(null); setGov(null); setRead(""); setLoading(true); chargeSovereign(6);
     const ind = detectIndustry(term);
     const jobs: Promise<void>[] = [];
     jobs.push((async () => { try { const r = await fetch(GW + "/knowledge?q=" + encodeURIComponent(term)); if (r.ok) setKn(await r.json()); } catch (e) {} })());

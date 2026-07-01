@@ -49,6 +49,15 @@ export default function EmergencePage() {
       </section>
       <section className="mx-auto max-w-3xl px-6 py-12 text-center">
         <p className="text-sm text-emerald-100/70">The emergence mirror: the real world rendered as a sovereign digital twin. Over time it transforms from a shared planet into <b className="text-emerald-200">your</b> AI character - the hatch. The same egg pixel-streams from Unreal Engine 5 in the full OS.</p>
+        <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-black/20 p-5">
+          <div className="text-sm font-bold text-emerald-200">Your Sovereign learns you as you use the OS.</div>
+          <p className="mt-1 text-sm text-emerald-100/70">Every question in the <b className="text-emerald-200">Sovereign dock</b>, every <b className="text-emerald-200">Governance Graph</b> query, every <b className="text-emerald-200">Sov Space</b> experiment and <b className="text-emerald-200">Council</b> verdict charges the egg - it hatches into the character that has learned you.</p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <a href="/graph" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Ask the Governance Graph +6%</a>
+            <a href="/sov-space" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Run a Sov Space experiment +10%</a>
+            <a href="/try" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Convene the Council +10%</a>
+          </div>
+        </div>
       </section>
     </div>
   );

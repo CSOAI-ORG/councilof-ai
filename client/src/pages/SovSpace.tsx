@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { chargeSovereign } from "../lib/sovCharge";
 
 // Sovereign Space - the CSOAI AI-OS simulation. Feed data + text, watch the
 // 33-agent council deliberate, and the Sovereign narrates + speaks every step.
@@ -134,7 +135,7 @@ export default function SovSpace() {
 
   async function run() {
     timers.current.forEach(clearTimeout); timers.current = [];
-    setLog(["Convening the council over your scenario..."]); setVerdictText(""); setSig(""); setDone(false); setRunning(true); phaseRef.current = 2;
+    setLog(["Convening the council over your scenario..."]); setVerdictText(""); setSig(""); setDone(false); setRunning(true); phaseRef.current = 2; chargeSovereign(10);
     const scen = (scenario || "").trim() || SAMPLE;
     const ind = ssIndustry(scen);
     const region = ssRegion(scen);

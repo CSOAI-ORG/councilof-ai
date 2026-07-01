@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { chargeSovereign } from "../lib/sovCharge";
 
 // SovereignDock - the persistent right-hand AI OS sidebar. Speak or type and it
 // acts: routes you to the right surface, answers from the framework knowledge
@@ -83,6 +84,7 @@ export default function SovereignDock() {
     if (!t) return;
     setMsgs((m) => m.concat({ role: "you", text: t }));
     setInput("");
+    chargeSovereign(4); // every question teaches your Sovereign
     // Only treat input as a navigation command when it's an explicit nav verb or a
     // short topic phrase - never when the user is asking a question (answer those).
     const words = t.split(/\s+/).length;
