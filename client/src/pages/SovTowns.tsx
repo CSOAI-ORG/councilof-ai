@@ -120,7 +120,7 @@ export default function SovTowns() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          Yes — we can train more Sov Towns on every white paper, and that multiplies into more data. The full learning loop (real ingestion, simulation, spawning, inner-sov3 queens per town) lights up with the Layer 0 gateway. Until then this models the engine and accumulates the registry, one town at a time.
+          Yes — we can train more Sov Towns on every white paper, and that multiplies into more data. The full learning loop (real ingestion, simulation, spawning, inner Sovereign queens per town) lights up with the Layer 0 gateway. Until then this models the engine and accumulates the registry, one town at a time.
         </div>
       </section>
     </div>

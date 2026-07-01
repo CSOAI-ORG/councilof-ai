@@ -36,7 +36,7 @@ const ITEMS: Item[] = [
   { name: "Sovereign Compliance Passport", cat: "Protocol", seat: "CSOAI - Ed25519 attestation", region: "Global", status: "Live", href: "/readiness" },
   { name: "BFT Consensus (configurable)", cat: "Council", seat: "CSOAI - open at openpatent.ai", region: "Global", status: "Live", href: "/bft" },
   { name: "The 4-Wing Council", cat: "Council", seat: "CSOAI", region: "Global", status: "Live", href: "/dragonfly" },
-  { name: "The Hive (SOV3 queens)", cat: "Council", seat: "CSOAI", region: "Global", status: "Live", href: "/hive" },
+  { name: "The Hive (Sovereign queens)", cat: "Council", seat: "CSOAI", region: "Global", status: "Live", href: "/hive" },
 ];
 const CATS: ("All" | Cat)[] = ["All", "Regulation", "Standard", "Protocol", "Council"];
 const CTONE: Record<string, string> = { Regulation: "bg-blue-100 text-blue-700", Standard: "bg-emerald-100 text-emerald-700", Protocol: "bg-violet-100 text-violet-700", Council: "bg-amber-100 text-amber-700" };

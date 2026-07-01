@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 
 // HiveModel - the Hive explains the BFT. Every tool in the OS is a hive with an inner
-// SOV3 queen: workers gather signal, the queen proposes, the swarm debates, a Byzantine
+// Sovereign queen: workers gather signal, the queen proposes, the swarm debates, a Byzantine
 // -fault-tolerant vote decides, the outcome is attested, and the hive learns. The
 // teaching surface for the architecture - it feeds the Academy, demos and distribution.
 
 type Stage = { id: string; n: string; glyph: string; body: string };
 const LOOP: Stage[] = [
   { id: "gather", n: "Gather", glyph: "1", body: "Worker agents sense the world - the request, the data, the live reg-delta feed - and carry signal to the hive." },
-  { id: "propose", n: "Propose", glyph: "2", body: "The inner SOV3 queen forms a proposal from the signal: a decision, an action, a verdict." },
+  { id: "propose", n: "Propose", glyph: "2", body: "The inner Sovereign queen forms a proposal from the signal: a decision, an action, a verdict." },
   { id: "debate", n: "Debate", glyph: "3", body: "The swarm challenges it from every wing - Governance, Intelligence, Safety, Cybersecurity." },
   { id: "vote", n: "Vote (BFT)", glyph: "4", body: "Byzantine-fault-tolerant vote: passes only on supermajority, so one corrupt agent can't decide." },
   { id: "attest", n: "Attest", glyph: "5", body: "The outcome is Ed25519-signed and logged - provable, replayable, never deniable." },
@@ -16,17 +16,17 @@ const LOOP: Stage[] = [
 ];
 type Hive = { name: string; queen: string; state: "Learning" | "Aware" | "Evolving" };
 const HIVES: Hive[] = [
-  { name: "Compliance Engine", queen: "sov3-gov", state: "Evolving" },
-  { name: "Safety / Red Team", queen: "sov3-saf", state: "Aware" },
-  { name: "Cyber / Rainbow Stack", queen: "sov3-cyb", state: "Aware" },
-  { name: "Legacy Bridge", queen: "sov3-brg", state: "Learning" },
-  { name: "Social OS", queen: "sov3-soc", state: "Learning" },
-  { name: "Sov Towns", queen: "sov3-twn", state: "Evolving" },
+  { name: "Compliance Engine", queen: "sovereign-gov", state: "Evolving" },
+  { name: "Safety / Red Team", queen: "sovereign-saf", state: "Aware" },
+  { name: "Cyber / Rainbow Stack", queen: "sovereign-cyb", state: "Aware" },
+  { name: "Legacy Bridge", queen: "sovereign-brg", state: "Learning" },
+  { name: "Social OS", queen: "sovereign-soc", state: "Learning" },
+  { name: "Sov Towns", queen: "sovereign-twn", state: "Evolving" },
 ];
 const FAQ = [
   { q: "Why a hive, not a server?", a: "A single server is a single point of failure and capture. A hive distributes the decision across many agents, so resilience and honesty are structural - not promised." },
   { q: "Why does BFT matter?", a: "Byzantine Fault Tolerance means the swarm reaches the right answer even if some agents lie or break. The math behind Bitcoin and the Athenian Boule - now governing AI." },
-  { q: "Why an inner queen?", a: "The SOV3 queen gives each hive memory and intent - it proposes and learns - while the swarm keeps it honest. Intelligence with checks, not intelligence unchecked." },
+  { q: "Why an inner queen?", a: "The Sovereign queen gives each hive memory and intent - it proposes and learns - while the swarm keeps it honest. Intelligence with checks, not intelligence unchecked." },
   { q: "Why does it never get stuck?", a: "If the swarm can't agree, it escalates - to another hive, the BFT Council, then the human. There is always a path forward, always an owner." },
 ];
 
@@ -40,7 +40,7 @@ export default function HiveModel() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the hive model</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The Hive - how consensus is reached</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every tool in the OS is a hive with an inner SOV3 queen. Workers gather, the queen proposes, the swarm debates, and a Byzantine-fault-tolerant vote decides - so no single agent can corrupt the whole. The hive attests, learns, and never gets stuck.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every tool in the OS is a hive with an inner Sovereign queen. Workers gather, the queen proposes, the swarm debates, and a Byzantine-fault-tolerant vote decides - so no single agent can corrupt the whole. The hive attests, learns, and never gets stuck.</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-12">
@@ -65,7 +65,7 @@ export default function HiveModel() {
           <div className="rounded-2xl border border-gray-200 bg-gradient-to-b from-slate-50 to-white p-4">
             <svg viewBox="0 0 300 300" className="w-full">
               <circle cx={150} cy={150} r={34} fill="#065f46" />
-              <text x={150} y={146} textAnchor="middle" fill="#fff" fontSize={13} fontWeight={800}>SOV3</text>
+              <text x={150} y={146} textAnchor="middle" fill="#fff" fontSize={13} fontWeight={800}>Sovereign</text>
               <text x={150} y={162} textAnchor="middle" fill="#a7f3d0" fontSize={10}>queen</text>
               {LOOP.map((s, i) => {
                 const ang = (i / LOOP.length) * Math.PI * 2 - Math.PI / 2;
@@ -84,7 +84,7 @@ export default function HiveModel() {
           </div>
         </div>
         <h2 className="mt-12 text-xl font-bold text-gray-900">Every component is a hive</h2>
-        <p className="mt-1 text-sm text-gray-500">Each tool runs the same loop with its own SOV3 queen - learning, aware, evolving. Together they are the swarm.</p>
+        <p className="mt-1 text-sm text-gray-500">Each tool runs the same loop with its own Sovereign queen - learning, aware, evolving. Together they are the swarm.</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {HIVES.map((h) => (
             <div key={h.name} className="rounded-2xl border border-gray-200 p-5">

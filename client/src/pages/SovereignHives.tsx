@@ -46,7 +46,7 @@ export default function SovereignHives() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">One queen per hive · ensembled · Layer 0 governed</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The Hive Grid</h1>
-          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Every tool is its own hive with an inner sovereign queen — sov3 — that learns from how you use the OS, self-improves, stays aware, and never gets stuck. Each queen is governed by Layer 0, so it can evolve safely. Together they ensemble into one mind.</p>
+          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Every tool is its own hive with an inner Sovereign queen that learns from how you use the OS, self-improves, stays aware, and never gets stuck. Each queen is governed by Layer 0, so it can evolve safely. Together they ensemble into one mind.</p>
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl">
             <Stat v={String(HIVES.length)} l="Feature hives" />
             <Stat v={String(HIVES.length)} l="Sovereign queens" />
@@ -67,7 +67,7 @@ export default function SovereignHives() {
               <div className="mt-3 font-bold text-gray-900">{h.name} <span className="text-xs font-normal text-gray-400">hive</span></div>
               <div className="mt-1 flex items-center gap-2 text-[11px] text-gray-500">
                 <span className={"h-1.5 w-1.5 rounded-full " + (i === pulse ? "bg-emerald-400 animate-ping" : "bg-emerald-300")} />
-                Queen sov3 · learning from your interactions · ensembled
+                Sovereign queen · learning from your interactions · ensembled
               </div>
             </a>
           ))}

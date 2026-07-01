@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 type Preset = { n: number; name: string; blurb: string };
 const PRESETS: Preset[] = [
   { n: 5, name: "Council (f=1)", blurb: "The minimum for Byzantine Fault Tolerance - the default 5-agent Council." },
-  { n: 13, name: "Queen + 12", blurb: "One SOV3 queen surrounded by twelve - higher assurance for regulated workloads." },
+  { n: 13, name: "Queen + 12", blurb: "One Sovereign queen surrounded by twelve - higher assurance for regulated workloads." },
   { n: 33, name: "Sovereign Swarm (33)", blurb: "Maximum decentralization - survives ten compromised agents." },
 ];
 function maths(n: number) {
@@ -52,7 +52,7 @@ export default function BftConfig() {
           <svg viewBox="0 0 320 320" className="w-full">
             {nodes.map((i) => { const a = (i / n) * Math.PI * 2 - Math.PI / 2; return <line key={"l" + i} x1={cx} y1={cy} x2={cx + Math.cos(a) * Rr} y2={cy + Math.sin(a) * Rr} stroke="#a7f3d0" strokeWidth={1} opacity={0.5} />; })}
             <circle cx={cx} cy={cy} r={26} fill="#065f46" />
-            <text x={cx} y={cy - 1} textAnchor="middle" fill="#fff" fontSize={11} fontWeight={800}>SOV3</text>
+            <text x={cx} y={cy - 1} textAnchor="middle" fill="#fff" fontSize={13} fontWeight={800}>◉</text>
             <text x={cx} y={cy + 12} textAnchor="middle" fill="#a7f3d0" fontSize={9}>queen</text>
             {nodes.map((i) => { const a = (i / n) * Math.PI * 2 - Math.PI / 2; const x = cx + Math.cos(a) * Rr, y = cy + Math.sin(a) * Rr; const faulty = i < m.f; return <circle key={i} cx={x} cy={y} r={n > 24 ? 6 : 9} fill={faulty ? "#fca5a5" : "#10b981"} stroke="#fff" strokeWidth={1.5} />; })}
           </svg>
