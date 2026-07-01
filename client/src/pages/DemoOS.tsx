@@ -144,6 +144,8 @@ export default function DemoOS() {
   const [chat, setChat] = useState<{ id: number; who: "sov" | "you"; t: string }[]>([]);
   const [wins, setWins] = useState<Win[]>([]);
   const [winsShow, setWinsShow] = useState(false);
+  const [winMin, setWinMin] = useState(false);
+  const [winTab, setWinTab] = useState(0);
   const [listening, setListening] = useState(false);
   const [paused, setPaused] = useState(false);
   const [handsFree, setHandsFree] = useState(true);
@@ -179,6 +181,7 @@ export default function DemoOS() {
 
   useEffect(() => { document.title = "The AI OS - live demo & tour | CSOAI"; const prev = document.body.style.overflow; document.body.style.overflow = "hidden"; return () => { document.body.style.overflow = prev; cleanup(); }; }, []);
   useEffect(() => { const el = endRef.current && (endRef.current.parentElement as HTMLElement | null); if (el) el.scrollTop = el.scrollHeight; }, [chat]);
+  useEffect(() => { setWinTab(0); setWinMin(false); }, [wins]);
 
   function cleanup() { try { window.speechSynthesis.cancel(); } catch (e) {} if (timer.current) clearTimeout(timer.current); if (typeT.current) clearInterval(typeT.current); bridgeT.current.forEach(clearTimeout); bridgeT.current = []; try { rec.current && rec.current.stop(); } catch (e) {} }
   function post(msg: any) { try { frame.current && frame.current.contentWindow && frame.current.contentWindow.postMessage(msg, "*"); } catch (e) {} }
@@ -316,25 +319,36 @@ export default function DemoOS() {
       )}
 
       {mode !== null && (
-        <div className="absolute left-1/2 top-4 z-30 flex -translate-x-1/2 items-center gap-3 rounded-full border border-emerald-500/25 bg-[#04120c]/90 px-4 py-2 backdrop-blur-xl">
-          <span className="h-2 w-2 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 8px #34d399" }} />
-          <span className="text-xs font-bold text-emerald-100">{title || "CSOAI Sovereign OS"}</span>
-          <span className="hidden sm:flex items-center gap-1">{stepsRef.current.map((_, k) => (<span key={k} className={"h-1.5 rounded-full transition-all " + (k === i ? "w-4 bg-emerald-400" : k < i ? "w-1.5 bg-emerald-500/60" : "w-1.5 bg-white/15")} />))}</span>
-          {!paused && !ending && <button onClick={interrupt} title="Tap or speak to interrupt" className="flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-[1.5px] text-emerald-300/70 hover:bg-white/5"><span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />🎙 tap or speak</button>}
-          {mode === "demo" && !ending && <button onClick={() => { stepsRef.current = STEPS; setMode("full"); modeRef.current = "full"; }} title="Switch to the full tour" className="rounded-full px-2 py-0.5 text-[10px] font-bold text-emerald-300/60 hover:bg-white/5">full tour</button>}
+        <div className="absolute left-4 top-4 z-30 flex max-w-[calc(100vw-460px)] items-center gap-3 rounded-2xl border border-emerald-500/25 bg-[#04120c]/90 px-4 py-2.5 backdrop-blur-xl">
+          <span className="h-2 w-2 flex-shrink-0 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 8px #34d399" }} />
+          <span className="truncate text-sm font-semibold text-emerald-100">{title || "CSOAI Sovereign OS"}</span>
+          <span className="hidden flex-shrink-0 items-center gap-1 border-l border-white/10 pl-3 md:flex">{stepsRef.current.map((_, k) => (<span key={k} className={"h-1.5 rounded-full transition-all " + (k === i ? "w-4 bg-emerald-400" : k < i ? "w-1.5 bg-emerald-500/60" : "w-1.5 bg-white/15")} />))}</span>
+          {!paused && !ending && <button onClick={interrupt} title="Tap or speak to interrupt" className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[1px] text-emerald-200/80 hover:bg-white/5"><span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />tap / speak</button>}
+          {mode === "demo" && !ending && <button onClick={() => { stepsRef.current = STEPS; setMode("full"); modeRef.current = "full"; }} title="Switch to the full tour" className="flex-shrink-0 rounded-full px-2 py-1 text-[10px] font-bold text-emerald-300/60 hover:bg-white/5">full tour</button>}
         </div>
       )}
 
       {geoLabel && (<div className="absolute left-1/2 top-20 z-30 -translate-x-1/2 rounded-full border border-emerald-400/30 bg-black/50 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-200/90 backdrop-blur">◎ {geoLabel}</div>)}
 
-      {winsShow && wins.map((w, idx) => (
-        <OsWindow key={w.src + "-" + idx} title={w.title} src={w.src} idx={idx}
-          innerRef={idx === 0 ? (el) => { win0Ref.current = el; } : undefined}
-          onClose={() => setWins((ws) => ws.filter((_, k) => k !== idx))} />
-      ))}
+
 
       {mode !== null && (
-        <div ref={chatRef} className="absolute right-0 top-0 z-30 flex h-screen w-[360px] max-w-[86vw] flex-col border-l border-emerald-400/30 bg-[#04120c]/95 backdrop-blur-xl shadow-2xl">
+        <div ref={chatRef} className="absolute right-0 top-0 z-30 flex h-screen w-[420px] max-w-[94vw] flex-col border-l border-emerald-400/30 bg-[#04120c]/95 backdrop-blur-xl shadow-2xl">
+          {winsShow && wins.length > 0 && (
+            <div ref={win0Ref} className="flex flex-col border-b border-emerald-500/25" style={{ height: winMin ? 38 : "52vh" }}>
+              <div className="flex items-center gap-2 bg-[#03110b] px-3 py-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
+                {wins.length > 1 ? (
+                  <div className="ml-1 flex flex-1 gap-1 overflow-x-auto">
+                    {wins.map((w, k) => (<button key={k} onClick={() => { setWinTab(k); setWinMin(false); }} className={"whitespace-nowrap rounded-md px-2 py-0.5 text-[10px] font-bold " + (winTab === k ? "bg-emerald-500/25 text-emerald-100" : "text-emerald-300/60 hover:bg-white/5")}>{w.title.replace(/^[◉🛰]\s*/, "").slice(0, 16)}</button>))}
+                  </div>
+                ) : (<span className="ml-1 flex-1 truncate text-xs font-bold text-emerald-100">{wins[0].title}</span>)}
+                <button onClick={() => setWinMin((m) => !m)} title={winMin ? "Restore" : "Minimize"} className="rounded px-1.5 text-emerald-300/70 hover:bg-white/5">{winMin ? "▢" : "—"}</button>
+                <button onClick={() => setWins([])} title="Close" className="rounded px-1.5 text-emerald-300/70 hover:bg-white/5">✕</button>
+              </div>
+              {!winMin && <iframe key={(wins[winTab] || wins[0]).src} src={(wins[winTab] || wins[0]).src} title={(wins[winTab] || wins[0]).title} className="w-full flex-1 border-0 bg-[#03110b]" />}
+            </div>
+          )}
           <div className="flex items-center gap-2 border-b border-emerald-500/15 px-4 py-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-base">{"◉"}</div>
             <div className="text-sm font-bold text-emerald-100">Your Sovereign {geoCity && <span className="font-mono text-[10px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
