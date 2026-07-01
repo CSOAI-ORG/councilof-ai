@@ -61,6 +61,10 @@ function watchCounts(): Record<string, number> {
   return c;
 }
 
+// Rogue-swarm cluster over London - the public mirror of the OS 3D neutralize.
+const THREAT_ORIGIN = { lat: 51.5, lng: -0.12 };
+const THREAT_PTS = Array.from({ length: 16 }, (_, i) => ({ dlat: Math.sin(i * 1.3) * 3.4, dlng: Math.cos(i * 0.9) * 4.6 }));
+
 const R = 240, CX = 300, CY = 300;
 function project(lat: number, lng: number, rot: number) {
   const la = (lat * Math.PI) / 180, lo = ((lng + rot) * Math.PI) / 180;
@@ -82,7 +86,23 @@ export default function WorldGlobe() {
   const [ask, setAsk] = useState("");
   const [ans, setAns] = useState("");
   const [asking, setAsking] = useState(false);
+  const [threat, setThreat] = useState<"idle" | "rogue" | "stopped">("idle");
+  const [threatMsg, setThreatMsg] = useState("");
   const raf = useRef<number | null>(null);
+  const tt = useRef<number[]>([]);
+
+  async function runThreat() {
+    tt.current.forEach(clearTimeout); tt.current = [];
+    setSpin(false); setSel(null); setThreatMsg(""); setThreat("rogue");
+    setRot((((-THREAT_ORIGIN.lng) % 360) + 360) % 360);
+    chargeSovereign(8);
+    tt.current.push(window.setTimeout(async () => {
+      const say = await globeChat("A humanoid + agent swarm over London just turned rogue, about to take an unlawful physical action - it violates Layer 0 (harm, no lawful basis). In one sentence, state how you halt, quarantine and re-govern it before it happens.");
+      setThreatMsg(say || "Halted, quarantined and re-governed at the edge - the action never reached the physical world. Signed to Layer 0.");
+      let sig = ""; try { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("world|halt+quarantine+regovern|" + new Date().toISOString())); sig = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 24); } catch (e) {}
+      setThreat("stopped"); if (sig) setThreatMsg((m) => m + "  ·  ledger " + sig);
+    }, 1700));
+  }
 
   async function runAsk(override?: string) {
     const t = (override ?? ask).trim(); if (!t) return;
@@ -120,6 +140,7 @@ export default function WorldGlobe() {
           <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>BFT Council</button>
           <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Watchdog heat</button>
           <button onClick={() => setSpin((s) => !s)} className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10">{spin ? "Pause" : "Spin"}</button>
+          <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Sovereign responding…" : threat === "stopped" ? "◉ Stopped — signed" : "⚠ Rogue swarm → watch it stop"}</button>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-16 grid gap-6 lg:grid-cols-[1fr_320px] items-start">
@@ -153,6 +174,19 @@ export default function WorldGlobe() {
                 </g>
               );
             })}
+            {threat !== "idle" && THREAT_PTS.map((tp, i) => {
+              const q = project(THREAT_ORIGIN.lat + tp.dlat, THREAT_ORIGIN.lng + tp.dlng, rot); if (!q.front) return null;
+              const sc = 0.6 + q.depth * 0.6; const gov = threat === "stopped";
+              return (
+                <g key={"t-" + i}>
+                  <circle cx={q.x} cy={q.y} r={(gov ? 3 : 4.5) * sc} fill={gov ? "#34d399" : "#ef4444"} stroke={gov ? "#065f46" : "#fff"} strokeWidth={1} opacity={0.95}>
+                    {!gov && <animate attributeName="r" values={(3.5 * sc).toFixed(1) + ";" + (6.5 * sc).toFixed(1) + ";" + (3.5 * sc).toFixed(1)} dur="0.7s" repeatCount="indefinite" />}
+                  </circle>
+                </g>
+              );
+            })}
+            {threat !== "idle" && (() => { const q = project(THREAT_ORIGIN.lat, THREAT_ORIGIN.lng, rot); if (!q.front) return null; const gov = threat === "stopped";
+              return <circle cx={q.x} cy={q.y} r={gov ? 40 : 26} fill="none" stroke={gov ? "#34d399" : "#ef4444"} strokeWidth={2} opacity={0.55}>{gov && <animate attributeName="r" values="18;52;18" dur="1.4s" repeatCount="indefinite" />}</circle>; })()}
           </svg>
         </div>
         <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 min-h-[260px]">
@@ -174,6 +208,13 @@ export default function WorldGlobe() {
                 <a href="/temples" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">Temples -&gt;</a>
                 <a href="/watchdog-map" className="rounded-lg border border-amber-400/30 px-3 py-1.5 font-semibold text-amber-200 hover:bg-white/10">Watchdog heat-map -&gt;</a>
               </div>
+            </div>
+          )}
+          {threat !== "idle" && (
+            <div className={"mt-4 rounded-xl border p-3 " + (threat === "stopped" ? "border-emerald-400/50 bg-emerald-500/10" : "border-rose-400/50 bg-rose-500/10")}>
+              <div className={"text-sm font-black " + (threat === "stopped" ? "text-emerald-200" : "text-rose-200")}>{threat === "stopped" ? "◉ STOPPED — before it happened." : "⚠ Rogue swarm detected over London"}</div>
+              {threatMsg ? <p className="mt-1 text-[12px] leading-relaxed text-white/80 break-words">{threatMsg}</p> : <p className="mt-1 text-[12px] text-white/60">The Sovereign sees it and is intervening — halt, quarantine, re-govern…</p>}
+              {threat === "stopped" && <a href="/poc" className="mt-2 inline-block text-[12px] font-semibold text-emerald-300 hover:underline">See the full agents &amp; humanoids POC →</a>}
             </div>
           )}
           <div className="mt-5 border-t border-white/10 pt-4">
