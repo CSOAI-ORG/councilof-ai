@@ -13,6 +13,25 @@ async function askSov(q: string): Promise<string> {
 }
 function daysTo(iso?: string): number | null { if (!iso) return null; const d = Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000); return d; }
 
+// Real, published open-source MCP tools per framework (github.com/CSOAI-ORG) — Layer 0 governed.
+const REAL_MCP: Record<string, string[]> = {
+  "eu-ai-act": ["eu-ai-act-compliance-mcp", "csoai-governance-crosswalk-mcp"],
+  "gdpr": ["gdpr-compliance-ai-mcp"],
+  "iso-42001": ["iso-42001-ai-mcp"],
+  "iso-42005": ["iso-42001-ai-mcp"],
+  "nist-ai-rmf": ["csoai-governance-crosswalk-mcp", "bias-detection-mcp"],
+  "cra": ["dora-nis2-crosswalk-mcp"],
+  "nis2": ["dora-nis2-crosswalk-mcp"],
+  "dora": ["dora-nis2-crosswalk-mcp", "mifid-ii-ai-mcp"],
+  "hipaa": ["healthcare-ai-governance-mcp"],
+  "council-of-europe-ai-convention": ["csoai-governance-crosswalk-mcp"],
+  "oecd-ai-principles": ["csoai-governance-crosswalk-mcp"],
+  "unesco-ai-ethics": ["csoai-governance-crosswalk-mcp"],
+  "uk-aisi": ["csoai-governance-crosswalk-mcp"],
+  "korea-ai-basic-act": ["csoai-governance-crosswalk-mcp"],
+  "singapore-agentic-ai": ["csoai-governance-crosswalk-mcp"],
+};
+
 function Hero() {
   return (
     <section className="border-b border-emerald-500/15 bg-[#03110b]">
@@ -111,7 +130,14 @@ function Detail({ f }: { f: HiveFramework }) {
         </Panel>
         <Panel title="CSOAI Layer 0 mapping" wide>
           <p className="text-sm text-emerald-100/85">{f.csoaiArticles}</p>
-          <div className="mt-2 flex flex-wrap gap-1.5">{f.mcp.map((m) => <span key={m} className="rounded-md bg-emerald-500/10 px-2 py-0.5 font-mono text-[11px] text-emerald-300">{m}</span>)}</div>
+          {(REAL_MCP[f.slug] || []).length > 0 && (
+            <div className="mt-3">
+              <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[1.5px] text-emerald-300/60">Governed MCP tools — open source, pip/npx install</div>
+              <div className="flex flex-wrap gap-1.5">{(REAL_MCP[f.slug] || []).map((r) => (
+                <a key={r} href={"https://github.com/CSOAI-ORG/" + r} target="_blank" rel="noreferrer" className="rounded-md border border-emerald-400/25 bg-emerald-500/10 px-2 py-1 font-mono text-[11px] text-emerald-200 hover:bg-emerald-500/20">⎇ {r}</a>
+              ))}</div>
+            </div>
+          )}
         </Panel>
       </div>
     </div>
