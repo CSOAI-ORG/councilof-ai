@@ -47,6 +47,80 @@ function slotStyle(slot: Slot, solo: boolean): any {
 }
 function intersect(a: DOMRect, b: DOMRect) { return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom); }
 
+// A real, draggable + minimizable OS window (not just a fixed browser frame).
+function OsWindow({ title, src, idx, onClose, innerRef }: { title: string; src: string; idx: number; onClose: () => void; innerRef?: (el: HTMLDivElement | null) => void }) {
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1440;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 900;
+  const w0 = Math.min(600, vw - 440), h0 = Math.min(Math.round(vh * 0.62), 560);
+  const [pos, setPos] = useState({ x: Math.max(24, 40 + idx * 44), y: 84 + idx * 40 });
+  const [min, setMin] = useState(false);
+  const [z, setZ] = useState(20 + idx);
+  const drag = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
+  function down(e: React.PointerEvent) { setZ(50); drag.current = { sx: e.clientX, sy: e.clientY, ox: pos.x, oy: pos.y }; (e.target as any).setPointerCapture?.(e.pointerId); }
+  function move(e: React.PointerEvent) { const d = drag.current; if (!d) return; setPos({ x: Math.max(0, Math.min(vw - 120, d.ox + (e.clientX - d.sx))), y: Math.max(56, Math.min(vh - 40, d.oy + (e.clientY - d.sy))) }); }
+  function up() { drag.current = null; }
+  const bar = (
+    <div onPointerDown={down} onPointerMove={move} onPointerUp={up} className="flex cursor-move items-center gap-2 border-b border-emerald-500/20 bg-[#04120c] px-3 py-2 select-none">
+      <button onClick={onClose} title="Close" className="h-2.5 w-2.5 rounded-full bg-rose-400/80 hover:bg-rose-400" />
+      <button onClick={() => setMin((m) => !m)} title={min ? "Restore" : "Minimize"} className="h-2.5 w-2.5 rounded-full bg-amber-400/80 hover:bg-amber-400" />
+      <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
+      <span className="ml-2 text-xs font-bold text-emerald-100">{title}</span>
+      <span className="ml-auto font-mono text-[9px] uppercase tracking-wide text-emerald-300/40">{min ? "minimized · drag me" : "live in the OS · drag"}</span>
+    </div>
+  );
+  return (
+    <div ref={innerRef} className="absolute overflow-hidden rounded-2xl border border-emerald-400/40 bg-[#05140d] shadow-[0_24px_80px_-24px_rgba(0,0,0,.85)]" style={{ left: pos.x, top: pos.y, width: w0, height: min ? 34 : h0, zIndex: z }}>
+      {bar}
+      {!min && <iframe src={src} title={title} className="w-full border-0 bg-[#03110b]" style={{ height: "calc(100% - 34px)" }} />}
+    </div>
+  );
+}
+
+// Speak-to-map: the Sovereign toggles globe data layers from natural language.
+const GLOBE_LAYERS: { re: RegExp; tag: string; label: string }[] = [
+  { re: /framework|regulation|\blaw\b|eu ai act|nist|iso/i, tag: "frameworks", label: "the frameworks" },
+  { re: /government|\bgov\b|authorit|nation|countr|regulator/i, tag: "gov", label: "governments" },
+  { re: /fortune|compan|corporate|enterprise|\bhq\b|business/i, tag: "fortune", label: "the Fortune 500" },
+  { re: /cyber|\bcni\b|critical infra|attack|security/i, tag: "cyber", label: "cyber and critical-infrastructure" },
+  { re: /threat|rogue|bad actor/i, tag: "threat", label: "the threat swarm" },
+  { re: /humanoid|robot/i, tag: "humanoids", label: "the humanoid fleet" },
+  { re: /satellite|orbit|\bspace\b/i, tag: "sats", label: "satellites" },
+  { re: /agent swarm|\bagents\b/i, tag: "swarm", label: "the agent swarm" },
+  { re: /sovereign node|\bnodes\b|civili/i, tag: "nodes", label: "the sovereign nodes" },
+];
+// Narration→globe bridge: as the Sovereign SAYS a word, the globe reacts in sync.
+// Two kinds: place words fly the camera; concept words light up the matching layer.
+const BRIDGE_PLACE: { re: RegExp; lng: number; lat: number; h: number }[] = [
+  { re: /london/i, lng: -0.118, lat: 51.509, h: 140000 },
+  { re: /brussels|^eu$|europe(an)?/i, lng: 4.35, lat: 50.85, h: 2200000 },
+  { re: /washington|nist|\bdc\b/i, lng: -77.04, lat: 38.9, h: 2200000 },
+  { re: /beijing|china/i, lng: 116.4, lat: 39.9, h: 2400000 },
+  { re: /geneva|iso/i, lng: 6.14, lat: 46.2, h: 1600000 },
+  { re: /singapore/i, lng: 103.8, lat: 1.35, h: 1800000 },
+  { re: /(new york|nyc)/i, lng: -74.0, lat: 40.71, h: 180000 },
+  { re: /toronto|canada/i, lng: -79.38, lat: 43.65, h: 200000 },
+  { re: /tokyo|japan/i, lng: 139.7, lat: 35.7, h: 2200000 },
+  { re: /washington|pentagon|defen[cs]e/i, lng: -77.04, lat: 38.9, h: 2400000 },
+];
+const BRIDGE_LAYER: { re: RegExp; tag: string }[] = [
+  { re: /framework|regulation|\blaw\b/i, tag: "frameworks" },
+  { re: /government|\bgov\b|nation|authorit|regulator/i, tag: "gov" },
+  { re: /fortune|compan|corporate|enterprise|business/i, tag: "fortune" },
+  { re: /cyber|\bcni\b|critical.?infra|security/i, tag: "cyber" },
+  { re: /threat|rogue|ungovern|bad.?actor/i, tag: "threat" },
+  { re: /humanoid|robot/i, tag: "humanoids" },
+  { re: /satellite|orbit/i, tag: "sats" },
+  { re: /power|plant|infrastructure/i, tag: "plants" },
+];
+
+function layerFromSpeech(t: string): { tag: string; label: string; on: boolean } | null {
+  const m = GLOBE_LAYERS.find((l) => l.re.test(t)); if (!m) return null;
+  const wantsMap = /\b(show|display|turn on|add|reveal|map|see|where|hide|remove|turn off|clear|layer)\b/i.test(t);
+  if (!wantsMap) return null;
+  const on = !/\b(hide|remove|turn off|clear|without|no )\b/i.test(t);
+  return { tag: m.tag, label: m.label, on };
+}
+
 export default function DemoOS() {
   const [mode, setMode] = useState<null | "demo" | "full">(null);
   const [i, setI] = useState(-1);
@@ -83,11 +157,13 @@ export default function DemoOS() {
   const modeRef = useRef<"demo" | "full">("demo");
   const idc = useRef(0);
   const typeT = useRef<any>(null);
+  const bridgeT = useRef<any[]>([]);
+  const flewThisLine = useRef(false);
 
   useEffect(() => { document.title = "The AI OS - live demo & tour | CSOAI"; return () => cleanup(); }, []);
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [chat]);
 
-  function cleanup() { try { window.speechSynthesis.cancel(); } catch (e) {} if (timer.current) clearTimeout(timer.current); if (typeT.current) clearInterval(typeT.current); try { rec.current && rec.current.stop(); } catch (e) {} }
+  function cleanup() { try { window.speechSynthesis.cancel(); } catch (e) {} if (timer.current) clearTimeout(timer.current); if (typeT.current) clearInterval(typeT.current); bridgeT.current.forEach(clearTimeout); bridgeT.current = []; try { rec.current && rec.current.stop(); } catch (e) {} }
   function post(msg: any) { try { frame.current && frame.current.contentWindow && frame.current.contentWindow.postMessage(msg, "*"); } catch (e) {} }
   function say(who: "sov" | "you", t: string) { const id = ++idc.current; setChat((c) => c.concat({ id, who, t })); return id; }
   function narrate(text: string) {
@@ -96,6 +172,18 @@ export default function DemoOS() {
     if (typeT.current) clearInterval(typeT.current);
     typeT.current = setInterval(() => { k++; const done = k >= words.length; const part = words.slice(0, k).join(" ") + (done ? "" : " ▍"); setChat((c) => c.map((m) => (m.id === id ? { ...m, t: part } : m))); if (done && typeT.current) clearInterval(typeT.current); }, 85);
     speak(text);
+    scheduleBridge(text, words);
+  }
+  // As each word is SAID, react on the globe in sync: place words fly, concept words light a layer.
+  function scheduleBridge(text: string, words: string[]) {
+    bridgeT.current.forEach(clearTimeout); bridgeT.current = []; flewThisLine.current = false;
+    words.forEach((w, idx) => {
+      const at = idx * 85 + 100;
+      const pl = BRIDGE_PLACE.find((p) => p.re.test(w));
+      if (pl && !flewThisLine.current) { flewThisLine.current = true; bridgeT.current.push(setTimeout(() => post({ cmd: "flyTo", lng: pl.lng, lat: pl.lat, height: pl.h, duration: 2.4 }), at)); return; }
+      const ly = BRIDGE_LAYER.find((l) => l.re.test(w));
+      if (ly) bridgeT.current.push(setTimeout(() => post({ cmd: "layer", tag: ly.tag, on: true }), at));
+    });
   }
   function speak(t: string) { try { const u = new SpeechSynthesisUtterance(t); u.rate = 1.04; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(v.name + " " + v.lang)); if (pick) u.voice = pick; u.onstart = () => { speaking.current = true; }; u.onend = () => { speaking.current = false; }; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {} }
 
@@ -153,7 +241,14 @@ export default function DemoOS() {
   function finish() { if (timer.current) clearTimeout(timer.current); closeWins(); post({ cmd: "home", duration: 2.5 }); setPaused(false); setEnding(true); setTitle("Where would you like to start?"); narrate("So - where would you like to start? I can scan your area, run a live scenario, show you governance, or explore the globe. Just tap - or tell me."); }
   function stop() { cleanup(); setMode(null); setI(-1); setWins([]); setWinsShow(false); setTitle(""); setGeoLabel(""); setEnding(false); post({ cmd: "home", duration: 2 }); }
 
-  function onBargeIn(said: string) { if (timer.current) clearTimeout(timer.current); try { window.speechSynthesis.cancel(); } catch (e) {} setPaused(true); say("you", said); answer(said); }
+  function onBargeIn(said: string) {
+    if (timer.current) clearTimeout(timer.current); try { window.speechSynthesis.cancel(); } catch (e) {}
+    say("you", said);
+    // Speak-to-map: if the user asks for a layer, toggle it on the globe and keep the tour flowing.
+    const lc = layerFromSpeech(said);
+    if (lc) { post({ cmd: "layer", tag: lc.tag, on: lc.on }); if (lc.on) post({ cmd: "home", duration: 2.2 }); const line = (lc.on ? "Showing " : "Hiding ") + lc.label + " on the globe."; narrate(line); timer.current = setTimeout(() => { setPaused(false); runStep(Math.max(0, i)); }, 3800); setPaused(true); return; }
+    setPaused(true); answer(said);
+  }
   function interrupt() {
     if (timer.current) clearTimeout(timer.current); try { window.speechSynthesis.cancel(); } catch (e) {} setPaused(true); setListening(true); say("sov", "I'm listening - go ahead.");
     const SR = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition; if (!SR) { say("sov", "Voice needs a Chromium browser - type to me instead."); setListening(false); return; }
@@ -219,26 +314,21 @@ export default function DemoOS() {
 
       {geoLabel && (<div className="absolute left-1/2 top-20 z-30 -translate-x-1/2 rounded-full border border-emerald-400/30 bg-black/50 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-200/90 backdrop-blur">◎ {geoLabel}</div>)}
 
-      {wins.map((w, idx) => (
-        <div key={idx} ref={idx === 0 ? win0Ref : undefined} className={"absolute z-20 overflow-hidden rounded-2xl border border-emerald-400/40 bg-[#05140d] shadow-[0_24px_80px_-24px_rgba(0,0,0,.85)] transition-all duration-500 ease-out " + (winsShow ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95 pointer-events-none")} style={slotStyle(w.slot, solo)}>
-          <div className="flex items-center gap-2 border-b border-emerald-500/20 bg-[#04120c] px-3 py-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-rose-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
-            <span className="ml-2 text-xs font-bold text-emerald-100">{w.title}</span>
-            <span className="ml-auto font-mono text-[9px] uppercase tracking-wide text-emerald-300/40">live in the OS</span>
-          </div>
-          <iframe src={w.src} title={w.title} className="w-full border-0 bg-[#03110b]" style={{ height: "calc(100% - 33px)" }} />
-        </div>
+      {winsShow && wins.map((w, idx) => (
+        <OsWindow key={w.src + "-" + idx} title={w.title} src={w.src} idx={idx}
+          innerRef={idx === 0 ? (el) => { win0Ref.current = el; } : undefined}
+          onClose={() => setWins((ws) => ws.filter((_, k) => k !== idx))} />
       ))}
 
       {mode !== null && (
-        <div ref={chatRef} className="absolute left-6 bottom-6 z-30 w-[92%] max-w-md rounded-2xl border border-emerald-400/30 bg-[#04120c]/95 backdrop-blur-xl shadow-2xl">
+        <div ref={chatRef} className="absolute right-0 top-0 z-30 flex h-screen w-[360px] max-w-[86vw] flex-col border-l border-emerald-400/30 bg-[#04120c]/95 backdrop-blur-xl shadow-2xl">
           <div className="flex items-center gap-2 border-b border-emerald-500/15 px-4 py-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-base">{"◉"}</div>
             <div className="text-sm font-bold text-emerald-100">Your Sovereign {geoCity && <span className="font-mono text-[10px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
             <button onClick={() => setHandsFree((h) => { const n = !h; if (n) startRec(); else stopRec(); return n; })} className={"ml-auto rounded-full px-2 py-0.5 text-[10px] font-bold " + (handsFree ? "bg-emerald-500/20 text-emerald-200" : "text-emerald-300/50 hover:bg-white/5")}>{handsFree ? "hands-free ⏺" : "hands-free off"}</button>
             <button onClick={stop} className="rounded-lg px-2 py-1 text-[11px] text-emerald-300/60 hover:bg-white/5">End</button>
           </div>
-          <div className="max-h-[38vh] space-y-2 overflow-y-auto px-4 py-3">
+          <div className="flex-1 space-y-2 overflow-y-auto px-4 py-3">
             {chat.map((m) => (<div key={m.id} className={m.who === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[92%] rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.t}</div>))}
             <div ref={endRef} />
           </div>

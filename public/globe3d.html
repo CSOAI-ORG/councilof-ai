@@ -63,7 +63,14 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
 <div id="rail" class="card">
   <h3>Data layers</h3>
   <div class="lyr" data-layer="nodes"><span class="sw on"><i></i></span><span class="nm">Sovereign nodes<small>12 civilizations</small></span></div>
+  <div class="lyr" data-layer="frameworks"><span class="sw on"><i></i></span><span class="nm">Frameworks<small>EU AI Act, NIST, ISO…</small></span></div>
   <div class="lyr" data-layer="arcs"><span class="sw on"><i></i></span><span class="nm">Cross-region mesh<small>L0-D handoff arcs</small></span></div>
+  <div class="lyr" data-layer="gov"><span class="sw"><i></i></span><span class="nm">Governments<small>AI authorities</small></span></div>
+  <div class="lyr" data-layer="fortune"><span class="sw"><i></i></span><span class="nm">Fortune 500 / 100<small>major HQs</small></span></div>
+  <div class="lyr" data-layer="cyber"><span class="sw"><i></i></span><span class="nm">Cyber / CNI<small>defenders + threats</small></span></div>
+  <div class="lyr" data-layer="threat"><span class="sw"><i></i></span><span class="nm">Threat swarm<small>rogue agents/humanoids</small></span></div>
+  <div class="lyr" data-layer="humanoids"><span class="sw"><i></i></span><span class="nm">Humanoid fleet<small>live-tracked</small></span></div>
+  <div class="lyr" data-layer="sats"><span class="sw"><i></i></span><span class="nm">Satellites<small>orbital</small></span></div>
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
     <svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"></circle><circle id="ring-arc" cx="26" cy="26" r="22" fill="none" stroke="#34d399" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 26 26)"></circle></svg>
@@ -96,6 +103,17 @@ var NODES=[
  {n:'UAE',c:[54.4,24.5],tier:'voluntary',tools:24}
 ];
 var tierC={binding:'#e2574c',emerging:'#f5b942',voluntary:'#3b9ad8'};
+
+// ---- Selectable data layers: frameworks, governments, Fortune 500, cyber ----
+var FW=[
+ ['EU AI Act',4.35,50.85,'#ef4444'],['NIST AI RMF',-77.22,39.14,'#0ea5e9'],['ISO 42001',6.14,46.2,'#0ea5e9'],
+ ['GDPR',4.36,50.85,'#ef4444'],['UK AI',-0.12,51.5,'#f59e0b'],['Korea AI Act',126.98,37.57,'#ef4444'],
+ ['Singapore',103.8,1.35,'#f59e0b'],['CoE AI Treaty',7.75,48.57,'#a855f7'],['OECD/UNESCO',2.35,48.85,'#f59e0b'],
+ ['Canada AIDA',-75.7,45.4,'#f59e0b'],['China PIPL',116.4,39.9,'#ef4444'],['Japan',139.7,35.7,'#f59e0b']
+];
+var GOV=[['USA',-77.04,38.9],['EU',4.35,50.85],['UK',-0.12,51.5],['China',116.4,39.9],['Canada',-75.7,45.4],['Australia',149.1,-35.3],['Japan',139.7,35.7],['Korea',126.98,37.57],['India',77.2,28.6],['Brazil',-47.9,-15.8],['UAE',54.4,24.5],['Singapore',103.8,1.35],['Germany',13.4,52.5],['France',2.35,48.85],['Saudi',46.7,24.7]];
+var FORTUNE=[['Walmart',-94.2,36.4],['Amazon',-122.3,47.6],['Apple',-122.0,37.3],['Microsoft',-122.1,47.6],['Alphabet',-122.08,37.4],['ExxonMobil',-96.9,32.9],['JPMorgan',-74.0,40.7],['Berkshire',-95.9,41.3],['UnitedHealth',-93.5,44.9],['Meta',-122.15,37.48],['Tesla',-97.7,30.3],['Nvidia',-121.95,37.35],['Toyota',137.15,35.08],['Volkswagen',10.8,52.4],['Samsung',127.0,37.28],['Aramco',50.1,26.3],['Shell',-0.1,51.5],['TSMC',120.97,24.8],['Tencent',114.06,22.54],['Reliance',72.87,19.07],['Nestle',6.84,46.46],['BHP',144.96,-37.8],['Petrobras',-43.2,-22.9],['JPM-London',-0.09,51.51]];
+var CYBER=[['CISA',-77.09,38.88],['ENISA',23.73,37.98],['NCSC-UK',-0.13,51.5],['BSI-DE',7.1,50.73],['ANSSI-FR',2.31,48.86],['China',116.4,39.9],['Russia',37.6,55.75],['Israel',34.78,32.08],['DPRK',125.75,39.03],['Iran',51.39,35.69],['Ukraine',30.52,50.45],['Estonia',24.75,59.44]];
 
 try{ Cesium.Ion.defaultAccessToken=''; }catch(e){}
 var viewer;
@@ -177,6 +195,31 @@ if(viewer){
       point:{pixelSize:5, color:Cesium.Color.fromCssColorString('#ef4444'), outlineColor:Cesium.Color.WHITE, outlineWidth:1} });
   }
 
+  // ----- Frameworks (colored by status), visible by default -----
+  FW.forEach(function(f){
+    viewer.entities.add({ layerTag:'frameworks',
+      position:Cesium.Cartesian3.fromDegrees(f[1],f[2]),
+      point:{pixelSize:7, color:Cesium.Color.fromCssColorString(f[3]), outlineColor:Cesium.Color.WHITE, outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
+      label:{text:f[0], font:'600 10px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#cfe8df'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2.5, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-13), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,8e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,1.2e7,0)} });
+  });
+  // ----- Governments (AI authorities / capitals), hidden by default -----
+  GOV.forEach(function(g){
+    viewer.entities.add({ layerTag:'gov', show:false, position:Cesium.Cartesian3.fromDegrees(g[1],g[2]),
+      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#e7f6ef'), outlineColor:Cesium.Color.fromCssColorString('#0d9488'), outlineWidth:2, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.2,2e7,.4)} });
+  });
+  // ----- Fortune 500 / 100 HQs, hidden by default -----
+  FORTUNE.forEach(function(c){
+    viewer.entities.add({ layerTag:'fortune', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],10000),
+      point:{pixelSize:5, color:Cesium.Color.fromCssColorString('#38bdf8'), outlineColor:Cesium.Color.fromCssColorString('#0c4a6e'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.2,2e7,.4)} });
+  });
+  // ----- Cyber / CNI hubs (defenders + threat origins), hidden by default -----
+  CYBER.forEach(function(c){
+    viewer.entities.add({ layerTag:'cyber', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],20000),
+      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#f43f5e'), outlineColor:Cesium.Color.WHITE, outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)} });
+    viewer.entities.add({ layerTag:'cyber', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],20000),
+      ellipse:{ semiMinorAxis:180000, semiMajorAxis:180000, height:20000, material:Cesium.Color.fromCssColorString('#f43f5e').withAlpha(0.12) } });
+  });
+
   // layer toggles
   document.querySelectorAll('.lyr').forEach(function(el){
     el.onclick=function(){ var tag=el.dataset.layer, sw=el.querySelector('.sw'), on=!sw.classList.contains('on'); sw.classList.toggle('on',on);
@@ -211,14 +254,33 @@ if(viewer){
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
   setTimeout(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; },3500);
 
+  // ----- Cinematic camera: tilted arrivals + gentle orbit around the location -----
+  var _orbit=null, _orbitH=0;
+  function stopOrbit(){ if(_orbit){clearInterval(_orbit);_orbit=null;} try{ viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY); }catch(e){} }
+  function orbitAround(lng,lat,range,pitchDeg){
+    stopOrbit(); var center=Cesium.Cartesian3.fromDegrees(lng,lat); _orbitH=Cesium.Math.toRadians(20);
+    _orbit=setInterval(function(){ _orbitH+=0.0022; try{ viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(_orbitH, Cesium.Math.toRadians(pitchDeg||-32), range)); }catch(e){} }, 40);
+  }
+
   // Drive API - the CSOAI demo/tour controls the camera + layers via postMessage.
   function handleCmd(m){
     try {
       if (!m || typeof m !== 'object' || !viewer) return;
-      if (m.cmd === 'flyTo') { spinning = false; viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(Number(m.lng), Number(m.lat), Number(m.height)||2600000), duration: Number(m.duration)||2.0 }); }
+      if (m.cmd === 'flyTo') {
+        spinning = false; stopOrbit();
+        var lng=Number(m.lng), lat=Number(m.lat), h=Number(m.height)||2600000, dur=Number(m.duration)||2.4;
+        var pitch = (m.pitch!=null) ? Number(m.pitch) : (h>6000000 ? -78 : h>1500000 ? -50 : -32);
+        var head = (m.heading!=null) ? Number(m.heading) : -18;
+        viewer.camera.flyTo({
+          destination: Cesium.Cartesian3.fromDegrees(lng, lat, h),
+          orientation: { heading: Cesium.Math.toRadians(head), pitch: Cesium.Math.toRadians(pitch), roll: 0 },
+          duration: dur,
+          complete: function(){ if (h < 4000000 && m.orbit !== false) orbitAround(lng, lat, Math.max(h*1.7, 140000), pitch); }
+        });
+      }
       else if (m.cmd === 'layer') { viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag) ent.show = !!m.on; }); }
-      else if (m.cmd === 'spin') { spinning = !!m.on; }
-      else if (m.cmd === 'home') { spinning = (m.on !== false); viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(20,28,26000000), duration: Number(m.duration)||2.2 }); }
+      else if (m.cmd === 'spin') { spinning = !!m.on; if(m.on) stopOrbit(); }
+      else if (m.cmd === 'home') { stopOrbit(); spinning = (m.on !== false); viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(20,28,26000000), orientation:{heading:0,pitch:Cesium.Math.toRadians(-88),roll:0}, duration: Number(m.duration)||2.4 }); }
       else if (m.cmd === 'neutralize') {
         // Sovereign stops the rogue swarm ON the globe: red threat cluster → emerald governed.
         spinning = false;
