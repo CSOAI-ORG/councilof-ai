@@ -1,78 +1,65 @@
 /**
- * Testimonials Component
- * Social proof section with quotes from early adopters and supporters
+ * "Built for everyone in AI governance" — persona value section.
+ * Honest, non-fabricated framing: what CSOAI does for each role, with true
+ * capability stats. No invented names, institutions, earnings, or review scores.
  */
 
 import { motion } from "framer-motion";
-import { Quote, Star, Building2, GraduationCap, Landmark, Users } from "lucide-react";
+import { Quote, Building2, GraduationCap, Landmark, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-interface Testimonial {
-  quote: string;
-  author: string;
+interface Persona {
+  headline: string;
+  body: string;
   role: string;
-  organization: string;
   category: "enterprise" | "analyst" | "government" | "citizen";
-  rating?: number;
 }
 
-const testimonials: Testimonial[] = [
+const personas: Persona[] = [
   {
-    quote: "CSOAI's unified framework saved us months of compliance work. Instead of navigating 7 different regulatory frameworks separately, we get comprehensive coverage in one platform.",
-    author: "Sarah Chen",
-    role: "Chief Compliance Officer",
-    organization: "TechCorp AI Solutions",
+    headline: "One platform, every framework",
+    body: "Instead of navigating seven regulatory frameworks separately, map each AI system once and get comprehensive, crosswalked coverage — sealed to Layer 0 for audit.",
+    role: "For compliance & risk teams",
     category: "enterprise",
-    rating: 5,
   },
   {
-    quote: "The free training completely changed my career trajectory. I went from uncertainty about AI's impact on my job to becoming a certified AI Safety Analyst earning £85/hour.",
-    author: "Marcus Thompson",
-    role: "Certified AI Safety Analyst",
-    organization: "CSOAI Network",
+    headline: "Learn it, then govern it",
+    body: "Free open-source training plus the AI Safety Analyst certification — build the skills, then run real assessments inside the OS.",
+    role: "For practitioners",
     category: "analyst",
-    rating: 5,
   },
   {
-    quote: "The Byzantine Council approach is brilliant. Having 33 AI agents from different providers ensures no single company can game the system. This is real accountability.",
-    author: "Dr. Elena Vasquez",
-    role: "AI Policy Researcher",
-    organization: "European Policy Institute",
+    headline: "Accountability by design",
+    body: "A 33-agent Byzantine council drawn from different providers means no single company can game the outcome — accountability that's structural, not promised.",
+    role: "For policy & research",
     category: "government",
-    rating: 5,
   },
   {
-    quote: "Finally, a platform where I can report AI incidents and actually see action taken. The transparency dashboard shows real accountability, not just corporate promises.",
-    author: "James Morrison",
-    role: "Concerned Citizen",
-    organization: "Public Watchdog User",
+    headline: "Report, and see action",
+    body: "The public Watchdog lets anyone flag an AI incident and watch the transparency dashboard — real follow-through, not corporate promises.",
+    role: "For the public",
     category: "citizen",
-    rating: 5,
   },
   {
-    quote: "CSOAI represents a fundamental shift in AI governance. Instead of adversarial control, they've designed partnership. This approach will actually scale with AI capabilities.",
-    author: "Prof. Michael Zhang",
-    role: "AI Safety Researcher",
-    organization: "MIT CSAIL",
+    headline: "Partnership, not adversarial control",
+    body: "CSOAI is designed as partnership between people and AI — an approach built to scale with AI capability instead of fighting it.",
+    role: "For governance leaders",
     category: "government",
-    rating: 5,
   },
   {
-    quote: "The certification exam was rigorous but fair. It properly tests understanding of real-world AI safety scenarios, not just memorization. Proud to be among the first cohort.",
-    author: "Priya Sharma",
-    role: "Certified AI Safety Analyst",
-    organization: "Independent Consultant",
-    category: "analyst",
-    rating: 5,
+    headline: "Provable when auditors ask",
+    body: "Every decision is Ed25519-signed to Layer 0 and verifiable offline. Comply once, and it crosswalks everywhere.",
+    role: "For teams under deadline",
+    category: "enterprise",
   },
 ];
 
 const categoryConfig = {
   enterprise: { icon: Building2, color: "bg-purple-100 text-purple-700", label: "Enterprise" },
-  analyst: { icon: GraduationCap, color: "bg-emerald-100 text-emerald-700", label: "Analyst" },
+  analyst: { icon: GraduationCap, color: "bg-emerald-100 text-emerald-700", label: "Practitioner" },
   government: { icon: Landmark, color: "bg-blue-100 text-blue-700", label: "Policy" },
-  citizen: { icon: Users, color: "bg-amber-100 text-amber-700", label: "Citizen" },
+  citizen: { icon: Users, color: "bg-amber-100 text-amber-700", label: "Public" },
 };
 
 export default function Testimonials() {
@@ -87,21 +74,20 @@ export default function Testimonials() {
           className="text-center mb-16"
         >
           <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200">
-            Social Proof
+            Built for everyone
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            What Our <span className="text-emerald-600">Community</span> Says
+            One OS, every role in <span className="text-emerald-600">AI governance</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            From enterprise compliance officers to certified analysts,
-            here's what early adopters are saying about CSOAI.
+            From compliance officers to the public — here's what CSOAI does for each of you.
           </p>
         </motion.div>
 
-        {/* Testimonial Grid */}
+        {/* Persona Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => {
-            const config = categoryConfig[testimonial.category];
+          {personas.map((p, index) => {
+            const config = categoryConfig[p.category];
             const IconComponent = config.icon;
 
             return (
@@ -114,32 +100,20 @@ export default function Testimonials() {
               >
                 <Card className="h-full border-2 hover:border-emerald-300 transition-all hover:shadow-lg">
                   <CardContent className="p-6">
-                    {/* Quote Icon */}
+                    {/* Icon */}
                     <Quote className="h-8 w-8 text-emerald-200 mb-4" />
 
-                    {/* Quote Text */}
-                    <p className="text-gray-700 mb-6 leading-relaxed">
-                      "{testimonial.quote}"
-                    </p>
+                    {/* Headline + body */}
+                    <p className="text-lg font-bold text-gray-900 mb-2">{p.headline}</p>
+                    <p className="text-gray-700 mb-6 leading-relaxed">{p.body}</p>
 
-                    {/* Rating */}
-                    {testimonial.rating && (
-                      <div className="flex items-center gap-1 mb-4">
-                        {Array.from({ length: testimonial.rating }).map((_, i) => (
-                          <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Author */}
+                    {/* Role */}
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-full ${config.color} flex items-center justify-center`}>
                         <IconComponent className="h-5 w-5" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-semibold text-gray-900">{testimonial.author}</p>
-                        <p className="text-sm text-gray-500">{testimonial.role}</p>
-                        <p className="text-xs text-gray-400">{testimonial.organization}</p>
+                        <p className="font-semibold text-gray-900">{p.role}</p>
                       </div>
                       <Badge className={config.color}>
                         {config.label}
@@ -152,7 +126,7 @@ export default function Testimonials() {
           })}
         </div>
 
-        {/* Stats Row */}
+        {/* Capability Stats Row — all true, no fabricated numbers */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -161,10 +135,10 @@ export default function Testimonials() {
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8"
         >
           {[
-            { value: "10,000+", label: "Early Members" },
-            { value: "500+", label: "Certified Analysts" },
-            { value: "50+", label: "Enterprise Partners" },
-            { value: "4.9/5", label: "Average Rating" },
+            { value: "7+", label: "Frameworks crosswalked" },
+            { value: "33", label: "BFT council agents" },
+            { value: "Layer 0", label: "Signed & verifiable" },
+            { value: "Free", label: "Open-source core" },
           ].map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-emerald-600 mb-1">
