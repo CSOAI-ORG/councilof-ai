@@ -254,5 +254,6 @@ map.on("load",function(){
   play.onclick=function(){if(running){running=false;play.textContent="▶";cancelAnimationFrame(raf);return;}running=true;play.textContent="⏸";var p=range.value/100;if(p>=0.999)p=0;function step(){if(!running)return;p+=0.004;if(p>=1){p=1;running=false;play.textContent="▶";}range.value=p*100;render(p);if(running)raf=requestAnimationFrame(step);}raf=requestAnimationFrame(step);};
 })();
 </script>
+<script>window.SOVEREIGN_CONFIG={brand:'CSOAI',accent:'#34d399',endpoint:'https://os.meok.ai/api',sections:[{label:'The OS',href:'/os'},{label:'Governance Graph',href:'/graph'},{label:'Sov Space',href:'/sov-space'},{label:'Try the Council',href:'/try'},{label:'Plans',href:'/pricing'},{label:'Status',href:'/status'}]};</script><script src="https://os.meok.ai/sovereign-embed.js" defer></script>
 </body>
 </html>
