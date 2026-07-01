@@ -16,7 +16,7 @@ const STEPS: Step[] = [
   { say: "Welcome. This is your CSOAI AI Operating System - live, on the world. I'm your Sovereign, and I'll show you everything. Just watch, and interrupt me any time." },
   { say: "First, let me see where you are.", fly: { lng: 0, lat: 20, height: 20000000 } },
   { say: "Watch - I can drop into any real place on Earth. Here's London, live, from orbit down to the street.", fly: { lng: -0.118, lat: 51.509, height: 15000 } },
-  { say: "Now up to orbit - every satellite and signal, mapped and governed.", fly: { lng: -0.118, lat: 40, height: 22000000 }, layer: { tag: "sats", on: true } },
+  { say: "Now up to orbit - the live view from space, every satellite and signal, mapped and governed.", wins: [{ title: "🛰 Earth from orbit - live", src: "/spacecam.html", slot: "tr" }], fly: { lng: -0.118, lat: 40, height: 22000000 }, layer: { tag: "sats", on: true } },
   { say: "Across to New York - the OS sees the whole real world, wherever you are.", fly: { lng: -74.0, lat: 40.71, height: 16000 }, full: true },
   { say: "And up to Canada - Toronto. Critical infrastructure and power, all live on the governed map.", fly: { lng: -79.38, lat: 43.65, height: 16000 }, layer: { tag: "plants", on: true }, full: true },
   { say: "Here's the Governance Graph. Name any company, place or AI system and I map the jurisdiction and every framework that applies.", wins: [{ title: "Governance Graph", src: "/graph?demo=a%20hospital%20in%20Texas", slot: "tr" }], fly: { lng: -99, lat: 31, height: 2600000 } },
@@ -62,6 +62,9 @@ export default function DemoOS() {
   const [ending, setEnding] = useState(false);
   const [booting, setBooting] = useState(true);
   const [bootN, setBootN] = useState(0);
+  const [gate, setGate] = useState(true);
+
+  async function allowVoice() { try { await (navigator as any).mediaDevices.getUserMedia({ audio: true }); } catch (e) {} setGate(false); }
 
   useEffect(() => {
     const iv = setInterval(() => setBootN((n) => n + 1), 480);
@@ -177,7 +180,20 @@ export default function DemoOS() {
         </div>
       )}
 
-      {mode === null && i === -1 && !booting && (
+      {!booting && gate && mode === null && (
+        <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-[#03080e]/85 backdrop-blur px-6 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/10 text-2xl">🎙</div>
+          <h2 className="mt-4 text-2xl font-black text-emerald-100">Grant your Sovereign a voice</h2>
+          <p className="mt-2 max-w-md text-sm text-emerald-100/75">Allow the mic so you can just talk to me during the tour - interrupt any time and I'll listen. Nothing is recorded or sold; on-device, consent-first.</p>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <button onClick={allowVoice} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">🎙 Allow &amp; continue</button>
+            <button onClick={() => setGate(false)} className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">Continue silently</button>
+          </div>
+          <div className="mt-3 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">No private cameras {"·"} no facial recognition {"·"} no tracking {"·"} no data selling</div>
+        </div>
+      )}
+
+      {mode === null && i === -1 && !booting && !gate && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#03080e]/70 backdrop-blur-sm px-6 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI - the AI operating system</p>
           <h1 className="mt-3 text-4xl sm:text-6xl font-black tracking-tight">See the OS <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">run itself.</span></h1>

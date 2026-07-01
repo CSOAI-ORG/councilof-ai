@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Earth from orbit</title><style>
+html,body{margin:0;height:100%;background:#02060c;color:#cfe8df;font-family:ui-sans-serif,system-ui;overflow:hidden}
+#stars{position:absolute;inset:0;background:radial-gradient(1.5px 1.5px at 20% 30%,rgba(125,211,252,.5),transparent),radial-gradient(1.5px 1.5px at 70% 60%,rgba(167,243,208,.4),transparent),radial-gradient(1px 1px at 45% 80%,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 85% 20%,rgba(125,211,252,.4),transparent),radial-gradient(1px 1px at 55% 12%,rgba(255,255,255,.3),transparent)}
+#wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#earth{max-width:96%;max-height:96%;border-radius:50%;filter:contrast(1.05) saturate(1.12);box-shadow:0 0 80px rgba(56,189,248,.25);animation:spin 120s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+#cap{position:absolute;left:12px;bottom:12px;font:600 11px ui-monospace,monospace;letter-spacing:1px;color:#a7f3d0;background:rgba(0,0,0,.45);padding:6px 10px;border-radius:8px}
+#live{position:absolute;right:12px;top:12px;font:700 10px ui-monospace,monospace;letter-spacing:2px;color:#34d399;background:rgba(0,0,0,.45);padding:5px 9px;border-radius:20px}
+#live b{display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;margin-right:5px;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+</style></head><body>
+<div id="stars"></div>
+<div id="wrap"><img id="earth" alt="Earth from orbit"></div>
+<div id="live"><b></b>LIVE ORBIT</div>
+<div id="cap">EARTH FROM ORBIT &middot; NASA EPIC / DSCOVR &middot; loading&hellip;</div>
+<script>
+(function(){
+  var img=document.getElementById('earth'),cap=document.getElementById('cap');
+  fetch('https://epic.gsfc.nasa.gov/api/natural').then(function(r){return r.json();}).then(function(a){
+    if(!a||!a.length)throw 0;
+    var d=a[a.length-1]; var p=(d.date||'').split(' ')[0].split('-');
+    img.src='https://epic.gsfc.nasa.gov/archive/natural/'+p[0]+'/'+p[1]+'/'+p[2]+'/png/'+d.image+'.png';
+    cap.textContent='EARTH FROM ORBIT · NASA EPIC / DSCOVR · '+(d.date||'live');
+  }).catch(function(){ cap.textContent='EARTH FROM ORBIT · orbital feed reconnecting…'; });
+})();
+</script>
+</body></html>
