@@ -16,8 +16,11 @@ const STEPS: Step[] = [
   { say: "Here's the Governance Graph. Name any company, place or AI system and I map the jurisdiction and every framework that applies.", win: { title: "Governance Graph", src: "/graph?demo=a%20hospital%20in%20Texas" }, fly: { lng: -99, lat: 31, height: 2600000 } },
   { say: "Now the Council. Describe an AI system and five agents deliberate, then seal a signed verdict.", win: { title: "The Council", src: "/try?demo=We%20use%20AI%20to%20screen%20job%20applicants" }, fly: { lng: 4.3, lat: 50.8, height: 2600000 } },
   { say: "This is our public Watchdog - humans, agents, humanoids and systems report incidents, and the world heat-maps by problem layer.", win: { title: "Global AI Watchdog", src: "/watchdog-map" }, layer: { tag: "nodes", on: true } },
-  { say: "In Sov Space you run a real governance experiment - I simulate it and seal a verdict with a Layer 0 ledger hash.", win: { title: "Sov Space", src: "/sov-space?demo=A%20fintech%20in%20the%20EU%20deploying%20an%20AI%20credit-scoring%20model" }, full: true, fly: { lng: 103.8, lat: 1.35, height: 2600000 } },
-  { say: "Every framework lives where it's made - the EU AI Act in Brussels, NIST near Washington, PIPL in Beijing. Comply once, I crosswalk it everywhere.", full: true, fly: { lng: 116.4, lat: 39.9, height: 2600000 } },
+  { say: "In Sov Space you run a real governance experiment - I simulate it and seal a verdict with a Layer 0 ledger hash.", win: { title: "Sov Space", src: "/sov-space?demo=A%20fintech%20in%20the%20EU%20deploying%20an%20AI%20credit-scoring%20model" }, fly: { lng: 103.8, lat: 1.35, height: 2600000 } },
+  { say: "And this is Sov Town Space. Here the OS simulates real-world scenarios to actually help humanity - redirecting data, resources and decisions toward a future of abundance, not extraction. Each town learns, simulates, and compounds what it discovers.", win: { title: "Sov Town Space", src: "/towns" }, fly: { lng: 20, lat: 5, height: 9000000 } },
+  { say: "None of this is extraction. It's all built on our Sovereignty Charter and our Partnership Charter - you own your data, you stay in control, and value flows to people, not away from them. That's the whole point.", win: { title: "The Sovereign Charter", src: "/charter" }, full: true },
+  { say: "Every framework lives where it's made - the EU AI Act in Brussels, NIST near Washington, PIPL in Beijing. Comply once, and I crosswalk it everywhere.", full: true, fly: { lng: 116.4, lat: 39.9, height: 2600000 } },
+  { say: "Now - the emergence dome. As you use the OS, your Sovereign learns you, and this living mirror of the world charges and hatches into your own AI character. Step inside the dome.", win: { title: "Emergence - the living dome", src: "/emergence" }, fly: { lng: 0, lat: 15, height: 16000000 } },
   { say: "And full transparency: the Sovereign brain and every Layer 0 protocol, checked live.", win: { title: "System Status", src: "/status" }, full: true, home: true },
   { say: "Own your AI. Own your data. Start free, scale when you need. That's your OS - and I'm always right here. Ask me anything, any time.", win: { title: "Plans", src: "/pricing" }, home: true },
 ];
@@ -62,7 +65,7 @@ export default function DemoOS() {
     if (s.layer) post({ cmd: "layer", ...s.layer });
     if (s.home) post({ cmd: "home", duration: 2.5 });
     if (s.win) { setChat((c) => c.concat({ who: "sov", t: "Opening " + s.win!.title + " for you." })); setWin(s.win); } else { setWin(null); }
-    const dur = m === "demo" ? 12000 : 20000;
+    const dur = m === "demo" ? 12000 : 24000;
     timer.current = setTimeout(() => { if (s.win) setChat((c) => c.concat({ who: "sov", t: "Closing " + s.win!.title + "." })); const n = idx + 1; setI(n); runStep(n, m); }, dur);
   }
 
@@ -105,7 +108,7 @@ export default function DemoOS() {
           <h1 className="mt-3 text-4xl sm:text-6xl font-black tracking-tight">See the OS <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">run itself.</span></h1>
           <p className="mt-4 max-w-xl text-emerald-100/80">The Sovereign will fly the globe, open the tools, and explain it all - by voice and in chat. Interrupt any time and it listens.</p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <button onClick={() => start("demo")} className="rounded-xl bg-emerald-500 px-7 py-3.5 text-base font-bold text-[#03110b] hover:bg-emerald-400">▶ 90-second demo</button>
+            <button onClick={() => start("demo")} className="rounded-xl bg-emerald-500 px-7 py-3.5 text-base font-bold text-[#03110b] hover:bg-emerald-400">▶ Quick demo (~2 min)</button>
             <button onClick={() => start("full")} className="rounded-xl border border-emerald-400/50 px-7 py-3.5 text-base font-semibold text-emerald-100 hover:bg-emerald-500/10">Full guided tour (~6 min)</button>
           </div>
           <a href="/os" className="mt-4 text-xs text-emerald-300/60 hover:text-emerald-200">Skip - take me straight into the OS →</a>
