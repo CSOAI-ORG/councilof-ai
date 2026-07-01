@@ -179,6 +179,7 @@ import Agents from "./pages/Agents";
 import Academy from "./pages/Academy";
 import SovereignDock from "./components/SovereignDock";
 import DemoTour from "./components/DemoTour";
+import WatchdogMap from "./pages/WatchdogMap";
 import SovSpace from "./pages/SovSpace";
 import BadgesPage from "./pages/BadgesPage";
 import RealWorldMap from "./pages/RealWorldMap";
@@ -483,6 +484,9 @@ function App() {
                   <Route path="/compliance" component={Compliance} />
                   <Route path="/agent-council" component={AgentCouncil} />
                   <Route path="/watchdog" component={Watchdog} />
+                  <Route path="/watchdog-map" component={WatchdogMap} />
+                  <Route path="/heatmap" component={WatchdogMap} />
+                  <Route path="/watchdog-heatmap" component={WatchdogMap} />
                   <Route path="/reports" component={Reports} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/settings/billing" component={Billing} />
