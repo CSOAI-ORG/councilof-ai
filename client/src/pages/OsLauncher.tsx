@@ -19,6 +19,7 @@ const APPS: App[] = [
   { name: "Open Commons", desc: "Creative-Commons media search, keyless — build in the open.", href: "/commons", glyph: "◐", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
   { name: "Emergence", desc: "The living egg — your Sovereign learns you as you use the OS, then hatches into your AI character.", href: "/emergence", glyph: "◍", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30" },
   { name: "System Status", desc: "The transparency board — every core system, live.", href: "/status", glyph: "◉", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
+  { name: "Global AI Watchdog", desc: "The public watchdog for humans, agents, humanoids and systems — report a signal, watch the world heat-map by problem layer, live.", href: "/watchdog-map", glyph: "◎", tone: "from-rose-500/20 to-amber-400/5 border-rose-400/30" },
   { name: "Rediscovered, Not Invented", desc: "The 4,000-year lineage — every CSOAI system mapped to the ancient original that ran empires.", href: "/lineage", glyph: "𓉴", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30" },
   { name: "Relevance Map", desc: "What governs what — pick your industry, see the relevant CSOAI bridges, frameworks and gaps.", href: "/map", glyph: "◌", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
   { name: "Framework Temples", desc: "Each regulation a temple at its real-world seat — step inside for the visual breakdown.", href: "/temples", glyph: "卂", tone: "from-amber-500/20 to-teal-400/5 border-amber-400/30" },

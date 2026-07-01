@@ -24,6 +24,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /price|pricing|plan|cost/i, href: "/plans", label: "Plans and pricing" },
   { re: /media|image|photo|creative commons/i, href: "/commons", label: "Open Commons media" },
   { re: /status|health|uptime/i, href: "/status", label: "System Status" },
+  { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
   { re: /globe|earth|world map|3d/i, href: "/world-3d", label: "the living globe" },
   { re: /layer ?0|protocol|trust control/i, href: "/layer0", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },
