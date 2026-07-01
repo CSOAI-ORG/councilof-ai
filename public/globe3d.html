@@ -64,6 +64,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <h3>Data layers</h3>
   <div class="lyr" data-layer="nodes"><span class="sw on"><i></i></span><span class="nm">Sovereign nodes<small>12 civilizations</small></span></div>
   <div class="lyr" data-layer="frameworks"><span class="sw on"><i></i></span><span class="nm">Frameworks<small>EU AI Act, NIST, ISO…</small></span></div>
+  <div class="lyr" data-layer="ontology"><span class="sw"><i></i></span><span class="nm">Ontology<small>objects + how they relate</small></span></div>
   <div class="lyr" data-layer="arcs"><span class="sw on"><i></i></span><span class="nm">Cross-region mesh<small>L0-D handoff arcs</small></span></div>
   <div class="lyr" data-layer="gov"><span class="sw"><i></i></span><span class="nm">Governments<small>AI authorities</small></span></div>
   <div class="lyr" data-layer="fortune"><span class="sw"><i></i></span><span class="nm">Fortune 500 / 100<small>major HQs</small></span></div>
@@ -236,6 +237,30 @@ if(viewer){
     viewer.entities.add({ layerTag:'intel', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],15000),
       ellipse:{ semiMinorAxis:160000, semiMajorAxis:160000, height:15000, material:Cesium.Color.fromCssColorString('#fb923c').withAlpha(0.10) } });
   });
+
+  // ----- Ontology layer: every governed object and how it RELATES (Palantir-style) -----
+  // Objects: governments, frameworks, companies, cyber. Links: governs / applies-to / defends.
+  (function(){
+    function d2(a,b){ var dx=a[0]-b[0],dy=a[1]-b[1]; return dx*dx+dy*dy; }
+    function nearest(from, list, k){ return list.map(function(x){return {x:x,d:d2(from,[x[1],x[2]])};}).sort(function(p,q){return p.d-q.d;}).slice(0,k).map(function(o){return o.x;}); }
+    function arc(a,b,color){
+      viewer.entities.add({ layerTag:'ontology', show:false,
+        polyline:{ positions:Cesium.Cartesian3.fromDegreesArrayHeights([a[0],a[1],120000,(a[0]+b[0])/2,(a[1]+b[1])/2,900000,b[0],b[1],120000]),
+          width:1.3, arcType:Cesium.ArcType.NONE,
+          material:new Cesium.PolylineGlowMaterialProperty({glowPower:.22, color:Cesium.Color.fromCssColorString(color).withAlpha(.6)}) } });
+    }
+    // government --governs--> nearest frameworks (emerald)
+    GOV.forEach(function(g){ nearest([g[1],g[2]], FW, 2).forEach(function(f){ arc([g[1],g[2]],[f[1],f[2]],'#34d399'); }); });
+    // framework --applies-to--> nearest companies (sky)
+    FW.forEach(function(f){ nearest([f[1],f[2]], FORTUNE, 2).forEach(function(c){ arc([f[1],f[2]],[c[1],c[2]],'#38bdf8'); }); });
+    // cyber --defends--> nearest company (rose)
+    CYBER.forEach(function(c){ nearest([c[1],c[2]], FORTUNE, 1).forEach(function(t){ arc([c[1],c[2]],[t[1],t[2]],'#f43f5e'); }); });
+    // object glints at every ontology node
+    FW.concat(GOV.map(function(g){return [g[0],g[1],g[2],'#e7f6ef'];})).forEach(function(o){
+      viewer.entities.add({ layerTag:'ontology', show:false, position:Cesium.Cartesian3.fromDegrees(o[1],o[2],120000),
+        point:{pixelSize:3, color:Cesium.Color.fromCssColorString('#a7f3d0').withAlpha(.9)} });
+    });
+  })();
 
   // layer toggles
   document.querySelectorAll('.lyr').forEach(function(el){

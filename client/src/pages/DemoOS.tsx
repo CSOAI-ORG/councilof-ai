@@ -34,6 +34,7 @@ const STEPS: Step[] = [
   { say: "Here's why this changes everything. The barriers that stop most teams - hiring consultants, months of manual mapping, tools that don't talk to each other - I remove them. You start free, on open source, and scale only when you need to.", wins: [{ title: "Plans - start free", src: "/pricing", slot: "tr" }], full: true },
   { say: "The benefit is simple: comply once and I crosswalk it everywhere; run it hands-free while you get on with your work; and every decision is signed to Layer 0 - provable, not promised. One OS for all of AI governance.", full: true },
   { say: "Here's the whole OS at a glance - the Graph, the Council and the Watchdog, all open together, tiled like a real desktop, all on one brain.", wins: [{ title: "Governance Graph", src: "/graph?demo=a%20fintech%20in%20Singapore", slot: "tl" }, { title: "The Council", src: "/try?demo=a%20facial%20recognition%20system%20in%20public", slot: "tr" }, { title: "Global Watchdog", src: "/watchdog-map", slot: "br" }], full: true },
+  { say: "And this is the ontology - like Palantir's, but for AI governance. Every object - frameworks, governments, companies, cyber, threats - and exactly how they relate, live on the world. Watch the web light up.", layer: { tag: "ontology", on: true }, fly: { lng: 10, lat: 28, height: 26000000 } },
   { say: "Every framework lives where it's made - the EU AI Act in Brussels, NIST near Washington, PIPL in Beijing. Comply once, and I crosswalk it everywhere.", full: true, fly: { lng: 116.4, lat: 39.9, height: 2600000 } },
   { say: "Now - the emergence dome. As you use the OS, your Sovereign learns you, and this living mirror of the world charges and hatches into your own AI character. Step inside.", wins: [{ title: "Emergence - the living dome", src: "/emergence", slot: "c" }], fly: { lng: 0, lat: 15, height: 16000000 } },
   { say: "Now the proof. This is ONE OS for agents AND humanoids - I track every single one, live and global.", layer: { tag: "humanoids", on: true }, fly: { lng: 10, lat: 25, height: 26000000 } },
@@ -88,6 +89,7 @@ function OsWindow({ title, src, idx, onClose, innerRef }: { title: string; src: 
 
 // Speak-to-map: the Sovereign toggles globe data layers from natural language.
 const GLOBE_LAYERS: { re: RegExp; tag: string; label: string }[] = [
+  { re: /ontolog|relationship|how.*relate|connect|graph of/i, tag: "ontology", label: "the governance ontology" },
   { re: /framework|regulation|\blaw\b|eu ai act|nist|iso/i, tag: "frameworks", label: "the frameworks" },
   { re: /government|\bgov\b|authorit|nation|countr|regulator/i, tag: "gov", label: "governments" },
   { re: /fortune|compan|corporate|enterprise|\bhq\b|business/i, tag: "fortune", label: "the Fortune 500" },
@@ -115,6 +117,7 @@ const BRIDGE_PLACE: { re: RegExp; lng: number; lat: number; h: number }[] = [
   { re: /washington|pentagon|defen[cs]e/i, lng: -77.04, lat: 38.9, h: 2400000 },
 ];
 const BRIDGE_LAYER: { re: RegExp; tag: string }[] = [
+  { re: /ontolog|how they relate|relationship/i, tag: "ontology" },
   { re: /framework|regulation|\blaw\b/i, tag: "frameworks" },
   { re: /government|\bgov\b|nation|authorit|regulator/i, tag: "gov" },
   { re: /fortune|compan|corporate|enterprise|business/i, tag: "fortune" },
