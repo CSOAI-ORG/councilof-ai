@@ -124,7 +124,7 @@ export function Footer() {
             <Link href="/">
               <a className="flex items-center space-x-3 mb-4 hover:opacity-80 transition-opacity">
                 <img
-                  src="/csoai-icon.svg.png"
+                  src="/csoai-icon.svg"
                   alt="CSOAI"
                   className="h-10 w-10"
                 />

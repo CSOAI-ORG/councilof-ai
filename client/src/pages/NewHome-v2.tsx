@@ -237,10 +237,10 @@ export default function NewHomeV2() {
       {/* SECTION 1: HERO */}
       {/* ============================================ */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900">
-        {/* Background image overlay */}
+        {/* Background depth — pure CSS, no external asset */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-30"
-          style={{ backgroundImage: "url(/hero-epic.png)" }}
+          className="absolute inset-0 opacity-60"
+          style={{ backgroundImage: "radial-gradient(1000px 500px at 50% -10%, rgba(16,185,129,0.25), transparent 60%), radial-gradient(700px 400px at 85% 20%, rgba(13,148,136,0.18), transparent 55%)" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-emerald-900/70 to-slate-900/95" />
 

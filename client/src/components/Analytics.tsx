@@ -18,8 +18,10 @@ type AnalyticsEvent = {
 
 // Analytics configuration
 const ANALYTICS_CONFIG = {
-  enabled: true, // Can be toggled via environment variable
-  endpoint: "/api/analytics", // Backend endpoint for analytics
+  // Only fire when an endpoint is actually configured — avoids failed beacons
+  // (405/500) on static deploys that have no /api/analytics function.
+  enabled: !!(import.meta as any).env?.VITE_ANALYTICS_ENDPOINT,
+  endpoint: ((import.meta as any).env?.VITE_ANALYTICS_ENDPOINT as string) || "/api/analytics",
   batchSize: 10, // Number of events to batch before sending
   flushInterval: 30000, // Flush events every 30 seconds
   debug: import.meta.env.DEV, // Enable debug logging in development

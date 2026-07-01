@@ -10,9 +10,10 @@ import { startTour } from "../lib/demoTour";
 type Msg = { role: "you" | "sov"; text: string };
 
 const ROUTES: { re: RegExp; href: string; label: string }[] = [
+  { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/graph", label: "the Governance Graph" },
   { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/graph", label: "the Governance Graph" },
   { re: /framework|crosswalk|\biso\b|\bnist\b|tc260|eu ai act/i, href: "/crosswalks", label: "Framework crosswalks" },
-  { re: /sov ?space|simulate|experiment|govern/i, href: "/sov-space", label: "Sov Space" },
+  { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/sov-space", label: "Sov Space" },
   { re: /sovereign town|\btown\b|incident/i, href: "/sovereign-town", label: "Sovereign Town" },
   { re: /distribution|\bmcp\b|pypi|npm|glama|mcpize|registry/i, href: "/distribution", label: "Distribution & Layer 0 coverage" },
   { re: /evidence|connect|integrat|webhook/i, href: "/evidence", label: "Evidence Hub" },
