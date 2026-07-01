@@ -156,6 +156,7 @@ export default function FrameworkHive() {
   const [, params] = useRoute("/hive/:slug");
   const [search, setSearch] = useState("");
   useEffect(() => { if (!params) document.title = "The Framework Hive — every AI framework, collected | CSOAI"; }, [params]);
+  useEffect(() => { if (!params) { const q = new URLSearchParams(window.location.search).get("q"); if (q) setSearch(q); } }, [params]);
   const f = params ? getHive(params.slug) : undefined;
   const list = useMemo(() => {
     const q = search.trim().toLowerCase();
