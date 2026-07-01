@@ -25,11 +25,22 @@ const PDCA = [
   { k: "Act", t: "Halt, quarantine the actor, re-govern, and sign the intervention to the ledger." },
 ];
 
+// When an actor plays up, the Sovereign auto-confirms the scene across sensing modalities,
+// then clears the stop through the Rainbow Stack 7-layer AI-security defense. Consent-first.
+const SENSORS = [
+  { n: "Public + consented cameras", d: "civic feeds only — no facial recognition, no private cameras" },
+  { n: "WiFi sensing", d: "device-free presence & motion — sees the scene without a camera" },
+  { n: "LoRa / BLE mesh", d: "proximity, identity beacons and hardware kill-switch reach" },
+  { n: "Overhead / satellite", d: "wide-area confirmation of what's happening" },
+  { n: "Rainbow Stack — 7-layer defense", d: "the AI-security assessment that clears the intervention" },
+];
+
 export default function PocShowcase() {
   const [scnId, setScnId] = useState("humanoids");
   const scn = SCENARIOS.find((s) => s.id === scnId) || SCENARIOS[0];
   const [phase, setPhase] = useState<Phase>("idle");
   const [pd, setPd] = useState(-1);
+  const [sensed, setSensed] = useState(-1);
   const [verdict, setVerdict] = useState("");
   const [sig, setSig] = useState("");
   const [fleet, setFleet] = useState({ humanoids: 48213, agents: 1284556, interventions: 37 });
@@ -41,11 +52,13 @@ export default function PocShowcase() {
   const dots = useRef(Array.from({ length: N }).map((_, i) => ({ a: (i / N) * Math.PI * 2 + Math.random(), r: 60 + Math.random() * 90 }))).current;
   const rogue = 17;
 
-  function reset() { timers.current.forEach(clearTimeout); setPhase("idle"); setPd(-1); setVerdict(""); setSig(""); }
+  function reset() { timers.current.forEach(clearTimeout); setPhase("idle"); setPd(-1); setSensed(-1); setVerdict(""); setSig(""); }
 
   async function run() {
     reset(); setPhase("forming");
     timers.current.push(setTimeout(() => setPhase("threat"), 1600));
+    // the moment it plays up, auto-confirm the scene across every sensing modality
+    [0, 1, 2, 3, 4].forEach((s) => timers.current.push(setTimeout(() => setSensed(s), 1850 + 360 * s)));
     timers.current.push(setTimeout(async () => {
       setPhase("pdca");
       // step the PDCA
@@ -54,7 +67,7 @@ export default function PocShowcase() {
       // real Sovereign read on the threat
       let say = "";
       try {
-        const q = "You are the CSOAI Sovereign governing a global fleet. Threat detected: " + scn.threat + " - it violates Layer 0 (harm + no lawful basis). In 2 sentences, state the governance breach and the exact intervention you take to stop it before it happens.";
+        const q = "You are the CSOAI Sovereign governing a global fleet. Threat detected: " + scn.threat + ". You auto-confirm the scene via public/consented cameras and WiFi sensing (no facial recognition), and clear the response through the Rainbow Stack 7-layer defense - it violates Layer 0 (harm + no lawful basis). In 2 sentences, state the governance breach and the exact intervention you take to stop it before it happens.";
         const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: q }) });
         if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") say = String(d.response); }
       } catch (e) {}
@@ -122,6 +135,19 @@ export default function PocShowcase() {
 
         <div className="space-y-3">
           <button onClick={run} disabled={active && !stopped} className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{active && !stopped ? "Sovereign responding…" : "▶ Run: " + scn.label + " turns rogue"}</button>
+          <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
+            <div className="text-sm font-bold text-emerald-200">Sensing &amp; confirmation — how it actually sees</div>
+            <div className="mt-1 text-[11px] text-emerald-100/60">The instant an actor plays up, the Sovereign confirms the scene across every modality — consent-first — then the Rainbow Stack clears the stop.</div>
+            <div className="mt-3 space-y-1.5">
+              {SENSORS.map((s, k) => (
+                <div key={s.n} className={"flex items-center gap-2.5 rounded-lg border p-2 transition-all " + (k <= sensed ? "border-emerald-400/40 bg-emerald-500/5" : "border-emerald-500/10 opacity-40")}>
+                  <span className={"h-2 w-2 flex-shrink-0 rounded-full " + (k <= sensed ? "bg-emerald-400 animate-pulse" : "bg-white/15")} />
+                  <div><div className="text-xs font-bold text-emerald-100">{s.n}</div><div className="text-[10.5px] text-emerald-100/60">{s.d}</div></div>
+                  {k <= sensed && <span className="ml-auto font-mono text-[9px] uppercase tracking-wide text-emerald-300/70">confirmed</span>}
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
             <div className="text-sm font-bold text-emerald-200">PDCA - the Sovereign's response, in milliseconds</div>
             <div className="mt-3 space-y-2">
