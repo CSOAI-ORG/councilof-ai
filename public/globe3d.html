@@ -4,7 +4,10 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>CSOAI Sovereign 3D — Photorealistic Governance Earth (beta)</title>
-<script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/';</script>
+<script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/';
+// Early buffer: capture drive commands the instant they arrive, even before Cesium loads.
+window.__sovBuf=[]; window.__sovReady=false;
+window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.data && e.data.cmd) window.__sovBuf.push(e.data); });</script>
 <link href="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Cesium.js"></script>
 <style>
@@ -209,9 +212,9 @@ if(viewer){
   setTimeout(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; },3500);
 
   // Drive API - the CSOAI demo/tour controls the camera + layers via postMessage.
-  window.addEventListener('message', function(ev){
+  function handleCmd(m){
     try {
-      var m = ev.data || {}; if (typeof m !== 'object' || !viewer) return;
+      if (!m || typeof m !== 'object' || !viewer) return;
       if (m.cmd === 'flyTo') { spinning = false; viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(Number(m.lng), Number(m.lat), Number(m.height)||2600000), duration: Number(m.duration)||2.0 }); }
       else if (m.cmd === 'layer') { viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag) ent.show = !!m.on; }); }
       else if (m.cmd === 'spin') { spinning = !!m.on; }
@@ -233,7 +236,11 @@ if(viewer){
         viewer.entities.values.forEach(function(ent){ if (ent.layerTag === 'threat' && ent.point) { ent.point.color = red; ent.point.outlineColor = Cesium.Color.WHITE; ent.point.pixelSize = 5; } });
       }
     } catch(e){}
-  });
+  }
+  // Live listener + flush any commands that arrived before Cesium finished loading.
+  window.addEventListener('message', function(ev){ handleCmd(ev.data); });
+  window.__sovReady = true;
+  try { (window.__sovBuf || []).forEach(handleCmd); window.__sovBuf = []; } catch(e){}
   try { parent.postMessage({ sovGlobeReady: true }, '*'); } catch(e){}
 }
 </script>

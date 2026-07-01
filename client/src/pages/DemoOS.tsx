@@ -213,7 +213,7 @@ export default function DemoOS() {
           <span className="h-2 w-2 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 8px #34d399" }} />
           <span className="text-xs font-bold text-emerald-100">{title || "CSOAI Sovereign OS"}</span>
           <span className="hidden sm:flex items-center gap-1">{stepsRef.current.map((_, k) => (<span key={k} className={"h-1.5 rounded-full transition-all " + (k === i ? "w-4 bg-emerald-400" : k < i ? "w-1.5 bg-emerald-500/60" : "w-1.5 bg-white/15")} />))}</span>
-          {!paused && <button onClick={next} className="rounded-full px-2 py-0.5 text-[11px] font-bold text-emerald-200/80 hover:bg-white/5">Next ▸</button>}
+          {!paused && !ending && <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-[1.5px] text-emerald-300/50"><span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />auto</span>}
         </div>
       )}
 
