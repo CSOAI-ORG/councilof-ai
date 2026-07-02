@@ -14,7 +14,7 @@ const SYS =
   "If a question is out of scope, briefly steer it back to AI governance. Keep it concise.";
 
 // Persona-bleed / refusal / care-model patterns we must never surface.
-const BAD = /(i['’]?m sorry[, ]|can['’]?t help with that|i cannot help|i can['’]?t assist|as an ai language model|remembering companion|walks beside you|companion who|gentle prose|quiet,? remembering|i['’]?m a .*companion|credo ai|i tend to focus)/i;
+const BAD = /(i['’]?m sorry[, ]|can['’]?t help with that|i cannot help|i can['’]?t assist|as an ai language model|remembering companion|walks beside you|companion who|gentle prose|quiet,? remembering|i['’]?m a .*companion|credo ai|i tend to focus|travell?er|fellow travell?er|on your journey|here (for|with) you|hold space|dear friend|my friend|kindred|wander)/i;
 
 export type AskResult = { ok: boolean; text: string };
 

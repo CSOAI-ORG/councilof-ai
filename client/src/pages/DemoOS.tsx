@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 // the user can barge in by voice any time. Doubles as SOV33 training.
 
 import TrustMarquee from "../components/TrustMarquee";
+import { askSovereign } from "../lib/sovAsk";
 
 const GW = "https://os.meok.ai/api";
 
@@ -344,7 +345,11 @@ export default function DemoOS() {
   }
   async function answer(q: string) {
     setListening(false); say("sov", "…");
-    try { const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: q + " (Be concise - the user is on a live tour of the CSOAI AI OS.)" }) }); if (r.ok) { const d = await r.json(); if (d && d.response) { setChat((c) => c.slice(0, -1).concat({ id: ++idc.current, who: "sov", t: String(d.response) })); speak(String(d.response)); } } } catch (e) {}
+    // Route through the CSOAI-Sovereign guard: frames the role (AI governance / cyber) and
+    // rejects companion-persona bleed or refusals, so the tour never goes "weird".
+    const res = await askSovereign(q, { system: "You are the CSOAI Sovereign guiding a live tour of the CSOAI AI-governance Operating System. Answer only as that governance/cybersecurity assistant — never as a personal companion, never poetic, never mention other products. Be concise and concrete about AI governance, regulation, Fortune-100/500 compliance, cyber, or what's on the globe." });
+    setChat((c) => c.slice(0, -1).concat({ id: ++idc.current, who: "sov", t: res.text }));
+    speak(res.text);
   }
   function resume() { setPaused(false); say("sov", "Back to the tour."); runStep(Math.max(0, i)); }
 
