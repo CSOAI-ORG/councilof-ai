@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 // AltPage - data-driven "CSOAI alternative to X" page (vanta / onetrust / credo).
+import SovereignSpot from "../components/SovereignSpot";
 // Positioning reflects public market positioning as of June 2026; fair + defensible,
 // not disparaging. FAQPage JSON-LD for answer engines. Zero external deps.
 
@@ -99,6 +100,9 @@ export default function AltPage({ comp }: { comp: string }) {
           <a href="/eu-ai-act-checklist" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">2 Aug 2026 checklist -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic={"choosing CSOAI vs " + c.name} layer="regulators" suggest={"Where does " + c.name + " fall short and how does CSOAI cover it?"} />
+      </div></section>
     </div>
   );
 }

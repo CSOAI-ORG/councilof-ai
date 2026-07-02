@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 // UsStateAct - data-driven US state AI-law page (colorado / texas / california).
+import SovereignSpot from "../components/SovereignSpot";
 // State AI law is fast-moving; each page carries an "evolving law" disclaimer and
 // FAQPage JSON-LD. Date-accurate as of June 2026; not legal advice.
 
@@ -91,6 +92,9 @@ export default function UsStateAct({ state }: { state: string }) {
           <a href="/nist-vs-eu-ai-act" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">NIST + EU AI Act -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic={(s.title || "this US state AI law") + " — who's covered and what to do"} layer="regulators" suggest={"Who must comply with " + (s.title || "this law") + ", and by when?"} />
+      </div></section>
     </div>
   );
 }

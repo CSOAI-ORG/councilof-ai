@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 // SectorAct - one data-driven, sector-specific EU AI Act page (healthcare / finance / hr).
+import SovereignSpot from "../components/SovereignSpot";
 // Renders sector high-risk use cases, obligations, and FAQPage JSON-LD for answer engines.
 // Date-accurate: transparency/notice from 2 Aug 2026; full high-risk obligations phase to Dec 2027.
 
@@ -102,6 +103,9 @@ export default function SectorAct({ sector }: { sector: string }) {
           <a href="/penalties" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">What a breach costs -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic={"the EU AI Act for " + sector} layer="regulators" suggest={"Which " + sector + " AI systems are high-risk, and what must we do?"} />
+      </div></section>
     </div>
   );
 }

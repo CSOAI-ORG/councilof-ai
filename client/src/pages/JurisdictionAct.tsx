@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import SovereignSpot from "../components/SovereignSpot";
 
 // JurisdictionAct - data-driven non-EU AI-regulation page (uk / canada / china / singapore).
 // Fast-moving area; each carries an "evolving / verify status" disclaimer + FAQ JSON-LD.
@@ -91,6 +92,9 @@ export default function JurisdictionAct({ jx }: { jx: string }) {
           <a href="/readiness" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Scan my readiness -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic={j.title + " — obligations, who must act, and the first move"} layer="regulators" suggest={"What must a company do to comply with " + j.title + "?"} />
+      </div></section>
     </div>
   );
 }
