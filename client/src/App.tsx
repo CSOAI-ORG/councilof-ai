@@ -194,6 +194,7 @@ import RealWorldMap from "./pages/RealWorldMap";
 import PlansPage from "./pages/PlansPage";
 import OnboardOS from "./pages/OnboardOS";
 import GovGraph from "./pages/GovGraph";
+import NetworkPage from "./pages/NetworkPage";
 import EmergencePage from "./pages/EmergencePage";
 import ToolCommons from "./pages/ToolCommons";
 import OpenMedia from "./pages/OpenMedia";
@@ -359,6 +360,9 @@ function App() {
                   <Route path="/personal-protection" component={Protect} />
                   <Route path="/deepfake-protection" component={Protect} />
                   <Route path="/ontology" component={Ontology} />
+          <Route path="/network" component={NetworkPage} />
+          <Route path="/sovereign-network" component={NetworkPage} />
+          <Route path="/agents-network" component={NetworkPage} />
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
