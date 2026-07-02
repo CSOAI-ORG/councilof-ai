@@ -429,11 +429,11 @@ if(viewer){
           destination: Cesium.Cartesian3.fromDegrees(lng, lat, h),
           orientation: { heading: Cesium.Math.toRadians(head), pitch: Cesium.Math.toRadians(pitch), roll: 0 },
           duration: dur,
-          complete: function(){ if (h < 4000000 && m.orbit !== false) orbitAround(lng, lat, Math.max(h*1.7, 140000), pitch); }
+          complete: function(){ if (m.orbit === false) return; if (h < 4000000) orbitAround(lng, lat, Math.max(h*1.7, 140000), pitch); else { spinning = true; } }
         });
         if (h < 9000000 && window.__focusPulse) setTimeout(function(){ window.__focusPulse(lng, lat, m.col); }, Math.max(0, dur*1000 - 700));
       }
-      else if (m.cmd === 'layer') { var n=0,fx=null; viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag){ ent.show = !!m.on; if(m.on&&!fx&&ent.position){var cc=ent.position.getValue(Cesium.JulianDate.now()); if(cc){var carto=Cesium.Cartographic.fromCartesian(cc); fx=[Cesium.Math.toDegrees(carto.longitude),Cesium.Math.toDegrees(carto.latitude)];}} n++; } }); if(m.on&&fx&&window.__focusPulse) window.__focusPulse(fx[0],fx[1],m.col); }
+      else if (m.cmd === 'layer') { var n=0,fx=null; viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag){ ent.show = !!m.on; if(m.on&&!fx&&ent.position){var cc=ent.position.getValue(Cesium.JulianDate.now()); if(cc){var carto=Cesium.Cartographic.fromCartesian(cc); fx=[Cesium.Math.toDegrees(carto.longitude),Cesium.Math.toDegrees(carto.latitude)];}} n++; } }); if(m.on&&fx&&window.__focusPulse) window.__focusPulse(fx[0],fx[1],m.col); if(m.on){ stopOrbit(); spinning=true; } }
       else if (m.cmd === 'lightup') { var tags=(m.tags)||['frameworks','regulators','gov','fortune','cyber','compute','network','intel','robotics','labs','auton','humanoids','ontology','arcs']; viewer.entities.values.forEach(function(ent){ if(tags.indexOf(ent.layerTag)>=0) ent.show=true; }); spinning=false; stopOrbit(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(8,30,22000000), orientation:{heading:Cesium.Math.toRadians(-10),pitch:Cesium.Math.toRadians(-80),roll:0}, duration:2.6}); }
       else if (m.cmd === 'bftSpiral') {
         clearViz(); spinning=false; stopOrbit();
