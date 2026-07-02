@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 // AiGovernanceHub - pillar page that links the whole AI-governance cluster.
 // Concentrates internal-link authority and gives answer engines a topic map.
+import SovereignSpot from "../components/SovereignSpot";
 type Link = { label: string; href: string };
 type Group = { title: string; blurb: string; links: Link[] };
 const GROUPS: Group[] = [
@@ -85,6 +86,9 @@ export default function AiGovernanceHub() {
           ))}
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="AI governance — which frameworks apply and how to comply" layer="frameworks" suggest="Where do I start with AI governance for my organisation?" />
+      </div></section>
     </div>
   );
 }

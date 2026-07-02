@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 // HighRiskSystems - the EU AI Act Annex III high-risk categories explainer + FAQ JSON-LD.
+import SovereignSpot from "../components/SovereignSpot";
 type Cat = { n: string; ex: string };
 const CATS: Cat[] = [
   { n: "Biometrics", ex: "Remote biometric identification, biometric categorisation, and emotion recognition." },
@@ -53,6 +54,9 @@ export default function HighRiskSystems() {
           <a href="/ai-act-summary" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">EU AI Act, explained -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="EU AI Act Annex III high-risk AI systems" layer="frameworks" suggest="Is my AI system high-risk under Annex III, and what does that require?" />
+      </div></section>
     </div>
   );
 }

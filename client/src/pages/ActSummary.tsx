@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 // ActSummary - plain-English "EU AI Act explained" overview + FAQ JSON-LD. Top-of-funnel.
+import SovereignSpot from "../components/SovereignSpot";
 type Tier = { name: string; tone: string; desc: string };
 const TIERS: Tier[] = [
   { name: "Unacceptable risk", tone: "bg-red-100 text-red-700", desc: "Banned outright - social scoring, manipulative AI, untargeted facial scraping. In force since Feb 2025." },
@@ -52,6 +53,9 @@ export default function ActSummary() {
           <a href="/eu-ai-act-checklist" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Am I ready? -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="the EU AI Act in plain English" layer="frameworks" suggest="Explain the EU AI Act risk tiers and what applies to me." />
+      </div></section>
     </div>
   );
 }
