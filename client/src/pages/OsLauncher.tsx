@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
+import TrustMarquee from "../components/TrustMarquee";
 
 const OS_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 const OS_APP_ROUTES: Record<string, string> = { revenue: "/pricing", pricing: "/pricing", plans: "/pricing", king: "/try", council: "/try", try: "/try", setup: "/start", onboard: "/start", graph: "/graph", knowledge: "/graph", space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", tools: "/tool-commons", commons: "/commons", status: "/status", os: "/os", emergence: "/emergence", egg: "/emergence", certification: "/certification", academy: "/academy", evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator", layer0: "/layer0", distribution: "/distribution" };
@@ -233,6 +234,10 @@ export default function OsLauncher() {
         <div className="mt-10 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-5 text-sm text-emerald-100/60">
           One signed floor under every endpoint — sites, MCP servers, packages, plugins and tools — governed by
           Layer 0 and verifiable offline. <span className="text-emerald-300">This is the substrate, not just a site.</span>
+        </div>
+
+        <div className="mt-10 border-t border-emerald-500/15 pt-8">
+          <TrustMarquee variant="full" dark speed={70} />
         </div>
       </section>
     </div>

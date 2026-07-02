@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 // close on the globe; the Sovereign is screen-aware and moves windows aside;
 // the user can barge in by voice any time. Doubles as SOV33 training.
 
+import TrustMarquee from "../components/TrustMarquee";
+
 const GW = "https://os.meok.ai/api";
 
 type Slot = "tr" | "tl" | "br" | "c";
@@ -351,6 +353,10 @@ export default function DemoOS() {
           <div className="mt-6 w-full max-w-sm space-y-1.5 font-mono text-xs">
             {BOOT.map((l, k) => (<div key={k} className={"flex items-center justify-between " + (k < bootN ? "text-emerald-200" : "text-emerald-300/25")}><span>{l}</span><span>{k < bootN ? "✓" : "…"}</span></div>))}
           </div>
+          <div className="absolute bottom-6 left-0 w-full">
+            <div className="mb-1.5 text-center font-mono text-[10px] uppercase tracking-[3px] text-emerald-300/50">Aligned to global frameworks {"·"} built on open source {"·"} verifiable</div>
+            <TrustMarquee variant="strip" dark speed={65} />
+          </div>
         </div>
       )}
 
@@ -453,14 +459,21 @@ export default function DemoOS() {
         </div>
       )}
 
-      {/* Bottom quick-nav bar */}
+      {/* Bottom quick-nav bar (lifted to clear the scrolling trust strip) */}
       {mode !== null && !booting && !ending && (
-        <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1 rounded-2xl border border-white/15 bg-[#04120c]/90 px-2 py-1.5 backdrop-blur-xl" style={{ maxWidth: "calc(100vw - 460px)" }}>
+        <div className="absolute bottom-9 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1 rounded-2xl border border-white/15 bg-[#04120c]/90 px-2 py-1.5 backdrop-blur-xl" style={{ maxWidth: "calc(100vw - 460px)" }}>
           {BOTTOM_NAV.map((b) => (
             <button key={b.src} onClick={() => openTool(b.n, b.src)} title={b.n} className="flex flex-col items-center rounded-lg px-2.5 py-1 text-emerald-200/80 hover:bg-white/10">
               <span className="text-sm leading-none">{b.g}</span><span className="mt-0.5 text-[9px] font-semibold">{b.n}</span>
             </button>
           ))}
+        </div>
+      )}
+
+      {/* Scrolling trust wall pinned to the very bottom of the OS — frameworks aligned + open source built on + standards, each links to its official source */}
+      {mode !== null && !booting && !ending && (
+        <div className="absolute bottom-0 left-0 z-20 w-full border-t border-emerald-500/20 bg-[#04120c]/85 py-1 backdrop-blur-xl" style={{ maxWidth: "calc(100vw - 420px)" }}>
+          <TrustMarquee variant="strip" dark speed={70} />
         </div>
       )}
 

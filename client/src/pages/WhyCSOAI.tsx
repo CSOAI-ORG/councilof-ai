@@ -27,6 +27,8 @@ const USPS: { t: string; d: string }[] = [
   { t: "Fair economics", d: "Value flows to the people doing the work — SMBs and enterprises — not to a middleman selling expensive certificates." },
 ];
 
+import TrustMarquee from "../components/TrustMarquee";
+
 export default function WhyCsoai() {
   useEffect(() => { document.title = "Why CSOAI — what we do that others don't | AI governance, open"; }, []);
   return (
@@ -38,6 +40,10 @@ export default function WhyCsoai() {
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">We put the value back <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">where it belongs.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">AI governance became a market for expensive certificates. We're black-swanning that — an open-source core, free training and certification, and fair pricing that returns safety and value to SMBs and enterprises, not to middlemen.</p>
         </div>
+      </section>
+
+      <section className="border-b border-emerald-500/15 py-8">
+        <TrustMarquee variant="full" dark speed={70} />
       </section>
 
       <section className="mx-auto max-w-5xl px-6 py-8">
