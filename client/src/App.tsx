@@ -195,6 +195,9 @@ import PlansPage from "./pages/PlansPage";
 import OnboardOS from "./pages/OnboardOS";
 import GovGraph from "./pages/GovGraph";
 import NetworkPage from "./pages/NetworkPage";
+import RegulatorAtlas from "./pages/RegulatorAtlas";
+import CyberScan from "./pages/CyberScan";
+import WhyCsoai from "./pages/WhyCsoai";
 import EmergencePage from "./pages/EmergencePage";
 import ToolCommons from "./pages/ToolCommons";
 import OpenMedia from "./pages/OpenMedia";
@@ -363,6 +366,14 @@ function App() {
           <Route path="/network" component={NetworkPage} />
           <Route path="/sovereign-network" component={NetworkPage} />
           <Route path="/agents-network" component={NetworkPage} />
+          <Route path="/regulators" component={RegulatorAtlas} />
+          <Route path="/regulator-atlas" component={RegulatorAtlas} />
+          <Route path="/scan" component={CyberScan} />
+          <Route path="/gods-eye" component={CyberScan} />
+          <Route path="/cyber-scan" component={CyberScan} />
+          <Route path="/why" component={WhyCsoai} />
+          <Route path="/why-csoai" component={WhyCsoai} />
+          <Route path="/usp" component={WhyCsoai} />
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />

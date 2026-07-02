@@ -45,6 +45,9 @@ const navigation = [
     description: 'The agentic governance OS',
     submenu: [
       { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus on your question' },
+      { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
+      { name: "God's Eye cyber scan", href: '/scan', description: 'Scan your own cyber with open-source; Sovereign fixes it' },
+      { name: 'Why CSOAI vs the rest', href: '/why', description: 'What we do that Vanta/Credo/OneTrust don\'t' },
       { name: 'The Sovereign Network', href: '/network', description: '20 signed agents, one council' },
       { name: 'The Hive', href: '/hive', description: 'Every framework, collected — click any one' },
       { name: 'The Sovereign Globe', href: '/globe', description: 'AI governance, layered on the world' },
