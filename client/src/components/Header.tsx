@@ -476,8 +476,6 @@ export function Header() {
                 Home
               </a>
 
-              <a href="/try" className="block px-4 py-3 rounded-lg font-bold text-emerald-700 bg-emerald-50" onClick={() => setMobileMenuOpen(false)}>⚖ Try the Council</a>
-
               {navigation.map((item) => (
                 <div key={item.name} className="space-y-1">
                   <a
@@ -507,7 +505,7 @@ export function Header() {
 
               <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
                 <a href="/os" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊞ Open the OS</Button>
+                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊞ AI OS</Button>
                 </a>
                 {user ? (
                   <>
