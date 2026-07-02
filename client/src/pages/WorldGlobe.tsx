@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
+import { askSovereign } from "../lib/sovAsk";
 
 const GLOBE_GW = "https://os.meok.ai/api";
 const PLACE_HINTS: { re: RegExp; id: string }[] = [
@@ -14,7 +15,7 @@ const PLACE_HINTS: { re: RegExp; id: string }[] = [
   { re: /singapore/i, id: "sg" },
 ];
 const GLOBE_IND = ["healthcare", "hospital", "clinical", "fintech", "finance", "banking", "insurance", "hr", "hiring", "recruiting", "education", "retail", "defense", "government", "pharma", "biotech", "energy", "telecom", "legal", "gaming", "crypto"];
-async function globeChat(msg: string): Promise<string> { try { const r = await fetch(GLOBE_GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: msg }) }); if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") return String(d.response); } } catch (e) {} return ""; }
+async function globeChat(msg: string): Promise<string> { const res = await askSovereign(msg); return res.ok ? res.text : ""; }
 async function globeGovern(q: string): Promise<any> { try { const r = await fetch(GLOBE_GW + "/govern?q=" + encodeURIComponent(q)); if (r.ok) { const d = await r.json(); if (d && d.matched) return d; } } catch (e) {} return null; }
 
 // WorldGlobe - a living, layered, zero-dependency world globe. Auto-rotates (pure SVG

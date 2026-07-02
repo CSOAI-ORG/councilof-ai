@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
+import { askSovereign } from "../lib/sovAsk";
 import { fetchHealth } from "../lib/sovHealth";
 import { startTour } from "../lib/demoTour";
 
@@ -52,11 +53,8 @@ const GW = "https://os.meok.ai/api";
 const INDUSTRIES = ["healthcare","health","hospital","clinical","finance","fintech","banking","insurance","education","edtech","retail","ecommerce","legal","law firm","government","public sector","defense","energy","utilities","automotive","telecom","pharma","biotech","manufacturing","logistics","supply chain","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing","advertising"];
 
 async function askChat(msg: string): Promise<string | null> {
-  try {
-    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: msg }) });
-    if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") return String(d.response); }
-  } catch (e) {}
-  return null;
+  const res = await askSovereign(msg);
+  return res.ok ? res.text : null;
 }
 
 async function askGovern(q: string): Promise<any | null> {

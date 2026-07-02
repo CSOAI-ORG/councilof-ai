@@ -52,6 +52,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { chargeSovereign } from '@/lib/sovCharge';
+import { askSovereign } from '@/lib/sovAsk';
 
 const SOV_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || 'https://os.meok.ai/api';
 
@@ -566,10 +567,8 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
     const t = query.trim();
     if (!t) return;
     setAiLoading(true); setAiAnswer(''); chargeSovereign(4);
-    try {
-      const r = await fetch(SOV_GW + '/chat', { method: 'POST', headers: { 'content-type': 'text/plain' }, body: JSON.stringify({ message: t }) });
-      if (r.ok) { const j = await r.json(); if (j && j.response && j.model !== 'idle') setAiAnswer(String(j.response)); }
-    } catch (e) {}
+    const res = await askSovereign(t);
+    setAiAnswer(res.text);
     setAiLoading(false);
   }, [query]);
 
