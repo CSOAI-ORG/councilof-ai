@@ -12,7 +12,7 @@ const MATRIX: { cap: string; csoai: string; others: string }[] = [
   { cap: "Proof", csoai: "Ed25519-signed to Layer 0 — offline-verifiable", others: "PDF reports, trust-us attestations" },
   { cap: "Coverage", csoai: "AI + cyber + data, one evidence set, crosswalked", others: "Siloed per framework, re-work each time" },
   { cap: "Cyber testing", csoai: "God's Eye — you scan with open-source, Sovereign fixes", others: "Upsell to a separate pen-test vendor" },
-  { cap: "Pricing", csoai: "Free tier + fair PAYG + subscription", others: "Five-figure annual minimums" },
+  { cap: "Pricing", csoai: "Free open-source tier + fair PAYG + subscription", others: "Vanta ~$10k–50k+/yr · Credo AI ~$75k+/yr · OneTrust ~$30–80k/yr add-on" },
   { cap: "Who benefits", csoai: "SMBs, enterprises, governments, every person", others: "The governance vendor's shareholders" },
 ];
 
@@ -73,7 +73,18 @@ export default function WhyCsoai() {
           <div className="rounded-2xl border border-emerald-400/30 bg-emerald-500/5 p-5"><div className="text-lg font-black text-emerald-200">Subscription</div><div className="text-xs text-emerald-100/70">Scale to a full program when you're ready — hosted, supported, still portable and yours to leave with.</div></div>
         </div>
 
-        <div className="mt-8 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-6 text-center">
+        <div className="mt-8 rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-emerald-500/10 to-transparent p-6">
+          <div className="text-sm font-bold uppercase tracking-wide text-emerald-300/70">The market reality (2026)</div>
+          <div className="mt-3 grid gap-4 sm:grid-cols-3">
+            <div><div className="text-2xl font-black text-emerald-200">~$418M</div><div className="text-xs text-emerald-100/70">AI-governance software market in 2026, up from ~$308M in 2025 — Gartner calls it a billion-dollar market forming.</div></div>
+            <div><div className="text-2xl font-black text-emerald-200">30+ tools</div><div className="text-xs text-emerald-100/70">crowding the space — most priced at five-figure annual minimums, out of reach for the SMBs that need governance most.</div></div>
+            <div><div className="text-2xl font-black text-emerald-200">~20% CAGR</div><div className="text-xs text-emerald-100/70">growth as EU AI Act, NIS2, DORA and CRA bite — and the SME segment is the fastest-growing, underserved slice.</div></div>
+          </div>
+          <p className="mt-3 text-[13px] text-emerald-100/75">The incumbents built a market for expensive certificates. We built the open-source core, free training, and fair pricing to serve the businesses they price out. That's the black swan: safety as a public good, value back to the people doing the work.</p>
+          <p className="mt-2 text-[11px] text-emerald-300/50">Figures compiled from public 2026 market analyses (Grand View, Precedence, Gartner) and vendor pricing summaries — indicative, verify for procurement.</p>
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-6 text-center">
           <div className="text-sm font-bold text-emerald-100">See it, don't take our word for it.</div>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/regulators" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">The Regulator Atlas →</a>
