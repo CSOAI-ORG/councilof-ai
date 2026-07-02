@@ -28,6 +28,7 @@ const USPS: { t: string; d: string }[] = [
 ];
 
 import TrustMarquee from "../components/TrustMarquee";
+import SovereignSpot from "../components/SovereignSpot";
 
 export default function WhyCsoai() {
   useEffect(() => { document.title = "Why CSOAI — what we do that others don't | AI governance, open"; }, []);
@@ -44,6 +45,10 @@ export default function WhyCsoai() {
 
       <section className="border-b border-emerald-500/15 py-8">
         <TrustMarquee variant="full" dark speed={70} />
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 py-8">
+        <SovereignSpot topic="why CSOAI beats Vanta, Credo AI and OneTrust" layer="frameworks" suggest="How does CSOAI's open-source + BFT-council model undercut the incumbents?" />
       </section>
 
       <section className="mx-auto max-w-5xl px-6 py-8">

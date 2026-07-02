@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { BATTLECARDS, MARKET, type Battlecard } from "../data/competitors";
+import SovereignSpot from "../components/SovereignSpot";
 
 // /competitors — live-researched battlecards. Cited, dated intel on the AI-
 // governance incumbents and the specific CSOAI wedge for each. Compiled from a
@@ -78,6 +79,10 @@ export default function Competitors() {
             <a href="/regulators" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">The Regulator Atlas →</a>
             <a href="/scan" className="rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20">God's Eye self-scan →</a>
           </div>
+        </div>
+
+        <div className="mt-8">
+          <SovereignSpot topic="the AI-governance competitive landscape (Vanta, Credo AI, OneTrust)" layer="regulators" suggest="Where does each incumbent leave a gap CSOAI fills?" />
         </div>
       </section>
     </div>
