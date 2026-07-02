@@ -189,6 +189,14 @@ export default function DemoOS() {
   const [winH, setWinH] = useState(52); // tool-window height in vh — drag to resize
 
   function openTool(title: string, src: string) { setWins([{ title, src, slot: "c" }]); setWinsShow(true); setWinMin(false); setDrawer(false); }
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setDrawer((d) => !d); }
+      else if (e.key === "Escape") { setDrawer(false); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
   function startResize(e: React.PointerEvent) {
     e.preventDefault(); const vh = window.innerHeight;
     const move = (ev: PointerEvent) => { const pct = Math.min(82, Math.max(24, (ev.clientY / vh) * 100)); setWinH(pct); };
@@ -372,7 +380,7 @@ export default function DemoOS() {
       {/* Hamburger — opens the white-branded all-tools drawer */}
       {mode !== null && !booting && (
         <button onClick={() => setDrawer(true)} title="All tools & layers" className="absolute right-4 top-4 z-40 flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-bold text-gray-900 shadow-lg hover:bg-gray-100">
-          <span className="text-base leading-none">☰</span> Menu
+          <span className="text-base leading-none">☰</span> Menu <span className="ml-1 rounded bg-gray-200 px-1 py-0.5 font-mono text-[9px] text-gray-500">⌘K</span>
         </button>
       )}
 
