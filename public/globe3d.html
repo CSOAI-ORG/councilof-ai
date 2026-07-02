@@ -62,6 +62,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
 </div>
 
 <div id="rail" class="card">
+  <a href="/os" target="_top" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;padding:9px 10px;border-radius:10px;background:linear-gradient(90deg,#059669,#0d9488);color:#fff;font:700 12px var(--sans);text-decoration:none;box-shadow:0 2px 12px rgba(16,185,129,.35)">⊞ AI OS · all tools</a>
   <h3>Data layers</h3>
   <div class="lyr" data-layer="nodes"><span class="sw on"><i></i></span><span class="nm">Sovereign nodes<small>12 civilizations</small></span></div>
   <div class="lyr" data-layer="frameworks"><span class="sw on"><i></i></span><span class="nm">Frameworks<small>EU AI Act, NIST, ISO…</small></span></div>
@@ -78,6 +79,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <div class="lyr" data-layer="network"><span class="sw"><i></i></span><span class="nm">Sovereign network<small>20 signed agents, one council</small></span></div>
   <div class="lyr" data-layer="regulators"><span class="sw"><i></i></span><span class="nm">Regulators<small>regimes at their seats</small></span></div>
   <div class="lyr" data-layer="labs"><span class="sw"><i></i></span><span class="nm">AI labs & safety<small>frontier labs + safety institutes</small></span></div>
+  <div class="lyr" data-layer="auton"><span class="sw"><i></i></span><span class="nm">Autonomous systems<small>robotaxis · ports · drones · humanoids</small></span></div>
   <div class="lyr" data-layer="sats"><span class="sw"><i></i></span><span class="nm">Satellites<small>orbital</small></span></div>
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
@@ -101,6 +103,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <span><i style="background:#22d3ee"></i>Sovereign network</span>
   <span><i style="background:#e879f9"></i>Regulators (regimes)</span>
   <span><i style="background:#a78bfa"></i>AI labs & safety</span>
+  <span><i style="background:#2dd4bf"></i>Autonomous systems</span>
 </div>
 <a id="back" href="/globe.html">← 2.5D map view</a>
 
@@ -142,6 +145,8 @@ var COMPUTE=[['N. Virginia',-77.46,39.02,'hyperscale'],['Oregon',-121.18,45.63,'
 var REGS=[['EU AI Act',4.35,50.85,'ai'],['GDPR',4.36,50.84,'data'],['NIS2',23.73,37.98,'cyber'],['CRA',4.34,50.86,'cyber'],['NIST AI RMF',-77.22,39.14,'ai'],['Colorado AI Act',-104.99,39.74,'ai'],['ISO 42001',6.14,46.20,'ai'],['DORA',2.35,48.86,'cyber'],['UK AI',-0.12,51.50,'ai'],['China TC260',116.40,39.90,'ai'],['Canada AIDA',-75.70,45.42,'ai'],['Singapore MGF',103.82,1.35,'ai']];
 var REGC={ai:'#e879f9',cyber:'#f43f5e',data:'#38bdf8'};
 // AI labs + AI-safety institutes mapped to the real world. [name, lng, lat, kind: lab|safety]
+// Autonomous / AI-controlled systems in the real world. [name, lng, lat, kind]
+var AUTON=[['Waymo robotaxi · SF',-122.42,37.77,'robotaxi'],['Waymo · Phoenix',-112.07,33.45,'robotaxi'],['Robotaxi · Austin',-97.74,30.27,'robotaxi'],['Zoox · Las Vegas',-115.14,36.17,'robotaxi'],['Baidu Apollo · Wuhan',114.31,30.59,'robotaxi'],['Pony.ai · Beijing',116.40,39.90,'robotaxi'],['WeRide · Guangzhou',113.26,23.13,'robotaxi'],['Nuro · Bay Area',-122.14,37.42,'robotaxi'],['Auto port · Rotterdam',4.40,51.95,'port'],['Auto port · Tuas Singapore',103.65,1.29,'port'],['Auto port · Qingdao',120.30,36.08,'port'],['Yara Birkeland · Norway',9.65,59.14,'port'],['Zipline drones · Rwanda',29.74,-1.94,'drone'],['Prime Air · Texas',-96.31,30.60,'drone'],['Auto mining · Pilbara',118.0,-22.6,'mining'],['Figure/BMW humanoids',-81.93,34.95,'humanoid'],['Tesla Optimus · Fremont',-121.94,37.49,'humanoid'],['Agility · Salem OR',-123.04,44.94,'humanoid'],['Aurora auto-trucking · Dallas',-96.80,32.78,'robotaxi']];
 var LABS=[['OpenAI',-122.41,37.77,'lab'],['Anthropic',-122.40,37.79,'lab'],['Google DeepMind',-0.13,51.53,'lab'],['DeepMind (MTV)',-122.08,37.42,'lab'],['Meta FAIR',-73.99,40.74,'lab'],['Mistral AI',2.35,48.86,'lab'],['Cohere',-79.38,43.65,'lab'],['Allen AI (AI2)',-122.33,47.66,'lab'],['Mila',-73.61,45.53,'lab'],['Microsoft Research',-122.13,47.64,'lab'],['Nvidia Research',-121.95,37.37,'lab'],['Stability AI',-0.13,51.51,'lab'],['xAI',-122.42,37.76,'lab'],['Zhipu / Tsinghua',116.33,40.00,'lab'],['UK AI Safety Inst.',-0.12,51.50,'safety'],['US AI Safety Inst. (NIST)',-77.22,39.14,'safety'],['CAIS',-122.42,37.77,'safety'],['Future of Life Inst.',-71.11,42.37,'safety'],['Alan Turing Inst.',-0.13,51.53,'safety'],['CHAI Berkeley',-122.26,37.87,'safety'],['MIRI',-122.27,37.87,'safety'],['Partnership on AI',-122.40,37.79,'safety'],['OECD.AI',2.31,48.85,'safety'],['Ada Lovelace Inst.',-0.09,51.52,'safety']];
 
 try{ Cesium.Ion.defaultAccessToken=''; }catch(e){}
@@ -321,6 +326,15 @@ if(viewer){
       label:{text:l[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString(lab?'#ddd6fe':'#fecdd3'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,7e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,1e7,0)},
       description:'<b>'+l[0]+'</b><br>'+(lab?'Frontier AI lab':'AI-safety institute')+' — mapped into the governance world.' });
   });
+  // ----- Autonomous / AI-controlled systems (robotaxis, auto-ports, drones, humanoids, mining), hidden by default -----
+  var AUC={robotaxi:'#2dd4bf',port:'#38bdf8',drone:'#a3e635',humanoid:'#fb923c',mining:'#fbbf24'};
+  AUTON.forEach(function(a){
+    var col=AUC[a[3]]||'#2dd4bf';
+    viewer.entities.add({ layerTag:'auton', show:false, position:Cesium.Cartesian3.fromDegrees(a[1],a[2],12000),
+      point:{pixelSize:6, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#042f2e'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
+      label:{text:a[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#ccfbf1'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
+      description:'<b>'+a[0]+'</b><br>Autonomous / AI-controlled system ('+a[3]+') — an agent acting in the physical world. This is what the Sovereign governs.' });
+  });
 
   // ----- Ontology layer: every governed object and how it RELATES (Palantir-style) -----
   // Objects: governments, frameworks, companies, cyber. Links: governs / applies-to / defends.
@@ -419,7 +433,7 @@ if(viewer){
         if (h < 9000000 && window.__focusPulse) setTimeout(function(){ window.__focusPulse(lng, lat, m.col); }, Math.max(0, dur*1000 - 700));
       }
       else if (m.cmd === 'layer') { var n=0,fx=null; viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag){ ent.show = !!m.on; if(m.on&&!fx&&ent.position){var cc=ent.position.getValue(Cesium.JulianDate.now()); if(cc){var carto=Cesium.Cartographic.fromCartesian(cc); fx=[Cesium.Math.toDegrees(carto.longitude),Cesium.Math.toDegrees(carto.latitude)];}} n++; } }); if(m.on&&fx&&window.__focusPulse) window.__focusPulse(fx[0],fx[1],m.col); }
-      else if (m.cmd === 'lightup') { var tags=(m.tags)||['frameworks','regulators','gov','fortune','cyber','compute','network','intel','robotics','labs','ontology','arcs']; viewer.entities.values.forEach(function(ent){ if(tags.indexOf(ent.layerTag)>=0) ent.show=true; }); spinning=false; stopOrbit(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(8,30,22000000), orientation:{heading:Cesium.Math.toRadians(-10),pitch:Cesium.Math.toRadians(-80),roll:0}, duration:2.6}); }
+      else if (m.cmd === 'lightup') { var tags=(m.tags)||['frameworks','regulators','gov','fortune','cyber','compute','network','intel','robotics','labs','auton','humanoids','ontology','arcs']; viewer.entities.values.forEach(function(ent){ if(tags.indexOf(ent.layerTag)>=0) ent.show=true; }); spinning=false; stopOrbit(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(8,30,22000000), orientation:{heading:Cesium.Math.toRadians(-10),pitch:Cesium.Math.toRadians(-80),roll:0}, duration:2.6}); }
       else if (m.cmd === 'spin') { spinning = !!m.on; if(m.on) stopOrbit(); }
       else if (m.cmd === 'home') { stopOrbit(); spinning = (m.on !== false); viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(20,28,26000000), orientation:{heading:0,pitch:Cesium.Math.toRadians(-88),roll:0}, duration: Number(m.duration)||2.4 }); }
       else if (m.cmd === 'neutralize') {
