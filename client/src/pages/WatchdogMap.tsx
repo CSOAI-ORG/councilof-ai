@@ -173,6 +173,13 @@ export default function WatchdogMap() {
             <div className="mt-4 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-5">
               <div className="flex items-baseline justify-between"><div className="text-lg font-bold">{sel.region} - Sovereign read</div><span className="font-mono text-[10px] uppercase tracking-wide text-emerald-300/40">{briefing ? "reasoning…" : "live"}</span></div>
               <p className="mt-2 text-sm leading-relaxed text-emerald-50/85 whitespace-pre-wrap">{briefing ? "Pulling live signals…" : (brief || "Click a hub to pull live signals.")}</p>
+              {!briefing && brief && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <a href={"/graph?demo=" + encodeURIComponent("AI governance risk in " + sel.region)} className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Govern this on the Graph →</a>
+                  <a href={"/try?demo=" + encodeURIComponent("What are my obligations for AI deployed in " + sel.region + "?")} className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Take it to the Council →</a>
+                  <a href="/protect" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Protect a person →</a>
+                </div>
+              )}
             </div>
           )}
         </div>
