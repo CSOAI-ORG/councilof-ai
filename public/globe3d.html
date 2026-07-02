@@ -155,7 +155,8 @@ var viewer;
 try{
   viewer=new Cesium.Viewer('c',{
     baseLayer:new Cesium.ImageryLayer(new Cesium.UrlTemplateImageryProvider({
-      url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', subdomains:['a','b','c','d'], maximumLevel:18
+      url:'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      maximumLevel:19, credit:'Imagery © Esri · Maxar · Earthstar Geographics · NASA'
     })),
     baseLayerPicker:false, geocoder:false, homeButton:false, sceneModePicker:false,
     navigationHelpButton:false, animation:false, timeline:false, fullscreenButton:false,
@@ -165,16 +166,18 @@ try{
 
 if(viewer){
   var sc=viewer.scene;
-  sc.globe.enableLighting=true;
-  sc.globe.baseColor=Cesium.Color.fromCssColorString('#05080e');
+  sc.globe.enableLighting=false; // even illumination — whole Earth always visible (no black night side)
+  sc.globe.baseColor=Cesium.Color.fromCssColorString('#0a1622');
+  try{ viewer.imageryLayers.get(0).brightness=1.04; viewer.imageryLayers.get(0).gamma=1.05; viewer.imageryLayers.get(0).saturation=1.12; }catch(e){}
+  try{ sc.globe.showGroundAtmosphere=true; }catch(e){}
   sc.skyAtmosphere.show=true;
-  try{ sc.skyAtmosphere.atmosphereLightIntensity=8.0; }catch(e){}
+  try{ sc.skyAtmosphere.atmosphereLightIntensity=12.0; }catch(e){}
   sc.fog.enabled=true;
   // --- Cinematic bloom glow so every node/arc pops ---
   try{
     var bloom=sc.postProcessStages.bloom; bloom.enabled=true;
-    bloom.uniforms.glowOnly=false; bloom.uniforms.contrast=128; bloom.uniforms.brightness=-0.2;
-    bloom.uniforms.delta=1.2; bloom.uniforms.sigma=3.0; bloom.uniforms.stepSize=1.0;
+    bloom.uniforms.glowOnly=false; bloom.uniforms.contrast=8; bloom.uniforms.brightness=-0.4;
+    bloom.uniforms.delta=1.4; bloom.uniforms.sigma=2.2; bloom.uniforms.stepSize=1.0;
   }catch(e){}
   try{ sc.highDynamicRange=true; }catch(e){}
   // --- Immersive opening: start far in space, then sweep in ---
