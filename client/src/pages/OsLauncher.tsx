@@ -65,6 +65,18 @@ const APPS: App[] = [
   { name: "Pricing & Plans", desc: "From a free risk check to enterprise governance.", href: "/pricing", glyph: "◆", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
 ];
 
+// SaaS grid categories — buckets each app so the launcher reads like a real app store.
+const CAT_MAP: Record<string, string> = {
+  "/try": "Govern", "/graph": "Govern", "/hive": "Govern", "/sov-space": "Govern", "/system-card": "Govern", "/regulators": "Govern", "/playbooks": "Govern", "/crosswalks": "Govern", "/policy-generator": "Govern", "/command-center": "Govern", "/readiness-assessment": "Govern", "/framework-catalog": "Govern", "/global-regulations": "Govern", "/pulse": "Govern",
+  "/scan": "Cyber & protect", "/watchdog-map": "Cyber & protect", "/risk-heatmap": "Cyber & protect", "/protect": "Cyber & protect", "/poc": "Cyber & protect",
+  "/network": "Ecosystem", "/safe-space": "Ecosystem", "/jewels": "Ecosystem", "/towns": "Ecosystem", "/minds": "Ecosystem", "/social": "Ecosystem", "/lineage": "Ecosystem", "/why": "Ecosystem", "/sovereign-town": "Ecosystem", "/ontology": "Ecosystem",
+  "/evidence": "Data & proof", "/models": "Data & proof", "/oscal": "Data & proof", "/distribution": "Data & proof", "/mcp-fleet": "Data & proof", "/tool-commons": "Data & proof", "/commons": "Data & proof", "/webhooks": "Data & proof", "/hives": "Data & proof", "/layer0": "Data & proof", "/legacy": "Data & proof",
+  "/academy": "Learn & join", "/certification": "Learn & join", "/register": "Learn & join", "/pricing": "Learn & join",
+  "/demo": "Explore & views", "/emergence": "Explore & views", "/map": "Explore & views", "/temples": "Explore & views", "/status": "Explore & views", "/globe.html": "Explore & views", "/globe3d.html": "Explore & views", "/world-3d": "Explore & views",
+};
+const CATS = ["All", "Govern", "Cyber & protect", "Ecosystem", "Data & proof", "Learn & join", "Explore & views"];
+function catOf(href: string) { return CAT_MAP[href] || "Explore & views"; }
+
 function fmt(n: number) {
   if (n >= 1e9) return (n / 1e9).toFixed(2).replace(/\.?0+$/, "") + "B";
   if (n >= 1e6) return Math.round(n / 1e6) + "M";
@@ -80,6 +92,9 @@ export default function OsLauncher() {
   const [ask, setAsk] = useState("");
   const [answer, setAnswer] = useState("");
   const [asking, setAsking] = useState(false);
+  const [q, setQ] = useState("");
+  const [cat, setCat] = useState("All");
+  const shown = useMemo(() => APPS.filter((a) => (cat === "All" || catOf(a.href) === cat) && (!q.trim() || (a.name + " " + a.desc).toLowerCase().includes(q.trim().toLowerCase()))), [q, cat]);
 
   async function runAsk() {
     const t = ask.trim(); if (!t) return;
@@ -176,9 +191,16 @@ export default function OsLauncher() {
 
       {/* app launchpad */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
-        <h2 className="mb-4 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Applications</h2>
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <h2 className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Applications</h2>
+          <span className="rounded-full border border-emerald-500/25 px-2 py-0.5 font-mono text-[10px] text-emerald-300/60">{shown.length} / {APPS.length}</span>
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search apps…" className="ml-auto w-full sm:w-64 rounded-lg border border-emerald-500/25 bg-black/40 px-3 py-1.5 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
+        </div>
+        <div className="mb-5 flex flex-wrap gap-1.5">
+          {CATS.map((c) => (<button key={c} onClick={() => setCat(c)} className={"rounded-full border px-3 py-1 text-xs font-bold " + (cat === c ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-emerald-500/25 text-emerald-200/60 hover:bg-white/5")}>{c}</button>))}
+        </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {APPS.map((a) => (
+          {shown.map((a) => (
             <a
               key={a.name}
               href={a.href}

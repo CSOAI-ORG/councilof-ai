@@ -55,7 +55,7 @@ export const REGIMES: Regime[] = [
   {
     slug: "nist-ai-rmf", name: "NIST AI RMF", region: "United States", authority: "NIST (voluntary framework)",
     kind: "ai", status: "voluntary",
-    summary: "The AI Risk Management Framework 1.0 plus the Generative AI Profile — voluntary, function-based (Govern, Map, Measure, Manage), and the de-facto US baseline referenced across sectors.",
+    summary: "The AI Risk Management Framework 1.0 plus the Generative AI Profile — voluntary, function-based (Govern, Map, Measure, Manage). With EO 14110 revoked (Jan 2025), the operative US federal baseline is OMB M-24-10 (agency AI use/governance) + NIST AI RMF, layered with state law (Colorado, California).",
     topTools: [
       "Govern/Map/Measure/Manage program scaffold",
       "AI system inventory + context mapping",
@@ -68,10 +68,10 @@ export const REGIMES: Regime[] = [
     nextDates: [
       { date: "ongoing", event: "GenAI Profile (NIST-AI-600-1) adoption across agencies + vendors" },
       { date: "2026", event: "Sector crosswalks + NIST assurance guidance expand" },
-      { date: "ongoing", event: "Federal procurement increasingly references RMF conformance" },
+      { date: "in effect", event: "OMB M-24-10 governs federal agencies' AI use (CAIOs, risk practices) — EO 14110 revoked Jan 2025" },
+      { date: "ongoing", event: "Federal procurement + M-24-10 increasingly reference RMF conformance" },
       { date: "2026–27", event: "Alignment work between RMF and ISO/IEC 42001 controls" },
-      { date: "ongoing", event: "State laws (CO, TX, CA) lean on RMF as a reasonable-care baseline" },
-      { date: "TBD", event: "Federal AI policy direction — status shifting under current administration" },
+      { date: "1 Jan 2027", event: "State laws bite (Colorado AI Act) leaning on RMF as the reasonable-care baseline" },
       { date: "ongoing", event: "CISA + sector guidance for AI in critical infrastructure" },
     ],
     csoai: "The Govern/Map/Measure/Manage scaffold as a live program, model cards + bias audits, red-team logging — mapped to EU AI Act so one evidence set serves both.",
