@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import SovereignSpot from "../components/SovereignSpot";
 // Iso42001VsEuAct - side-by-side ISO/IEC 42001 vs EU AI Act comparison + FAQPage JSON-LD.
 // High-intent answer-engine page. Zero external deps.
 type Row = { dim: string; iso: string; eu: string };
@@ -59,6 +60,9 @@ export default function Iso42001VsEuAct() {
           <a href="/eu-ai-act-checklist" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The 2 Aug 2026 checklist -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="ISO/IEC 42001 vs the EU AI Act — how they map and differ" layer="frameworks" suggest="Does ISO 42001 certification help with EU AI Act compliance?" />
+      </div></section>
     </div>
   );
 }

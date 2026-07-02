@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import SovereignSpot from "../components/SovereignSpot";
 // Penalties - interactive EU AI Act penalty estimator. Pick a violation tier and your
 // global turnover; see the max exposure (greater of fixed cap or % of turnover).
 // FAQPage JSON-LD for answer engines. Zero external deps.
@@ -65,6 +66,9 @@ export default function Penalties() {
       <section className="max-w-5xl mx-auto px-6 pb-12">
         <p className="text-xs text-gray-400">Illustrative estimate based on the EU AI Act penalty tiers (Art. 99). Actual fines consider gravity, duration, and cooperation. Not legal advice.</p>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="EU AI Act penalties and how to avoid them" layer="frameworks" suggest="What triggers the biggest EU AI Act fines and how do I avoid them?" />
+      </div></section>
     </div>
   );
 }

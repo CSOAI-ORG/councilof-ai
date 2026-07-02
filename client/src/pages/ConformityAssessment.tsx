@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import SovereignSpot from "../components/SovereignSpot";
 // ConformityAssessment - how high-risk AI providers demonstrate conformity + FAQ JSON-LD.
 const STEPS = [
   { t: "Build the quality + risk system", d: "Stand up a risk-management system, data governance, technical documentation, logging, and human oversight." },
@@ -51,6 +52,9 @@ export default function ConformityAssessment() {
           <a href="/ai-act-faq" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">More FAQs -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="EU AI Act conformity assessment for high-risk systems" layer="frameworks" suggest="What are the conformity-assessment steps for a high-risk AI system?" />
+      </div></section>
     </div>
   );
 }

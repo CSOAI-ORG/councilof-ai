@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import SovereignSpot from "../components/SovereignSpot";
 // AiActFaq - a broad EU AI Act FAQ with accordion UI + full FAQPage JSON-LD (10 Q&As).
 type QA = { q: string; a: string };
 const QAS: QA[] = [
@@ -52,6 +53,9 @@ export default function AiActFaq() {
           <a href="/penalties" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Penalty estimator -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="EU AI Act — your specific question" layer="frameworks" suggest="Ask any EU AI Act question and I'll answer for your case." />
+      </div></section>
     </div>
   );
 }

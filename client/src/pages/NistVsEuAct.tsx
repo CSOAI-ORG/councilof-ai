@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import SovereignSpot from "../components/SovereignSpot";
 // NistVsEuAct - side-by-side NIST AI RMF vs EU AI Act comparison with FAQPage JSON-LD.
 // High-intent answer-engine page. Zero external deps.
 type Row = { dim: string; nist: string; eu: string };
@@ -59,6 +60,9 @@ export default function NistVsEuAct() {
           <a href="/eu-ai-act-checklist" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The 2 Aug 2026 checklist -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="NIST AI RMF vs the EU AI Act — how they map and differ" layer="frameworks" suggest="If I've done NIST AI RMF, what more does the EU AI Act need?" />
+      </div></section>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import SovereignSpot from "../components/SovereignSpot";
 // GpaiObligations - GPAI / foundation-model provider obligations live 2 Aug 2026.
 // FAQPage JSON-LD for answer engines. Zero external deps.
 const BASE = [
@@ -67,6 +68,9 @@ export default function GpaiObligations() {
           <a href="/penalties" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The penalties -&gt;</a>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="GPAI / foundation-model provider obligations" layer="frameworks" suggest="What must a GPAI model provider do from 2 Aug 2026?" />
+      </div></section>
     </div>
   );
 }
