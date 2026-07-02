@@ -3,13 +3,12 @@ import { useRoute, Link } from "wouter";
 import { HIVE, getHive, HIVE_STATUS_COLOR, type HiveFramework } from "../data/hive-frameworks";
 import { chargeSovereign } from "../lib/sovCharge";
 
+import { askSovereign } from "../lib/sovAsk";
 const GW = "https://os.meok.ai/api";
 async function askSov(q: string): Promise<string> {
-  try {
-    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: q }) });
-    if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") return String(d.response); }
-  } catch (e) {}
-  return "";
+  // Route through the CSOAI-Sovereign guard (role-framed + companion-bleed rejected).
+  const r = await askSovereign(q, { fallback: "" });
+  return r.ok ? r.text : "";
 }
 function daysTo(iso?: string): number | null { if (!iso) return null; const d = Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000); return d; }
 

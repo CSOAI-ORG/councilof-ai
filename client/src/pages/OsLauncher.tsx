@@ -114,7 +114,7 @@ export default function OsLauncher() {
     // Fallback: rich reasoned answer.
     try {
       const r = await fetch(OS_GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: t }) });
-      if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") setAnswer(String(d.response)); }
+      if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) setAnswer(String(d.response)); }
     } catch (e) {}
     setAsking(false);
   }

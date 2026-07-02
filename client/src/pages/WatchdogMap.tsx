@@ -136,7 +136,7 @@ export default function WatchdogMap() {
     try {
       const msg = "You are the CSOAI AI Watchdog. In 3 sentences, summarise the most pressing AI-governance risk signals right now for " + h.region + " - covering AI systems, autonomous agents and humanoids - and the frameworks that bite.";
       const rq = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: msg }) });
-      if (rq.ok) { const d = await rq.json(); if (d && d.response && d.model !== "idle") setBrief(String(d.response)); }
+      if (rq.ok) { const d = await rq.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) setBrief(String(d.response)); }
     } catch (e) {}
     if (!brief) setBrief((b0) => b0 || "Live signals unavailable right now - try again shortly.");
     setBriefing(false);

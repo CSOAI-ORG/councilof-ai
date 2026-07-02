@@ -72,7 +72,7 @@ export default function CyberScan() {
     try {
       const m = "You are the CSOAI Sovereign security analyst. A CISO pasted raw findings from open-source security scanners. Triage them: (1) rank the top 3 by real risk, (2) for each give a concrete fix, (3) map each to the frameworks it affects (NIS2, DORA, CRA, ISO 27001, SOC 2), (4) end with the single most urgent action. Be concise and practical. Findings:\n" + text.slice(0, 4000);
       const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: m }) });
-      if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") setTriage(String(d.response)); }
+      if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) setTriage(String(d.response)); }
     } catch (e) {}
     if (!triage) setTriage((t) => t || "Live triage unavailable right now — try again shortly. Your findings stay in your browser.");
     setBusy(false);

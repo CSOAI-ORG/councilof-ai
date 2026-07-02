@@ -26,7 +26,7 @@ export default function GovGraph() {
     const jobs: Promise<void>[] = [];
     jobs.push((async () => { try { const r = await fetch(GW + "/knowledge?q=" + encodeURIComponent(term)); if (r.ok) setKn(await r.json()); } catch (e) {} })());
     if (ind) jobs.push((async () => { try { const r = await fetch(GW + "/govern?q=" + encodeURIComponent(ind)); if (r.ok) { const d = await r.json(); if (d && d.matched) setGov(d); } } catch (e) {} })());
-    jobs.push((async () => { try { const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "In 2 sentences, what does the law require for: " + term + "? Focus on AI governance and the key obligations." }) }); if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") setRead(String(d.response)); } } catch (e) {} })());
+    jobs.push((async () => { try { const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "In 2 sentences, what does the law require for: " + term + "? Focus on AI governance and the key obligations." }) }); if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) setRead(String(d.response)); } } catch (e) {} })());
     await Promise.all(jobs);
     setLoading(false);
   }

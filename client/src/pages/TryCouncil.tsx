@@ -103,7 +103,7 @@ export default function TryCouncil() {
       try {
         const prompt = "You are the " + a.name + ", the AI-governance council member who " + a.role + ". In no more than 2 sentences, give your distinct view on this system: \"" + q + "\". Working classification: " + result.tier + " (" + result.label + "); frameworks: " + result.frameworks.join(", ") + ". Speak in your role's voice, no preamble.";
         const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: prompt }) });
-        if (r.ok) { const j = await r.json(); if (j && j.response && j.model !== "idle") setLiveLines((m) => ({ ...m, [a.id]: String(j.response) })); }
+        if (r.ok) { const j = await r.json(); if (j && j.response && j.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(j.response))) setLiveLines((m) => ({ ...m, [a.id]: String(j.response) })); }
       } catch (e) {}
     }));
     const ts = new Date().toISOString();

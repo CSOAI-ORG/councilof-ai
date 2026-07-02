@@ -23,7 +23,7 @@ function RegCard({ r }: { r: Regime }) {
     try {
       const m = "You are the CSOAI Sovereign. In 3 sentences give a current, practical read on " + r.name + " (" + r.region + "): who must act now, the single most urgent obligation, and the smartest first move. Be specific and current.";
       const res = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: m }) });
-      if (res.ok) { const d = await res.json(); if (d && d.response && d.model !== "idle") setAns(String(d.response)); }
+      if (res.ok) { const d = await res.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) setAns(String(d.response)); }
     } catch (e) {}
     if (!ans) setAns((a) => a || "Live read unavailable right now — the collected obligations and dates below have what you need.");
     setBusy(false);

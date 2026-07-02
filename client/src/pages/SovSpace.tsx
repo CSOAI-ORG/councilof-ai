@@ -32,7 +32,7 @@ async function ssGovern(ind: string): Promise<any | null> {
 async function ssVerdict(scenario: string): Promise<string> {
   try {
     const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "You are the CSOAI 33-agent governance council. In 3 sentences, deliver a verdict on this AI system: is it permitted, and under what key conditions (risk tier, human oversight, transparency, data duties)? System: " + scenario }) });
-    if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") return String(d.response); }
+    if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) return String(d.response); }
   } catch (e) {}
   return "";
 }

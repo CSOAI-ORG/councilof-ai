@@ -69,7 +69,7 @@ export default function PocShowcase() {
       try {
         const q = "You are the CSOAI Sovereign governing a global fleet. Threat detected: " + scn.threat + ". You auto-confirm the scene via public/consented cameras and WiFi sensing (no facial recognition), and clear the response through the Rainbow Stack 7-layer defense - it violates Layer 0 (harm + no lawful basis). In 2 sentences, state the governance breach and the exact intervention you take to stop it before it happens.";
         const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: q }) });
-        if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle") say = String(d.response); }
+        if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) say = String(d.response); }
       } catch (e) {}
       setVerdict(say || "Breach: intended action fails the care-floor and has no lawful basis. Intervention: halt, quarantine the actor, and re-govern - signed and ledgered.");
       const digest = await sha256(scnId + "|halt+quarantine+regovern|" + new Date().toISOString());
