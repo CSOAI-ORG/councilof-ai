@@ -180,6 +180,28 @@ if(viewer){
     bloom.uniforms.delta=1.4; bloom.uniforms.sigma=2.2; bloom.uniforms.stepSize=1.0;
   }catch(e){}
   try{ sc.highDynamicRange=true; }catch(e){}
+  // --- Basemap picker (learned from DEFONEOS COP): God's Eye NASA satellite / Blue Marble / Night lights / Lite ---
+  function makeProv(key){
+    if(key==='bluemarble')return new Cesium.UrlTemplateImageryProvider({url:'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg',maximumLevel:8,credit:'NASA GIBS · Blue Marble'});
+    if(key==='nightlights')return new Cesium.UrlTemplateImageryProvider({url:'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/2016-01-01/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png',maximumLevel:8,credit:'NASA GIBS · Black Marble (city lights)'});
+    if(key==='dark')return new Cesium.UrlTemplateImageryProvider({url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',subdomains:['a','b','c','d'],maximumLevel:18});
+    return new Cesium.UrlTemplateImageryProvider({url:'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',maximumLevel:19,credit:'Esri · Maxar · Earthstar · NASA'});
+  }
+  function setBasemap(key){ try{ var L=viewer.imageryLayers; L.removeAll(); var lyr=L.addImageryProvider(makeProv(key)); lyr.brightness=(key==='dark')?1.0:1.05; lyr.gamma=1.05; lyr.saturation=(key==='nightlights')?1.0:1.12; window.__basemap=key; }catch(e){} }
+  try{
+    var bmWrap=document.createElement('div');
+    bmWrap.style.cssText='position:fixed;left:12px;bottom:12px;z-index:22;display:flex;flex-wrap:wrap;gap:6px;max-width:60vw;background:rgba(3,8,14,.82);border:1px solid rgba(125,211,252,.22);border-radius:12px;padding:6px 8px;backdrop-filter:blur(8px);font-family:system-ui,-apple-system,sans-serif';
+    var lbl=document.createElement('span'); lbl.textContent='Basemap'; lbl.style.cssText='align-self:center;color:#7dd3fc;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-right:2px'; bmWrap.appendChild(lbl);
+    [['satellite','🛰 NASA satellite'],['bluemarble','🌍 Blue Marble'],['nightlights','🌃 Night lights'],['dark','🪶 Lite']].forEach(function(b){
+      var el=document.createElement('button'); el.textContent=b[1];
+      el.style.cssText='cursor:pointer;border:1px solid rgba(125,211,252,.25);background:rgba(255,255,255,.05);color:#d7f5ff;border-radius:8px;padding:4px 9px;font-size:11px;font-weight:600';
+      el.onmouseenter=function(){el.style.background='rgba(52,211,153,.18)';}; el.onmouseleave=function(){el.style.background=(window.__basemap===b[0])?'rgba(52,211,153,.22)':'rgba(255,255,255,.05)';};
+      el.onclick=function(){ setBasemap(b[0]); [].forEach.call(bmWrap.querySelectorAll('button'),function(x){x.style.background='rgba(255,255,255,.05)';}); el.style.background='rgba(52,211,153,.22)'; };
+      bmWrap.appendChild(el);
+    });
+    document.body.appendChild(bmWrap);
+  }catch(e){}
+
   // --- Immersive opening: start far in space, then sweep in ---
   viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(10,25,38000000)});
   setTimeout(function(){ try{ viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(6,32,20000000), orientation:{heading:Cesium.Math.toRadians(-12),pitch:Cesium.Math.toRadians(-78)}, duration:4.2, easingFunction:Cesium.EasingFunction.QUADRATIC_IN_OUT}); }catch(e){} }, 250);
@@ -476,6 +498,7 @@ if(viewer){
       }
       else if (m.cmd === 'clearViz') { clearViz(); }
       else if (m.cmd === 'spin') { spinning = !!m.on; if(m.on) stopOrbit(); }
+      else if (m.cmd === 'basemap') { if(typeof setBasemap==='function') setBasemap(m.key||'satellite'); }
       else if (m.cmd === 'home') { stopOrbit(); spinning = (m.on !== false); viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(20,28,26000000), orientation:{heading:0,pitch:Cesium.Math.toRadians(-88),roll:0}, duration: Number(m.duration)||2.4 }); }
       else if (m.cmd === 'neutralize') {
         // Sovereign stops the rogue swarm ON the globe: red threat cluster → emerald governed.

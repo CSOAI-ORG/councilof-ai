@@ -60,7 +60,17 @@ function Chip({ t, dark }: { t: TrustItem; dark?: boolean }) {
           : "border-gray-200 bg-white text-gray-700 hover:border-emerald-400 hover:bg-emerald-50")
       }
     >
-      <span aria-hidden style={{ fontSize: 13 }}>{t.emblem}</span>
+      {t.icon ? (
+        <img
+          src={`https://cdn.simpleicons.org/${t.icon}/${dark ? "d7f5ff" : "475569"}`}
+          alt=""
+          width={13}
+          height={13}
+          loading="lazy"
+          onError={(e) => { const el = e.currentTarget; el.style.display = "none"; const sib = el.nextElementSibling as HTMLElement | null; if (sib) sib.style.display = "inline"; }}
+        />
+      ) : null}
+      <span aria-hidden style={{ fontSize: 13, display: t.icon ? "none" : "inline" }}>{t.emblem}</span>
       <span>{t.label}</span>
       <span aria-hidden style={{ width: 6, height: 6, borderRadius: 9, background: meta.tint }} />
     </a>

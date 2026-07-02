@@ -14,8 +14,9 @@ export interface TrustItem {
   label: string;   // short wordmark text
   full: string;    // full name (title/tooltip)
   kind: TrustKind;
-  emblem: string;  // emoji/glyph stand-in (swap for licensed logo where permitted)
+  emblem: string;  // emoji/glyph stand-in (shown if no licensed logo / slug fails)
   url: string;     // official source — clicking proves the claim
+  icon?: string;   // Simple Icons slug for open-source/tech marks (rights-clean); falls back to emblem on error
 }
 
 export const KIND_META: Record<TrustKind, { note: string; tint: string }> = {
@@ -53,18 +54,18 @@ export const TRUST: TrustItem[] = [
 
   // ── Open source the OS is genuinely built on ──
   { label: "OSCAL", full: "NIST OSCAL — machine-readable controls", kind: "built", emblem: "📄", url: "https://pages.nist.gov/OSCAL/" },
-  { label: "OpenSSF", full: "Open Source Security Foundation", kind: "built", emblem: "🧱", url: "https://openssf.org/" },
-  { label: "Sigstore", full: "Sigstore — signing & transparency", kind: "built", emblem: "✍", url: "https://www.sigstore.dev/" },
-  { label: "OPA", full: "Open Policy Agent (Rego)", kind: "built", emblem: "⚖", url: "https://www.openpolicyagent.org/" },
+  { label: "OpenSSF", full: "Open Source Security Foundation", kind: "built", emblem: "🧱", url: "https://openssf.org/", icon: "openssf" },
+  { label: "Sigstore", full: "Sigstore — signing & transparency", kind: "built", emblem: "✍", url: "https://www.sigstore.dev/", icon: "sigstore" },
+  { label: "OPA", full: "Open Policy Agent (Rego)", kind: "built", emblem: "⚖", url: "https://www.openpolicyagent.org/", icon: "openpolicyagent" },
   { label: "Cedar", full: "Cedar policy language", kind: "built", emblem: "🌲", url: "https://www.cedarpolicy.com/" },
   { label: "Nmap", full: "Nmap — network scanner", kind: "built", emblem: "📡", url: "https://nmap.org/" },
   { label: "OpenVAS", full: "OpenVAS / Greenbone vulnerability scanner", kind: "built", emblem: "🔎", url: "https://openvas.org/" },
   { label: "Nuclei", full: "Nuclei — vulnerability templates", kind: "built", emblem: "⚡", url: "https://github.com/projectdiscovery/nuclei" },
-  { label: "OWASP ZAP", full: "OWASP Zed Attack Proxy", kind: "built", emblem: "🕷", url: "https://www.zaproxy.org/" },
-  { label: "Trivy", full: "Trivy — container/IaC scanner", kind: "built", emblem: "🐳", url: "https://trivy.dev/" },
+  { label: "OWASP ZAP", full: "OWASP Zed Attack Proxy", kind: "built", emblem: "🕷", url: "https://www.zaproxy.org/", icon: "owasp" },
+  { label: "Trivy", full: "Trivy — container/IaC scanner", kind: "built", emblem: "🐳", url: "https://trivy.dev/", icon: "trivy" },
   { label: "OSV", full: "OSV — open vulnerability database", kind: "built", emblem: "🗂", url: "https://osv.dev/" },
-  { label: "Kubernetes", full: "Kubernetes", kind: "built", emblem: "☸", url: "https://kubernetes.io/" },
-  { label: "Linux", full: "Linux / Linux Foundation", kind: "built", emblem: "🐧", url: "https://www.linuxfoundation.org/" },
+  { label: "Kubernetes", full: "Kubernetes", kind: "built", emblem: "☸", url: "https://kubernetes.io/", icon: "kubernetes" },
+  { label: "Linux", full: "Linux / Linux Foundation", kind: "built", emblem: "🐧", url: "https://www.linuxfoundation.org/", icon: "linux" },
   { label: "Model Context Protocol", full: "Anthropic Model Context Protocol", kind: "built", emblem: "🔌", url: "https://modelcontextprotocol.io/" },
 
   // ── Open standards we implement ──
@@ -72,8 +73,8 @@ export const TRUST: TrustItem[] = [
   { label: "W3C DID", full: "W3C Decentralized Identifiers", kind: "standard", emblem: "🪪", url: "https://www.w3.org/TR/did-core/" },
   { label: "W3C VC", full: "W3C Verifiable Credentials", kind: "standard", emblem: "📇", url: "https://www.w3.org/TR/vc-data-model/" },
   { label: "x402", full: "x402 — HTTP-native payments", kind: "standard", emblem: "💳", url: "https://www.x402.org/" },
-  { label: "OpenTelemetry", full: "OpenTelemetry — observability", kind: "standard", emblem: "📈", url: "https://opentelemetry.io/" },
-  { label: "OpenAPI", full: "OpenAPI Specification", kind: "standard", emblem: "🧩", url: "https://www.openapis.org/" },
+  { label: "OpenTelemetry", full: "OpenTelemetry — observability", kind: "standard", emblem: "📈", url: "https://opentelemetry.io/", icon: "opentelemetry" },
+  { label: "OpenAPI", full: "OpenAPI Specification", kind: "standard", emblem: "🧩", url: "https://www.openapis.org/", icon: "openapiinitiative" },
 ];
 
 export const trustByKind = (k: TrustKind) => TRUST.filter((t) => t.kind === k);
