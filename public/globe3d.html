@@ -81,6 +81,10 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <div class="lyr" data-layer="labs"><span class="sw"><i></i></span><span class="nm">AI labs & safety<small>frontier labs + safety institutes</small></span></div>
   <div class="lyr" data-layer="auton"><span class="sw"><i></i></span><span class="nm">Autonomous systems<small>robotaxis · ports · drones · humanoids</small></span></div>
   <div class="lyr" data-layer="mcps"><span class="sw"><i></i></span><span class="nm">MCP fleet<small>live governed tools</small></span></div>
+  <div class="lyr" data-layer="space"><span class="sw"><i></i></span><span class="nm">Space &amp; satellites<small>spaceports · GNSS · live ISS</small></span></div>
+  <div class="lyr" data-layer="energy"><span class="sw"><i></i></span><span class="nm">AI-critical energy<small>nuclear · hydro · grids</small></span></div>
+  <div class="lyr" data-layer="cables"><span class="sw"><i></i></span><span class="nm">Internet backbone<small>subsea cables · IXPs</small></span></div>
+  <div class="lyr" data-layer="aircraft"><span class="sw"><i></i></span><span class="nm">Live aircraft<small>OpenSky ADS-B · live</small></span></div>
   <div class="lyr" data-layer="sats"><span class="sw"><i></i></span><span class="nm">Satellites<small>orbital</small></span></div>
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
@@ -105,6 +109,10 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <span><i style="background:#e879f9"></i>Regulators (regimes)</span>
   <span><i style="background:#a78bfa"></i>AI labs & safety</span>
   <span><i style="background:#2dd4bf"></i>Autonomous systems</span>
+  <span><i style="background:#67e8f9"></i>Space &amp; satellites</span>
+  <span><i style="background:#fde047"></i>AI-critical energy</span>
+  <span><i style="background:#5eead4"></i>Internet backbone</span>
+  <span><i style="background:#f8fafc"></i>Live aircraft</span>
 </div>
 <a id="back" href="/globe.html">← 2.5D map view</a>
 
@@ -401,6 +409,27 @@ if(viewer){
       label:{text:c[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#ecfeff'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
       description:'<b>'+c[0]+'</b><br>Internet backbone ('+c[3]+') — subsea cable landing / exchange the AI economy runs on; a CNI & data-sovereignty governance point.' });
   });
+
+  // ----- Live aircraft (OpenSky ADS-B, keyless) — autonomous-airspace governance; polls only when toggled on -----
+  (function(){
+    function acOn(){ var el=document.querySelector('.lyr[data-layer="aircraft"] .sw'); return !!(el && el.classList.contains('on')); }
+    function clearAc(){ var rm=[]; viewer.entities.values.forEach(function(e){ if(e.layerTag==='aircraft') rm.push(e); }); rm.forEach(function(e){ viewer.entities.remove(e); }); }
+    function poll(){
+      if(!acOn()){ clearAc(); return; }
+      // bounded box (Europe) keeps the keyless payload small + reliable
+      fetch('https://opensky-network.org/api/states/all?lamin=35&lomin=-11&lamax=60&lomax=30',{cache:'no-store'})
+        .then(function(r){ return r.ok?r.json():null; })
+        .then(function(d){ if(!d||!d.states||!acOn()) return; clearAc();
+          d.states.slice(0,120).forEach(function(s){ var lng=s[5],lat=s[6],alt=s[7]||9000,cs=(s[1]||'').trim()||s[0]; if(lng==null||lat==null) return;
+            viewer.entities.add({ layerTag:'aircraft', show:true, position:Cesium.Cartesian3.fromDegrees(lng,lat,Math.max(3000,alt)),
+              point:{pixelSize:4, color:Cesium.Color.fromCssColorString('#f8fafc'), outlineColor:Cesium.Color.fromCssColorString('#38bdf8'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.2,2e7,.3)},
+              description:'<b>'+cs+'</b><br>Live civil aircraft ('+(s[2]||'')+') — OpenSky ADS-B. Autonomous-airspace & dual-use governance.' });
+          });
+        }).catch(function(){});
+    }
+    setInterval(poll, 30000); // refresh cadence; first pull happens the first tick after toggle-on
+    var chip=document.querySelector('.lyr[data-layer="aircraft"]'); if(chip){ chip.addEventListener('click', function(){ setTimeout(poll, 60); }); }
+  })();
 
   // ----- Ontology layer: every governed object and how it RELATES (Palantir-style) -----
   // Objects: governments, frameworks, companies, cyber. Links: governs / applies-to / defends.
