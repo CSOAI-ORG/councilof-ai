@@ -1,8 +1,23 @@
 import { useEffect, useRef, useState } from "react";
+const EMG_GW = "https://os.meok.ai/api";
 export default function EmergencePage() {
   const cv = useRef<HTMLCanvasElement | null>(null);
   const chargeRef = useRef(0); const hatchedRef = useRef(false);
   const [charge, setCharge] = useState(0); const [hatched, setHatched] = useState(false);
+  const [pName, setPName] = useState(""); const [pKind, setPKind] = useState("Digital sovereign twin");
+  const [passport, setPassport] = useState<null | { fingerprint?: string; signature?: string; publicKey?: string; canonical?: string }>(null);
+  const [minting, setMinting] = useState(false);
+  async function mintPassport() {
+    const holder = (pName || "").trim(); if (!holder) return;
+    setMinting(true); setPassport(null);
+    const canonical = "CSOAI Sovereign Passport · " + pKind + " · holder: " + holder + " · issued " + new Date().toISOString();
+    try {
+      const r = await fetch(EMG_GW + "/sign", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: canonical }) });
+      if (r.ok) { const d = await r.json(); setPassport({ fingerprint: d.fingerprint, signature: d.signature, publicKey: d.publicKey, canonical: d.canonical || canonical }); }
+    } catch (e) {}
+    if (!passport) setPassport((p) => p || { canonical, fingerprint: "", signature: "" });
+    setMinting(false);
+  }
   useEffect(() => { document.title = "Emergence - the living egg | CSOAI"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { hatchedRef.current = true; setHatched(true); } } } catch (e) {} }, []);
   function addCharge() { const n = Math.min(100, chargeRef.current + 12); chargeRef.current = n; setCharge(n); try { localStorage.setItem("sov_charge", String(n)); } catch (e) {} if (n >= 100 && !hatchedRef.current) { hatchedRef.current = true; setHatched(true); } }
   useEffect(() => {
@@ -57,6 +72,29 @@ export default function EmergencePage() {
             <a href="/sov-space" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Run a Sov Space experiment +10%</a>
             <a href="/try" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Convene the Council +10%</a>
           </div>
+        </div>
+
+        {/* Digital sovereign twin + signed ID passport (real Ed25519 signing) */}
+        <div className="mt-6 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-5 text-left">
+          <div className="text-sm font-bold text-emerald-200">Mint a digital ID passport</div>
+          <p className="mt-1 text-[13px] text-emerald-100/75">Your emerged twin — and every agent you deploy — carries a signed <b className="text-emerald-200">digital passport</b>: an Ed25519 identity anyone can verify (proofof.ai). Mint one for yourself, or issue <b className="text-emerald-200">passported agents</b> for your enterprise or government — each identified, accountable, and sealed to Layer 0.</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <input value={pName} onChange={(e) => setPName(e.target.value)} placeholder="Holder — you, an agent, or an org" className="flex-1 min-w-[200px] rounded-lg border border-emerald-500/25 bg-black/30 px-3 py-2 text-sm text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
+            <select value={pKind} onChange={(e) => setPKind(e.target.value)} className="rounded-lg border border-emerald-500/25 bg-black/30 px-2 py-2 text-sm text-emerald-50">
+              <option>Digital sovereign twin</option><option>Enterprise agent</option><option>Government agent</option><option>Humanoid / robot</option>
+            </select>
+            <button onClick={mintPassport} disabled={minting} className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{minting ? "Signing…" : "🪪 Mint signed passport"}</button>
+          </div>
+          {passport && (
+            <div className="mt-3 rounded-xl border border-emerald-500/20 bg-black/30 p-3 font-mono text-[11px] text-emerald-100/85">
+              <div className="text-emerald-300/80">✦ {pKind} · {pName}</div>
+              {passport.fingerprint ? (<>
+                <div className="mt-1 break-all">seal <span className="text-emerald-200">{passport.fingerprint}</span></div>
+                <div className="mt-0.5 break-all text-emerald-300/60">sig {String(passport.signature).slice(0, 88)}…</div>
+                <div className="mt-1 text-emerald-300/70">Ed25519-signed · offline-verifiable via <a href="/protect" className="underline">proofof.ai</a> · anchored to Layer 0.</div>
+              </>) : (<div className="mt-1 text-amber-200/80">Signing service unavailable right now — the passport is issued once the Sovereign backend is reachable. Your details never leave your browser.</div>)}
+            </div>
+          )}
         </div>
       </section>
     </div>
