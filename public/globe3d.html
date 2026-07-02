@@ -80,6 +80,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <div class="lyr" data-layer="regulators"><span class="sw"><i></i></span><span class="nm">Regulators<small>regimes at their seats</small></span></div>
   <div class="lyr" data-layer="labs"><span class="sw"><i></i></span><span class="nm">AI labs & safety<small>frontier labs + safety institutes</small></span></div>
   <div class="lyr" data-layer="auton"><span class="sw"><i></i></span><span class="nm">Autonomous systems<small>robotaxis · ports · drones · humanoids</small></span></div>
+  <div class="lyr" data-layer="mcps"><span class="sw"><i></i></span><span class="nm">MCP fleet<small>live governed tools</small></span></div>
   <div class="lyr" data-layer="sats"><span class="sw"><i></i></span><span class="nm">Satellites<small>orbital</small></span></div>
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
@@ -403,6 +404,16 @@ if(viewer){
   fetch('https://os.meok.ai/api/tools',{cache:'no-store'}).then(function(r){return r.json();}).then(function(t){
     var n = (t && (t.total || t.count)) || (Array.isArray(t) ? t.length : 0);
     if(n && n > 50) document.getElementById('s-tools').textContent = n;
+    // Wire the REAL MCP fleet as a governed layer — scatter each tool near its cluster's anchor jurisdiction (deterministic, labelled).
+    var list = (t && (t.matches || t.mcps)) || (Array.isArray(t) ? t : []);
+    if(list && list.length){
+      list.forEach(function(m,i){ if(!m || !m.name) return; var b=NODES[i%NODES.length];
+        var lng=b.c[0]+(((i*37)%22)-11), lat=b.c[1]+(((i*19)%16)-8);
+        viewer.entities.add({ layerTag:'mcps', show:false, position:Cesium.Cartesian3.fromDegrees(lng,lat,9000),
+          point:{pixelSize:3.4, color:Cesium.Color.fromCssColorString('#7dd3fc'), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.1,2e7,.35)},
+          description:'<b>'+m.name+'</b><br>'+(m.clusterLabel||m.cluster||'governed MCP')+(m.tools?(' · '+m.tools+' tools'):'')+(m.connect?('<br><code>'+m.connect+'</code>'):'')+'<br><i>Live governed MCP · Layer 0.</i>' }); });
+      var chip=document.querySelector('.lyr[data-layer="mcps"] .nm small'); if(chip) chip.textContent = n+' live governed MCPs';
+    }
   }).catch(function(){});
 
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
@@ -434,7 +445,7 @@ if(viewer){
         if (h < 9000000 && window.__focusPulse) setTimeout(function(){ window.__focusPulse(lng, lat, m.col); }, Math.max(0, dur*1000 - 700));
       }
       else if (m.cmd === 'layer') { var n=0,fx=null; viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag){ ent.show = !!m.on; if(m.on&&!fx&&ent.position){var cc=ent.position.getValue(Cesium.JulianDate.now()); if(cc){var carto=Cesium.Cartographic.fromCartesian(cc); fx=[Cesium.Math.toDegrees(carto.longitude),Cesium.Math.toDegrees(carto.latitude)];}} n++; } }); if(m.on&&fx&&window.__focusPulse) window.__focusPulse(fx[0],fx[1],m.col); if(m.on){ stopOrbit(); spinning=true; } }
-      else if (m.cmd === 'lightup') { var tags=(m.tags)||['frameworks','regulators','gov','fortune','cyber','compute','network','intel','robotics','labs','auton','humanoids','ontology','arcs']; viewer.entities.values.forEach(function(ent){ if(tags.indexOf(ent.layerTag)>=0) ent.show=true; }); spinning=false; stopOrbit(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(8,30,22000000), orientation:{heading:Cesium.Math.toRadians(-10),pitch:Cesium.Math.toRadians(-80),roll:0}, duration:2.6}); }
+      else if (m.cmd === 'lightup') { var tags=(m.tags)||['frameworks','regulators','gov','fortune','cyber','compute','network','intel','robotics','labs','auton','mcps','humanoids','ontology','arcs']; viewer.entities.values.forEach(function(ent){ if(tags.indexOf(ent.layerTag)>=0) ent.show=true; }); spinning=false; stopOrbit(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(8,30,22000000), orientation:{heading:Cesium.Math.toRadians(-10),pitch:Cesium.Math.toRadians(-80),roll:0}, duration:2.6}); }
       else if (m.cmd === 'bftSpiral') {
         clearViz(); spinning=false; stopOrbit();
         var clng=(m.lng!=null)?Number(m.lng):-0.12, clat=(m.lat!=null)?Number(m.lat):51.5;
