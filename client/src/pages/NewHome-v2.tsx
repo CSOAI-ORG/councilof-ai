@@ -327,6 +327,14 @@ export default function NewHomeV2() {
             <Link href="/demo"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-100 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">▶ Watch the live demo</Button></Link>
           </div>
 
+          {/* Explore live — the AI economy + the ecosystem, one click */}
+          <div className="mb-10 flex flex-wrap gap-2 justify-center items-center text-xs">
+            <a href="/globe3d.html" className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 font-semibold text-amber-100 hover:bg-amber-400/20">🟡 The AI economy, live on the globe</a>
+            <Link href="/network" className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 font-semibold text-cyan-100 hover:bg-cyan-500/20">🩵 The Sovereign network — 20 signed agents</Link>
+            <Link href="/watchdog-map" className="rounded-full border border-emerald-400/30 px-3 py-1.5 font-semibold text-emerald-100 hover:bg-white/5">◎ The live Watchdog</Link>
+            <Link href="/graph" className="rounded-full border border-emerald-400/30 px-3 py-1.5 font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</Link>
+          </div>
+
           {/* Choose Your Path - Role-based CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
