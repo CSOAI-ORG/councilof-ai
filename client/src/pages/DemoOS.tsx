@@ -32,6 +32,7 @@ const STEPS: Step[] = [
   { say: "Robotics and humanoids are coming fast - I map the R&D hubs building them, so governance is ready before they ship.", layer: { tag: "robotics", on: true }, fly: { lng: 20, lat: 30, height: 24000000 } },
   { say: "And I keep watch on AI security and the trending risks worldwide - the intel that matters, on one live map.", layer: { tag: "intel", on: true } },
   { say: "This is the AI economy itself - the compute that powers every model on earth, lit up in gold. Where compute concentrates, capability and risk concentrate. I watch it in real time and flag anything - a quake, an outage - that threatens the infrastructure your AI runs on.", layer: { tag: "compute", on: true }, fly: { lng: -40, lat: 35, height: 26000000 } },
+  { say: "And this is our own Sovereign network - twenty signed agents, from proofof.ai to safetyof.ai, each one accountable and each one arced back to a single council. This is the ecosystem, live: one crown, many agents, all sealed to Layer 0.", layer: { tag: "network", on: true }, fly: { lng: 2, lat: 52, height: 4200000 } },
   { say: "Here's why this changes everything. The barriers that stop most teams - hiring consultants, months of manual mapping, tools that don't talk to each other - I remove them. You start free, on open source, and scale only when you need to.", wins: [{ title: "Plans - start free", src: "/pricing", slot: "tr" }], full: true },
   { say: "The benefit is simple: comply once and I crosswalk it everywhere; run it hands-free while you get on with your work; and every decision is signed to Layer 0 - provable, not promised. One OS for all of AI governance.", full: true },
   { say: "Here's the whole OS at a glance - the Graph, the Council and the Watchdog, all open together, tiled like a real desktop, all on one brain.", wins: [{ title: "Governance Graph", src: "/graph?demo=a%20fintech%20in%20Singapore", slot: "tl" }, { title: "The Council", src: "/try?demo=a%20facial%20recognition%20system%20in%20public", slot: "tr" }, { title: "Global Watchdog", src: "/watchdog-map", slot: "br" }], full: true },
@@ -105,6 +106,7 @@ const GLOBE_LAYERS: { re: RegExp; tag: string; label: string }[] = [
   { re: /agent swarm|\bagents\b/i, tag: "swarm", label: "the agent swarm" },
   { re: /sovereign node|\bnodes\b|civili/i, tag: "nodes", label: "the sovereign nodes" },
   { re: /compute|datacenter|data cent|\bgpu\b|ai economy|ai infrastructure/i, tag: "compute", label: "the AI compute infrastructure" },
+  { re: /sovereign network|agent.?card|our (agents|network|ecosystem)|signed agents|the ecosystem/i, tag: "network", label: "the Sovereign network" },
 ];
 // Narration→globe bridge: as the Sovereign SAYS a word, the globe reacts in sync.
 // Two kinds: place words fly the camera; concept words light up the matching layer.
@@ -132,6 +134,7 @@ const BRIDGE_LAYER: { re: RegExp; tag: string }[] = [
   { re: /trending|news|intel/i, tag: "intel" },
   { re: /satellite|orbit/i, tag: "sats" },
   { re: /compute|datacenter|data cent|\bgpu\b|ai economy/i, tag: "compute" },
+  { re: /sovereign network|ecosystem|signed agents|agent card/i, tag: "network" },
   { re: /power|plant|infrastructure/i, tag: "plants" },
 ];
 

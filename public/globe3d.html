@@ -75,6 +75,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <div class="lyr" data-layer="robotics"><span class="sw"><i></i></span><span class="nm">Robotics R&D<small>humanoid hubs</small></span></div>
   <div class="lyr" data-layer="intel"><span class="sw"><i></i></span><span class="nm">AI security / trending<small>intel + news hubs</small></span></div>
   <div class="lyr" data-layer="compute"><span class="sw"><i></i></span><span class="nm">AI compute<small>the AI economy's substrate</small></span></div>
+  <div class="lyr" data-layer="network"><span class="sw"><i></i></span><span class="nm">Sovereign network<small>20 signed agents, one council</small></span></div>
   <div class="lyr" data-layer="sats"><span class="sw"><i></i></span><span class="nm">Satellites<small>orbital</small></span></div>
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
@@ -95,6 +96,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
   <span><i style="background:#fb923c"></i>AI-security</span>
   <span><i style="background:#6ee7b7"></i>Humanoids / agents</span>
   <span><i style="background:#fbbf24"></i>AI compute infrastructure</span>
+  <span><i style="background:#22d3ee"></i>Sovereign network</span>
 </div>
 <a id="back" href="/globe.html">← 2.5D map view</a>
 
@@ -127,6 +129,8 @@ var FORTUNE=[['Walmart',-94.2,36.4],['Amazon',-122.3,47.6],['Apple',-122.0,37.3]
 var CYBER=[['CISA',-77.09,38.88],['ENISA',23.73,37.98],['NCSC-UK',-0.13,51.5],['BSI-DE',7.1,50.73],['ANSSI-FR',2.31,48.86],['China',116.4,39.9],['Russia',37.6,55.75],['Israel',34.78,32.08],['DPRK',125.75,39.03],['Iran',51.39,35.69],['Ukraine',30.52,50.45],['Estonia',24.75,59.44]];
 var ROBOTICS=[['Boston',-71.06,42.36],['Bay Area',-122.14,37.44],['Austin',-97.74,30.27],['Tokyo',139.69,35.68],['Seoul',126.98,37.57],['Shenzhen',114.06,22.54],['Zurich',8.54,47.37],['Shanghai',121.47,31.23],['Munich',11.58,48.14],['Waterloo',-80.52,43.46],['Oslo',10.75,59.91],['Pisa',10.4,43.72]];
 var INTEL=[['SF Bay',-122.27,37.8],['London',-0.12,51.5],['Tel Aviv',34.78,32.08],['Bengaluru',77.59,12.97],['Beijing',116.4,39.9],['Singapore',103.8,1.35],['Toronto',-79.38,43.65],['Paris',2.35,48.86],['Berlin',13.4,52.5],['Dubai',55.27,25.2],['Austin',-97.74,30.27],['Seattle',-122.33,47.6]];
+// Sovereign network — the signed agent-card domains, one council. [domain, lng, lat, role]. First entry is the crown/hub.
+var NETWORK=[['csoai.org',-0.12,51.50,'the standards crown'],['councilof.ai',-0.02,51.62,'BFT council'],['meok.ai',-0.24,51.42,'sovereign brain'],['proofof.ai',2.35,48.86,'deepfake & identity proof'],['safetyof.ai',4.90,52.37,'AI safety'],['accountabilityof.ai',8.68,50.11,'accountability'],['ethicalgovernanceof.ai',7.44,46.95,'ethical governance'],['dataprivacyof.ai',6.13,46.20,'data privacy'],['careshield.ai',-3.19,55.95,'care & safeguarding'],['diyhelp.ai',-1.26,51.75,'guided help'],['grabhire.ai',0.12,52.20,'hire marketplace'],['planthire.ai',-2.24,53.48,'plant hire'],['muckaway.ai',-1.90,52.48,'logistics'],['koikeeper.ai',-1.55,53.80,'koi care'],['fishkeeper.ai',-2.58,51.45,'aquatics'],['optimobile.ai',-4.25,55.86,'mobile optics'],['pokerhud.ai',-6.26,53.35,'decision HUD'],['cobolbridge.ai',18.06,59.33,'legacy bridge'],['wowmcp.ai',12.57,55.68,'MCP tooling'],['templeman-opticians.com',-0.75,51.90,'optical practice']];
 // AI compute infrastructure — the physical substrate of the AI economy. [name, lng, lat, kind]
 var COMPUTE=[['N. Virginia',-77.46,39.02,'hyperscale'],['Oregon',-121.18,45.63,'hyperscale'],['Bay Area',-121.96,37.35,'AI lab + cloud'],['Phoenix',-112.07,33.45,'fab + DC'],['Dublin',-6.26,53.35,'EU cloud'],['Frankfurt',8.68,50.11,'EU cloud'],['London',-0.13,51.51,'cloud + lab'],['Paris',2.35,48.86,'AI lab'],['Stockholm',18.06,59.33,'green compute'],['Tel Aviv',34.78,32.08,'AI R&D'],['Bengaluru',77.59,12.97,'cloud + AI'],['Mumbai',72.88,19.08,'cloud'],['Singapore',103.82,1.35,'APAC hub'],['Tokyo',139.69,35.68,'cloud + robotics'],['Seoul',126.98,37.57,'chip + AI'],['Beijing',116.4,39.9,'AI lab + cloud'],['Shanghai',121.47,31.23,'AI + fab'],['Sydney',151.21,-33.87,'cloud'],['Sao Paulo',-46.63,-23.55,'LatAm hub'],['Toronto',-79.38,43.65,'AI research']];
 
@@ -255,6 +259,17 @@ if(viewer){
       description:'<b>'+c[0]+'</b><br>AI compute hub — '+c[3]+'<br><i>Governance relevance: where compute concentrates, AI capability and AI risk concentrate.</i>' });
     viewer.entities.add({ layerTag:'compute', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],18000),
       ellipse:{ semiMinorAxis:200000, semiMajorAxis:200000, height:18000, material:Cesium.Color.fromCssColorString('#fbbf24').withAlpha(0.12) } });
+  });
+  // ----- Sovereign network (signed agent-card domains, arced to the crown), hidden by default -----
+  var netHub=NETWORK[0];
+  NETWORK.forEach(function(a,i){
+    var isHub=(i===0);
+    viewer.entities.add({ layerTag:'network', show:false, position:Cesium.Cartesian3.fromDegrees(a[1],a[2],16000),
+      point:{pixelSize:isHub?10:6, color:Cesium.Color.fromCssColorString(isHub?'#fbbf24':'#22d3ee'), outlineColor:Cesium.Color.fromCssColorString('#042f2e'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.4,2e7,.4)},
+      label:{ text:a[0], font:(isHub?'700 12px':'600 10px')+' system-ui', fillColor:Cesium.Color.fromCssColorString(isHub?'#fde68a':'#a5f3fc'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#04201f').withAlpha(.7), pixelOffset:new Cesium.Cartesian2(0,-14), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,1.4e7,0), disableDepthTestDistance:Number.POSITIVE_INFINITY },
+      description:'<b>'+a[0]+'</b><br>'+a[3]+'<br><i>A signed agent in the Sovereign network — every action sealed to Layer 0.</i>' });
+    if(!isHub) viewer.entities.add({ layerTag:'network', show:false,
+      polyline:{ positions:Cesium.Cartesian3.fromDegreesArrayHeights([a[1],a[2],16000, netHub[1],netHub[2],16000]), width:1.4, material:new Cesium.PolylineGlowMaterialProperty({glowPower:.2, color:Cesium.Color.fromCssColorString('#22d3ee').withAlpha(.5)}) } });
   });
 
   // ----- Ontology layer: every governed object and how it RELATES (Palantir-style) -----
