@@ -4,6 +4,7 @@
  */
 
 import { motion } from "framer-motion";
+import SovereignSpot from "@/components/SovereignSpot";
 import {
   Shield, AlertTriangle, CheckCircle2, Clock, Scale, FileText,
   BookOpen, ArrowRight, ExternalLink, Calendar, Euro, Building2,
@@ -1000,6 +1001,9 @@ export default function EUAIActGuide() {
           </motion.div>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="the EU AI Act — obligations, timelines and getting compliant" layer="frameworks" suggest="What must a high-risk AI provider do before the EU AI Act deadlines?" />
+      </div></section>
     </div>
   );
 }

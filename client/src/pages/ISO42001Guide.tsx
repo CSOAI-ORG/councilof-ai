@@ -4,6 +4,7 @@
  */
 
 import { motion } from "framer-motion";
+import SovereignSpot from "@/components/SovereignSpot";
 import {
   Award, CheckCircle2, Shield, FileText, Building2, Globe,
   BookOpen, ArrowRight, ExternalLink, Layers, RefreshCw, Target,
@@ -1139,6 +1140,9 @@ export default function ISO42001Guide() {
           </motion.div>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="ISO/IEC 42001 — building an AI management system" layer="frameworks" suggest="What does an ISO 42001 AI management system require?" />
+      </div></section>
     </div>
   );
 }

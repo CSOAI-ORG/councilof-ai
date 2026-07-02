@@ -4,6 +4,7 @@
  */
 
 import { motion } from "framer-motion";
+import SovereignSpot from "@/components/SovereignSpot";
 import {
   Shield, CheckCircle2, AlertTriangle, FileText, Building2, Globe,
   BookOpen, ArrowRight, ExternalLink, Layers, Network, Eye,
@@ -1163,6 +1164,9 @@ export default function TC260Guide() {
           </motion.div>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="China's TC260 AI Safety Governance Framework" layer="regulators" suggest="How does China's TC260 framework govern generative AI?" />
+      </div></section>
     </div>
   );
 }

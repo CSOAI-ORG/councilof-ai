@@ -4,6 +4,7 @@
  */
 
 import { motion } from "framer-motion";
+import SovereignSpot from "@/components/SovereignSpot";
 import {
   Shield, CheckCircle2, Target, BarChart3, Cog, FileText,
   BookOpen, ArrowRight, ExternalLink, Layers, Network, Eye,
@@ -1121,6 +1122,9 @@ export default function NISTAIRMFGuide() {
           </motion.div>
         </div>
       </section>
+      <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-5xl px-6">
+        <SovereignSpot topic="the NIST AI Risk Management Framework — Govern/Map/Measure/Manage" layer="frameworks" suggest="How do I operationalise the NIST AI RMF functions?" />
+      </div></section>
     </div>
   );
 }
