@@ -55,6 +55,23 @@ const STEPS: Step[] = [
 
 const BOOT = ["Establishing governed link", "Loading Sovereign Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "33-agent BFT council online", "Care-floor engaged"];
 
+// Navigation surfaces for the OS drawer + bottom bar (end-user tool navigation).
+const NAV_GROUPS: { g: string; items: { n: string; src: string }[] }[] = [
+  { g: "Govern", items: [{ n: "Governance Graph", src: "/graph" }, { n: "The Council", src: "/try" }, { n: "Sov Space", src: "/sov-space" }, { n: "Framework Hive", src: "/hive" }, { n: "Regulator Atlas", src: "/regulators" }] },
+  { g: "Protect & watch", items: [{ n: "Global Watchdog", src: "/watchdog-map" }, { n: "God's Eye cyber scan", src: "/scan" }, { n: "Personal Protection", src: "/protect" }] },
+  { g: "Ecosystem", items: [{ n: "Sovereign Network", src: "/network" }, { n: "The Ontology", src: "/ontology" }, { n: "Signed System Card", src: "/system-card" }, { n: "Why CSOAI", src: "/why" }, { n: "Competitor battlecards", src: "/competitors" }] },
+  { g: "Build & run", items: [{ n: "Tool Commons (377)", src: "/tool-commons" }, { n: "OSCAL Studio", src: "/oscal" }, { n: "Command Center", src: "/command-center" }, { n: "Plans & pricing", src: "/plans" }, { n: "Full OS launcher", src: "/os" }] },
+];
+const NAV_LAYERS: { n: string; tag: string }[] = [
+  { n: "Frameworks", tag: "frameworks" }, { n: "Regulators", tag: "regulators" }, { n: "Governments", tag: "gov" }, { n: "Fortune / companies", tag: "fortune" }, { n: "Cyber / CNI", tag: "cyber" }, { n: "AI compute", tag: "compute" }, { n: "AI labs & safety", tag: "labs" }, { n: "Autonomous systems", tag: "auton" }, { n: "Sovereign network", tag: "network" }, { n: "Robotics", tag: "robotics" }, { n: "Humanoids", tag: "humanoids" }, { n: "AI-security intel", tag: "intel" }, { n: "Ontology", tag: "ontology" }, { n: "Cross-region mesh", tag: "arcs" },
+];
+const NAV_SHOW: { n: string; cmd: any }[] = [
+  { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ BFT council spiral", cmd: { cmd: "bftSpiral" } }, { n: "🌈 Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◱ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
+];
+const BOTTOM_NAV: { n: string; src: string; g: string }[] = [
+  { n: "Graph", src: "/graph", g: "◎" }, { n: "Council", src: "/try", g: "⚖" }, { n: "Hive", src: "/hive", g: "⬡" }, { n: "Watchdog", src: "/watchdog-map", g: "👁" }, { n: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "🗺" }, { n: "Network", src: "/network", g: "◇" }, { n: "OS", src: "/os", g: "⊞" },
+];
+
 function slotStyle(slot: Slot, solo: boolean): any {
   if (solo && slot === "tr") return { right: 24, top: 72, width: "46%", maxWidth: 560, height: "54vh" };
   if (slot === "tr") return { right: 20, top: 72, width: "38%", maxWidth: 460, height: "40vh" };
@@ -167,6 +184,9 @@ export default function DemoOS() {
   const [booting, setBooting] = useState(true);
   const [bootN, setBootN] = useState(0);
   const [gate, setGate] = useState(false);
+  const [drawer, setDrawer] = useState(false);
+
+  function openTool(title: string, src: string) { setWins([{ title, src, slot: "c" }]); setWinsShow(true); setWinMin(false); setDrawer(false); }
 
   async function allowVoice() { try { await (navigator as any).mediaDevices.getUserMedia({ audio: true }); } catch (e) {} setGate(false); }
 
@@ -338,6 +358,68 @@ export default function DemoOS() {
       )}
 
       {geoLabel && (<div className="absolute left-1/2 top-20 z-30 -translate-x-1/2 rounded-full border border-emerald-400/30 bg-black/50 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-200/90 backdrop-blur">◎ {geoLabel}</div>)}
+
+      {/* Hamburger — opens the white-branded all-tools drawer */}
+      {mode !== null && !booting && (
+        <button onClick={() => setDrawer(true)} title="All tools & layers" className="absolute right-4 top-4 z-40 flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-bold text-gray-900 shadow-lg hover:bg-gray-100">
+          <span className="text-base leading-none">☰</span> Menu
+        </button>
+      )}
+
+      {/* White-branded drawer: every tool + layer + 3D showcase */}
+      {drawer && (
+        <div className="absolute inset-0 z-[60]" onClick={() => setDrawer(false)}>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+          <div onClick={(e) => e.stopPropagation()} className="absolute right-0 top-0 h-screen w-[360px] max-w-[92vw] overflow-y-auto bg-white text-gray-900 shadow-2xl">
+            <div className="sticky top-0 flex items-center gap-2 border-b border-gray-200 bg-white px-4 py-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-sm font-bold text-white">◉</span>
+              <span className="font-bold">CSOAI · AI OS</span>
+              <button onClick={() => setDrawer(false)} className="ml-auto rounded-lg px-2 py-1 text-gray-400 hover:bg-gray-100">✕</button>
+            </div>
+            <div className="p-4">
+              {NAV_GROUPS.map((grp) => (
+                <div key={grp.g} className="mb-4">
+                  <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">{grp.g}</div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {grp.items.map((it) => (
+                      <button key={it.src} onClick={() => openTool(it.n, it.src)} className="rounded-lg border border-gray-200 px-2.5 py-2 text-left text-[12px] font-semibold text-gray-800 hover:border-emerald-400 hover:bg-emerald-50">{it.n}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div className="mb-4">
+                <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Globe layers</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {NAV_LAYERS.map((l) => (
+                    <button key={l.tag} onClick={() => post({ cmd: "layer", tag: l.tag, on: true })} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-700 hover:border-emerald-400 hover:bg-emerald-50">{l.n}</button>
+                  ))}
+                  <button onClick={() => NAV_LAYERS.forEach((l) => post({ cmd: "layer", tag: l.tag, on: false }))} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-500 hover:bg-gray-100">clear all</button>
+                </div>
+              </div>
+              <div className="mb-2">
+                <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">3D showcases</div>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {NAV_SHOW.map((s) => (
+                    <button key={s.n} onClick={() => { post(s.cmd); setDrawer(false); }} className="rounded-lg border border-gray-200 px-2.5 py-2 text-left text-[12px] font-semibold text-gray-800 hover:border-emerald-400 hover:bg-emerald-50">{s.n}</button>
+                  ))}
+                </div>
+              </div>
+              <a href="/os" className="mt-3 block rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-emerald-500">Open the full OS launcher →</a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom quick-nav bar */}
+      {mode !== null && !booting && !ending && (
+        <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1 rounded-2xl border border-white/15 bg-[#04120c]/90 px-2 py-1.5 backdrop-blur-xl" style={{ maxWidth: "calc(100vw - 460px)" }}>
+          {BOTTOM_NAV.map((b) => (
+            <button key={b.src} onClick={() => openTool(b.n, b.src)} title={b.n} className="flex flex-col items-center rounded-lg px-2.5 py-1 text-emerald-200/80 hover:bg-white/10">
+              <span className="text-sm leading-none">{b.g}</span><span className="mt-0.5 text-[9px] font-semibold">{b.n}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
 
 
