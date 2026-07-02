@@ -185,8 +185,15 @@ export default function DemoOS() {
   const [bootN, setBootN] = useState(0);
   const [gate, setGate] = useState(false);
   const [drawer, setDrawer] = useState(false);
+  const [winH, setWinH] = useState(52); // tool-window height in vh — drag to resize
 
   function openTool(title: string, src: string) { setWins([{ title, src, slot: "c" }]); setWinsShow(true); setWinMin(false); setDrawer(false); }
+  function startResize(e: React.PointerEvent) {
+    e.preventDefault(); const vh = window.innerHeight;
+    const move = (ev: PointerEvent) => { const pct = Math.min(82, Math.max(24, (ev.clientY / vh) * 100)); setWinH(pct); };
+    const up = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); };
+    window.addEventListener("pointermove", move); window.addEventListener("pointerup", up);
+  }
 
   async function allowVoice() { try { await (navigator as any).mediaDevices.getUserMedia({ audio: true }); } catch (e) {} setGate(false); }
 
@@ -428,7 +435,7 @@ export default function DemoOS() {
       {mode !== null && (
         <div ref={chatRef} className="absolute right-0 top-0 z-30 flex h-screen w-[420px] max-w-[94vw] flex-col border-l border-emerald-400/30 bg-[#04120c]/95 backdrop-blur-xl shadow-2xl">
           {winsShow && wins.length > 0 && (
-            <div ref={win0Ref} className="flex flex-col border-b border-emerald-500/25" style={{ height: winMin ? 38 : "52vh" }}>
+            <div ref={win0Ref} className="flex flex-col border-b border-emerald-500/25" style={{ height: winMin ? 38 : winH + "vh" }}>
               <div className="flex items-center gap-2 bg-[#03110b] px-3 py-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-rose-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
                 {wins.length > 1 ? (
@@ -440,6 +447,7 @@ export default function DemoOS() {
                 <button onClick={() => setWins([])} title="Close" className="rounded px-1.5 text-emerald-300/70 hover:bg-white/5">✕</button>
               </div>
               {!winMin && <iframe key={(wins[winTab] || wins[0]).src} src={(wins[winTab] || wins[0]).src} title={(wins[winTab] || wins[0]).title} className="w-full flex-1 border-0 bg-[#03110b]" />}
+              {!winMin && <div onPointerDown={startResize} title="Drag to resize" className="flex h-2 cursor-row-resize items-center justify-center bg-emerald-500/15 hover:bg-emerald-400/40"><span className="h-0.5 w-8 rounded bg-emerald-300/50" /></div>}
             </div>
           )}
           <div className="flex items-center gap-2 border-b border-emerald-500/15 px-4 py-2.5">
