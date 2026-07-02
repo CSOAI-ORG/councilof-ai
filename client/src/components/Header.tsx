@@ -267,7 +267,7 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center" ref={dropdownRef}>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 xl:gap-3">
               {/* Home Link */}
               <a
                 href="/"
@@ -279,8 +279,6 @@ export function Header() {
               >
                 Home
               </a>
-
-              <a href="/try" className={`px-3 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${isActive('/try') ? 'text-white bg-emerald-600' : 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100'}`}>⚖ Try the Council</a>
 
               {/* Main Nav Items */}
               {navigation.map((item) => (
@@ -376,7 +374,7 @@ export function Header() {
               href="/os"
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
             >
-              <span className="text-base leading-none">⊞</span> Open OS
+              <span className="text-base leading-none">⊞</span> AI OS
             </a>
 
             {user ? (
