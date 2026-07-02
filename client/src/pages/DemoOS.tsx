@@ -169,8 +169,8 @@ export default function DemoOS() {
   async function allowVoice() { try { await (navigator as any).mediaDevices.getUserMedia({ audio: true }); } catch (e) {} setGate(false); }
 
   useEffect(() => {
-    const iv = setInterval(() => setBootN((n) => n + 1), 360);
-    const done = setTimeout(() => { clearInterval(iv); setBooting(false); setTimeout(() => { if (i === -1) start("demo"); }, 300); }, 360 * (BOOT.length + 1) + 400);
+    const iv = setInterval(() => setBootN((n) => n + 1), 190);
+    const done = setTimeout(() => { clearInterval(iv); setBooting(false); setTimeout(() => { if (i === -1) start("demo"); }, 120); }, 190 * (BOOT.length + 1) + 200);
     return () => { clearInterval(iv); clearTimeout(done); };
   }, []);
 
