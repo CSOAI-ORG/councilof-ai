@@ -10,7 +10,7 @@ const GW = "https://os.meok.ai/api";
 
 type Slot = "tr" | "tl" | "br" | "c";
 type Win = { title: string; src: string; slot: Slot };
-type Step = { say: string; wins?: Win[]; fly?: { lng: number; lat: number; height: number }; layer?: { tag: string; on: boolean }; home?: boolean; full?: boolean; neutralize?: boolean; rearm?: boolean };
+type Step = { say: string; wins?: Win[]; fly?: { lng: number; lat: number; height: number }; layer?: { tag: string; on: boolean }; home?: boolean; full?: boolean; neutralize?: boolean; rearm?: boolean; cmd?: any };
 
 const STEPS: Step[] = [
   { say: "Welcome. This is your CSOAI AI Operating System - live, on the world. I'm your Sovereign, and I'll show you everything. Just watch, and interrupt me any time." },
@@ -40,7 +40,9 @@ const STEPS: Step[] = [
   { say: "Under it all, a living mesh - cross-region handoffs, so a decision made anywhere is honoured everywhere.", layer: { tag: "arcs", on: true } },
   { say: "And the agents themselves - governed swarms across every hub, each one accountable, each one signed.", layer: { tag: "swarm", on: true } },
   { say: "Every framework lives where it's made - the EU AI Act in Brussels, NIST near Washington, PIPL in Beijing. Comply once, and I crosswalk it everywhere.", full: true, fly: { lng: 116.4, lat: 39.9, height: 2600000 } },
-  { say: "Now - the emergence dome. As you use the OS, your Sovereign learns you, and this living mirror of the world charges and hatches into your own AI character. Step inside.", wins: [{ title: "Emergence - the living dome", src: "/emergence", slot: "c" }], fly: { lng: 0, lat: 15, height: 16000000 } },
+  { say: "Now here's why we're a generation ahead. Watch our Byzantine council rise. Thirty-three sovereign agents, spiralling into consensus - no single model decides, a fault-tolerant council does, and every vote is held to a 0.95 care-floor. This is governance that can't be captured or bribed.", cmd: { cmd: "bftSpiral" }, full: true },
+  { say: "And beneath every agent, our Rainbow Stack - defence-in-depth in seven layers. Red attestation, orange identity, yellow transport, green access, blue payment, indigo memory, violet governance. Security woven through the whole spiral, not bolted on. No one else builds it this way.", cmd: { cmd: "rainbowStack" }, full: true },
+  { say: "Now - emergence. As you use the OS, your Sovereign learns you and hatches into your own digital sovereign twin - carrying a signed digital ID passport via proofof.ai. And you can mint the same: digital-passported agents for your enterprise or government, each one identified, accountable and Ed25519-signed to Layer 0.", cmd: { cmd: "clearViz" }, wins: [{ title: "Emergence - your digital sovereign twin", src: "/emergence", slot: "c" }], fly: { lng: 0, lat: 15, height: 16000000 } },
   { say: "Now the proof. This is ONE OS for agents AND humanoids - I track every single one, live and global.", layer: { tag: "humanoids", on: true }, fly: { lng: 10, lat: 25, height: 26000000 } },
   { say: "I map their environments by WiFi sensing, LoRa and Bluetooth mesh - consent-first, no private cameras - and every humanoid runs PDCA, simulating outcomes to pick the governed path.", full: true },
   { say: "Here's a humanoid on the ground in London. Let me bring up the local public street cam - live - so you can watch the real world and the AI economy moving in it.", wins: [{ title: "◉ Public street cam - London (live)", src: "/livecam.html?loc=London", slot: "tr" }], layer: { tag: "humanoids", on: true }, fly: { lng: -0.118, lat: 51.509, height: 60000 } },
@@ -255,6 +257,7 @@ export default function DemoOS() {
     if (s.fly) post({ cmd: "flyTo", ...s.fly, duration: 2.2 });
     if (s.rearm) post({ cmd: "rearm" });
     if (s.layer) post({ cmd: "layer", ...s.layer });
+    if (s.cmd) post(s.cmd);
     if (s.neutralize) { post({ cmd: "layer", tag: "threat", on: true }); setTimeout(() => post({ cmd: "neutralize" }), 1400); }
     if (s.home) post({ cmd: "home", duration: 2.5 });
     if (s.wins && s.wins.length) { say("sov", s.wins.length > 1 ? "Arranging " + s.wins.length + " windows for you." : "Opening " + s.wins[0].title + "."); openWins(s.wins); } else closeWins();

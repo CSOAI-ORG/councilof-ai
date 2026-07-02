@@ -193,6 +193,7 @@ if(viewer){
     }catch(e){}
   }
   window.__focusPulse=focusPulse;
+  function clearViz(){ var rm=[]; viewer.entities.values.forEach(function(e){ if(e.layerTag==='viz') rm.push(e); }); rm.forEach(function(e){ try{viewer.entities.remove(e);}catch(x){} }); }
 
   // ----- Sovereign nodes (points + labels) -----
   NODES.forEach(function(d){
@@ -434,6 +435,32 @@ if(viewer){
       }
       else if (m.cmd === 'layer') { var n=0,fx=null; viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag){ ent.show = !!m.on; if(m.on&&!fx&&ent.position){var cc=ent.position.getValue(Cesium.JulianDate.now()); if(cc){var carto=Cesium.Cartographic.fromCartesian(cc); fx=[Cesium.Math.toDegrees(carto.longitude),Cesium.Math.toDegrees(carto.latitude)];}} n++; } }); if(m.on&&fx&&window.__focusPulse) window.__focusPulse(fx[0],fx[1],m.col); }
       else if (m.cmd === 'lightup') { var tags=(m.tags)||['frameworks','regulators','gov','fortune','cyber','compute','network','intel','robotics','labs','auton','humanoids','ontology','arcs']; viewer.entities.values.forEach(function(ent){ if(tags.indexOf(ent.layerTag)>=0) ent.show=true; }); spinning=false; stopOrbit(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(8,30,22000000), orientation:{heading:Cesium.Math.toRadians(-10),pitch:Cesium.Math.toRadians(-80),roll:0}, duration:2.6}); }
+      else if (m.cmd === 'bftSpiral') {
+        clearViz(); spinning=false; stopOrbit();
+        var clng=(m.lng!=null)?Number(m.lng):-0.12, clat=(m.lat!=null)?Number(m.lat):51.5;
+        var N=33, base=140000, step=64000, turns=3, rad=3.4, pts=[];
+        for(var k=0;k<N;k++){ var a=(k/N)*Math.PI*2*turns, h=base+k*step, r=rad*(1-k/(N*1.5)); var lng=clng+r*Math.cos(a), lat=clat+r*Math.sin(a); pts.push([lng,lat,h]);
+          viewer.entities.add({layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(lng,lat,h), point:{pixelSize:7, color:Cesium.Color.fromCssColorString('#34d399'), outlineColor:Cesium.Color.fromCssColorString('#065f46'), outlineWidth:1}}); }
+        var mid=base+(N*step)/2;
+        pts.forEach(function(p,idx){ if(idx%2===0) viewer.entities.add({layerTag:'viz', polyline:{positions:Cesium.Cartesian3.fromDegreesArrayHeights([p[0],p[1],p[2], clng,clat,mid]), width:1, material:new Cesium.PolylineGlowMaterialProperty({glowPower:.25, color:Cesium.Color.fromCssColorString('#10b981').withAlpha(.35)})}}); });
+        var spine=[]; pts.forEach(function(p){ spine.push(p[0],p[1],p[2]); });
+        viewer.entities.add({layerTag:'viz', polyline:{positions:Cesium.Cartesian3.fromDegreesArrayHeights(spine), width:2.5, material:new Cesium.PolylineGlowMaterialProperty({glowPower:.3, color:Cesium.Color.fromCssColorString('#6ee7b7').withAlpha(.75)})}});
+        viewer.entities.add({layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(clng,clat,base+N*step+150000), label:{text:'Byzantine Council · 33 agents · BFT quorum · care-floor 0.95', font:'700 13px Inter,sans-serif', fillColor:Cesium.Color.fromCssColorString('#a7f3d0'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#05140d').withAlpha(.85), disableDepthTestDistance:Number.POSITIVE_INFINITY}});
+        viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(clng-6,clat-9,4400000), orientation:{heading:Cesium.Math.toRadians(12),pitch:Cesium.Math.toRadians(-26),roll:0}, duration:3.0});
+      }
+      else if (m.cmd === 'rainbowStack') {
+        clearViz(); spinning=false; stopOrbit();
+        var rlng=(m.lng!=null)?Number(m.lng):8, rlat=(m.lat!=null)?Number(m.lat):30;
+        var RB=[['#ef4444','Red · Attestation — Ed25519 sigils + x402 receipts'],['#f59e0b','Orange · Identity — W3C DID + Agent Cards'],['#eab308','Yellow · Transport — Noise + WireGuard'],['#22c55e','Green · Access — Cedar / OPA dual-policy'],['#3b82f6','Blue · Payment — x402 + AP2'],['#6366f1','Indigo · Memory — encrypted store + FTS'],['#a855f7','Violet · Governance — 13-framework engine']];
+        var per=46, rbase=150000, layerH=380000, rrad=2.7;
+        RB.forEach(function(c,li){ var lp=[];
+          for(var k=0;k<per;k++){ var a=(k/per)*Math.PI*2 + li*0.55, h=rbase+li*layerH+(k/per)*layerH*0.9; lp.push(rlng+rrad*Math.cos(a), rlat+rrad*Math.sin(a), h); }
+          viewer.entities.add({layerTag:'viz', polyline:{positions:Cesium.Cartesian3.fromDegreesArrayHeights(lp), width:5, material:new Cesium.PolylineGlowMaterialProperty({glowPower:.38, color:Cesium.Color.fromCssColorString(c[0]).withAlpha(.9)})}});
+          viewer.entities.add({layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(rlng+rrad+0.5,rlat,rbase+li*layerH+layerH*0.5), label:{text:c[1], font:'600 11px Inter,sans-serif', fillColor:Cesium.Color.fromCssColorString(c[0]), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#05080e').withAlpha(.85), disableDepthTestDistance:Number.POSITIVE_INFINITY}}); });
+        viewer.entities.add({layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(rlng,rlat,rbase+7*layerH+200000), label:{text:'The Rainbow Stack · defense-in-depth on every agent', font:'700 13px Inter,sans-serif', fillColor:Cesium.Color.WHITE, showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#111827').withAlpha(.82), disableDepthTestDistance:Number.POSITIVE_INFINITY}});
+        viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(rlng-7,rlat-10,4800000), orientation:{heading:Cesium.Math.toRadians(14),pitch:Cesium.Math.toRadians(-22),roll:0}, duration:3.0});
+      }
+      else if (m.cmd === 'clearViz') { clearViz(); }
       else if (m.cmd === 'spin') { spinning = !!m.on; if(m.on) stopOrbit(); }
       else if (m.cmd === 'home') { stopOrbit(); spinning = (m.on !== false); viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(20,28,26000000), orientation:{heading:0,pitch:Cesium.Math.toRadians(-88),roll:0}, duration: Number(m.duration)||2.4 }); }
       else if (m.cmd === 'neutralize') {
