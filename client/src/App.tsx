@@ -21,6 +21,7 @@ import Penalties from "./pages/Penalties";
 import NistVsEuAct from "./pages/NistVsEuAct";
 import Iso42001VsEuAct from "./pages/Iso42001VsEuAct";
 import SectorAct from "./pages/SectorAct";
+import Workbench from "./pages/Workbench";
 import AltPage from "./pages/AltPage";
 import EuActVsGdpr from "./pages/EuActVsGdpr";
 import ActTimeline from "./pages/ActTimeline";
@@ -412,6 +413,8 @@ function App() {
             <Route path="/policy-generator" component={PolicyGenerator} />
             <Route path="/mcp-fleet" component={McpFleet} />
             <Route path="/os" component={OsLauncher} />
+            <Route path="/workbench" component={Workbench} />
+            <Route path="/sov3" component={Workbench} />
             <Route path="/demo" component={DemoOS} />
             <Route path="/os-demo" component={DemoOS} />
             <Route path="/tour" component={DemoOS} />
