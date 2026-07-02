@@ -94,6 +94,7 @@ export default function OsLauncher() {
   const [asking, setAsking] = useState(false);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("All");
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const shown = useMemo(() => APPS.filter((a) => (cat === "All" || catOf(a.href) === cat) && (!q.trim() || (a.name + " " + a.desc).toLowerCase().includes(q.trim().toLowerCase()))), [q, cat]);
 
   async function runAsk() {
@@ -215,8 +216,12 @@ export default function OsLauncher() {
         {grouped ? (
           CATS.slice(1).map((c) => { const items = APPS.filter((a) => catOf(a.href) === c); if (!items.length) return null; return (
             <div key={c} className="mb-8">
-              <div className="mb-3 flex items-center gap-2"><h3 className="text-sm font-bold text-emerald-100">{c}</h3><span className="rounded-full border border-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300/50">{items.length}</span></div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{items.map(Tile)}</div>
+              <button onClick={() => setCollapsed((s) => ({ ...s, [c]: !s[c] }))} className="mb-3 flex w-full items-center gap-2 text-left hover:opacity-90">
+                <span className={"text-emerald-300/70 transition-transform " + (collapsed[c] ? "" : "rotate-90")}>▸</span>
+                <h3 className="text-sm font-bold text-emerald-100">{c}</h3>
+                <span className="rounded-full border border-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300/50">{items.length}</span>
+              </button>
+              {!collapsed[c] && <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{items.map(Tile)}</div>}
             </div>
           ); })
         ) : shown.length ? (

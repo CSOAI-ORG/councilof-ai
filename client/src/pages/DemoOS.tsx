@@ -68,6 +68,16 @@ const NAV_LAYERS: { n: string; tag: string }[] = [
 const NAV_SHOW: { n: string; cmd: any }[] = [
   { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ BFT council spiral", cmd: { cmd: "bftSpiral" } }, { n: "🌈 Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◱ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
 ];
+// Sovereign Network directory — signed agent domains, opened in a new tab.
+const NET_DOMAINS: { d: string; n: string }[] = [
+  { d: "councilof.ai", n: "Council" }, { d: "csoai.org", n: "CSOAI" }, { d: "proofof.ai", n: "Proof-of" },
+  { d: "safetyof.ai", n: "Safety-of" }, { d: "accountabilityof.ai", n: "Accountability" }, { d: "ethicalgovernanceof.ai", n: "Ethical gov" },
+  { d: "dataprivacyof.ai", n: "Data privacy" }, { d: "careshield.ai", n: "CareShield" }, { d: "meok.ai", n: "MEOK brain" },
+  { d: "wowmcp.ai", n: "WOW MCP" }, { d: "diyhelp.ai", n: "DIY Help" }, { d: "grabhire.ai", n: "GrabHire" },
+  { d: "planthire.ai", n: "PlantHire" }, { d: "muckaway.ai", n: "Muckaway" }, { d: "optimobile.ai", n: "Optimobile" },
+  { d: "cobolbridge.ai", n: "COBOL Bridge" }, { d: "pokerhud.ai", n: "PokerHUD" }, { d: "fishkeeper.ai", n: "Fishkeeper" },
+  { d: "koikeeper.ai", n: "Koikeeper" }, { d: "templeman-opticians.com", n: "Templeman" },
+];
 const BOTTOM_NAV: { n: string; src: string; g: string }[] = [
   { n: "Graph", src: "/graph", g: "◎" }, { n: "Council", src: "/try", g: "⚖" }, { n: "Hive", src: "/hive", g: "⬡" }, { n: "Watchdog", src: "/watchdog-map", g: "👁" }, { n: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "🗺" }, { n: "Network", src: "/network", g: "◇" }, { n: "OS", src: "/os", g: "⊞" },
 ];
@@ -401,7 +411,10 @@ export default function DemoOS() {
                   <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">{grp.g}</div>
                   <div className="grid grid-cols-2 gap-1.5">
                     {items.map((it) => (
-                      <button key={it.src} onClick={() => openTool(it.n, it.src)} className="rounded-lg border border-gray-200 px-2.5 py-2 text-left text-[12px] font-semibold text-gray-800 hover:border-emerald-400 hover:bg-emerald-50">{it.n}</button>
+                      <div key={it.src} className="flex items-stretch gap-1">
+                        <button onClick={() => openTool(it.n, it.src)} className="flex-1 rounded-lg border border-gray-200 px-2.5 py-2 text-left text-[12px] font-semibold text-gray-800 hover:border-emerald-400 hover:bg-emerald-50" title="Open docked in the OS">{it.n}</button>
+                        <button onClick={() => window.open(it.src, "_blank")} title="Open in a new tab" className="rounded-lg border border-gray-200 px-1.5 text-[13px] leading-none text-gray-400 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-600">↗</button>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -415,6 +428,17 @@ export default function DemoOS() {
                   <button onClick={() => NAV_LAYERS.forEach((l) => post({ cmd: "layer", tag: l.tag, on: false }))} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-500 hover:bg-gray-100">clear all</button>
                 </div>
               </div>
+              {(() => { const nd = NET_DOMAINS.filter((x) => !drawerQ.trim() || (x.n + " " + x.d).toLowerCase().includes(drawerQ.trim().toLowerCase())); if (!nd.length) return null; return (
+              <div className="mb-4">
+                <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Sovereign network <span className="rounded-full border border-emerald-200 px-1.5 text-[9px] text-emerald-500">{NET_DOMAINS.length} signed</span></div>
+                <div className="flex flex-wrap gap-1.5">
+                  {nd.map((x) => (
+                    <a key={x.d} href={"https://" + x.d} target="_blank" rel="noreferrer" title={x.d} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-700 hover:border-emerald-400 hover:bg-emerald-50">{x.n} <span className="text-gray-400">↗</span></a>
+                  ))}
+                  <a href="/network" className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-100">Full directory →</a>
+                </div>
+              </div>
+              ); })()}
               <div className="mb-2">
                 <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">3D showcases</div>
                 <div className="grid grid-cols-2 gap-1.5">
