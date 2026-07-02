@@ -191,15 +191,72 @@ export async function fetchAiGovNews(max = 24): Promise<LiveSignal[]> {
   return out;
 }
 
+// ---- KEYED feeds (Phase 6) — light up when a key is supplied ---------------
+// These stay dark (return []) until the relevant env key is set, by design.
+// Set VITE_ACLED_KEY + VITE_ACLED_EMAIL and/or VITE_FIRMS_MAP_KEY at build time.
+const ENV: any = (import.meta as any).env || {};
+
+// ACLED — live armed-conflict + unrest events, framed as geopolitical risk to
+// AI infrastructure when near a compute hub.
+export async function fetchAcledConflict(): Promise<LiveSignal[]> {
+  const key = ENV.VITE_ACLED_KEY, email = ENV.VITE_ACLED_EMAIL;
+  if (!key || !email) return []; // dark until keyed
+  const cached = cacheGet<LiveSignal[]>("acled", 30 * 60 * 1000);
+  if (cached) return cached;
+  const url = "https://api.acleddata.com/acled/read?key=" + encodeURIComponent(key) + "&email=" + encodeURIComponent(email) + "&limit=200&event_date=" + new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10) + "|" + new Date().toISOString().slice(0, 10) + "&event_date_where=BETWEEN";
+  const d = await getJSON(url);
+  const rows = d && Array.isArray(d.data) ? d.data : [];
+  const out: LiveSignal[] = [];
+  for (const r of rows) {
+    const lat = parseFloat(r.latitude), lng = parseFloat(r.longitude);
+    if (!isFinite(lat) || !isFinite(lng)) continue;
+    const near = nearestComputeHub(lat, lng);
+    if (!near || near.km > 400) continue; // only conflict threatening compute
+    out.push({ source: "ACLED", category: "systemic", note: (r.event_type || "Conflict event") + " near " + near.hub.name + " — geopolitical risk to AI infrastructure. " + String(r.notes || "").slice(0, 140), lat, lng, region: r.country, severity: "elevated", at: Date.parse(r.event_date) || Date.now() });
+  }
+  cacheSet("acled", out);
+  return out;
+}
+
+// NASA FIRMS — live fire/thermal detections; physical risk to compute when near a hub.
+export async function fetchFirmsFires(): Promise<LiveSignal[]> {
+  const key = ENV.VITE_FIRMS_MAP_KEY;
+  if (!key) return []; // dark until keyed
+  const cached = cacheGet<LiveSignal[]>("firms", 30 * 60 * 1000);
+  if (cached) return cached;
+  // CSV: lat,lon,bright,scan,track,acq_date,... — global VIIRS last 1 day
+  try {
+    const r = await fetch("https://firms.modaps.eosdis.nasa.gov/api/area/csv/" + encodeURIComponent(key) + "/VIIRS_SNPP_NRT/world/1");
+    if (!r.ok) return [];
+    const txt = await r.text();
+    const lines = txt.trim().split("\n"); const head = (lines.shift() || "").split(",");
+    const li = head.indexOf("latitude"), gi = head.indexOf("longitude");
+    const out: LiveSignal[] = [];
+    for (const ln of lines.slice(0, 3000)) {
+      const c = ln.split(","); const lat = parseFloat(c[li]), lng = parseFloat(c[gi]);
+      if (!isFinite(lat) || !isFinite(lng)) continue;
+      const near = nearestComputeHub(lat, lng);
+      if (!near || near.km > 120) continue; // only fires very close to a hub
+      out.push({ source: "NASA FIRMS", category: "systemic", note: "Active fire detection ~" + Math.round(near.km) + "km from " + near.hub.name + " — physical risk to AI compute (power/cooling/connectivity).", lat, lng, region: near.hub.region, severity: "elevated", at: Date.now() });
+    }
+    const uniq = out.filter((s, i, a) => a.findIndex((x) => x.note === s.note) === i);
+    cacheSet("firms", uniq);
+    return uniq;
+  } catch { return []; }
+}
+
 // ---- unified pull ----------------------------------------------------------
 // One call the OS can lean on: real AI-governance + AI-infrastructure signals,
 // deduped and sorted newest-first. Degrades gracefully — any dead feed just
-// contributes nothing, never an error.
+// contributes nothing, never an error. Keyed feeds (ACLED/FIRMS) join in
+// automatically once their env keys are set.
 export async function fetchLiveGovSignals(): Promise<LiveSignal[]> {
   const results = await Promise.allSettled([
     fetchComputeQuakeRisk(),
     fetchComputeEnvRisk(),
     fetchAiGovNews(),
+    fetchAcledConflict(),
+    fetchFirmsFires(),
   ]);
   const all: LiveSignal[] = [];
   for (const r of results) if (r.status === "fulfilled") all.push(...r.value);

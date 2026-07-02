@@ -197,6 +197,7 @@ import GovGraph from "./pages/GovGraph";
 import NetworkPage from "./pages/NetworkPage";
 import RegulatorAtlas from "./pages/RegulatorAtlas";
 import CyberScan from "./pages/CyberScan";
+import Competitors from "./pages/Competitors";
 import EmergencePage from "./pages/EmergencePage";
 import ToolCommons from "./pages/ToolCommons";
 import OpenMedia from "./pages/OpenMedia";
@@ -371,6 +372,8 @@ function App() {
           <Route path="/gods-eye" component={CyberScan} />
           <Route path="/cyber-scan" component={CyberScan} />
           <Route path="/usp" component={WhyCSOAI} />
+          <Route path="/competitors" component={Competitors} />
+          <Route path="/battlecards" component={Competitors} />
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />

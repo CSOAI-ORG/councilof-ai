@@ -107,6 +107,7 @@ const GLOBE_LAYERS: { re: RegExp; tag: string; label: string }[] = [
   { re: /sovereign node|\bnodes\b|civili/i, tag: "nodes", label: "the sovereign nodes" },
   { re: /compute|datacenter|data cent|\bgpu\b|ai economy|ai infrastructure/i, tag: "compute", label: "the AI compute infrastructure" },
   { re: /sovereign network|agent.?card|our (agents|network|ecosystem)|signed agents|the ecosystem/i, tag: "network", label: "the Sovereign network" },
+  { re: /regulator|regime|authorit|watchdog seat|regulatory/i, tag: "regulators", label: "the regulators, at their seats" },
 ];
 // Narration→globe bridge: as the Sovereign SAYS a word, the globe reacts in sync.
 // Two kinds: place words fly the camera; concept words light up the matching layer.

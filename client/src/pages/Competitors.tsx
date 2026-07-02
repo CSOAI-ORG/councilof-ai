@@ -1,0 +1,85 @@
+import { useEffect } from "react";
+import { BATTLECARDS, MARKET, type Battlecard } from "../data/competitors";
+
+// /competitors — live-researched battlecards. Cited, dated intel on the AI-
+// governance incumbents and the specific CSOAI wedge for each. Compiled from a
+// web-research pass mid-2026; figures indicative, verify for procurement.
+
+function Card({ b }: { b: Battlecard }) {
+  return (
+    <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
+      <div className="text-xl font-black text-emerald-50">{b.name}</div>
+      <p className="mt-1 text-sm text-emerald-100/75">{b.positioning}</p>
+
+      <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/70">The facts (cited)</div>
+      <ul className="mt-1.5 space-y-1 text-[13px] text-emerald-100/80">
+        {b.facts.map((f, i) => (<li key={i} className="flex gap-2"><span className="text-emerald-400/60">·</span><span>{f}</span></li>))}
+      </ul>
+
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-sky-300/70">Strengths</div>
+          <ul className="mt-1.5 space-y-1 text-[12px] text-emerald-100/70">{b.strengths.map((s, i) => (<li key={i} className="flex gap-2"><span className="text-sky-400/60">+</span><span>{s}</span></li>))}</ul>
+        </div>
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-rose-300/70">Where they're beatable</div>
+          <ul className="mt-1.5 space-y-1 text-[12px] text-emerald-100/70">{b.weaknesses.map((w, i) => (<li key={i} className="flex gap-2"><span className="text-rose-400/60">−</span><span>{w}</span></li>))}</ul>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3">
+        <div className="text-[11px] font-bold uppercase tracking-wide text-emerald-300/80">How CSOAI wins</div>
+        <p className="mt-1 text-[13px] text-emerald-50/90">{b.wedge}</p>
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        {b.sources.map((s, i) => (<a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="rounded-full border border-emerald-500/25 px-2.5 py-1 text-[10px] text-emerald-300/70 hover:bg-white/5">↗ {s.label}</a>))}
+      </div>
+    </div>
+  );
+}
+
+export default function Competitors() {
+  useEffect(() => { document.title = "AI-governance battlecards — CSOAI vs Vanta, Credo AI, OneTrust (cited)"; }, []);
+  return (
+    <div className="min-h-screen bg-[#03110b] text-emerald-50">
+      <section className="relative overflow-hidden border-b border-emerald-500/15">
+        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(16,185,129,.16), transparent 60%)" }} />
+        <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · competitive battlecards</p>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Know the field. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Win the deal.</span></h1>
+          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Live-researched, cited intel on the AI-governance incumbents — their funding, customers, and the exact gaps where CSOAI's open, signed, council-driven OS wins.</p>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 py-8">
+        <div className="rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-emerald-500/10 to-transparent p-5">
+          <div className="text-[11px] font-bold uppercase tracking-wide text-emerald-300/70">The market (2026)</div>
+          <div className="mt-2 grid gap-4 sm:grid-cols-3">
+            <div><div className="text-2xl font-black text-emerald-200">{MARKET.size2026}</div><div className="text-xs text-emerald-100/70">market in 2026 (up from {MARKET.size2025} in 2025)</div></div>
+            <div><div className="text-2xl font-black text-emerald-200">{MARKET.cagr}</div><div className="text-xs text-emerald-100/70">CAGR as EU AI Act, NIS2, DORA, CRA bite</div></div>
+            <div><div className="text-2xl font-black text-emerald-200">30+</div><div className="text-xs text-emerald-100/70">tools crowding in — SMB segment underserved</div></div>
+          </div>
+          <p className="mt-2 text-[13px] text-emerald-100/75">{MARKET.note}</p>
+          <div className="mt-2 flex flex-wrap gap-2">{MARKET.sources.map((s, i) => (<a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="rounded-full border border-emerald-500/25 px-2.5 py-1 text-[10px] text-emerald-300/60 hover:bg-white/5">↗ {s.label}</a>))}</div>
+        </div>
+
+        <div className="mt-6 grid gap-5 lg:grid-cols-3">{BATTLECARDS.map((b) => <Card key={b.slug} b={b} />)}</div>
+
+        <div className="mt-6 rounded-2xl border border-amber-400/25 bg-amber-400/5 p-4 text-center text-xs text-amber-100/70">
+          Figures compiled from public sources in a mid-2026 research pass — indicative and time-sensitive. Verify current numbers before quoting in a sales or procurement context.
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-6 text-center">
+          <div className="text-sm font-bold text-emerald-100">The one-line pitch</div>
+          <p className="mx-auto mt-1 max-w-2xl text-[13px] text-emerald-100/75">They sell closed platforms and five-figure certificates. We give you an open-source core, free training + certification, a 33-agent council, self-scan cyber, and Layer 0 proof — value back to you, not a middleman.</p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <a href="/why" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Why CSOAI →</a>
+            <a href="/regulators" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">The Regulator Atlas →</a>
+            <a href="/scan" className="rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20">God's Eye self-scan →</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -48,6 +48,7 @@ const navigation = [
       { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
       { name: "God's Eye cyber scan", href: '/scan', description: 'Scan your own cyber with open-source; Sovereign fixes it' },
       { name: 'Why CSOAI vs the rest', href: '/why', description: 'What we do that Vanta/Credo/OneTrust don\'t' },
+      { name: 'Competitor battlecards', href: '/competitors', description: 'Cited intel on Vanta, Credo AI, OneTrust + our wedge' },
       { name: 'The Sovereign Network', href: '/network', description: '20 signed agents, one council' },
       { name: 'The Hive', href: '/hive', description: 'Every framework, collected — click any one' },
       { name: 'The Sovereign Globe', href: '/globe', description: 'AI governance, layered on the world' },
