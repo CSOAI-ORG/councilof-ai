@@ -199,8 +199,17 @@ export default function DemoOS() {
   const [drawer, setDrawer] = useState(false);
   const [drawerQ, setDrawerQ] = useState("");
   const [winH, setWinH] = useState(52); // tool-window height in vh — drag to resize
+  const [chatMin, setChatMin] = useState(false); // collapse the chat dock to a small launcher
+  const [chatW, setChatW] = useState<number>(() => { const v = Number(localStorage.getItem("sovChatW")); return v >= 280 && v <= 460 ? v : 320; }); // narrower default; user-set width
+  const setChatWidth = (w: number) => { const c = Math.max(280, Math.min(460, w)); setChatW(c); localStorage.setItem("sovChatW", String(c)); };
 
   function openTool(title: string, src: string) { setWins([{ title, src, slot: "c" }]); setWinsShow(true); setWinMin(false); setDrawer(false); }
+  function startChatResize(e: React.PointerEvent) {
+    e.preventDefault();
+    const move = (ev: PointerEvent) => setChatWidth(window.innerWidth - ev.clientX);
+    const up = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); };
+    window.addEventListener("pointermove", move); window.addEventListener("pointerup", up);
+  }
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setDrawer((d) => !d); }
@@ -347,7 +356,7 @@ export default function DemoOS() {
       <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(1200px 640px at 50% 120%, rgba(3,8,14,.72), transparent 60%)" }} />
 
       {booting && (
-        <div className="absolute inset-0 z-40 flex flex-col items-center justify-center px-6" style={{ background: "#02060c", backgroundImage: "radial-gradient(1.5px 1.5px at 20% 30%, rgba(125,211,252,.5), transparent), radial-gradient(1.5px 1.5px at 70% 60%, rgba(167,243,208,.45), transparent), radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,.35), transparent), radial-gradient(1.5px 1.5px at 85% 25%, rgba(125,211,252,.4), transparent), radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,.3), transparent)" }}>
+        <div className="absolute inset-0 z-40 flex flex-col items-center justify-center px-6" style={{ background: "#03080f", backgroundImage: "radial-gradient(1100px 720px at 50% 40%, rgba(16,185,129,.22), transparent 68%), radial-gradient(700px 500px at 50% 42%, rgba(56,189,248,.12), transparent 70%), radial-gradient(1.6px 1.6px at 20% 30%, rgba(125,211,252,.7), transparent), radial-gradient(1.6px 1.6px at 70% 60%, rgba(167,243,208,.65), transparent), radial-gradient(1.2px 1.2px at 40% 80%, rgba(255,255,255,.5), transparent), radial-gradient(1.6px 1.6px at 85% 25%, rgba(125,211,252,.6), transparent), radial-gradient(1.2px 1.2px at 55% 15%, rgba(255,255,255,.45), transparent)" }}>
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/10 text-3xl text-emerald-300" style={{ boxShadow: "0 0 44px rgba(16,185,129,.4)" }}>{"◉"}</div>
           <div className="font-mono text-[11px] uppercase tracking-[4px] text-emerald-300/70">CSOAI {"·"} Sovereign {"·"} Governance {"·"} Layer 0</div>
           <div className="mt-6 w-full max-w-sm space-y-1.5 font-mono text-xs">
@@ -479,8 +488,15 @@ export default function DemoOS() {
 
 
 
-      {mode !== null && (
-        <div ref={chatRef} className="absolute right-0 top-0 z-30 flex h-screen w-[420px] max-w-[94vw] flex-col border-l border-emerald-400/30 bg-[#04120c]/95 backdrop-blur-xl shadow-2xl">
+      {mode !== null && chatMin && (
+        <button onClick={() => setChatMin(false)} title="Open the Sovereign" className="absolute right-3 top-3 z-40 flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04120c]/90 px-3 py-2 text-sm font-bold text-emerald-100 shadow-2xl backdrop-blur-xl hover:bg-[#04120c]">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">◉</span> Sovereign
+          {listening && <span className="h-2 w-2 rounded-full bg-rose-400 animate-pulse" />}
+        </button>
+      )}
+      {mode !== null && !chatMin && (
+        <div ref={chatRef} className="absolute right-0 top-0 z-30 flex h-screen max-w-[94vw] flex-col border-l border-emerald-400/30 bg-[#04120c]/95 backdrop-blur-xl shadow-2xl" style={{ width: chatW }}>
+          <div onPointerDown={startChatResize} title="Drag to resize" className="absolute left-0 top-0 z-10 h-full w-1.5 cursor-col-resize bg-emerald-500/10 hover:bg-emerald-400/50" />
           {winsShow && wins.length > 0 && (
             <div ref={win0Ref} className="flex flex-col border-b border-emerald-500/25" style={{ height: winMin ? 38 : winH + "vh" }}>
               <div className="flex items-center gap-2 bg-[#03110b] px-3 py-2">
@@ -497,11 +513,12 @@ export default function DemoOS() {
               {!winMin && <div onPointerDown={startResize} title="Drag to resize" className="flex h-2 cursor-row-resize items-center justify-center bg-emerald-500/15 hover:bg-emerald-400/40"><span className="h-0.5 w-8 rounded bg-emerald-300/50" /></div>}
             </div>
           )}
-          <div className="flex items-center gap-2 border-b border-emerald-500/15 px-4 py-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-base">{"◉"}</div>
-            <div className="text-sm font-bold text-emerald-100">Your Sovereign {geoCity && <span className="font-mono text-[10px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
-            <button onClick={() => setHandsFree((h) => { const n = !h; if (n) startRec(); else stopRec(); return n; })} className={"ml-auto rounded-full px-2 py-0.5 text-[10px] font-bold " + (handsFree ? "bg-emerald-500/20 text-emerald-200" : "text-emerald-300/50 hover:bg-white/5")}>{handsFree ? "hands-free ⏺" : "hands-free off"}</button>
-            <button onClick={stop} className="rounded-lg px-2 py-1 text-[11px] text-emerald-300/60 hover:bg-white/5">End</button>
+          <div className="flex items-center gap-1.5 border-b border-emerald-500/15 px-3 py-1.5">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">{"◉"}</div>
+            <div className="truncate text-[13px] font-bold text-emerald-100">Sovereign {geoCity && <span className="font-mono text-[9px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
+            <button onClick={() => setHandsFree((h) => { const n = !h; if (n) startRec(); else stopRec(); return n; })} title={handsFree ? "Hands-free on" : "Hands-free off"} className={"ml-auto rounded-full px-1.5 py-0.5 text-[11px] " + (handsFree ? "bg-emerald-500/20 text-emerald-200" : "text-emerald-300/45 hover:bg-white/5")}>{handsFree ? "🎙⏺" : "🎙"}</button>
+            <button onClick={() => setChatMin(true)} title="Collapse chat" className="rounded px-1.5 py-0.5 text-[13px] text-emerald-300/60 hover:bg-white/5">»</button>
+            <button onClick={stop} title="End tour" className="rounded px-1.5 py-0.5 text-[11px] text-emerald-300/60 hover:bg-white/5">End</button>
           </div>
           <div className="flex-1 space-y-2 overflow-y-auto px-4 py-3">
             {chat.map((m) => (<div key={m.id} className={m.who === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[92%] rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.t}</div>))}

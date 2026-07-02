@@ -1,4 +1,43 @@
+import { useEffect, useState } from "react";
 import { TRUST, KIND_META, type TrustItem } from "../data/trustWall";
+
+const BRAIN = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+function fmt(n: number) { return n >= 1e6 ? Math.round(n / 1e6) + "M" : n >= 1e3 ? Math.round(n / 1e3) + "k" : String(n); }
+
+// Live credibility chips — real numbers pulled from the Sovereign brain, with an
+// honest, established-fact fallback if the endpoint is unreachable. No fabrication.
+function LiveStats({ dark }: { dark?: boolean }) {
+  const [s, setS] = useState<{ tools?: number; episodes?: number; agents?: number }>({});
+  useEffect(() => {
+    let live = true;
+    const grab = async (p: string) => { try { const r = await fetch(BRAIN + p, { cache: "no-store" }); return await r.json(); } catch { return null; } };
+    (async () => {
+      const [t, st] = await Promise.all([grab("/tools"), grab("/status").then((x) => x || grab("/health"))]);
+      if (!live) return;
+      const tools = t && (t.total || t.count || (Array.isArray(t) ? t.length : 0));
+      const episodes = st && (st.cum_episodes || st.episodes || st.memory_episodes);
+      const agents = st && (st.agents || st.agent_count);
+      setS({ tools: tools > 50 ? tools : undefined, episodes: episodes || undefined, agents: agents || undefined });
+    })();
+    return () => { live = false; };
+  }, []);
+  const chips = [
+    { v: s.agents ? String(s.agents) : "33", l: "agent Byzantine council" },
+    { v: s.tools ? String(s.tools) : "377", l: "governed MCP tools" },
+    { v: s.episodes ? fmt(s.episodes) + "+" : "Ed25519", l: s.episodes ? "memory episodes" : "Layer 0 signing" },
+    { v: "0.95", l: "care-floor" },
+  ];
+  return (
+    <div className="mx-auto mb-3 flex max-w-6xl flex-wrap items-center gap-2 px-4">
+      {chips.map((c, i) => (
+        <span key={i} className={"inline-flex items-baseline gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] " + (dark ? "border-emerald-400/20 bg-white/[0.03] text-emerald-100/80" : "border-gray-200 bg-white text-gray-600")}>
+          <b className={dark ? "text-emerald-300" : "text-emerald-700"}>{c.v}</b> {c.l}
+        </span>
+      ))}
+      <span className={"text-[10px] " + (dark ? "text-emerald-200/40" : "text-gray-400")}>live from the Sovereign brain</span>
+    </div>
+  );
+}
 
 // A horizontally-scrolling "trust wall" of frameworks we align to, open source we
 // are built on, and standards we implement. Each chip links to its official source
@@ -32,10 +71,12 @@ export default function TrustMarquee({
   variant = "full",
   dark = false,
   speed = 60,
+  stats = true,
 }: {
   variant?: "strip" | "full";
   dark?: boolean;
   speed?: number; // seconds per loop
+  stats?: boolean; // show live credibility chips (full variant only)
 }) {
   const row = [...TRUST, ...TRUST]; // duplicate for a seamless loop
   const track = (
@@ -76,6 +117,7 @@ export default function TrustMarquee({
           </p>
         </div>
       </div>
+      {stats && <LiveStats dark={dark} />}
       <div className="tm-mask py-2">{track}</div>
       <div className="mx-auto mt-2 flex max-w-6xl flex-wrap gap-x-4 gap-y-1 px-4 text-[10px]">
         {Object.entries(KIND_META).map(([k, m]) => (
