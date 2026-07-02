@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
+import { fetchLiveGovSignals } from "../lib/liveFeeds";
 
 // Global AI Watchdog - the public watchdog for humans, AI agents, humanoids and
 // systems. Anyone (or anything) can report an incident; signals heat-map the world
@@ -55,6 +56,17 @@ function saveReports(r: Report[]) { try { localStorage.setItem(RKEY, JSON.string
 const W = 720, H = 360;
 function proj(lat: number, lng: number) { return { x: ((lng + 180) / 360) * W, y: ((90 - lat) / 180) * H }; }
 
+// Map a real live signal (region name and/or lat-lng) onto the nearest watchdog hub.
+function signalToHubId(region?: string, lat?: number, lng?: number): string | null {
+  if (region) { const h = REGION2HUB[region.toLowerCase().trim()]; if (h) return h; }
+  if (typeof lat === "number" && typeof lng === "number") {
+    let best: { id: string; d: number } | null = null;
+    for (const h of HUBS) { const d = (h.lat - lat) ** 2 + (h.lng - lng) ** 2; if (!best || d < best.d) best = { id: h.id, d }; }
+    if (best) return best.id;
+  }
+  return null;
+}
+
 export default function WatchdogMap() {
   const [layer, setLayer] = useState<Cat | "all">("all");
   const [reports, setReports] = useState<Report[]>([]);
@@ -71,6 +83,19 @@ export default function WatchdogMap() {
 
   async function ingest() {
     setPulling(true); setPulled(0); chargeSovereign(6);
+    let total = 0;
+    // 1) REAL keyless feeds — USGS quakes near AI compute, NASA EONET, GDELT AI-gov news.
+    try {
+      const live = await fetchLiveGovSignals();
+      const real: Report[] = [];
+      for (const s of live) {
+        const hub = signalToHubId(s.region, s.lat, s.lng);
+        if (!hub) continue;
+        real.push({ hub, cat: s.category as Cat, reporter: "System", note: "[" + s.source + "] " + s.note.slice(0, 200), at: s.at || Date.now() });
+      }
+      if (real.length) { const nx0 = loadReports().concat(real); saveReports(nx0); setReports(nx0); total += real.length; setPulled(total); }
+    } catch (e) {}
+    // 2) LLM signals desk — augments the real feed with correlation/context.
     try {
       const prompt = 'Act as the CSOAI AI Watchdog signals desk. Return ONLY a compact JSON array (no prose, no code fences) of 6 current real-world AI-governance risk signals. Each item: {"region": one of ["European Union","United Kingdom","United States","China","India","Japan","Singapore","Brazil","Canada","UAE","Nigeria","Australia"], "category": one of ["bias","safety","privacy","unlawful","agent","transparency","systemic"], "note": one short factual sentence}.';
       const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: prompt }) });
@@ -85,7 +110,7 @@ export default function WatchdogMap() {
             if (hub && c) add.push({ hub, cat: c.id, reporter: "System", note: "[live signal] " + String(it.note || "").slice(0, 200), at: Date.now() });
           } catch (e) {}
         });
-        if (add.length) { const nx = reports.concat(add); setReports(nx); saveReports(nx); setPulled(add.length); }
+        if (add.length) { const nx = loadReports().concat(add); setReports(nx); saveReports(nx); total += add.length; setPulled(total); }
       }
     } catch (e) {}
     setPulling(false);
