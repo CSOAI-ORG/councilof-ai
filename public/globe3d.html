@@ -363,6 +363,45 @@ if(viewer){
       description:'<b>'+a[0]+'</b><br>Autonomous / AI-controlled system ('+a[3]+') — an agent acting in the physical world. This is what the Sovereign governs.' });
   });
 
+  // ----- Space governance: satellites, constellations, GNSS & spaceports (dual-use AI + space), hidden by default -----
+  var SPACE=[['Cape Canaveral · spaceport',-80.60,28.49,'port'],['Kennedy KSC',-80.65,28.57,'port'],['Vandenberg',-120.61,34.74,'port'],['Baikonur Cosmodrome',63.34,45.96,'port'],['Kourou · ESA',-52.77,5.24,'port'],['Wenchang · China',110.95,19.61,'port'],['Jiuquan · China',100.29,40.96,'port'],['Sriharikota · ISRO',80.23,13.72,'port'],['Tanegashima · JAXA',130.97,30.40,'port'],['Starbase · Boca Chica',-97.16,25.99,'port'],['Rocket Lab · Mahia',177.86,-39.26,'port'],['Starlink NOC · Redmond',-122.12,47.67,'constellation'],['OneWeb · London',-0.13,51.51,'constellation'],['Kuiper · Redmond',-122.13,47.67,'constellation'],['Galileo GCC · Fucino',13.60,41.98,'gnss'],['GPS master · Schriever',-104.53,38.80,'gnss'],['BeiDou · Beijing',116.40,39.90,'gnss'],['GLONASS · Moscow',37.62,55.75,'gnss']];
+  var SPC={port:'#f5d0fe',constellation:'#67e8f9',gnss:'#fca5a5'};
+  SPACE.forEach(function(s){ var col=SPC[s[3]]||'#67e8f9';
+    viewer.entities.add({ layerTag:'space', show:false, position:Cesium.Cartesian3.fromDegrees(s[1],s[2],14000),
+      point:{pixelSize:6, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#1e1b4b'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
+      label:{text:s[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#f5f3ff'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
+      description:'<b>'+s[0]+'</b><br>Space governance ('+s[3]+') — orbital assets, GNSS & launch sites the Sovereign frameworks map (dual-use AI, space situational awareness).' });
+  });
+  // Live ISS position — real keyless space feed (wheretheiss.at)
+  (function(){ try{
+    var iss=viewer.entities.add({ layerTag:'space', show:false, position:Cesium.Cartesian3.fromDegrees(0,0,4.2e5),
+      point:{pixelSize:9, color:Cesium.Color.fromCssColorString('#fde047'), outlineColor:Cesium.Color.fromCssColorString('#7dd3fc'), outlineWidth:2},
+      label:{text:'ISS · live', font:'700 10px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#fef9c3'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-13)},
+      description:'International Space Station — live position. Space situational awareness under space governance.' });
+    function upd(){ fetch('https://api.wheretheiss.at/v1/satellites/25544',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.longitude!=null){ iss.position=Cesium.Cartesian3.fromDegrees(Number(d.longitude),Number(d.latitude),4.2e5); } }).catch(function(){}); }
+    upd(); setInterval(upd, 8000);
+  }catch(e){} })();
+
+  // ----- AI-critical energy & grid (the power AI runs on — resilience & sovereignty), hidden by default -----
+  var ENERGY=[['Palo Verde nuclear',-112.86,33.39,'nuclear'],['Vogtle nuclear',-81.76,33.14,'nuclear'],['Hinkley Point C',-3.13,51.21,'nuclear'],['Flamanville',-1.88,49.54,'nuclear'],['Olkiluoto',21.44,61.24,'nuclear'],['Taishan',112.97,21.72,'nuclear'],['Three Gorges Dam',111.00,30.82,'hydro'],['Itaipu Dam',-54.59,-25.41,'hydro'],['Grand Coulee',-118.98,47.96,'hydro'],['Hornsea wind · UK',1.79,53.88,'renewable'],['Hydro-Quebec',-73.57,45.50,'hydro'],['Iceland geothermal',-21.94,64.14,'renewable'],['ERCOT grid · Texas',-97.74,30.27,'grid'],['PJM grid · Virginia',-77.46,39.02,'grid'],['Nord Pool · Nordics',10.75,59.91,'grid']];
+  var ENC={nuclear:'#fde047',hydro:'#38bdf8',renewable:'#86efac',grid:'#fb923c'};
+  ENERGY.forEach(function(e){ var col=ENC[e[3]]||'#fb923c';
+    viewer.entities.add({ layerTag:'energy', show:false, position:Cesium.Cartesian3.fromDegrees(e[1],e[2],11000),
+      point:{pixelSize:6, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#422006'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
+      label:{text:e[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#fff7ed'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
+      description:'<b>'+e[0]+'</b><br>AI-critical energy ('+e[3]+') — the power AI compute depends on; a governance, resilience & sustainability concern.' });
+  });
+
+  // ----- Internet backbone: subsea cable landings & major IXPs (the AI economy substrate / CNI), hidden by default -----
+  var CABLES=[['Marseille landing',5.37,43.30,'landing'],['Lisbon landing',-9.14,38.72,'landing'],['Bude · UK landing',-4.55,50.83,'landing'],['Virginia Beach landing',-75.98,36.85,'landing'],['NYC landing',-74.01,40.71,'landing'],['Ashburn IXP · Equinix',-77.49,39.04,'ixp'],['Amsterdam AMS-IX',4.90,52.37,'ixp'],['Frankfurt DE-CIX',8.68,50.11,'ixp'],['London LINX',-0.02,51.51,'ixp'],['Singapore landing',103.85,1.29,'landing'],['Hong Kong landing',114.16,22.28,'landing'],['Tokyo landing',139.77,35.63,'landing'],['Mumbai landing',72.82,18.94,'landing'],['Fortaleza landing',-38.52,-3.72,'landing'],['Alexandria landing',29.92,31.20,'landing']];
+  var CAC={landing:'#5eead4',ixp:'#c4b5fd'};
+  CABLES.forEach(function(c){ var col=CAC[c[3]]||'#5eead4';
+    viewer.entities.add({ layerTag:'cables', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],9000),
+      point:{pixelSize:5, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#042f2e'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
+      label:{text:c[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#ecfeff'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
+      description:'<b>'+c[0]+'</b><br>Internet backbone ('+c[3]+') — subsea cable landing / exchange the AI economy runs on; a CNI & data-sovereignty governance point.' });
+  });
+
   // ----- Ontology layer: every governed object and how it RELATES (Palantir-style) -----
   // Objects: governments, frameworks, companies, cyber. Links: governs / applies-to / defends.
   (function(){
@@ -470,7 +509,7 @@ if(viewer){
         if (h < 9000000 && window.__focusPulse) setTimeout(function(){ window.__focusPulse(lng, lat, m.col); }, Math.max(0, dur*1000 - 700));
       }
       else if (m.cmd === 'layer') { var n=0,fx=null; viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag){ ent.show = !!m.on; if(m.on&&!fx&&ent.position){var cc=ent.position.getValue(Cesium.JulianDate.now()); if(cc){var carto=Cesium.Cartographic.fromCartesian(cc); fx=[Cesium.Math.toDegrees(carto.longitude),Cesium.Math.toDegrees(carto.latitude)];}} n++; } }); if(m.on&&fx&&window.__focusPulse) window.__focusPulse(fx[0],fx[1],m.col); if(m.on){ stopOrbit(); spinning=true; } }
-      else if (m.cmd === 'lightup') { var tags=(m.tags)||['frameworks','regulators','gov','fortune','cyber','compute','network','intel','robotics','labs','auton','mcps','humanoids','ontology','arcs']; viewer.entities.values.forEach(function(ent){ if(tags.indexOf(ent.layerTag)>=0) ent.show=true; }); spinning=false; stopOrbit(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(8,30,22000000), orientation:{heading:Cesium.Math.toRadians(-10),pitch:Cesium.Math.toRadians(-80),roll:0}, duration:2.6}); }
+      else if (m.cmd === 'lightup') { var tags=(m.tags)||['frameworks','regulators','gov','fortune','cyber','compute','network','intel','robotics','labs','auton','mcps','humanoids','ontology','arcs','space','energy','cables']; viewer.entities.values.forEach(function(ent){ if(tags.indexOf(ent.layerTag)>=0) ent.show=true; }); spinning=false; stopOrbit(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(8,30,22000000), orientation:{heading:Cesium.Math.toRadians(-10),pitch:Cesium.Math.toRadians(-80),roll:0}, duration:2.6}); }
       else if (m.cmd === 'bftSpiral') {
         clearViz(); spinning=false; stopOrbit();
         var clng=(m.lng!=null)?Number(m.lng):-0.12, clat=(m.lat!=null)?Number(m.lat):51.5;
