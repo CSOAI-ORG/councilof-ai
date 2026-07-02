@@ -38,21 +38,6 @@ const navigation = [
       { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
-    {
-      name: "Tools",
-      icon: Shield,
-      submenu: [
-        { name: "Command Center", href: "/command-center", icon: BarChart3, description: "Your whole governance program on one screen" },
-        { name: "AI Policy Generator", href: "/policy-generator", icon: BookOpen, description: "Generate a board-ready AI policy" },
-        { name: "Risk Heatmap", href: "/risk-heatmap", icon: Shield, description: "Likelihood x impact risk matrix" },
-        { name: "Sovereign Town", href: "/sovereign-town", icon: Shield, description: "The signed record of AI governance" },
-        { name: "OSCAL Studio", href: "/oscal", icon: Settings, description: "Import/export NIST OSCAL, FedRAMP 20x ready" },
-        { name: "Evidence Hub", href: "/evidence", icon: BarChart3, description: "Continuous compliance evidence" },
-        { name: "Model Registry", href: "/models", icon: BarChart3, description: "Model cards and fairness audits" },
-        { name: "Framework Catalog", href: "/framework-catalog", icon: BookOpen, description: "25+ frameworks supported" },
-        { name: "Webhooks", href: "/webhooks", icon: Settings, description: "Real-time integration mesh" },
-      ],
-    },
   {
     name: 'Explore',
     href: '/os',
@@ -71,20 +56,6 @@ const navigation = [
       { name: 'Rediscovered, Not Invented', href: '/lineage', description: 'The 4,000-year governance architecture' },
       { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
       { name: 'Open the full launcher', href: '/os', description: 'Every app on one grid' },
-    ]
-  },
-  {
-    name: 'Charter',
-    href: '/charter',
-    icon: FileText,
-    description: 'Our founding principles',
-    submenu: [
-      { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
-      { name: 'Browse All 52 Articles', href: '/charter#articles', description: 'Individual article deep-dives' },
-      { name: 'The Maternal Covenant', href: '/charter#maternal', description: 'Care-based AI safety paradigm' },
-      { name: 'Prosperity Fund', href: '/prosperity', description: 'AI wealth redistribution & UBI' },
-      { name: 'Byzantine Council', href: '/byzantine', description: '33-agent monitoring system' },
-      { name: 'Founding Members', href: '/founding-members', description: 'Join the first 100 members' },
     ]
   },
   {
@@ -114,9 +85,14 @@ const navigation = [
       { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
       { name: 'Government Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
       { name: 'Global Regulation Tracker', href: '/global-regulations', description: 'AI regulations across 40+ nations' },
-      { name: 'SOAI-PDCA Framework', href: '/soai-pdca', description: 'Learn about SOAI-PDCA methodology' },
-      { name: 'PDCA Simulator', href: '/pdca-simulator', description: 'Interactive PDCA walkthrough' },
       { name: '33-Agent Council', href: '/agent-council', description: 'Byzantine consensus system' },
+      { name: 'Command Center', href: '/command-center', description: 'Your whole governance program on one screen' },
+      { name: 'AI Policy Generator', href: '/policy-generator', description: 'Generate a board-ready AI policy' },
+      { name: 'Risk Heatmap', href: '/risk-heatmap', description: 'Likelihood × impact risk matrix' },
+      { name: 'OSCAL Studio', href: '/oscal', description: 'Import/export NIST OSCAL, FedRAMP 20x ready' },
+      { name: 'Evidence Hub', href: '/evidence', description: 'Continuous compliance evidence' },
+      { name: 'Model Registry', href: '/models', description: 'Model cards and fairness audits' },
+      { name: 'Sovereign Town', href: '/sovereign-town', description: 'The signed record of AI governance' },
       { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
       { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
     ]
@@ -134,20 +110,22 @@ const navigation = [
     ]
   },
   {
-    name: 'Resources',
-    href: '/resources',
+    name: 'Company',
+    href: '/charter',
     icon: BookMarked,
-    description: 'Knowledge & tools',
+    description: 'Charter, knowledge & trust',
     submenu: [
+      { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
+      { name: 'The Maternal Covenant', href: '/charter#maternal', description: 'Care-based AI safety paradigm' },
+      { name: 'Prosperity Fund', href: '/prosperity', description: 'AI wealth redistribution & UBI' },
+      { name: 'Founding Members', href: '/founding-members', description: 'Join the first 100 members' },
       { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
       { name: 'AI Glossary', href: '/glossary', description: '60+ governance terms defined' },
       { name: 'Framework Crosswalks', href: '/crosswalks', description: 'Compare EU AI Act, NIST, ISO 42001, TC260' },
       { name: 'Readiness Assessment', href: '/readiness-assessment', description: 'Evaluate your AI governance maturity' },
       { name: 'Partners & Advisory', href: '/partners', description: 'Expert advisory services' },
-      { name: 'Case Studies', href: '/case-studies', description: 'Real-world implementations' },
       { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
       { name: 'Technology', href: '/technology', description: 'Our architecture & Byzantine Council' },
-      { name: 'ROI Calculator', href: '/roi-calculator', description: 'Estimate your governance ROI' },
       { name: 'Blog', href: '/blog', description: 'Latest news & insights' },
     ]
   },
