@@ -185,6 +185,7 @@ export default function DemoOS() {
   const [bootN, setBootN] = useState(0);
   const [gate, setGate] = useState(false);
   const [drawer, setDrawer] = useState(false);
+  const [drawerQ, setDrawerQ] = useState("");
   const [winH, setWinH] = useState(52); // tool-window height in vh — drag to resize
 
   function openTool(title: string, src: string) { setWins([{ title, src, slot: "c" }]); setWinsShow(true); setWinMin(false); setDrawer(false); }
@@ -385,21 +386,22 @@ export default function DemoOS() {
               <span className="font-bold">CSOAI · AI OS</span>
               <button onClick={() => setDrawer(false)} className="ml-auto rounded-lg px-2 py-1 text-gray-400 hover:bg-gray-100">✕</button>
             </div>
+            <div className="sticky top-[53px] z-10 border-b border-gray-100 bg-white px-4 py-2"><input value={drawerQ} onChange={(e) => setDrawerQ(e.target.value)} placeholder="Search tools & layers…" className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-800 placeholder-gray-400 focus:border-emerald-400 focus:outline-none" /></div>
             <div className="p-4">
-              {NAV_GROUPS.map((grp) => (
+              {NAV_GROUPS.map((grp) => { const items = grp.items.filter((it) => !drawerQ.trim() || it.n.toLowerCase().includes(drawerQ.trim().toLowerCase())); if (!items.length) return null; return (
                 <div key={grp.g} className="mb-4">
                   <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">{grp.g}</div>
                   <div className="grid grid-cols-2 gap-1.5">
-                    {grp.items.map((it) => (
+                    {items.map((it) => (
                       <button key={it.src} onClick={() => openTool(it.n, it.src)} className="rounded-lg border border-gray-200 px-2.5 py-2 text-left text-[12px] font-semibold text-gray-800 hover:border-emerald-400 hover:bg-emerald-50">{it.n}</button>
                     ))}
                   </div>
                 </div>
-              ))}
+              ); })}
               <div className="mb-4">
                 <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Globe layers</div>
                 <div className="flex flex-wrap gap-1.5">
-                  {NAV_LAYERS.map((l) => (
+                  {NAV_LAYERS.filter((l) => !drawerQ.trim() || l.n.toLowerCase().includes(drawerQ.trim().toLowerCase())).map((l) => (
                     <button key={l.tag} onClick={() => post({ cmd: "layer", tag: l.tag, on: true })} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-700 hover:border-emerald-400 hover:bg-emerald-50">{l.n}</button>
                   ))}
                   <button onClick={() => NAV_LAYERS.forEach((l) => post({ cmd: "layer", tag: l.tag, on: false }))} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-500 hover:bg-gray-100">clear all</button>

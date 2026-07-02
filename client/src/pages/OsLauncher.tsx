@@ -134,6 +134,19 @@ export default function OsLauncher() {
 
   const C = 138.2;
   const dash = useMemo(() => (C * (1 - ring / 100)).toFixed(1), [ring]);
+  const grouped = cat === "All" && !q.trim();
+  const Tile = (a: App) => (
+    <a key={a.name} href={a.href} className={`group relative overflow-hidden rounded-2xl border bg-gradient-to-br ${a.tone} p-5 transition hover:scale-[1.015] hover:shadow-[0_0_30px_-8px_rgba(16,185,129,0.35)]`}>
+      {a.pro && <span title="Operator tier — advanced / defence-grade capability" className="absolute right-3 top-3 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[1.5px] text-amber-200/90">Operator · Pro</span>}
+      <div className="flex items-start gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/30 text-xl text-emerald-200">{a.glyph}</div>
+        <div className="flex-1">
+          <div className="font-semibold text-white">{a.name} <span className="opacity-0 transition group-hover:opacity-100">→</span></div>
+          <p className="mt-1 text-[13px] leading-snug text-emerald-50/70">{a.desc}</p>
+        </div>
+      </div>
+    </a>
+  );
 
   return (
     <div className="min-h-screen bg-[#05080e] text-[#e7f6ef]" style={{ backgroundImage: "radial-gradient(1200px 600px at 50% -10%, rgba(16,185,129,0.10), transparent 60%)" }}>
@@ -199,25 +212,18 @@ export default function OsLauncher() {
         <div className="mb-5 flex flex-wrap gap-1.5">
           {CATS.map((c) => (<button key={c} onClick={() => setCat(c)} className={"rounded-full border px-3 py-1 text-xs font-bold " + (cat === c ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-emerald-500/25 text-emerald-200/60 hover:bg-white/5")}>{c}</button>))}
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {shown.map((a) => (
-            <a
-              key={a.name}
-              href={a.href}
-              {...(a.ext ? {} : {})}
-              className={`group relative overflow-hidden rounded-2xl border bg-gradient-to-br ${a.tone} p-5 transition hover:scale-[1.015] hover:shadow-[0_0_30px_-8px_rgba(16,185,129,0.35)]`}
-            >
-              {a.pro && <span title="Operator tier — advanced / defence-grade capability" className="absolute right-3 top-3 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[1.5px] text-amber-200/90">Operator · Pro</span>}
-              <div className="flex items-start gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/30 text-xl text-emerald-200">{a.glyph}</div>
-                <div className="flex-1">
-                  <div className="font-semibold text-white">{a.name} <span className="opacity-0 transition group-hover:opacity-100">→</span></div>
-                  <p className="mt-1 text-[13px] leading-snug text-emerald-50/70">{a.desc}</p>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
+        {grouped ? (
+          CATS.slice(1).map((c) => { const items = APPS.filter((a) => catOf(a.href) === c); if (!items.length) return null; return (
+            <div key={c} className="mb-8">
+              <div className="mb-3 flex items-center gap-2"><h3 className="text-sm font-bold text-emerald-100">{c}</h3><span className="rounded-full border border-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300/50">{items.length}</span></div>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{items.map(Tile)}</div>
+            </div>
+          ); })
+        ) : shown.length ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{shown.map(Tile)}</div>
+        ) : (
+          <div className="rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-8 text-center text-sm text-emerald-100/50">No apps match "{q}". <button onClick={() => { setQ(""); setCat("All"); }} className="text-emerald-300 underline">Clear</button></div>
+        )}
 
         <div className="mt-10 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-5 text-sm text-emerald-100/60">
           One signed floor under every endpoint — sites, MCP servers, packages, plugins and tools — governed by
