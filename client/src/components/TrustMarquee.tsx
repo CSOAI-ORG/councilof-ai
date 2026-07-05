@@ -12,7 +12,8 @@ function LiveStats({ dark }: { dark?: boolean }) {
     let live = true;
     const grab = async (p: string) => { try { const r = await fetch(BRAIN + p, { cache: "no-store" }); return await r.json(); } catch { return null; } };
     (async () => {
-      const [t, st] = await Promise.all([grab("/tools"), grab("/status").then((x) => x || grab("/health"))]);
+      // /health + /tools are CORS-open cross-origin; /status is not — avoid the console error.
+      const [t, st] = await Promise.all([grab("/tools"), grab("/health")]);
       if (!live) return;
       const tools = t && (t.total || t.count || (Array.isArray(t) ? t.length : 0));
       const episodes = st && (st.cum_episodes || st.episodes || st.memory_episodes);
