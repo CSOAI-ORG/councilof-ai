@@ -187,6 +187,8 @@ import Academy from "./pages/Academy";
 import SovereignDock from "./components/SovereignDock";
 import DemoTour from "./components/DemoTour";
 import WatchdogMap from "./pages/WatchdogMap";
+import IncidentReport from "./pages/IncidentReport";
+import EuActClassifier from "./pages/EuActClassifier";
 import DemoOS from "./pages/DemoOS";
 import PocShowcase from "./pages/PocShowcase";
 import SovSpace from "./pages/SovSpace";
@@ -463,6 +465,8 @@ function App() {
           <Route path="/ai-governance" component={AiGovernanceHub} />
           <Route path="/ai-governance-guide" component={AiGovernanceHub} />
           <Route path="/high-risk-ai-systems" component={HighRiskSystems} />
+          <Route path="/classifier" component={EuActClassifier} />
+          <Route path="/report" component={IncidentReport} />
           <Route path="/high-risk-ai" component={HighRiskSystems} />
           <Route path="/ai-act-summary" component={ActSummary} />
           <Route path="/eu-ai-act-explained" component={ActSummary} />
