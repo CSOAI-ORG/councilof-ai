@@ -1,6 +1,30 @@
 # CSOAI — Master Alignment & Rundown
 
-> Single source of truth for every CSOAI surface and agent — the **M4 / Claude Science**, Claude Code, and any other machine or agent working on CSOAI. Read this first. Last aligned: 2026-07 (HEAD `c16b660`).
+> Single source of truth for every CSOAI surface and agent — the **M4 / Claude Science**, Claude Code, and any other machine or agent working on CSOAI. Read this first. Last aligned: 2026-07-06 (HEAD `master`).
+
+---
+
+## ⚠️ BRANCH TRUTH — READ BEFORE YOU PULL OR PUBLISH
+
+**The live site deploys from `master`, NOT `main`.** These two branches have diverged hard:
+
+| Branch | What it is | Live? |
+|---|---|---|
+| **`master`** | **The production lane** — the full Vite SPA that IS `csoai.org` / `os.csoai.org`. Has ALIGNMENT.md, the CSOAI Governance MCP, SovereignSpot, the full globe, `/workbench`. **465 commits ahead** of the merge base. | ✅ **YES — this is what's live** |
+| **`main`** | GitHub's *default* branch, a separate lane (Hermes + a new Next.js `src/app/` App Router experiment, #128). Missing ALIGNMENT.md, the MCP, SovereignSpot. **23 commits** main-only. | ❌ not the live app |
+
+**So on the M4 / any machine, do NOT `git checkout main`.** Use:
+```bash
+git clone https://github.com/CSOAI-ORG/councilof-ai.git
+cd councilof-ai && git checkout master && git pull origin master   # the live lane
+```
+
+**npm publish 404 fix:** `npm publish` at the repo root tries to push `csoai-platform` (the whole app, not a real package → 404). The MCP is a *sub-package* — publish from its folder:
+```bash
+cd mcp/csoai-governance && npm publish        # publishes csoai-governance-mcp
+```
+
+**Open decision (Nick):** GitHub's default branch is `main` but production is `master`. Until that's reconciled, treat **`master` as canonical**. Consolidation = task #60.
 
 ---
 
