@@ -31,7 +31,7 @@ const EXPLAINERS = [
   {
     t: "Explore the live governance grid →",
     d: "The immersive globe — 177 jurisdictions, sovereign nodes, the MCP fleet and the Sovereign Town feed, live on one Earth.",
-    href: "/globe.html",
+    href: "/globe3d.html",
   },
   {
     t: "See the 3D governance Earth (beta) →",
@@ -222,7 +222,7 @@ export default function SovereignTown() {
             {[
               { t: "OSCAL Studio", d: "Import/export NIST OSCAL — FedRAMP 20x ready.", href: "/oscal" },
               { t: "Evidence Hub", d: "Continuous, automated compliance evidence.", href: "/evidence" },
-              { t: "Live governance grid", d: "The immersive globe across 177 jurisdictions.", href: "/globe.html" },
+              { t: "Live governance grid", d: "The immersive globe across 177 jurisdictions.", href: "/globe3d.html" },
               { t: "3D governance Earth", d: "Photorealistic CesiumJS globe (beta).", href: "/globe3d.html" },
             ].map((x) => (
               <a key={x.t} href={x.href} className="block rounded-2xl border border-gray-200 bg-white p-5 hover:border-emerald-300 hover:bg-emerald-50/40 transition">

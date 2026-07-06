@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import TrustMarquee from "../components/TrustMarquee";
+import ToolRunner from "../components/ToolRunner";
 
 const OS_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 const OS_APP_ROUTES: Record<string, string> = { revenue: "/pricing", pricing: "/pricing", plans: "/pricing", king: "/try", council: "/try", try: "/try", setup: "/start", onboard: "/start", graph: "/graph", knowledge: "/graph", space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", tools: "/tool-commons", commons: "/commons", status: "/status", os: "/os", emergence: "/emergence", egg: "/emergence", certification: "/certification", academy: "/academy", evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator", layer0: "/layer0", distribution: "/distribution" };
@@ -52,7 +53,7 @@ const APPS: App[] = [
   { name: "MCP Fleet", desc: "216 governed MCP servers across 10 hives — Layer 0 wrapped.", href: "/mcp-fleet", glyph: "⊟", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Hive Grid", desc: "Every tool a hive with a sovereign queen — learning, aware, ensembled.", href: "/hives", glyph: "⬡", tone: "from-violet-500/20 to-violet-400/5 border-violet-400/30" },
   { name: "Distribution", desc: "Every endpoint we ship to — PyPI, npm, glama, mcpize, GitHub — with Layer 0 coverage.", href: "/distribution", glyph: "⌖", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
-  { name: "Immersive Globe", desc: "177 jurisdictions, sovereign nodes, agent swarm — one Earth.", href: "/globe.html", glyph: "◍", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30", ext: true },
+  { name: "Immersive Globe", desc: "177 jurisdictions, sovereign nodes, agent swarm — one Earth.", href: "/globe3d.html", glyph: "◍", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30", ext: true },
   { name: "3D Governance Earth", desc: "Photorealistic CesiumJS globe with cross-region arcs.", href: "/globe3d.html", glyph: "✺", tone: "from-sky-500/20 to-sky-400/5 border-sky-400/30", ext: true },
   { name: "OSCAL Studio", desc: "Import/export NIST OSCAL — FedRAMP 20x ready.", href: "/oscal", glyph: "⌬", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Evidence Hub", desc: "Continuous, automated compliance evidence.", href: "/evidence", glyph: "⊞", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
@@ -186,7 +187,7 @@ export default function OsLauncher() {
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href="/certification" className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get certified →</a>
-              <a href="/globe.html" className="rounded-lg border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Launch the globe</a>
+              <a href="/globe3d.html" className="rounded-lg border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Launch the globe</a>
               <a href="/command-center" className="rounded-lg border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Command Center</a>
             </div>
           </div>
@@ -206,6 +207,11 @@ export default function OsLauncher() {
       </section>
 
       {/* app launchpad */}
+      <section className="mx-auto max-w-6xl px-6 pb-2">
+        <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Run a live governed tool — right here</div>
+        <ToolRunner />
+      </section>
+
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <h2 className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Applications</h2>

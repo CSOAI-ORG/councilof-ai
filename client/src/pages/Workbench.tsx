@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { askSovereign } from "../lib/sovAsk";
+import ToolRunner from "../components/ToolRunner";
 
 // /workbench — the CSOAI AI OS as a GOVERNANCE WORKBENCH, powered by SOV3.
 // The Claude-Science pattern, applied to AI governance: a coordinating Sovereign
@@ -108,6 +109,11 @@ export default function Workbench() {
               </div>
             )}
           </div>
+        </div>
+
+        <div className="mt-8">
+          <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Or run a live governed tool directly</div>
+          <ToolRunner />
         </div>
 
         <p className="mt-8 text-[11px] text-emerald-300/40">Honest note: Ed25519 seals require the live Sovereign brain; when unreachable, artifacts carry a real in-browser SHA-256 content hash instead of a signature — never a fake seal. Council line reflects the BFT quorum model (Charter Art. 11).</p>
