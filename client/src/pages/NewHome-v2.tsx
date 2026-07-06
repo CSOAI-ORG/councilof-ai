@@ -233,6 +233,15 @@ const faqs = [
 export default function NewHomeV2() {
   return (
     <div className="min-h-screen bg-white">
+      {/* Job-creation banner — the breakthrough message (absorbed USP) */}
+      <div className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-2 text-center text-sm">
+          <span className="font-bold">AI is taking jobs. CSOAI is creating them.</span>
+          <span className="hidden sm:inline text-white/80">Become a certified AI Safety Watchdog Analyst — get paid to protect humanity.</span>
+          <a href="/watchdog-signup" className="rounded-full bg-white/15 px-3 py-0.5 font-semibold hover:bg-white/25">Start training →</a>
+          <a href="/classifier" className="rounded-full bg-white/15 px-3 py-0.5 font-semibold hover:bg-white/25">Is your AI high-risk? →</a>
+        </div>
+      </div>
       {/* ============================================ */}
       {/* SECTION 1: HERO */}
       {/* ============================================ */}
