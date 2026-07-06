@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Case Studies — CSOAI</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Real-world EU AI Act compliance case studies: 3 illustrative scenarios for healthcare, finance, and public sector.">
+  <link rel="canonical" href="https://csoai.org/case-studies">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#0f172a;line-height:1.65}
+    .container{max-width:1000px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#0a8a3f}
+    h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.4rem;border-bottom:1px solid #e6e8ec;padding-bottom:.4rem;color:#0a8a3f}
+    h3{font-size:1.1rem;margin-top:1.5rem;margin-bottom:.3rem;color:#0f172a}
+    p{color:#0f172a;margin-bottom:.75rem}
+    a{color:#0a8a3f;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .lead{color:#5a5e66;font-size:1.1rem;margin-bottom:2rem}
+    .case{background:#f7f8fa;border:1px solid #e6e8ec;border-radius:.5rem;padding:1.5rem;margin-bottom:1.5rem;transition:border-color .2s,transform .2s}
+    .case:hover{border-color:#0a8a3f;transform:translateY(-2px)}
+    .case h3{color:#0a8a3f;margin-bottom:.3rem}
+    .case .meta{color:#888;font-size:.85rem;margin-bottom:1rem;font-style:italic}
+    .case .scenario{background:#fff;border-left:3px solid #0a8a3f;padding:1rem;margin:1rem 0;border-radius:.3rem}
+    .case .scenario strong{display:block;color:#0a8a3f;margin-bottom:.4rem}
+    .case .stack{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1rem 0}
+    .case .stack .item{background:#fff;padding:.75rem;border-radius:.3rem;border:1px solid #e6e8ec;font-size:.85rem}
+    .case .stack .item strong{color:#0a8a3f}
+    .case .outcome{background:#f0fdf4;border:1px solid #d4f4dd;border-radius:.4rem;padding:1rem;margin:1rem 0}
+    .case .outcome strong{color:#076a30}
+    .cta{display:inline-block;background:#0a8a3f;color:white;padding:.75rem 1.5rem;border-radius:.5rem;font-weight:600;text-decoration:none;margin-top:1rem}
+    .foot{margin-top:3rem;color:#888;font-size:.85rem;border-top:1px solid #e6e8ec;padding-top:1.5rem;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · Case Studies</p>
+    <h1>3 illustrative EU AI Act scenarios</h1>
+    <p class="lead">These are anonymised, illustrative case studies. They show how the CSOAI stack + Watchdog Certs would work in three high-risk AI deployments. (Real customer names are confidential.)</p>
+
+    <div class="case">
+      <h3>Case 1: EU healthcare AI diagnostic (anonymised)</h3>
+      <div class="meta">Hospitals · 3 EU member states · 12M patients · Article 50 high-risk (Annex III #1 health)</div>
+
+      <div class="scenario">
+        <strong>The scenario</strong>
+        A medical AI vendor sells a chest X-ray triage system to 40 hospitals across Germany, France, and Italy. The AI is "intended to be used as a second-reader" — meaning a radiologist confirms every diagnosis. But the AI's risk profile is high: it's used in critical care, with potential for harm if it produces false negatives.
+        <br><br>
+        <strong>The compliance gap</strong>
+        The vendor's existing compliance documentation: 47 pages in 4 languages. No single verify URL a radiologist or hospital can check. The vendor's auditor wants Article 9 (risk management), Article 10 (data governance), Article 11 (technical docs), Article 14 (human oversight) — all four have to be checkable in 1 click.
+        <br><br>
+        <strong>What csoai.org would deliver</strong>
+        1 Watchdog Certificate per hospital deployment (40 certs). Each cert is Ed25519-signed, hash-chained into the sigil bus, and references the EU AI Act, MDR, HIPAA, ISO 13485, and the hospital's specific configuration. The cert URL is public — the radiologist, the auditor, the hospital's CISO can all check it in 1 click.
+      </div>
+
+      <div class="stack">
+        <div class="item"><strong>Stack:</strong> care-membrane-mcp + fda-samd-mcp + hipaa-compliance-mcp + healthcare-ai-governance-mcp + healthcare-fhir-mcp + meok-cold-chain-pharma-mcp + mdr-medical-device-mcp</div>
+        <div class="item"><strong>Tier:</strong> Enterprise £1,499/mo</div>
+        <div class="item"><strong>Certs:</strong> 40 × £4,950 = £198,000 one-time</div>
+        <div class="item"><strong>ARR:</strong> £17,988/yr</div>
+        <div class="item"><strong>Time to compliance:</strong> 14 days (vs 6-9 months typical)</div>
+      </div>
+
+      <div class="outcome">
+        <strong>The outcome</strong>
+        Hospital CISO can check any of the 40 deployments in 1 click. The EU notified body reviewing the MDR compliance gets a single URL that proves every required document is in place. The vendor's sales team can answer "is your AI EU AI Act compliant?" with a yes + a URL, not a 47-page PDF.
+      </div>
+      <a href="/certify" class="cta">Get Your Watchdog Cert</a>
+    </div>
+
+    <div class="case">
+      <h3>Case 2: EU bank credit AI (anonymised)</h3>
+      <div class="meta">Bank · 5 EU member states · €40B loan book · Article 50 high-risk (Annex III #5 creditworthiness)</div>
+
+      <div class="scenario">
+        <strong>The scenario</strong>
+        A European retail bank uses an AI to assess creditworthiness for SME loans. The AI considers 200+ features from company filings, transaction history, and alternative data. The bank wants to expand from 3 EU countries to 5, but each new country adds 2 new regulators to the compliance matrix.
+        <br><br>
+        <strong>The compliance gap</strong>
+        The bank's existing audit: 8 different frameworks, 3 different regulators, 12 different compliance attestations. The bank has to maintain separate documentation for ECB + EBA + national supervisors + DORA + GDPR. Each regulator asks for the same evidence in different formats.
+        <br><br>
+        <strong>What csoai.org would deliver</strong>
+        1 Watchdog Certificate per AI model + per country deployment. The cert is valid for EU AI Act, DORA, NIS2, GDPR, AML, and the national supervisor's requirements. The bank's internal audit team + ECB + EBA + national supervisors can all check the same URL.
+      </div>
+
+      <div class="stack">
+        <div class="item"><strong>Stack:</strong> agent-commerce-payments-mcp + aml-ai-mcp + dora-compliance-mcp + nis2-compliance-mcp + pci-dss-mcp + soc2-compliance-ai-mcp</div>
+        <div class="item"><strong>Tier:</strong> Enterprise £1,499/mo</div>
+        <div class="item"><strong>Certs:</strong> 1 × £4,950 (multi-country covered)</div>
+        <div class="item"><strong>ARR:</strong> £17,988/yr</div>
+        <div class="item"><strong>Time to compliance:</strong> 21 days (vs 12+ months typical)</div>
+      </div>
+
+      <div class="outcome">
+        <strong>The outcome</strong>
+        The bank expands to 2 new countries in 4 months instead of 18. The compliance cost per country drops by 80%. The bank's risk officer can prove to ECB + EBA + national supervisors that the AI is fully compliant in 1 click. The bank's customer base grows 2x without the proportional compliance overhead.
+      </div>
+      <a href="/certify" class="cta">Get Your Watchdog Cert</a>
+    </div>
+
+    <div class="case">
+      <h3>Case 3: UK public sector benefits AI (anonymised)</h3>
+      <div class="meta">UK central government · 8M citizens · UK AI Bill + Equality Act + data protection</div>
+
+      <div class="scenario">
+        <strong>The scenario</strong>
+        A UK central government department uses an AI to triage benefits applications. The AI flags applications that need additional review. The department processes 1.2M applications per year, and the AI helps prioritise 40% for fast-track.
+        <br><br>
+        <strong>The compliance gap</strong>
+        The department's existing transparency: a 2,000-word public statement on the AI's design. No single verify URL. The ICO + Equality and Human Rights Commission + the National Audit Office each have separate compliance reviews scheduled. Each review takes 6+ months.
+        <br><br>
+        <strong>What csoai.org would deliver</strong>
+        1 Watchdog Certificate per AI model + per deployment. The cert is valid for the UK AI Bill, Equality Act 2010, UK GDPR, ICO guidance, and the National Audit Office's transparency requirements. The department publishes the verify URL on the public-facing website. Any citizen can check that the AI they're being assessed by is independently certified.
+      </div>
+
+      <div class="stack">
+        <div class="item"><strong>Stack:</strong> agent-policy-enforcement-mcp + agent-audit-logger-mcp + meok-iso-42005-impact-mcp + nist-rmf-ai-mcp + iso-42001-ai-mcp</div>
+        <div class="item"><strong>Tier:</strong> Enterprise £1,499/mo</div>
+        <div class="item"><strong>Certs:</strong> 1 × £4,950 (single deployment)</div>
+        <div class="item"><strong>ARR:</strong> £17,988/yr</div>
+        <div class="item"><strong>Time to compliance:</strong> 30 days (vs 18+ months typical)</div>
+      </div>
+
+      <div class="outcome">
+        <strong>The outcome</strong>
+        The ICO, EHRC, and NAO reviews complete in 90 days instead of 18 months. The department saves £2M+ in compliance overhead. The public-facing AI certification URL becomes a model for other departments. The minister responsible for AI in government cites the deployment as a "best practice" example in their next speech.
+      </div>
+      <a href="/certify" class="cta">Get Your Watchdog Cert</a>
+    </div>
+
+    <h2>Common patterns</h2>
+    <p>All 3 cases share these patterns:</p>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li><strong>Article 50 high-risk classification</strong> (Annex III #1 health, #5 credit, #5 essential services)</li>
+      <li><strong>Multi-jurisdiction compliance</strong> (3-5 regulators per AI system)</li>
+      <li><strong>Pre-existing compliance documentation</strong> that's difficult to verify in 1 click</li>
+      <li><strong>Need for public verify URL</strong> (regulator + customer + auditor access)</li>
+      <li><strong>White-label opportunity</strong> (the customer's branding on the cert)</li>
+    </ul>
+
+    <h2>What csoai.org would NOT do</h2>
+    <p>To be clear about scope:</p>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li>We don't replace your existing risk management process — we certify its output</li>
+      <li>We don't replace your legal counsel — we provide the signed evidence they can use</li>
+      <li>We don't replace your auditor — we make their job 10x faster</li>
+      <li>We don't claim to make you "compliant" — only your regulator can decide that</li>
+      <li>We don't lock you in — every cert is yours forever, with the Ed25519 keys published</li>
+    </ul>
+
+    <p class="foot">© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · <a href="/glossary">Glossary</a> · <a href="/regulators">Regulators</a> · <a href="/certify">/certify</a> · Updated 2026-06-17</p>
+  </div>
+</body>
+</html>

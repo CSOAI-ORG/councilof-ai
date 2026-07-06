@@ -1,0 +1,250 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<title>/os — They Are Apps. CSOAI Is the Operating System. | CSOAI</title>
+<meta name="description" content="CSOAI is the Layer 0 runtime substrate for the agentic economy. Vanta, Drata, Credo AI, IBM — they're apps. We're the OS. MCP/A2A/AP2/x402 native.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://csoai.org/os">
+<meta property="og:type" content="website">
+<meta property="og:title" content="/os — They Are Apps. CSOAI Is the Operating System.">
+<meta property="og:description" content="Layer 0 runtime substrate for the agentic economy. Identity bus, attestation bus, policy bus, payment bus, audit bus, council bus.">
+<meta property="og:image" content="https://csoai.org/og-image.png">
+<meta property="og:url" content="https://csoai.org/os">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"CSOAI OS — Layer 0 Runtime Substrate","description":"The operating system for the agentic economy"}</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#c9a84c;--bg:#0a0a0f;--surface:#11111a;--border:#1e293b;--text:#f8fafc;--muted:#94a3b8;--emerald:#10B981;--violet:#8b5cf6;--cyan:#06b6d4;--red:#EF4444}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,.btn{font-family:'Space Grotesk',sans-serif}
+.container{max-width:1200px;margin:0 auto;padding:0 2rem}
+.section{padding:5rem 0}
+.btn{display:inline-block;padding:.85rem 1.75rem;border-radius:8px;font-weight:700;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;font-size:.9rem;transition:all .2s}
+.btn-accent{background:var(--primary);color:#0a0a0f}
+.btn-outline{border:2px solid rgba(201,168,76,.4);color:var(--primary);background:transparent}
+.hero{position:relative;text-align:center;padding:8rem 0 5rem;background:radial-gradient(ellipse at top,rgba(139,92,246,.1) 0%,transparent 60%)}
+.hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:800;line-height:1.05;margin-bottom:1.5rem}
+.hero h1 .accent{background:linear-gradient(135deg,var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.25rem;color:var(--muted);max-width:680px;margin:0 auto 2.5rem}
+.os-diagram{position:relative;max-width:900px;margin:5rem auto;padding:3rem;background:radial-gradient(ellipse at center,rgba(139,92,246,.08) 0%,transparent 70%);border-radius:24px}
+.os-kernel{width:200px;height:200px;margin:0 auto;background:linear-gradient(135deg,var(--violet),var(--cyan));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;text-align:center;box-shadow:0 0 80px rgba(139,92,246,.4);position:relative;z-index:2;color:#0a0a0f}
+.os-orbit{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border:1px dashed rgba(139,92,246,.3);border-radius:50%;animation:rotate 60s linear infinite}
+.os-orbit.inner{width:400px;height:400px;border-color:rgba(6,182,212,.3);animation-duration:40s;animation-direction:reverse}
+.os-node{position:absolute;width:80px;height:80px;background:var(--surface);border:2px solid var(--violet);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;text-align:center;padding:.5rem;color:var(--text)}
+.os-node.cyan{border-color:var(--cyan)}
+.os-node.emerald{border-color:var(--emerald)}
+.os-node.gold{border-color:var(--primary)}
+@keyframes rotate{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.bus-section{margin-top:3rem}
+.bus{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.bus::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--violet),var(--cyan))}
+.bus h3{color:var(--primary);font-size:1.4rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.bus .icon{width:40px;height:40px;background:linear-gradient(135deg,var(--violet),var(--cyan));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.bus p{color:var(--muted);margin-bottom:1rem}
+.bus ul{list-style:none;color:var(--text);font-size:.95rem}
+.bus li{padding:.5rem 0;padding-left:1.5rem;position:relative}
+.bus li::before{content:'⚡';position:absolute;left:0;color:var(--primary);font-weight:700}
+.authority{margin-top:5rem}
+.authority-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2rem}
+.authority-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;transition:all .2s}
+.authority-item:hover{border-color:var(--primary);transform:translateY(-2px)}
+.authority-item .icon{font-size:2.5rem;margin-bottom:.5rem}
+.authority-item h4{color:var(--primary);font-size:1.05rem;margin-bottom:.5rem}
+.authority-item p{color:var(--muted);font-size:.85rem}
+nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:1rem 0}
+nav .container{display:flex;justify-content:space-between;align-items:center}
+nav a.logo{color:var(--primary);font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;text-decoration:none}
+nav .nav-links a{color:var(--muted);text-decoration:none;margin:0 .75rem;font-size:.9rem}
+nav .nav-links a:hover{color:var(--text)}
+footer{text-align:center;padding:3rem 0;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="container">
+    <a href="index.html" class="logo">🐉 CSOAI</a>
+    <div class="nav-links">
+      <a href="switch.html">/switch</a>
+      <a href="article-50-kit.html">🚨 Article 50</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="contact.html?service=os">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>They are <span class="accent">apps</span>.<br>CSOAI is the <span class="accent">operating system</span>.</h1>
+    <p>Vanta, Drata, Credo AI, IBM, Microsoft, AWS, OneTrust — they are all apps. CSOAI is the Layer 0 runtime substrate that binds them, governs them, and issues cryptographic proof for every action they take.</p>
+    <a href="contact.html?service=os" class="btn btn-accent">Build on CSOAI</a>
+    <a href="switch.html" class="btn btn-outline">Switch from a competitor →</a>
+  </div>
+
+  <div class="os-diagram">
+    <div class="os-orbit">
+      <div class="os-node cyan" style="top:10%;left:50%;transform:translateX(-50%)">Vanta</div>
+      <div class="os-node cyan" style="top:30%;left:85%;">Drata</div>
+      <div class="os-node cyan" style="top:70%;left:80%;">Credo AI</div>
+      <div class="os-node cyan" style="top:90%;left:50%;transform:translateX(-50%)">Holistic AI</div>
+      <div class="os-node cyan" style="top:70%;left:20%;">OneTrust</div>
+      <div class="os-node cyan" style="top:30%;left:15%;">IBM</div>
+    </div>
+    <div class="os-orbit inner">
+      <div class="os-node gold" style="top:0%;left:50%;transform:translateX(-50%)">EU AI Office</div>
+      <div class="os-node gold" style="top:50%;left:100%;transform:translateY(-50%)">NIST</div>
+      <div class="os-node gold" style="top:100%;left:50%;transform:translate(-50%,-100%)">AISI</div>
+      <div class="os-node gold" style="top:50%;left:0%;transform:translate(-100%,-50%)">BSI</div>
+    </div>
+    <div class="os-kernel">CSOAI<br>Layer 0</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-label" style="color:var(--primary);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:3px;margin-bottom:.5rem">The 6 buses</div>
+    <h2 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:1rem">Layer 0 is 6 buses. Apps plug in. Regulators verify.</h2>
+    <p style="color:var(--muted);max-width:680px">Every agent, user, system, and event flows through the same 6 buses. Identity on entry. Attestation on every action. Policy at runtime. Payment pre-checked. Audit immutably recorded. Council as final arbiter.</p>
+
+    <div class="bus-section">
+      <div class="bus">
+        <h3><span class="icon">🆔</span> Identity Bus</h3>
+        <p>Every agent, user, and system gets a <code style="background:rgba(201,168,76,.1);padding:.1rem .3rem;border-radius:4px">did:csoai</code> — a W3C-compliant decentralized identifier. No vendor lock-in, no SAML cascade.</p>
+        <ul>
+          <li>W3C DID v1.1 standard</li>
+          <li>IETF AIP alignment</li>
+          <li>Ed25519 + Secp256k1 key support</li>
+          <li>Works offline, works air-gapped</li>
+        </ul>
+      </div>
+
+      <div class="bus">
+        <h3><span class="icon">📜</span> Attestation Bus</h3>
+        <p>Every compliance event becomes a signed, publicly-verifiable receipt. Your auditor, regulator, or customer can check the truth — without calling us.</p>
+        <ul>
+          <li>Ed25519 signature per event</li>
+          <li>Public verify URL (csoai.org/verify/{id})</li>
+          <li>Solana SBT mint for material events</li>
+          <li>Sub-5ms verification latency</li>
+        </ul>
+      </div>
+
+      <div class="bus">
+        <h3><span class="icon">⚖️</span> Policy Bus</h3>
+        <p>PDCA (Plan-Do-Check-Act) runtime enforces rules across all connected apps. Sub-0.1ms latency. 13-framework crosswalk in YAML.</p>
+        <ul>
+          <li>13 frameworks: EU AI Act, NIST AI RMF, ISO 42001, GDPR, DORA, NIS2, CRA, MDR, SR 11-7, BCBS 239, SOC 2, OCSF, custom</li>
+          <li>Runtime enforcement at agent-call latency</li>
+          <li>Versioned policies with Ed25519 signatures</li>
+          <li>Override workflow for emergency exceptions</li>
+        </ul>
+      </div>
+
+      <div class="bus">
+        <h3><span class="icon">💳</span> Payment Bus</h3>
+        <p>x402 / AP2 / ACP payment flows pre-checked for compliance. The agent pays — and the receipt is cryptographic proof that the payment complied.</p>
+        <ul>
+          <li>x402 micropayments with compliance attestation</li>
+          <li>AP2 agent payment protocol support</li>
+          <li>ACP agent commerce standard</li>
+          <li>Each transaction emits a Watchdog Certificate</li>
+        </ul>
+      </div>
+
+      <div class="bus">
+        <h3><span class="icon">📚</span> Audit Bus</h3>
+        <p>Immutable, regulator-checkable logs. Append-only, hash-chained, optionally blockchain-anchored to Polygon PoA or Solana.</p>
+        <ul>
+          <li>SHA-256 hash chain (every entry references prior)</li>
+          <li>Polygon PoA anchoring (optional, for regulators)</li>
+          <li>Solana SBT for material attestations</li>
+          <li>Indefinite retention (or your policy)</li>
+        </ul>
+      </div>
+
+      <div class="bus">
+        <h3><span class="icon">👥</span> Council Bus</h3>
+        <p>BFT multi-stakeholder governance as a first-class system bus. Override any decision with quorum. Resolve disputes with cryptographic voting.</p>
+        <ul>
+          <li>Byzantine Fault Tolerant (33 voters, f=10)</li>
+          <li>Weighted by stakeholder type (regulator/operator/customer)</li>
+          <li>Sub-5ms consensus latency</li>
+          <li>Audit trail per vote (Ed25519 signed)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:rgba(201,168,76,.04)">
+  <div class="container">
+    <div style="color:var(--primary);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:3px;margin-bottom:.5rem">Authority absorption</div>
+    <h2 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:1rem">How regulators, notified bodies, and legislators plug in</h2>
+    <p style="color:var(--muted);max-width:680px">Don't fight incumbents. Absorb them. The OS becomes the substrate where every stakeholder meets.</p>
+
+    <div class="authority-grid">
+      <div class="authority-item">
+        <div class="icon">🏛️</div>
+        <h4>Regulators</h4>
+        <p>Public verify dashboards + API. Check any agent's compliance status without trusting CSOAI.</p>
+      </div>
+      <div class="authority-item">
+        <div class="icon">📋</div>
+        <h4>Notified Bodies</h4>
+        <p>Joint conformity packages. CSOAI Watchdog Cert + Notified Body audit = complete evidence.</p>
+      </div>
+      <div class="authority-item">
+        <div class="icon">⚖️</div>
+        <h4>Legislators</h4>
+        <p>Policy sandbox participation. Shape standards while building credibility.</p>
+      </div>
+      <div class="authority-item">
+        <div class="icon">🌐</div>
+        <h4>Standard Bodies</h4>
+        <p>BSI, CEN, IEEE, ISO liaison status. Contribute schemas, co-author frameworks.</p>
+      </div>
+      <div class="authority-item">
+        <div class="icon">🤝</div>
+        <h4>Competitor Platforms</h4>
+        <p>They become evidence sources, not enemies. Vanta exports → CSOAI attestation.</p>
+      </div>
+      <div class="authority-item">
+        <div class="icon">🏢</div>
+        <h4>Governments</h4>
+        <p>Sovereign AI council membership. NATO-friendly, EU-hosted deployments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div style="color:var(--primary);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:3px;margin-bottom:.5rem">Why this matters</div>
+    <h2 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:1rem">Regulators and legislators want this</h2>
+    <ul style="list-style:none;margin-top:2rem;display:grid;gap:1rem">
+      <li style="background:var(--surface);border-left:3px solid var(--emerald);padding:1rem 1.5rem;border-radius:8px"><strong>Single pane</strong> — AI system inventory across sectors, one dashboard, real-time</li>
+      <li style="background:var(--surface);border-left:3px solid var(--emerald);padding:1rem 1.5rem;border-radius:8px"><strong>Tamper-evident</strong> — Ed25519 audit trails + optional eIDAS timestamp anchoring</li>
+      <li style="background:var(--surface);border-left:3px solid var(--emerald);padding:1rem 1.5rem;border-radius:8px"><strong>Cross-jurisdiction</strong> — Standardised mapping between 13 frameworks + 5 legal regions</li>
+      <li style="background:var(--surface);border-left:3px solid var(--emerald);padding:1rem 1.5rem;border-radius:8px"><strong>Public verify</strong> — Auditor checks truth without trusting CSOAI (Ed25519 self-verifying)</li>
+      <li style="background:var(--surface);border-left:3px solid var(--emerald);padding:1rem 1.5rem;border-radius:8px"><strong>Sovereign by default</strong> — Reduces CLOUD Act + extraterritorial risk for EU/UK regulators</li>
+      <li style="background:var(--surface);border-left:3px solid var(--emerald);padding:1rem 1.5rem;border-radius:8px"><strong>Open source</strong> — Substrate is CC0/MIT/Apache 2.0, not a black-box vendor platform</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" style="text-align:center;background:radial-gradient(ellipse at center,rgba(139,92,246,.1) 0%,transparent 60%)">
+  <div class="container">
+    <h2 style="font-size:clamp(2rem,5vw,3rem);margin-bottom:1rem">Build on the OS. Or build the OS with us.</h2>
+    <p style="color:var(--muted);max-width:600px;margin:0 auto 2rem">Two paths. Both win.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a href="contact.html?service=os-build" class="btn btn-accent">Build Apps on CSOAI</a>
+      <a href="contact.html?service=os-partner" class="btn btn-outline">Become an OS Partner</a>
+      <a href="switch.html" class="btn btn-outline">Switch Your Stack</a>
+    </div>
+    <p style="margin-top:2rem;font-size:.85rem;color:var(--muted)">Or <a href="article-50-kit.html" style="color:var(--primary)">secure your EU AI Act compliance in 48 hours →</a></p>
+  </div>
+</section>
+
+<footer>
+  <p>🐉 CSOAI LTD (UK Companies House 16939677) · Independent standards body · CC0 core + MIT SDK + Apache 2.0 BFT</p>
+  <p style="margin-top:.5rem"><a href="index.html" style="color:var(--primary)">Home</a> · <a href="switch.html" style="color:var(--primary)">/switch</a> · <a href="pricing.html" style="color:var(--primary)">Pricing</a> · <a href="article-50-kit.html" style="color:var(--primary)">Article 50</a></p>
+</footer>
+</body></html>

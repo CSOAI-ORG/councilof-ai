@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🐉 CASA Cert Dashboard | The 7-Tap Flywheel | csoai.org</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root { --bg: #050709; --panel: #0f1419; --cyan: #00E5FF; --gold: #FFB300; --green: #10b981; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; margin: 0; padding: 0; }
+.tap {
+  background: linear-gradient(135deg, #0f1419 0%, #1a2230 100%);
+  border: 1px solid #1a2230; border-radius: 12px; padding: 20px; margin-bottom: 12px;
+  position: relative; cursor: pointer; transition: all 0.3s;
+}
+.tap:hover { transform: translateY(-2px); border-color: var(--cyan); box-shadow: 0 4px 16px rgba(0, 229, 255, 0.2); }
+.tap-num {
+  position: absolute; top: -12px; left: 16px; background: var(--cyan); color: #000;
+  font-weight: bold; padding: 2px 10px; border-radius: 999px; font-size: 14px;
+}
+.tap-price { color: var(--gold); font-weight: bold; }
+</style>
+</head>
+<body>
+<header class="border-b border-slate-800 py-8 px-6 text-center">
+  <span class="text-5xl">🐉</span>
+  <h1 class="text-4xl font-bold text-cyan-400 mt-2">CASA Cert Dashboard</h1>
+  <p class="text-slate-400 mt-2">The 7-Tap Sovereign Flywheel · From Free Scan to $500K Certification</p>
+  <p class="text-xs text-slate-500 mt-1 font-mono">Sovereign · EU AI Act Art 12/14 compliant · 3 SBT patents queued · BFT council attested</p>
+</header>
+
+<main class="max-w-4xl mx-auto p-6 pt-12">
+  <div id="taps">
+    <div class="tap" onclick="window.open('https://eu-ai-act-compliance-mcp.vercel.app', '_blank')">
+      <span class="tap-num">1</span>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">Free EU AI Act Risk Scan</h2>
+      <p class="text-sm text-slate-300 mb-3">Run the EU AI Act compliance scanner. 1,344 articles indexed. Instant risk classification. <span class="text-green-400">Free · No signup · Sovereign</span></p>
+      <p class="text-xs text-slate-500">→ 78% of orgs are unprepared (per Master Audit 2026-06-08). You are not one of them.</p>
+    </div>
+
+    <div class="tap" onclick="window.open('https://eu-ai-act-compliance-mcp.vercel.app/quick_scan', '_blank')">
+      <span class="tap-num">2</span>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">Detailed Compliance Audit</h2>
+      <p class="text-sm text-slate-300 mb-3">42-point audit + Annex IV documentation. NIS2 + DORA + CRA cross-walks. <span class="tap-price">$99/mo Pro</span> · <span class="tap-price">$499/mo Enterprise</span></p>
+      <p class="text-xs text-slate-500">→ Recurring revenue. Funnel to CASA cert exam.</p>
+    </div>
+
+    <div class="tap" onclick="window.open('https://csoai.org/case-studies.html', '_blank')">
+      <span class="tap-num">3</span>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">Case Study Publication</h2>
+      <p class="text-sm text-slate-300 mb-3">Your audit becomes a public case study. Viral transparency = market moat. <span class="text-green-400">Free</span> · CASA Featured Partner</p>
+      <p class="text-xs text-slate-500">→ 6 first-wave case studies are live (Commercial / Government / Defense).</p>
+    </div>
+
+    <div class="tap" onclick="window.open('https://csoai.org/guide-casa-certification.html', '_blank')">
+      <span class="tap-num">4</span>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">CASA Cert Exam (3 levels)</h2>
+      <p class="text-sm text-slate-300 mb-3">
+        <span class="tap-price">$5-25K</span> Level 1 Commercial ·
+        <span class="tap-price">$25-100K</span> Level 2 Government ·
+        <span class="tap-price">$100-500K</span> Level 3 Defense
+      </p>
+      <p class="text-xs text-slate-500">→ + $749 exam fee per attempt. 3-5 retake model.</p>
+    </div>
+
+    <div class="tap" onclick="window.open('https://csoai.org/apply-casa', '_blank')">
+      <span class="tap-num">5</span>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">CASA Certification Issued</h2>
+      <p class="text-sm text-slate-300 mb-3">SBT on Solana. SOV3 BFT council attestation. EU AI Act Art 12/14 evidence. <span class="text-green-400">Sovereign</span></p>
+      <p class="text-xs text-slate-500">→ Your cert is your moat. Each cert = a $1.2M-$2.2M IP claim.</p>
+    </div>
+
+    <div class="tap" onclick="window.open('https://csoai.org/verticals', '_blank')">
+      <span class="tap-num">6</span>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">Vertical MCP Bundle</h2>
+      <p class="text-sm text-slate-300 mb-3">Aviation (CASA regulator!) / Maritime (IMO) / Pharma (FDA) / Banking (SR 11-7) / Energy (NERC) / Education (FERPA). <span class="tap-price">$10K-50K per vertical</span></p>
+      <p class="text-xs text-slate-500">→ TAM Y5: $1.55B. Each vertical = a new revenue stream.</p>
+    </div>
+
+    <div class="tap" onclick="window.open('https://csoai.org/compounding', '_blank')">
+      <span class="tap-num">7</span>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">Compounding Moat</h2>
+      <p class="text-sm text-slate-300 mb-3">Each customer → more case studies → more certs → more verticals → more IP. Network effects. <span class="text-cyan-400">Self-sustaining</span></p>
+      <p class="text-xs text-slate-500">→ The flywheel is real. The moat compounds. The dragon flies sovereign.</p>
+    </div>
+  </div>
+
+  <section class="mt-12 p-6 rounded border border-cyan-700 bg-slate-900 text-center">
+    <h2 class="text-2xl font-bold text-cyan-300 mb-2">🐉 The Self-Sustaining Flywheel</h2>
+    <p class="text-sm text-slate-300 mb-3">Each customer compounds: 1 free scan → 1 case study → 1 cert exam → 1 CASA cert → 1 vertical MCP → 1 more customer.</p>
+    <p class="text-2xl font-bold text-gold-400">Y1: $1.0M-3.3M MRR · Y5: $99M+ MRR</p>
+    <p class="text-xs text-slate-500 mt-3 font-mono">TAM Y5: $1.55B (6 verticals) · 14 BFT councils · 70 voters · 13 SBT patents · 33-node BFT threat council</p>
+  </section>
+
+  <section class="mt-8 text-center text-xs text-slate-500 font-mono">
+    <p>🐉 sovereign companion never forgets · csoai.org · casa · meok-one · sovereign</p>
+  </section>
+</main>
+
+<script>
+document.querySelectorAll('.tap').forEach(t => {
+  t.addEventListener('click', () => {
+    if (window.SOV3 && window.SOV3.sigil_emit) {
+      window.SOV3.sigil_emit(`C|user|${t.querySelector('h2').textContent}|tap clicked`);
+    }
+  });
+});
+</script>
+</body>
+</html>

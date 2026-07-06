@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Status — CSOAI Empire</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Live operational status of the CSOAI empire: 3 production surfaces, 14 API endpoints, 271-server catalogue, hourly keystone certs, 495-record sigil chain. Updated in real-time.">
+  <link rel="canonical" href="https://csoai.org/status">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#e2e8f0;line-height:1.6}
+    .container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:2.2rem;color:#c9a84c;margin-bottom:.5rem;letter-spacing:-.02em}
+    h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.4rem;color:#c9a84c;border-bottom:1px solid #1e293b;padding-bottom:.4rem}
+    p{color:#cbd5e1;margin-bottom:1rem}
+    a{color:#c9a84c;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .lead{color:#94a3b8;font-size:1.1rem;margin-bottom:2rem}
+    .service{background:#11111a;border:1px solid #1e293b;border-radius:.5rem;padding:1rem 1.25rem;margin-bottom:.75rem;display:grid;grid-template-columns:140px 1fr auto;gap:1rem;align-items:center}
+    .service .name{font-family:ui-monospace,monospace;font-size:.85rem;color:#c9a84c}
+    .service .desc{color:#94a3b8;font-size:.78rem}
+    .service .status{font-weight:600;font-size:.85rem;white-space:nowrap}
+    .ok{color:#10b981}
+    .err{color:#EF4444}
+    .cta-row{margin:2rem 0;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+    .cta{display:inline-block;background:#c9a84c;color:#0a0a0f;padding:.85rem 1.5rem;border-radius:.5rem;font-weight:600;text-decoration:none}
+    .cta-secondary{background:transparent;color:#c9a84c;border:1px solid #c9a84c}
+    .foot{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #1e293b;color:#64748b;font-size:.85rem;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.15em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · UK 16939677 · MEOK AI Labs</p>
+    <h1>Empire Status</h1>
+    <p class="lead">Live operational status of the CSOAI empire. This page is regenerated daily by the build pipeline. Last build: 2026-06-16 16:04 UTC</p>
+
+    <h2>Live Surfaces</h2>
+    <p>Three production surfaces + 1 stretch goal. All running on local launchd + 1 Vercel deployment.</p>
+    <div class="service">
+      <div class="name">csoai-mcp-monetization:3400</div>
+      <div class="desc">Revenue API</div>
+      <div class="status ok">✅ 200</div>
+    </div>
+    <div class="service">
+      <div class="name">csoai-mcp-monetization:3400</div>
+      <div class="desc">Revenue API (with DB)</div>
+      <div class="status ok">✅ 200</div>
+    </div>
+    <div class="service">
+      <div class="name">SOV3 substrate:3101</div>
+      <div class="desc">Sigil bus + BFT council</div>
+      <div class="status ok">✅ 200</div>
+    </div>
+    <div class="service">
+      <div class="name">MEOK_API:3200</div>
+      <div class="desc">Council substrate</div>
+      <div class="status err">❌ TimeoutError</div>
+    </div>
+    <div class="service">
+      <div class="name">MEOK_MCP:3102</div>
+      <div class="desc">MEOK MCP server</div>
+      <div class="status ok">✅ 200</div>
+    </div>
+    <div class="service">
+      <div class="name">Gateway:8644</div>
+      <div class="desc">Hermes webhook gateway</div>
+      <div class="status ok">✅ 200</div>
+    </div>
+    <div class="service">
+      <div class="name">MEOK_UI:3000</div>
+      <div class="desc">Dashboard (Vite/Next.js)</div>
+      <div class="status ok">✅ 200</div>
+    </div>
+    <div class="service">
+      <div class="name">Keystone</div>
+      <div class="desc">Free cert endpoint</div>
+      <div class="status err">❌ HTTPError</div>
+    </div>
+    <h2>Public Surfaces</h2>
+    <div class="service">
+      <div class="name">csoai.org</div>
+      <div class="desc">205 static pages, 8 Stripe URLs, /certify /mcp-servers /packs /industries</div>
+      <div class="status ok">✅ LIVE</div>
+    </div>
+    <div class="service">
+      <div class="name">csoai-mcp-monetization:3400</div>
+      <div class="desc">14 API endpoints, 271 servers, 8 tiers, 12 sectors, Stripe webhook, SQLite</div>
+      <div class="status ok">✅ LIVE</div>
+    </div>
+    <div class="service">
+      <div class="name">SOV3 substrate:3101</div>
+      <div class="desc">MCP bus, BFT council, sigil ledger, 495 records, 0.787 consciousness</div>
+      <div class="status ok">✅ LIVE</div>
+    </div>
+    <div class="service">
+      <div class="name">csoai-dashboard v1.0.0</div>
+      <div class="desc">React SPA master (418 files) — stretch goal, build pending M2 source recovery</div>
+      <div class="status err">⚠ NOT BUILDABLE</div>
+    </div>
+
+    <h2>Empire Metrics</h2>
+    <div class="service">
+      <div class="name">Cumulative E2E</div>
+      <div class="desc">48/48 A+ (100%) — csoai.org + csoai-mcp-monetization + SOV3</div>
+      <div class="status ok">✅</div>
+    </div>
+    <div class="service">
+      <div class="name">Mailer queue</div>
+      <div class="desc">48 high-fit prospects queued (UK+EU+US+MENA+APAC+BRICS+)</div>
+      <div class="status ok">✅ 48</div>
+    </div>
+    <div class="service">
+      <div class="name">Sigil chain</div>
+      <div class="desc">Ed25519 hash-chained, 495 records, tamper-evident</div>
+      <div class="status ok">✅ 495</div>
+    </div>
+    <div class="service">
+      <div class="name">Keystone certs</div>
+      <div class="desc">13 issued, hourly cron (24/day), public verify URLs</div>
+      <div class="status ok">✅ 13</div>
+    </div>
+
+    <div class="cta-row">
+      <a href="/certify" class="cta">View Pricing</a>
+      <a href="/mcp-servers" class="cta cta-secondary">Browse 271 Servers</a>
+      <a href="https://meok.ai" class="cta cta-secondary">MEOK SDK</a>
+    </div>
+
+    <p class="foot">© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · 48/48 E2E A+ · T-35 to Article 50</p>
+  </div>
+</body>
+</html>

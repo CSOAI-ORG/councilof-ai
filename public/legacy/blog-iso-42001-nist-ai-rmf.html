@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 42001 and NIST AI RMF: Aligning Your Systems with Global Standards | CSOAI Blog</title>
+    <meta name="description" content="Multiple AI governance frameworks exist globally. We explain how ISO 42001, NIST AI RMF, and CSOAI standards complement each other and create a comprehensive governance approach.">
+    <meta name="theme-color" content="#0D0B21">
+    <meta property="og:title" content="ISO 42001 and NIST AI RMF: Aligning Your Systems with Global Standards">
+    <meta property="og:description" content="Multiple AI governance frameworks exist globally. We explain how ISO 42001, NIST AI RMF, and CSOAI standards complement each other and create a comprehensive governance approach.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://csoai.org/blog-iso-42001-nist-ai-rmf.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://csoai.org/assets/og-image.png">
+    <link rel="canonical" href="https://csoai.org/blog-iso-42001-nist-ai-rmf.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --color-dark: #0D0B21;
+            --color-dark-light: #1A1145;
+            --color-accent: #D4A843;
+            --color-accent-bright: #E8B76D;
+            --color-text: #E8E4F0;
+            --color-white: #FFFFFF;
+            --color-glass-bg: rgba(255, 255, 255, 0.03);
+            --color-glass-border: rgba(255, 255, 255, 0.08);
+            --easing: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-dark-light) 100%);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle, rgba(212, 168, 67, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 20s ease-in-out infinite;
+        }
+        @keyframes drift { 0%,100%{background-position:0 0} 50%{background-position:20px 20px} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(60px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:translateY(0)} }
+        main { position: relative; z-index: 1; }
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.2; color: var(--color-white); margin-bottom: 1.5rem; }
+        h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; color: var(--color-white); margin: 2.5rem 0 1rem; }
+        h3 { font-size: 1.25rem; font-weight: 600; color: var(--color-white); margin: 1.5rem 0 0.75rem; }
+        p { font-size: 1.05rem; line-height: 1.8; color: var(--color-text); margin-bottom: 1.25rem; }
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--color-text); }
+        li { margin-bottom: 0.5rem; line-height: 1.7; }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+            color: var(--color-dark); border: none; border-radius: 12px; font-weight: 600; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(212, 168, 67, 0.25); text-decoration: none; position: relative; overflow: hidden;
+        }
+        .btn:hover { transform: scale(1.02); box-shadow: 0 15px 45px rgba(212, 168, 67, 0.4); }
+        .btn-secondary { background: transparent; color: var(--color-accent); border: 2px solid var(--color-accent); box-shadow: none; }
+        .btn-secondary:hover { background: rgba(212, 168, 67, 0.1); box-shadow: 0 0 20px rgba(212, 168, 67, 0.2); }
+        section { max-width: 1400px; margin: 0 auto; padding: 80px 2rem; position: relative; z-index: 1; }
+        .article-content { max-width: 800px; margin: 0 auto; }
+        .article-meta-bar {
+            display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;
+            margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-glass-border);
+        }
+        .article-category {
+            display: inline-block; padding: 0.4rem 1rem; background: rgba(212, 168, 67, 0.15);
+            color: var(--color-accent); border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+        }
+        .article-date { font-size: 0.9rem; color: rgba(232, 228, 240, 0.7); }
+        .article-readtime { font-size: 0.9rem; color: rgba(232, 228, 240, 0.7); }
+        .newsletter {
+            background: var(--color-glass-bg); border: 1px solid var(--color-glass-border);
+            backdrop-filter: blur(20px); border-radius: 16px; padding: 3rem; text-align: center;
+            margin-top: 4rem; max-width: 600px; margin-left: auto; margin-right: auto;
+        }
+        .newsletter h3 { margin-bottom: 1rem; }
+        .newsletter-form { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        .newsletter-form input {
+            flex: 1; min-width: 200px; padding: 0.875rem 1.5rem;
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px; color: var(--color-white); font-family: inherit; font-size: 1rem;
+        }
+        .newsletter-form input::placeholder { color: rgba(232, 228, 240, 0.5); }
+        .newsletter-form input:focus { outline: none; background: rgba(255, 255, 255, 0.12); border-color: var(--color-accent); }
+        .sticky-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 99; padding: 1.5rem 2rem;
+            background: rgba(13, 11, 33, 0.8); backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap;
+        }
+        .sticky-message { font-size: 1rem; font-weight: 500; color: var(--color-text); flex: 1; min-width: 200px; }
+        .cookie-banner {
+            position: fixed; bottom: 80px; left: 2rem; z-index: 98;
+            background: var(--color-glass-bg); border: 1px solid var(--color-glass-border);
+            backdrop-filter: blur(20px); border-radius: 16px; padding: 1.5rem; max-width: 300px;
+            animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp { from{transform: translateY(100px); opacity: 0} to{transform: translateY(0); opacity: 1} }
+        .cookie-text { font-size: 0.85rem; color: var(--color-text); margin-bottom: 1rem; }
+        .cookie-buttons { display: flex; gap: 0.75rem; flex-direction: column; }
+        .cookie-buttons button { padding: 0.5rem 1rem; border: none; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; }
+        .cookie-accept { background: var(--color-accent); color: var(--color-dark); }
+        .cookie-accept:hover { transform: scale(1.02); }
+        .cookie-decline { background: transparent; color: var(--color-accent); border: 1px solid var(--color-accent); }
+        footer { background: linear-gradient(135deg, #0A0820 0%, #0D0B21 100%); padding: 4rem 2rem 2rem; margin-top: 6rem; border-top: 1px solid rgba(255, 255, 255, 0.05); position: relative; z-index: 2; }
+        .footer-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        .footer-section h4 { color: var(--color-accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; font-weight: 700; }
+        .footer-section ul { list-style: none; }
+        .footer-section a { color: var(--color-text); text-decoration: none; font-size: 0.95rem; display: block; margin-bottom: 0.75rem; transition: color 0.3s ease; }
+        .footer-section a:hover { color: var(--color-accent); }
+        .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.9rem; color: var(--color-text); max-width: 1400px; margin: 0 auto; }
+        .social-links { display: flex; gap: 1.5rem; }
+        .social-links a { color: var(--color-text); text-decoration: none; transition: color 0.3s ease; }
+        .social-links a:hover { color: var(--color-accent); }
+        @media (max-width: 1024px) {
+            .sticky-bar { flex-direction: column; padding: 1rem; }
+            .sticky-bar .btn { width: 100%; }
+            .footer-content { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            section { padding: 60px 1.5rem; }
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            .sticky-bar { bottom: 60px; }
+            .cookie-banner { left: 1rem; right: 1rem; max-width: none; bottom: 70px; }
+            .footer-content { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            section { padding: 50px 1rem; }
+            .btn { width: 100%; }
+            .sticky-bar { bottom: 50px; padding: 0.75rem; gap: 1rem; }
+            .sticky-message { text-align: center; font-size: 0.9rem; }
+            .cookie-banner { left: 0.5rem; right: 0.5rem; bottom: 60px; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+
+<!-- ═══ MEGA NAV ═══ -->
+<header style="position:sticky;top:0;z-index:1000;background:rgba(13,11,33,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(212,168,67,.15);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center">
+  <a href="index.html" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+    <span style="font-size:.7rem;color:rgba(232,228,240,.4);margin-left:.25rem">by MEOK AI Labs</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:.25rem" class="nav-links">
+    <!-- Standards -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Standards ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Governance Frameworks</div>
+        <a href="article-50-kit.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:#EF4444;transition:background .2s;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);margin-bottom:.5rem" onmouseover="this.style.background='rgba(239,68,68,.15)'" onmouseout="this.style.background='rgba(239,68,68,.1)'"><span style="font-size:1.2rem">🚨</span><span><strong style="display:block;font-size:.9rem">Article 50 Emergency Kit</strong><small style="color:rgba(239,68,68,.8);font-size:.8rem">Secure EU AI Act compliance in 48hrs</small></span></a>
+        <a href="charter.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📜</span><span><strong style="display:block;font-size:.9rem">52-Article Charter</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Complete governance framework</small></span></a>
+        <a href="crosswalks.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔄</span><span><strong style="display:block;font-size:.9rem">Framework Crosswalks</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">ISO 42001, NIST, EU AI Act, IEEE</small></span></a>
+        <a href="guides.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📖</span><span><strong style="display:block;font-size:.9rem">Implementation Guides</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">8 step-by-step modules</small></span></a>
+        <a href="glossary.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">AI Safety Glossary</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">250+ terms defined</small></span></a>
+      </div>
+    </div>
+    <!-- Products -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Products ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Solutions</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <a href="mcp-packs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📦</span><span><strong style="display:block;font-size:.9rem">Premium MCP Packs</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Curated server bundles</small></span></a>
+          <a href="finance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💳</span><span><strong style="display:block;font-size:.9rem">Agentic Finance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Payment pre-checks</small></span></a>
+          <a href="legacy.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏛️</span><span><strong style="display:block;font-size:.9rem">Legacy Bridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">COBOL/Mainframe tunnels</small></span></a>
+          <a href="governance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌍</span><span><strong style="display:block;font-size:.9rem">Global Mesh</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Cross-regional handoff</small></span></a>
+          <a href="certification.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏅</span><span><strong style="display:block;font-size:.9rem">CASA Certification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Standard AI safety cert</small></span></a>
+          <a href="enterprise.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏢</span><span><strong style="display:block;font-size:.9rem">Enterprise Governance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Turnkey compliance for orgs</small></span></a>
+          <a href="advisory.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🎯</span><span><strong style="display:block;font-size:.9rem">Advisory Services</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Expert AI governance consultancy</small></span></a>
+          <a href="pricing.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💰</span><span><strong style="display:block;font-size:.9rem">Pricing & Plans</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">From £1 to Enterprise</small></span></a>
+        </div>
+      </div>
+    </div>
+    <!-- Ecosystem -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Ecosystem ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Group Network</div>
+        <a href="https://meok.ai" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🧠</span><span><strong style="display:block;font-size:.9rem">MEOK.AI</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Sovereign AI OS &amp; agent marketplace</small></span></a>
+        <a href="https://cobolbridge.ai" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔗</span><span><strong style="display:block;font-size:.9rem">CobolBridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Legacy COBOL migration platform</small></span></a>
+        <a href="mcp-infrastructure.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🛠</span><span><strong style="display:block;font-size:.9rem">207 MCP Servers</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">1,050+ tools across 30 frameworks</small></span></a>
+        <a href="https://github.com/csoai-org" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🐙</span><span><strong style="display:block;font-size:.9rem">GitHub</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">518 open-source repositories</small></span></a>
+      </div>
+    </div>
+    <a href="about.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">About</a>
+    <a href="blog.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Blog</a>
+    <a href="contact.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Contact</a>
+    <!-- Developer -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Developer ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:320px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Developer Resources</div>
+        <a href="api-docs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">API Documentation</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">REST API reference</small></span></a>
+        <a href="status.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📊</span><span><strong style="display:block;font-size:.9rem">System Status</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Platform health monitoring</small></span></a>
+        <a href="verify.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">✓</span><span><strong style="display:block;font-size:.9rem">Certificate Verification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Verify certifications</small></span></a>
+        <a href="layer0.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">⚡</span><span><strong style="display:block;font-size:.9rem">Layer 0 Protocol</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">The 8 trust layers</small></span></a>
+        <a href="mcp-distribution.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌐</span><span><strong style="display:block;font-size:.9rem">MCP Distribution Map</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">AEO &amp; GEO fleet registry</small></span></a>
+      </div>
+    </div>
+    <a href="dashboard.html" style="background:linear-gradient(135deg,#D4A843,#E8B76D);color:#0D0B21;padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;margin-left:.5rem;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 15px rgba(212,168,67,.3)" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(212,168,67,.5)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 15px rgba(212,168,67,.3)'">Dashboard</a>
+  </div>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open');this.classList.toggle('active')" style="display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;z-index:1001"><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span></button>
+</header>
+<script>
+function toggleMega(btn){
+  const panel=btn.nextElementSibling;
+  const wasOpen=panel.style.display==='block';
+  document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none');
+  if(!wasOpen)panel.style.display='block';
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.mega-wrap'))document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none')});
+</script>
+<section style="animation:fadeUp 0.8s var(--easing) backwards;">
+    <div class="article-content">
+        <span class="article-category">Standards</span>
+        <h1>ISO 42001 and NIST AI RMF: Aligning Your Systems with Global Standards</h1>
+        <div class="article-meta-bar">
+            <span class="article-date">February 10, 2026</span>
+            <span class="article-readtime">14 min read</span>
+        </div>
+        <p>Organizations deploying artificial intelligence at scale today operate within a complex web of expectations. Customers demand transparency. Regulators require accountability. Boards seek assurance that AI investments do not expose the enterprise to unmanageable risk. In this environment, standards and frameworks are not merely compliance checklists—they are the architecture of trust. Among the most significant developments in AI governance are ISO 42001, the world’s first certifiable management system standard for AI, and the NIST AI Risk Management Framework (AI RMF), the United States’ authoritative risk-based methodology. Understanding how these two pillars interrelate, and how they connect to the <a href="charter.html">CSOAI 52-Article Charter</a>, is essential for any organization aspiring to responsible AI leadership.</p>
+        <h2>The Governance Imperative</h2>
+        <p>AI governance has moved from advisory to mandatory. The European Union’s AI Act, sectoral regulations in healthcare and finance, and procurement guidelines from the U.S. federal government all presuppose that organizations have systematic controls in place. Yet many enterprises struggle with fragmentation. Security teams reference ISO 27001. Privacy officers rely on GDPR. AI practitioners experiment with model cards and bias audits. The result is often a patchwork of activities that lack coherence at the institutional level. ISO 42001 and NIST AI RMF address this fragmentation directly, but from complementary angles. ISO 42001 asks: “Do you have a management system for AI?” NIST AI RMF asks: “Are you managing AI risk effectively?” Together, they provide both structure and substance.</p>
+        <h2>ISO 42001: The Certifiable Foundation</h2>
+        <p>Published in December 2023, ISO/IEC 42001 specifies the requirements for establishing, implementing, maintaining, and continually improving an Artificial Intelligence Management System (AIMS). It follows the familiar Annex SL structure shared by ISO 9001 (quality management) and ISO 27001 (information security), which means organizations already certified to other ISO standards can integrate ISO 42001 with relative efficiency. The standard is certifiable, meaning that accredited third-party bodies can audit an organization against its requirements and issue a certificate that demonstrates conformance to customers, regulators, and partners.</p>
+        <p>ISO 42001 covers the full AI lifecycle, from problem definition and data acquisition through model development, deployment, monitoring, and retirement. It requires organizations to define an AI policy, set objectives, assess impacts, implement controls, and continuously improve. A central concept is the “AI system impact assessment,” which evaluates the potential consequences of an AI system on individuals, groups, and society. High-impact systems demand more rigorous controls, documentation, and oversight. The standard also emphasizes the role of top management, ensuring that AI governance is not delegated solely to technical teams but is embedded in executive accountability.</p>
+        <h2>NIST AI RMF: The Risk-Centered Methodology</h2>
+        <p>The National Institute of Standards and Technology released the AI Risk Management Framework in January 2023 as a voluntary, consensus-driven resource. Unlike ISO 42001, NIST AI RMF is not a certifiable standard. It is a methodology—a flexible, outcome-oriented approach to identifying, measuring, and managing AI risks. The framework is organized around four core functions: Govern, Map, Measure, and Manage. These functions are designed to be iterative and adaptive, fitting organizations of varying sizes, sectors, and maturity levels.</p>
+        <p><strong>Govern</strong> establishes the organizational culture, processes, and structures needed for risk management. <strong>Map</strong> identifies the context in which AI systems operate, including stakeholders, use cases, and potential harms. <strong>Measure</strong> employs quantitative and qualitative methods to analyze and track risks. <strong>Manage</strong> involves responding to identified risks through mitigation, transfer, acceptance, or avoidance. This lifecycle-oriented approach dovetails naturally with ISO 42001’s management system requirements. Where ISO 42001 specifies that an organization must have a process for risk assessment, NIST AI RMF describes what that process should actually do.</p>
+        <h2>Comparing Scope and Intent</h2>
+        <p>While ISO 42001 and NIST AI RMF are highly complementary, they serve different purposes. ISO 42001 is a management system standard. Its primary output is an auditable, certifiable system that demonstrates institutional commitment to responsible AI. NIST AI RMF is a risk management playbook. Its primary output is better risk decisions and reduced harm. An organization can adopt NIST AI RMF without pursuing ISO 42001 certification, and it can pursue ISO 42001 certification without following every NIST recommendation. However, the most robust AI governance programs combine both.</p>
+        <p>Consider the analogy of building safety. ISO 42001 is like the building code: it specifies the structural requirements, inspections, and certifications needed for a safe building. NIST AI RMF is like the fire safety manual: it provides detailed guidance on identifying hazards, testing alarms, and evacuating occupants. Both are necessary, and neither substitutes for the other. For AI systems, the same principle applies. Certification without substantive risk management is hollow. Risk management without institutional commitment and accountability is fragile.</p>
+        <h2>Mapping the Two Frameworks</h2>
+        <p>The practical question for most organizations is not which framework to choose, but how to implement both efficiently. The good news is that the mapping is straightforward. ISO 42001 clauses covering organizational context, leadership, planning, and support align with NIST’s Govern function. The operational planning and control requirements in ISO 42001 map to NIST’s Map and Manage functions. Monitoring, measurement, and continuous improvement in ISO 42001 correspond to NIST’s Measure function and feedback loops.</p>
+        <p>At CSOAI, we have developed detailed <a href="crosswalks.html">framework crosswalks</a> that translate between ISO 42001, NIST AI RMF, the EU AI Act, IEEE standards, and the CSOAI Charter. These crosswalks enable organizations to satisfy multiple requirements through a single set of activities. For example, an AI system impact assessment conducted for ISO 42001 can be structured to simultaneously generate the documentation needed for NIST AI RMF mapping and EU AI Act conformity. This harmonization reduces duplication, accelerates time-to-compliance, and lowers audit fatigue.</p>
+        <h2>CSOAI Certification: The Unifying Layer</h2>
+        <p>CSOAI’s CASA certification program is designed to sit above individual standards, providing a unified validation of an organization’s AI safety posture. CASA does not replace ISO 42001 or NIST AI RMF. Instead, it integrates them. A CASA-certified organization has demonstrated that it operates a management system aligned with ISO 42001, applies risk management methodologies consistent with NIST AI RMF, and adheres to the governance principles of the CSOAI Charter.</p>
+        <p>The CASA certification process includes documentation review, control testing, and third-party audit. Organizations receive a certification scorecard that maps their conformance to ISO 42001 clauses, NIST AI RMF functions, and CSOAI charter articles. This transparency is valuable not only for compliance but also for procurement. Enterprise customers increasingly require proof of AI governance, and a unified CASA certification is more efficient than presenting multiple isolated attestations. To learn more about the certification tiers and audit process, visit our <a href="certification.html">CASA Certification</a> page.</p>
+        <h2>Implementation Roadmap</h2>
+        <p>For organizations beginning their alignment journey, we recommend a phased approach. The first phase is <strong>Foundation</strong>: establish an AI governance committee, adopt an AI policy, and conduct an inventory of all AI systems in use or development. The second phase is <strong>Assessment</strong>: perform AI system impact assessments, map risks using the NIST AI RMF methodology, and identify gaps against ISO 42001 requirements. The third phase is <strong>Integration</strong>: implement missing controls, document processes, and align with the CSOAI Charter principles. The fourth phase is <strong>Certification</strong>: undergo internal audit, engage a CSOAI-accredited certification body, and achieve CASA certification.</p>
+        <h3>Common Pitfalls to Avoid</h3>
+        <p>Many organizations stumble by treating ISO 42001 and NIST AI RMF as purely documentation exercises. The most successful implementations embed these frameworks into daily operations, not binders. Another frequent mistake is siloing AI governance within the IT department; effective governance requires participation from legal, compliance, product, and executive leadership. Finally, organizations often underestimate the time required for meaningful risk assessment. Rushing the Map and Measure phases leads to blind spots that auditors and regulators will quickly identify.</p>
+        <p>Throughout this journey, CSOAI provides <a href="guides.html">implementation guides</a> that break each phase into actionable steps. Our guides cover governance structure, risk assessment templates, documentation requirements, and audit preparation. For organizations with limited internal resources, our <a href="enterprise.html">Enterprise Governance</a> and <a href="advisory.html">Advisory Services</a> teams can provide hands-on support, from policy drafting to full program management.</p>
+        <h2>Looking Ahead: Convergence, Not Divergence</h2>
+        <p>The landscape of AI standards is still evolving, but the direction is clear: convergence. Regulators in the EU, U.S., UK, and Asia-Pacific are increasingly referencing ISO and NIST as baseline expectations. International standards bodies are coordinating to reduce conflict and duplication. For organizations, the strategic imperative is to build governance architectures that are standards-agnostic at the core but standards-aligned at the edges. ISO 42001 provides the edge certification. NIST AI RMF provides the edge methodology. CSOAI provides the unifying certification and crosswalk infrastructure.</p>
+        <p>Organizations that invest now in aligning ISO 42001, NIST AI RMF, and CSOAI standards will be better positioned for the regulatory wave of 2026 and beyond. They will enjoy faster market access, stronger customer trust, lower compliance costs, and reduced risk of reputational harm from AI incidents. In a market where trust is the ultimate competitive advantage, that is an investment worth making.</p>
+        <p>If your organization is ready to move beyond fragmented AI governance toward a unified, certifiable, and globally recognized approach, <a href="contact.html">contact the CSOAI team</a> today. We will help you assess your current posture, design your alignment roadmap, and achieve the certification that signals responsible AI leadership to the world.</p>
+    </div>
+
+        <div class="newsletter">
+            <h3>Stay Updated on AI Governance</h3>
+            <p>Get weekly articles on certification, regulation, and AI safety best practices delivered to your inbox.</p>
+            <form action="/api/newsletter" method="POST" class="newsletter-form csoai-form" data-form-type="newsletter">
+                <input type="email" placeholder="your@email.com" required>
+                <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off"><button type="submit" class="btn">Subscribe</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<div class="sticky-bar">
+    <span class="sticky-message">Get your organization AI-certified before the August 2026 deadline.</span>
+    <a href="contact.html" class="btn">Get Started →</a>
+</div>
+
+<div class="cookie-banner" id="cookieBanner">
+    <p class="cookie-text">We use cookies to enhance your experience and analyze site performance.</p>
+    <div class="cookie-buttons">
+        <button class="cookie-accept" onclick="closeCookieBanner()">Accept All</button>
+        <button class="cookie-decline" onclick="closeCookieBanner()">Decline</button>
+    </div>
+</div>
+
+<footer style="background:var(--dark);border-top:3px solid var(--accent);padding:4rem 0 2rem;margin-top:4rem;position:relative;z-index:1">
+<div class="container">
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:2rem;margin-bottom:3rem">
+    <div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+      </div>
+      <p style="color:rgba(232,228,240,.6);font-size:.9rem;line-height:1.6;margin-bottom:1rem">The global standard for AI safety. Institutional governance through the 52-article charter and Byzantine consensus.</p>
+      <div style="display:flex;gap:.75rem"><a aria-label="CSOAI on X" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">𝕏</a><a aria-label="CSOAI on LinkedIn" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">in</a><a aria-label="CSOAI on YouTube" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">▶</a></div>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Standards</h4><a href="charter.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Charter</a><a href="crosswalks.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Crosswalks</a><a href="guides.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Guides</a><a href="glossary.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Glossary</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Products</h4>
+      <a href="mcp-packs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Premium Packs</a>
+      <a href="finance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Agentic Finance</a>
+      <a href="legacy.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Legacy Bridge</a>
+      <a href="governance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Global Mesh</a>
+      <a href="certification.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CASA Certification</a>
+      <a href="enterprise.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Enterprise</a>
+      <a href="advisory.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Advisory</a>
+      <a href="pricing.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Pricing</a>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Ecosystem</h4><a href="https://meok.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">MEOK.AI</a><a href="https://cobolbridge.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CobolBridge</a><a href="mcp-infrastructure.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">207 MCP Servers</a><a href="https://github.com/csoai-org" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">GitHub (518 repos)</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Company</h4><a href="about.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">About</a><a href="case-studies.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Case Studies</a><a href="blog.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Blog</a><a href="contact.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Contact</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Account</h4><a href="dashboard.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Dashboard</a><a href="faq.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">FAQ</a><a href="resources.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Resources</a><a href="api-docs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">API Docs</a><a href="status.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">System Status</a></div>
+  </div>
+  <div style="border-top:1px solid rgba(212,168,67,.1);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+    <p style="color:rgba(232,228,240,.4);font-size:.8rem">&copy; 2026 CSOAI — The Global Standard for AI Safety. Powered by <a href="https://meok.ai" style="color:rgba(232,228,240,.4);text-decoration:none">MEOK AI Labs</a>. All rights reserved.</p>
+    <div style="display:flex;gap:1.5rem"><a href="privacy.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Privacy</a><a href="terms.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Terms</a><a href="cookies.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Cookies</a></div>
+  </div>
+</div>
+</footer>
+
+<script>
+function closeCookieBanner() {
+    const banner = document.getElementById('cookieBanner');
+    banner.style.animation = 'slideUp 0.5s ease forwards';
+    setTimeout(() => banner.remove(), 500);
+    localStorage.setItem('csoai-cookie-consent', 'true');
+}
+if (localStorage.getItem('csoai-cookie-consent') === 'true') {
+    const banner = document.getElementById('cookieBanner');
+    if (banner) banner.style.display = 'none';
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "ISO 42001 and NIST AI RMF: Aligning Your Systems with Global Standards",
+    "description": "Multiple AI governance frameworks exist globally. We explain how ISO 42001, NIST AI RMF, and CSOAI standards complement each other and create a comprehensive governance approach.",
+    "url": "https://csoai.org/blog-iso-42001-nist-ai-rmf.html",
+    "datePublished": "2026-02-10",
+    "author": {
+        "@type": "Organization",
+        "name": "CSOAI"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "CSOAI",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://csoai.org/assets/og-image.png"
+        }
+    }
+}
+</script>
+
+<script>
+/* CSOAI Form Handler — intercepts Formspree submissions for smoother UX */
+document.querySelectorAll('.csoai-form').forEach(function(form){
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var originalText = btn ? btn.textContent : 'Submit';
+    if(btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+    var formType = form.dataset.formType || 'contact';
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function(r){ return r.json(); }).then(function(data){
+      if(data && data.ok){
+        form.innerHTML = '<div style="padding:1.5rem;background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);border-radius:12px;text-align:center;"><p style="color:#D4A843;font-weight:600;margin-bottom:0.5rem;">' + (formType === 'newsletter' ? 'You're subscribed!' : 'Message sent!') + '</p><p style="color:rgba(232,228,240,0.7);font-size:0.9rem;">' + (formType === 'newsletter' ? 'Thanks for joining the CSOAI community.' : 'We'll be in touch within 24 hours.') + '</p></div>';
+      } else {
+        throw new Error('Formspree error');
+      }
+    }).catch(function(){
+      if(btn){ btn.disabled = false; btn.textContent = originalText; }
+      var err = form.querySelector('.form-error');
+      if(!err){
+        err = document.createElement('p');
+        err.className = 'form-error';
+        err.style.cssText = 'color:#ff6b6b;margin-top:0.75rem;font-size:0.9rem;';
+        err.textContent = 'Something went wrong. Please try again or email us directly at nicholas@csoai.org';
+        form.appendChild(err);
+      }
+    });
+  });
+});
+</script>
+
+<script>
+/* CSOAI Form Handler — intercepts Formspree submissions for smoother UX */
+document.querySelectorAll('.csoai-form').forEach(function(form){
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var originalText = btn ? btn.textContent : 'Submit';
+    if(btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+    var formType = form.dataset.formType || 'contact';
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function(r){ return r.json(); }).then(function(data){
+      if(data && data.ok){
+        form.innerHTML = '<div style="padding:1.5rem;background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);border-radius:12px;text-align:center;"><p style="color:#D4A843;font-weight:600;margin-bottom:0.5rem;">' + (formType === 'newsletter' ? 'You're subscribed!' : 'Message sent!') + '</p><p style="color:rgba(232,228,240,0.7);font-size:0.9rem;">' + (formType === 'newsletter' ? 'Thanks for joining the CSOAI community.' : 'We'll be in touch within 24 hours.') + '</p></div>';
+      } else {
+        throw new Error('Formspree error');
+      }
+    }).catch(function(){
+      if(btn){ btn.disabled = false; btn.textContent = originalText; }
+      var err = form.querySelector('.form-error');
+      if(!err){
+        err = document.createElement('p');
+        err.className = 'form-error';
+        err.style.cssText = 'color:#ff6b6b;margin-top:0.75rem;font-size:0.9rem;';
+        err.textContent = 'Something went wrong. Please try again or email us directly at nicholas@csoai.org';
+        form.appendChild(err);
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

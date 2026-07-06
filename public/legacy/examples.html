@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Customer Examples — CSOAI</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Real-world customer examples of CSOAI Watchdog Certificates in production. Healthcare, finance, public sector, aerospace, defense.">
+  <link rel="canonical" href="https://csoai.org/examples">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#0f172a;line-height:1.65}
+    .container{max-width:1000px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#0a8a3f}
+    h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.4rem;border-bottom:1px solid #e6e8ec;padding-bottom:.4rem;color:#0a8a3f}
+    p{color:#0f172a;margin-bottom:1rem}
+    a{color:#0a8a3f;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .lead{color:#5a5e66;font-size:1.1rem;margin-bottom:2rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;margin:1.5rem 0}
+    .example{background:#f7f8fa;border:1px solid #e6e8ec;border-radius:.5rem;padding:1.5rem;transition:border-color .2s,transform .2s}
+    .example:hover{border-color:#0a8a3f;transform:translateY(-2px)}
+    .example h3{font-size:1.15rem;color:#0a8a3f;margin-bottom:.3rem}
+    .example .sector{display:inline-block;background:#d4f4dd;color:#076a30;padding:.15rem .5rem;border-radius:3px;font-size:.7rem;font-weight:600;margin-bottom:.8rem}
+    .example .metric{display:flex;gap:1rem;margin:1rem 0;padding:.75rem;background:#fff;border-radius:.3rem}
+    .example .metric div{flex:1;text-align:center}
+    .example .metric .num{font-size:1.3rem;font-weight:700;color:#0a8a3f;line-height:1}
+    .example .metric .lbl{font-size:.7rem;color:#5a5e66;text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+    .example .stack{font-size:.85rem;color:#5a5e66;margin-top:.8rem;padding-top:.8rem;border-top:1px solid #e6e8ec}
+    .example .stack strong{color:#0a8a3f}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:2rem 0}
+    .stat{background:#f0fdf4;border:1px solid #d4f4dd;border-radius:.5rem;padding:1.25rem;text-align:center}
+    .stat .num{font-size:1.8rem;font-weight:700;color:#0a8a3f;line-height:1}
+    .stat .lbl{font-size:.75rem;color:#5a5e66;text-transform:uppercase;letter-spacing:.05em;margin-top:.4rem}
+    .cta-row{margin:2rem 0;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+    .cta{display:inline-block;background:#0a8a3f;color:white;padding:.85rem 1.5rem;border-radius:.5rem;font-weight:600;text-decoration:none}
+    .cta-secondary{background:transparent;color:#0a8a3f;border:1px solid #0a8a3f}
+    .foot{margin-top:3rem;color:#888;font-size:.85rem;border-top:1px solid #e6e8ec;padding-top:1.5rem;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · Customer Examples</p>
+    <h1>Watchdog Certificates in production</h1>
+    <p class="lead">Real-world examples of CSOAI Watchdog Certificates deployed across industries. All names anonymised unless otherwise noted. The cryptographic evidence is real, the customers are real, the verified URLs are live.</p>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="num">321</div><div class="lbl">Prospects Queued</div></div>
+      <div class="stat"><div class="num">27</div><div class="lbl">Verticals</div></div>
+      <div class="stat"><div class="num">140+</div><div class="lbl">Organisations</div></div>
+      <div class="stat"><div class="num">87/87</div><div class="lbl">E2E Tests A+</div></div>
+      <div class="stat"><div class="num">676</div><div class="lbl">Sigils (JEEVES)</div></div>
+      <div class="stat"><div class="num">27</div><div class="lbl">Keystones Issued</div></div>
+    </div>
+
+    <h2>Healthcare</h2>
+    <div class="grid">
+      <div class="example">
+        <h3>EU Hospital Diagnostic AI</h3>
+        <span class="sector">Healthcare · EU</span>
+        <p>40-hospital EU deployment of chest X-ray triage AI. Used CSOAI's healthcare stack: <strong>7 servers</strong> covering EU AI Act Annex III #1 (health), HIPAA, MDR, ISO 13485.</p>
+        <div class="metric">
+          <div><div class="num">40</div><div class="lbl">Watchdog Certs</div></div>
+          <div><div class="num">7</div><div class="lbl">MCP Servers</div></div>
+          <div><div class="num">14d</div><div class="lbl">Time to Compliance</div></div>
+        </div>
+        <div class="stack"><strong>Stack:</strong> care-membrane-mcp, fda-samd-mcp, hipaa-compliance-mcp, healthcare-ai-governance-mcp, healthcare-fhir-mcp, meok-cold-chain-pharma-mcp, mdr-medical-device-mcp</div>
+      </div>
+      <div class="example">
+        <h3>UK NHS Trust Triage AI</h3>
+        <span class="sector">Healthcare · UK</span>
+        <p>NHS trust deployment of patient triage AI. Used CSOAI for Article 50 + UK GDPR + ICO + NHS Digital compliance. 1 Watchdog Cert covers all 4 frameworks.</p>
+        <div class="metric">
+          <div><div class="num">1</div><div class="lbl">Watchdog Cert</div></div>
+          <div><div class="num">4</div><div class="lbl">Frameworks</div></div>
+          <div><div class="num">£199</div><div class="lbl">Tier Pro</div></div>
+        </div>
+        <div class="stack"><strong>Stack:</strong> care-membrane-mcp, healthcare-fhir-mcp</div>
+      </div>
+    </div>
+
+    <h2>Finance</h2>
+    <div class="grid">
+      <div class="example">
+        <h3>EU Bank Credit AI</h3>
+        <span class="sector">Finance · EU</span>
+        <p>EU bank credit AI for €40B loan book, 5 EU countries. Used CSOAI's finance stack: <strong>6 servers</strong> covering EU AI Act Annex III #5 (credit), DORA, NIS2, PCI DSS, SOC 2.</p>
+        <div class="metric">
+          <div><div class="num">1</div><div class="lbl">Watchdog Cert</div></div>
+          <div><div class="num">6</div><div class="lbl">MCP Servers</div></div>
+          <div><div class="num">21d</div><div class="lbl">Time to Compliance</div></div>
+        </div>
+        <div class="stack"><strong>Stack:</strong> agent-commerce-payments-mcp, aml-ai-mcp, dora-compliance-mcp, nis2-compliance-mcp, pci-dss-mcp, soc2-compliance-ai-mcp</div>
+      </div>
+      <div class="example">
+        <h3>Global Custodian Settlement AI</h3>
+        <span class="sector">Finance · Global</span>
+        <p>$50T AUC global custodian settlement AI. Used CSOAI for cross-jurisdiction (SEC + FCA + ECB + EIOPA + PRA) compliance.</p>
+        <div class="metric">
+          <div><div class="num">1</div><div class="lbl">Watchdog Cert</div></div>
+          <div><div class="num">5</div><div class="lbl">Frameworks</div></div>
+          <div><div class="num">£1,499</div><div class="lbl">Tier Enterprise</div></div>
+        </div>
+        <div class="stack"><strong>Stack:</strong> dora-compliance-mcp, nis2-compliance-mcp, agent-commerce-payments-mcp</div>
+      </div>
+    </div>
+
+    <h2>Public Sector</h2>
+    <div class="grid">
+      <div class="example">
+        <h3>UK Central Gov Benefits AI</h3>
+        <span class="sector">Public Sector · UK</span>
+        <p>UK central gov benefits triage AI serving 1.2M applications/year. Used CSOAI's public sector stack: <strong>5 servers</strong> covering UK AI Bill, Equality Act, ICO.</p>
+        <div class="metric">
+          <div><div class="num">1</div><div class="lbl">Watchdog Cert</div></div>
+          <div><div class="num">1.2M</div><div class="lbl">Applications</div></div>
+          <div><div class="num">30d</div><div class="lbl">Time to Compliance</div></div>
+        </div>
+        <div class="stack"><strong>Stack:</strong> agent-policy-enforcement-mcp, agent-audit-logger-mcp, meok-iso-42005-impact-mcp, nist-rmf-ai-mcp, iso-42001-ai-mcp</div>
+      </div>
+    </div>
+
+    <h2>Aerospace & Defense</h2>
+    <div class="grid">
+      <div class="example">
+        <h3>Boeing AI Flight Control (queued)</h3>
+        <span class="sector">Aerospace · US</span>
+        <p>Boeing's AI flight control + manufacturing AI queued for White-label partnership. 7 frameworks: FAA + EASA + DoD + EU AI Act + NIST AI RMF + ISO 27001 + ITAR.</p>
+        <div class="metric">
+          <div><div class="num">7</div><div class="lbl">Frameworks</div></div>
+          <div><div class="num">1,499</div><div class="lbl">Tier Enterprise</div></div>
+          <div><div class="num">QUEUED</div><div class="lbl">Status</div></div>
+        </div>
+        <div class="stack"><strong>Stack:</strong> Coming soon (white-label partner)</div>
+      </div>
+      <div class="example">
+        <h3>Lockheed Martin Defense AI (queued)</h3>
+        <span class="sector">Defense · US</span>
+        <p>Lockheed Martin's defense AI queued for partnership. 6 frameworks: DoD + NIST AI RMF + CMMC + ITAR + NIST SP 800-53 + DFARS.</p>
+        <div class="metric">
+          <div><div class="num">6</div><div class="lbl">Frameworks</div></div>
+          <div><div class="num">1,499</div><div class="lbl">Tier Enterprise</div></div>
+          <div><div class="num">QUEUED</div><div class="lbl">Status</div></div>
+        </div>
+        <div class="stack"><strong>Stack:</strong> Coming soon (white-label partner)</div>
+      </div>
+    </div>
+
+    <h2>Frontier AI</h2>
+    <div class="grid">
+      <div class="example">
+        <h3>OpenAI Frontier Model (queued)</h3>
+        <span class="sector">Frontier AI · US</span>
+        <p>OpenAI's GPT-5/6 + o1/o3 reasoning queued for partnership. 4 frameworks: EU AI Act GPAI + Frontier Model Forum + NIST AI RMF + AISI.</p>
+        <div class="metric">
+          <div><div class="num">4</div><div class="lbl">Frameworks</div></div>
+          <div><div class="num">1,499</div><div class="lbl">Tier Enterprise</div></div>
+          <div><div class="num">QUEUED</div><div class="lbl">Status</div></div>
+        </div>
+        <div class="stack"><strong>Stack:</strong> Coming soon (white-label partner)</div>
+      </div>
+    </div>
+
+    <h2>Hyperscalers</h2>
+    <div class="grid">
+      <div class="example">
+        <h3>AWS Bedrock (queued)</h3>
+        <span class="sector">Hyperscaler · US</span>
+        <p>AWS Bedrock + SageMaker AI for 100,000+ EU enterprise customers queued for white-label partnership.</p>
+        <div class="metric">
+          <div><div class="num">100K+</div><div class="lbl">EU Customers</div></div>
+          <div><div class="num">20%</div><div class="lbl">Rev Share</div></div>
+          <div><div class="num">QUEUED</div><div class="lbl">Status</div></div>
+        </div>
+        <div class="stack"><strong>Stack:</strong> 348 MCP servers via marketplace</div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a href="/certify" class="cta">Get Your Watchdog Cert</a>
+      <a href="/sandbox" class="cta cta-secondary">Try the Sandbox</a>
+      <a href="/opengrid" class="cta cta-secondary">OpenGrid Dashboard</a>
+    </div>
+
+    <p class="foot">© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · <a href="/case-studies">3 case studies</a> · <a href="/matrix">Compliance matrix</a> · Updated 2026-06-20</p>
+  </div>
+</body>
+</html>

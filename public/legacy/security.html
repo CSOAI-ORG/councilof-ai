@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Security — CSOAI</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="CSOAI LTD security disclosure: Ed25519-signed attestations, public verify URLs, no lock-in. UK Companies House 16939677.">
+  <link rel="canonical" href="https://csoai.org/security">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#0f172a;line-height:1.65}
+    .container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#0a8a3f}
+    h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.4rem;border-bottom:1px solid #e6e8ec;padding-bottom:.4rem}
+    p{color:#0f172a;margin-bottom:1rem}
+    a{color:#0a8a3f;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .lead{color:#5a5e66;font-size:1.1rem;margin-bottom:2rem}
+    .crit{background:#f0fdf4;border-left:4px solid #0a8a3f;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:.4rem}
+    .crit strong{color:#076a30}
+    .foot{margin-top:3rem;color:#888;font-size:.85rem;border-top:1px solid #e6e8ec;padding-top:1.5rem;text-align:center}
+    code{background:#f7f8fa;padding:.1rem .35rem;border-radius:.25rem;font-size:.88em}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p style="color:#c9a84c;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · Security</p>
+    <h1>How CSOAI is built for security & trust</h1>
+    <p class="lead">Every Watchdog Certificate we issue is cryptographically signed, publicly verifiable, and built to be vendor-independent. Here's exactly how.</p>
+
+    <h2>1. Ed25519 signatures, not opaque seals</h2>
+    <p>Every Watchdog Certificate is signed with the <strong>Ed25519</strong> algorithm — a high-performance elliptic curve signature standardised by the IETF (RFC 8032). Each certificate is a JSON document with:</p>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li><code>ts</code> — Unix timestamp of issuance</li>
+      <li><code>line</code> — the canonical SIGIL line (immutable)</li>
+      <li><code>gloss</code> — plain-English interpretation</li>
+      <li><code>digest</code> — SHA-256 hash of the parsed line</li>
+      <li><code>prev_sig</code> — previous record's signature (chain)</li>
+      <li><code>signature</code> — Ed25519 signature of (digest + prev_sig)</li>
+    </ul>
+    <p>You can verify any certificate yourself with <code>meok-attestation-api.vercel.app/verify/{cert_id}</code> — no login, no contact with us, no third party. The signature math is the trust.</p>
+
+    <div class="crit">
+      <strong>Why Ed25519:</strong> NIST-recommended, ~10,000x faster than RSA-2048, no SHA-1 dependencies, 64-byte signatures, 32-byte keys. Used by SSH, TLS 1.3, Signal, and the entire modern cryptography stack.
+    </div>
+
+    <h2>2. Hash-chained ledger, not a database</h2>
+    <p>Every certificate references the signature of the one before it. This means:</p>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li><strong>Tamper-evident:</strong> changing any historical record invalidates all subsequent signatures</li>
+      <li><strong>Auditable:</strong> anyone can recompute the chain from the public ledger</li>
+      <li><strong>Reproducible:</strong> the same input always produces the same chain</li>
+    </ul>
+    <p>The SOV3 substrate maintains this ledger in a tamper-evident JSONL file at <code>~/clawd/sovereign-temple/data/sigil_ledger.jsonl</code>. Every CSOAI Watchdog Certificate is also a sigil, so the chain covers both.</p>
+
+    <h2>3. Public verify URLs, no lock-in</h2>
+    <p>Every Watchdog Certificate has a public verify URL of the form <code>meok-attestation-api.vercel.app/verify/{cert_id}</code>. The endpoint:</p>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li>Returns the certificate JSON</li>
+      <li>Verifies the Ed25519 signature cryptographically (no DB lookup needed)</li>
+      <li>Returns the chain position (which record in the ledger)</li>
+      <li>Is hosted on Vercel Edge (multi-region, sub-100ms response)</li>
+    </ul>
+    <p>If CSOAI disappears, your certificates still verify. The Ed25519 key is published in the cert itself — anyone can verify with <code>nacl</code> or <code>openssl</code>.</p>
+
+    <h2>4. UK legal entity, no off-shore ambiguity</h2>
+    <p>CSOAI LTD is registered with UK Companies House (<strong>16939677</strong>). Director: Nicholas Templeman. Jurisdiction: England &amp; Wales. This is your recourse path if anything goes wrong.</p>
+
+    <h2>5. No telemetry, no tracking, no third-party cookies</h2>
+    <p>CSOAI's web properties:</p>
+    <ul style="margin:1rem 0 1.5rem 1.5rem">
+      <li>No Google Analytics (a cookie-free, server-logged analytics is coming)</li>
+      <li>No Facebook pixel, no tracking pixels, no third-party JS</li>
+      <li>No data broker integrations</li>
+      <li>No email open tracking (no pixels in our emails)</li>
+    </ul>
+    <p>You can verify by opening browser DevTools and inspecting the network tab. Every request goes to csoai.org or meok.ai directly.</p>
+
+    <h2>6. Reporting a vulnerability</h2>
+    <p>Found a security issue? Email <a href="mailto:security@csoai.org">security@csoai.org</a> with a description. We respond within 24h and ship a fix within 72h. We do not run a paid bug bounty yet (sprint-priority is the Article 50 deadline) but will credit reporters in the public changelog.</p>
+
+    <p class="foot">© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · <a href="/trust">Trust</a> · <a href="/status">Status</a> · <a href="/charter">Charter</a></p>
+  </div>
+</body>
+</html>
