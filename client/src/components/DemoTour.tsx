@@ -50,8 +50,8 @@ export default function DemoTour() {
         <div className="flex items-start gap-2">
           <span className="text-lg">{"◉"}</span>
           <div>
-            <div className="text-sm font-bold text-emerald-100">New here? Let me show you around.</div>
-            <p className="mt-0.5 text-xs text-emerald-100/70">I'll walk you through it live - governance graph, the Council, Sov Space, the globe. 60 seconds.</p>
+            <div className="text-sm font-bold text-emerald-100">New here? See what makes CSOAI different.</div>
+            <p className="mt-0.5 text-xs text-emerald-100/70">60-second live tour: the Sovereign OS, a 33-agent council, signed governance artifacts, and the globe. Not slides - the real thing.</p>
           </div>
         </div>
         <div className="mt-2 flex gap-2">
@@ -75,6 +75,7 @@ export default function DemoTour() {
               <span className="text-sm font-black text-emerald-100">{s.title}</span>
               <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Sovereign tour {"·"} {step + 1}/{TOUR.length}</span>
             </div>
+            {s.usp && <div className="mt-1 inline-flex items-center gap-1 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-300/90">{"✦"} {s.usp}</div>}
             <p className="mt-1 text-sm leading-relaxed text-emerald-50/90">{s.say}</p>
             {s.tip && <p className="mt-1 text-xs text-emerald-300/70">{"→"} {s.tip}</p>}
           </div>
