@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ToolRunner from "../components/ToolRunner";
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 const EX = ["audit", "compliance", "EU AI Act", "payments", "defence", "identity"];
 export default function ToolCommons() {
@@ -23,7 +24,11 @@ export default function ToolCommons() {
           <div className="mt-3 flex flex-wrap justify-center gap-2">{EX.map((e) => (<button key={e} onClick={() => run(e)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-3 py-1 text-xs text-emerald-200/80 hover:bg-emerald-500/15">{e}</button>))}</div>
         </div>
       </section>
-      <section className="mx-auto max-w-4xl px-6 py-10">
+      <section className="mx-auto max-w-4xl px-6 pt-8">
+        <ToolRunner />
+        <p className="mt-3 text-center text-[11px] uppercase tracking-[2px] text-emerald-300/40">↑ run live · ↓ connect the full fleet into your own agent</p>
+      </section>
+      <section className="mx-auto max-w-4xl px-6 py-8">
         <div className="grid gap-3 sm:grid-cols-2">
           {matches.map((m: any) => (
             <div key={m.name} className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
