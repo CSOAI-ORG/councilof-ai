@@ -24,7 +24,9 @@ cd councilof-ai && git checkout master && git pull origin master   # the live la
 cd mcp/csoai-governance && npm publish        # publishes csoai-governance-mcp
 ```
 
-**Open decision (Nick):** GitHub's default branch is `main` but production is `master`. Until that's reconciled, treat **`master` as canonical**. Consolidation = task #60.
+**Consolidation (task #60 — DONE `faf04cb`):** audited `main` and surgically ported its additive, framework-safe content into `master`: **`public/legacy/**` = the entire original csoai.org (311 pages), now live at `csoai.org/legacy/*`**, plus `public/.well-known/{security.txt,agent-card.json}` and the seals/handoff docs. **Intentionally NOT merged:** `main`'s Next.js `src/app/**` lane + `csoai-*` experimental client files (architecture clash with the live Vite app / superseded by the live lane).
+
+**Still open (Nick):** GitHub's *default* branch is still `main`; production is `master`. Flip the GitHub default to `master` when ready so agents pull the live lane by default. Until then, **`master` is canonical.**
 
 ---
 
