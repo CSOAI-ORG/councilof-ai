@@ -45,6 +45,7 @@ export function Footer() {
         { name: 'Partners & Advisory', href: '/partners' },
         { name: 'Case Studies', href: '/case-studies' },
         { name: 'Trust Center', href: '/trust-center' },
+        { name: 'Global AI Regulation Map', href: '/global-ai-regulation' },
         { name: 'Why CSOAI', href: '/compare' },
         { name: 'ROI Calculator', href: '/roi-calculator' },
         { name: 'Blog', href: '/blog' },
