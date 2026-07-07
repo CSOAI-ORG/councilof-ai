@@ -22,13 +22,11 @@ No API key required for the public governance surface. Override the backend with
 
 ## Install
 
-```bash
-npm install   # installs @modelcontextprotocol/sdk
-```
+Published on npm — **one command, no clone, no build:**
 
 ### Claude Code
 ```bash
-claude mcp add csoai-governance -- node /absolute/path/to/mcp/csoai-governance/index.mjs
+claude mcp add csoai-governance -- npx -y csoai-governance-mcp
 ```
 
 ### Claude Desktop / Claude Science (config JSON)
@@ -36,15 +34,29 @@ claude mcp add csoai-governance -- node /absolute/path/to/mcp/csoai-governance/i
 {
   "mcpServers": {
     "csoai-governance": {
-      "command": "node",
-      "args": ["/absolute/path/to/mcp/csoai-governance/index.mjs"]
+      "command": "npx",
+      "args": ["-y", "csoai-governance-mcp"]
     }
   }
 }
 ```
 
 ### Cursor / other MCP clients
-Point the client at `node index.mjs` (stdio transport).
+Point the client at `npx -y csoai-governance-mcp` (stdio transport).
+
+### Run directly / smoke-test
+```bash
+npx -y csoai-governance-mcp   # starts the stdio MCP server
+```
+
+<details>
+<summary>Local development (from a clone)</summary>
+
+```bash
+npm install                                   # installs @modelcontextprotocol/sdk
+claude mcp add csoai-governance -- node /absolute/path/to/mcp/csoai-governance/index.mjs
+```
+</details>
 
 ## Example flow inside Claude Science
 1. Run your analysis → produce a figure + conclusion.
