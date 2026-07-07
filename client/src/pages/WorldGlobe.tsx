@@ -23,6 +23,12 @@ async function globeGovern(q: string): Promise<any> { try { const r = await fetc
 // the BFT Council, and lets you click any pin for its detail. No external deps.
 
 type Pin = { id: string; name: string; region: string; lat: number; lng: number; color: string; href: string; note: string };
+type HiveAccount = { id: string; name: string; type: string; region: string; country: string; hq: [number, number]; play: string; gap: number; maxGap: number; confidence: string; topUsp: string | null };
+function hiveColor(h: HiveAccount): string {
+  if (h.confidence === "n/a-authority") return "#38bdf8"; // regulator/authority - blue
+  if (h.confidence === "verified") return "#34d399"; // real, cited governance posture - green
+  return "#94a3b8"; // modeled/unconfirmed - grey
+}
 const FRAMEWORKS: Pin[] = [
   { id: "euaa", name: "EU AI Act", region: "EU", lat: 50.85, lng: 4.35, color: "#2563eb", href: "/readiness", note: "Transparency 2 Aug 2026; high-risk Dec 2027 (Omnibus). Brussels." },
   { id: "gdpr", name: "GDPR", region: "EU", lat: 50.85, lng: 4.36, color: "#1d4ed8", href: "/meok-law", note: "Data + automated-decision safeguards. Brussels." },
@@ -84,9 +90,16 @@ function project(lat: number, lng: number, rot: number) {
 export default function WorldGlobe() {
   useEffect(() => { document.title = "The Sovereign Globe - AI governance, layered on the world | CSOAI"; }, []);
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setAsk(d); const t = setTimeout(() => runAsk(d), 700); return () => clearTimeout(t); } }, []);
+  const [hiveAccounts, setHiveAccounts] = useState<HiveAccount[]>([]);
+  const [hiveSel, setHiveSel] = useState<HiveAccount | null>(null);
+  useEffect(() => {
+    fetch("/hive-coverage.json").then((r) => (r.ok ? r.json() : null)).then((d) => {
+      if (d && Array.isArray(d.coverage)) setHiveAccounts(d.coverage as HiveAccount[]);
+    }).catch(() => {});
+  }, []);
   const [rot, setRot] = useState(0);
   const [spin, setSpin] = useState(true);
-  const [layers, setLayers] = useState<{ fw: boolean; council: boolean; watchdog: boolean; ontology: boolean }>({ fw: true, council: false, watchdog: false, ontology: false });
+  const [layers, setLayers] = useState<{ fw: boolean; council: boolean; watchdog: boolean; ontology: boolean; hive: boolean }>({ fw: true, council: false, watchdog: false, ontology: false, hive: false });
   const wc = watchCounts();
   const wmax = Math.max(1, ...WATCH_HUBS.map((h) => wc[h.id] || 0));
   const [sel, setSel] = useState<Pin | null>(null);
@@ -147,6 +160,7 @@ export default function WorldGlobe() {
           <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>BFT Council</button>
           <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Watchdog heat</button>
           <button onClick={() => setLayers((l) => ({ ...l, ontology: !l.ontology, fw: true }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.ontology ? "border-violet-400 bg-violet-600 text-white" : "border-white/20 text-white/60")}>Ontology</button>
+          <button onClick={() => setLayers((l) => ({ ...l, hive: !l.hive }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.hive ? "border-sky-400 bg-sky-600 text-white" : "border-white/20 text-white/60")}>Hive coverage{hiveAccounts.length ? " (" + hiveAccounts.length + ")" : ""}</button>
           <button onClick={() => setSpin((s) => !s)} className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10">{spin ? "Pause" : "Spin"}</button>
           <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Sovereign responding…" : threat === "stopped" ? "◉ Stopped — signed" : "⚠ Rogue swarm → watch it stop"}</button>
         </div>
@@ -187,6 +201,17 @@ export default function WorldGlobe() {
                 </g>
               );
             })}
+            {layers.hive && hiveAccounts.map((h) => {
+              const q = project(h.hq[1], h.hq[0], rot); if (!q.front) return null;
+              const sc = 0.6 + q.depth * 0.6;
+              const r = h.confidence === "n/a-authority" ? 3.5 * sc : (2.5 + (h.gap / h.maxGap) * 4) * sc;
+              const on = hiveSel && hiveSel.id === h.id;
+              return (
+                <g key={"h-" + h.id} onClick={() => setHiveSel(h)} style={{ cursor: "pointer" }}>
+                  <circle cx={q.x} cy={q.y} r={on ? r + 4 : r} fill={hiveColor(h)} opacity={on ? 1 : 0.75} stroke="#fff" strokeWidth={on ? 1.5 : 0.6} />
+                </g>
+              );
+            })}
             {threat !== "idle" && THREAT_PTS.map((tp, i) => {
               const q = project(THREAT_ORIGIN.lat + tp.dlat, THREAT_ORIGIN.lng + tp.dlng, rot); if (!q.front) return null;
               const sc = 0.6 + q.depth * 0.6; const gov = threat === "stopped";
@@ -211,6 +236,17 @@ export default function WorldGlobe() {
               {HIVE_SLUG[sel.id] && <a href={"/hive/" + HIVE_SLUG[sel.id]} className="mt-4 mr-2 inline-block rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-500">Open the hive -&gt;</a>}
               <a href={sel.href} className={"mt-4 inline-block rounded-xl px-4 py-2 text-sm font-bold " + (HIVE_SLUG[sel.id] ? "border border-emerald-400/40 text-emerald-100 hover:bg-white/5" : "bg-emerald-600 text-white hover:bg-emerald-500")}>Details -&gt;</a>
               <button onClick={() => { setSel(null); setSpin(true); }} className="ml-2 text-sm text-white/50 hover:text-white/80">resume spin</button>
+            </div>
+          ) : hiveSel ? (
+            <div>
+              <div className="text-[11px] uppercase tracking-wide text-sky-300/70">{hiveSel.type} - {hiveSel.region}</div>
+              <div className="mt-1 text-xl font-black" style={{ color: "#bae6fd" }}>{hiveSel.name}</div>
+              <p className="mt-2 text-sm text-white/75 leading-relaxed">
+                {hiveSel.confidence === "n/a-authority"
+                  ? "Regulator / standards authority - not a governance-gap target."
+                  : "Governance gap: " + hiveSel.gap + " / " + hiveSel.maxGap + " (" + hiveSel.confidence + (hiveSel.topUsp ? ", lead with " + hiveSel.topUsp : "") + ")"}
+              </p>
+              <button onClick={() => { setHiveSel(null); setSpin(true); }} className="mt-4 text-sm text-white/50 hover:text-white/80">resume spin</button>
             </div>
           ) : (
             <div className="text-white/60">
