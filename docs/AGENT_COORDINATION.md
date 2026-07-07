@@ -61,3 +61,15 @@
   rows into the full export (like this reconciliation did) is still a manual step.
   Remaining gap to the outreach gate: per-account recon (public web) to replace "modeled" with
   cited real facts, company by company — not done by any of this, coverage-count only.
+- **First real per-account recon done: 6/1952 (`9a06415`, Claude Science).** JPMorgan Chase,
+  Microsoft, Alphabet, UnitedHealth, Pfizer, Lockheed Martin now `verified`/`displace` with a
+  cited real internal AI-governance program (see commit message for sources). CVS Health
+  partially updated (`emerging`, vendor still `unknown` — evidence was exec-quoted, not a named
+  program). ExxonMobil/AT&T/Elevance/BofA/Citigroup deliberately left `unknown` — search only
+  returned SEO/vendor-blog noise for those five, not primary-source strength. Coverage:
+  24 → 30 verified/authority out of 1,952. **This is slow, one-account-at-a-time work** — at
+  this rate the remaining ~1,922 modeled rows are not a single-session job. If another agent
+  wants to parallelize it, the pattern is: web-search the company + "AI governance" /
+  "responsible AI", require a primary source (company's own domain or an SEC filing) naming an
+  actual program/committee/principles doc before upgrading `posture`/`currentVendor`, and leave
+  it `unknown` rather than force-fit a vendor blog's inference.
