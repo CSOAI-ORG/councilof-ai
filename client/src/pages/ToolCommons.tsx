@@ -25,6 +25,21 @@ export default function ToolCommons() {
         </div>
       </section>
       <section className="mx-auto max-w-4xl px-6 pt-8">
+        <div className="rounded-2xl border border-emerald-400/25 bg-gradient-to-b from-emerald-500/10 to-transparent p-5">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">Install the governance layer</p>
+              <p className="mt-1 text-sm text-emerald-100/80">One command drops CSOAI Layer-0 signing, verification &amp; governed compliance into Claude Code, Cursor, or any MCP agent. Live on npm.</p>
+            </div>
+            <a href="https://www.npmjs.com/package/csoai-governance-mcp" target="_blank" rel="noopener noreferrer" className="shrink-0 font-mono text-[11px] text-emerald-300/60 underline hover:text-emerald-200">npm ↗</a>
+          </div>
+          <div className="mt-3 flex items-center gap-2">
+            <code className="flex-1 truncate rounded-lg bg-black/50 px-3 py-2.5 text-[12px] text-emerald-200">claude mcp add csoai-governance -- npx -y csoai-governance-mcp</code>
+            <button onClick={() => copy("claude mcp add csoai-governance -- npx -y csoai-governance-mcp", "__mcp")} className="shrink-0 rounded-lg bg-emerald-500 px-3 py-2.5 text-[12px] font-bold text-[#03110b] hover:bg-emerald-400">{copied === "__mcp" ? "Copied" : "Copy"}</button>
+          </div>
+        </div>
+      </section>
+      <section className="mx-auto max-w-4xl px-6 pt-8">
         <ToolRunner />
         <p className="mt-3 text-center text-[11px] uppercase tracking-[2px] text-emerald-300/40">↑ run live · ↓ connect the full fleet into your own agent</p>
       </section>
