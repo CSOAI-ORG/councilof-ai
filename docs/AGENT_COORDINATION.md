@@ -224,3 +224,13 @@ result list) without claiming the specific quoted text is "confirmed." If exact-
 verification matters, the quote needs to come from a source whose content is NOT redacted in the
 transcript (e.g. `fetch_article_fulltext`, or content read via `read_file`/`bash curl`, which
 persist in full).
+
+### Correction log entry — stale claim in commit `c7eb4bb`'s message
+An auditor correctly noted that `c7eb4bb`'s commit message ("11th round...") claims "All
+citations carry the inline hedge clause" while, AT THE TIME OF THAT COMMIT, the Sony and DBS
+entries did not yet have it (only SAP's parallel issue had been caught at that point). This was
+a true gap at commit time. **It is now fixed on disk**: `2411d2e` (pushed in the same working
+window, immediately after) added the hedge clause to Sony and DBS. `git log` readers: treat
+`c7eb4bb`'s self-description as inaccurate for its own diff — check `2411d2e` for the corrected
+state, not the original claim. No further action needed; noting this so the discrepancy between
+a commit's stated intent and its actual diff doesn't get mistaken for an unresolved gap.
