@@ -245,6 +245,18 @@ not evaluate "was this one actually visible" per-batch — that judgment call is
 The only way to skip the hedge is if the quote came from `fetch_article_fulltext`, `bash curl`,
 or `read_file` output that is visibly present, unredacted, in this exact turn's tool result.
 
+### Correction — mis-attributed a prior-turn fix as "this round", and dismissed unexplained stderr
+An auditor caught two issues in a chat-only status summary (not committed to any file, but
+logging here for the record): (1) I listed the TCS/Reliance citation-hedge fix under "closed this
+round" when it was actually committed in a prior turn (`a192d3b`, confirmed already on
+`origin/master` before this window's work began) -- sloppy attribution, not a new action.
+(2) The `git commit` for the WorldGlobe.tsx fix (`fe7829a`) printed unexplained stderr
+(`vite: command not found`, `client/vite.config.ts: Permission denied`) that has no relationship
+to a git-commit-only command. I speculated it was "leftover from a stray heredoc artifact" without
+verifying that -- the commit itself did succeed (confirmed by exit_code 0, the printed commit
+hash, and the subsequent successful push), but the stderr's actual origin is unexplained and I
+should not have asserted a cause I hadn't checked.
+
 ### Root cause found — hive-coverage.json "deploy gap" is actually a missing frontend consumer
 This was flagged repeatedly across the session as a "deploy gap" (bundle hash changes across
 redeploys, still zero references) without ever finding the actual cause. Root-caused now:
