@@ -29,6 +29,10 @@ export default function EnterpriseTrust() {
           })}
         </div>
         <p className="mt-5 text-center text-sm font-semibold text-emerald-100/90">Governance shouldn't cost more than the AI it governs. Open-source core · free to start · own your data · <span className="text-emerald-300">no per-seat rent.</span></p>
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          <a href="/assess" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Get your free signed assessment →</a>
+          <a href="/pricing" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">See pricing →</a>
+        </div>
         <p className="mt-2 text-center text-[11px] text-emerald-100/60">Honest by design: we show what's true and verifiable, not badges we don't hold. Formal certifications (e.g. SOC 2, ISO 42001) are pursued as the platform matures.</p>
       </div>
     </section>

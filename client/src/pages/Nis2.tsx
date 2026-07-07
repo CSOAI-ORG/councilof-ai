@@ -39,7 +39,8 @@ export default function Nis2() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-2">
-          <a href="/dora" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-400">DORA × NIS2 crosswalk →</a>
+          <a href="/assess" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-400">Get your signed assessment →</a>
+          <a href="/dora" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">DORA × NIS2 crosswalk →</a>
           <a href="/cra" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Cyber Resilience Act →</a>
           <a href="/crosswalk" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Framework crosswalk →</a>
         </div>
