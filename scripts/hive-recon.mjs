@@ -217,8 +217,26 @@ if (rerun !== JSON.stringify(reports)) fails.push("non-deterministic scoring");
 
 // ---- output ----
 const outDir = resolve(ROOT, "docs");
-writeFileSync(resolve(outDir, "hive-recon-report.json"),
-  JSON.stringify({ summary, reports }, null, 2));
+const reportPath = resolve(outDir, "hive-recon-report.json");
+
+// REGRESSION GUARD: docs/hive-recon-report.json tracks the outreach-gate coverage number
+// (Nick's rule: "no outreach until the harness covers the full ~2000-lead TAM"). A run against
+// the default ecosystem.ts-only set (27 accounts) must never silently clobber a prior run that
+// covered more accounts -- that happened once (2026-07-07, fixed) when a globe-overlay commit
+// ran the default path and dropped 1,940 -> 27. Refuse unless FORCE=1 or accounts didn't shrink.
+try {
+  const prev = JSON.parse(readFileSync(reportPath, "utf8"));
+  const prevN = prev?.summary?.accounts ?? 0;
+  if (summary.accounts < prevN && !process.env.FORCE) {
+    console.error(`\n❌ REFUSING TO WRITE ${reportPath}: this run scored ${summary.accounts} accounts,`);
+    console.error(`   but it already covers ${prevN}. This would regress the outreach-gate coverage number.`);
+    console.error(`   If this is intentional, re-run with FORCE=1. Otherwise pass the full export:`);
+    console.error(`   HIVE_ACCOUNTS=docs/handoff/hive_full_export_1940.json npm run hive:recon\n`);
+    process.exit(1);
+  }
+} catch { /* no prior report — first run, nothing to guard */ }
+
+writeFileSync(reportPath, JSON.stringify({ summary, reports }, null, 2));
 
 // Public coverage overlay for the globe (Hive §5) — PUBLIC seed ONLY. When the internal
 // lead export is scored (HIVE_ACCOUNTS set), we do NOT write to public/ (boundary guard).
