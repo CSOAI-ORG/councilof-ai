@@ -29,6 +29,8 @@ const VENDOR_PROFILE: Record<string, Scores> = {
   internal:  { frameworkCoverage: 1, agenticGovernance: 1, verifiableProof: 1, liveTooling: 1, enforcementTiming: 1, sovereignty: 2, integrationEffort: 1 },
 };
 const KNOWN = new Set(Object.keys(VENDOR_PROFILE));
+// Only commercial competitors are "displace". An internal stack → "integrate" (layer under).
+const COMMERCIAL = new Set(["vanta", "drata", "credo-ai", "onetrust"]);
 const POSTURE_BASE: Record<string, Scores> = {
   none:     { frameworkCoverage: 0, agenticGovernance: 0, verifiableProof: 0, liveTooling: 0, enforcementTiming: 0, sovereignty: 1, integrationEffort: 0 },
   emerging: { frameworkCoverage: 1, agenticGovernance: 0, verifiableProof: 0, liveTooling: 1, enforcementTiming: 1, sovereignty: 1, integrationEffort: 0 },
@@ -52,7 +54,7 @@ export function scoreAccount(a: Account): AccountScore {
 
   let current: Scores | null, confidence: AccountScore["confidence"], play: AccountScore["play"];
   if (isAuthority) { current = null; confidence = "authority"; play = "align"; }
-  else if (KNOWN.has(vendor)) { current = VENDOR_PROFILE[vendor]; confidence = "verified"; play = "displace"; }
+  else if (KNOWN.has(vendor)) { current = VENDOR_PROFILE[vendor]; confidence = "verified"; play = COMMERCIAL.has(vendor) ? "displace" : "integrate"; }
   else { current = POSTURE_BASE[posture] || POSTURE_BASE.unknown; confidence = "modeled"; play = posture === "none" ? "absorb" : "integrate"; }
 
   const perAxis = AXES.map(({ key, label }) => {

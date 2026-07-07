@@ -33,6 +33,11 @@ export default function EuActClassifier() {
   const [busy, setBusy] = useState(false);
   const [out, setOut] = useState<{ text: string; tier: string } | null>(null);
   useEffect(() => { document.title = "EU AI Act risk classifier — CSOAI"; }, []);
+  useEffect(() => {
+    const s = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("q") : null;
+    if (s) { setQ(s); run(s); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function run(seed?: string) {
     const desc = (seed || q).trim(); if (!desc || busy) return;

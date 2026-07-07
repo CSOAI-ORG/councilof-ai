@@ -60,6 +60,9 @@ const VENDOR_PROFILE = {
   internal: { frameworkCoverage: 1, agenticGovernance: 1, verifiableProof: 1, liveTooling: 1, enforcementTiming: 1, sovereignty: 2, integrationEffort: 1 },
 };
 const KNOWN_VENDORS = new Set(Object.keys(VENDOR_PROFILE));
+// Only COMMERCIAL competitors are "displace" (rip-and-replace). An internal stack is
+// "integrate" (CSOAI is the governance layer UNDER it) — never a displace claim.
+const COMMERCIAL_VENDORS = new Set(["vanta", "drata", "credo-ai", "onetrust"]);
 
 // Posture → baseline current-state when no known vendor (MODELED, low-confidence).
 const POSTURE_BASE = {
@@ -142,7 +145,7 @@ function scoreAccount(a) {
   } else if (KNOWN_VENDORS.has(vendor)) {
     current = VENDOR_PROFILE[vendor];
     confidence = "verified"; // vendor is a public/known fact for this row
-    play = "displace";
+    play = COMMERCIAL_VENDORS.has(vendor) ? "displace" : "integrate"; // internal stack → integrate under, not displace
   } else {
     current = POSTURE_BASE[posture] || POSTURE_BASE.unknown;
     confidence = "modeled"; // no known vendor → current state is a conservative model
@@ -206,8 +209,8 @@ for (const r of reports) {
       fails.push(`${r.id}: axis ${ax} out of range`);
   }
   // HONESTY GATE: never "displace" without a known real vendor.
-  if (r.play === "displace" && !KNOWN_VENDORS.has(r.vendor))
-    fails.push(`${r.id}: HONESTY VIOLATION — displace play without a known vendor`);
+  if (r.play === "displace" && !COMMERCIAL_VENDORS.has(r.vendor))
+    fails.push(`${r.id}: HONESTY VIOLATION — displace play without a known COMMERCIAL vendor`);
   if (!["align", "absorb", "integrate", "displace"].includes(r.play))
     fails.push(`${r.id}: invalid play ${r.play}`);
 }

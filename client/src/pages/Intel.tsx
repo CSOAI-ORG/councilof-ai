@@ -16,6 +16,8 @@ export default function Intel() {
   const nonAuth = scored.filter((x) => x.s.confidence !== "authority");
   const avgGap = nonAuth.length ? (nonAuth.reduce((t, x) => t + x.s.totalGap, 0) / nonAuth.length).toFixed(1) : "0";
   const playCount = scored.reduce((m, x) => { m[x.s.play] = (m[x.s.play] || 0) + 1; return m; }, {} as Record<string, number>);
+  // worst-gap leaderboard — ranked across the WHOLE dataset (not the current tab)
+  const topGaps = ECOSYSTEM.map((a) => ({ a, s: scoreAccount(a) })).filter((x) => x.s.confidence !== "authority").sort((x, y) => y.s.totalGap - x.s.totalGap).slice(0, 8);
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -49,6 +51,23 @@ export default function Intel() {
             ))}
           </div>
           <p className="mt-1.5 text-[10px] text-emerald-300/45">Live §4 rubric · CSOAI scores sourced to product · competitor scores modeled from cited battlecards · displace only with a known vendor.</p>
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-amber-400/25 bg-gradient-to-b from-amber-500/[0.06] to-transparent p-4">
+          <div className="flex items-center justify-between">
+            <p className="font-mono text-[10px] uppercase tracking-[2px] text-amber-300/70">Top opportunities · biggest CSOAI gap (whole dataset)</p>
+            <span className="text-[10px] text-emerald-300/40">click to open the account →</span>
+          </div>
+          <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
+            {topGaps.map(({ a, s }, i) => (
+              <button key={a.id} onClick={() => setSel(a)} className="flex items-center gap-2 rounded-lg bg-black/30 px-3 py-1.5 text-left hover:bg-black/50">
+                <span className="w-4 shrink-0 font-mono text-[11px] text-amber-300/60">{i + 1}</span>
+                <span className="flex-1 truncate text-[13px] font-semibold text-emerald-100">{a.name}</span>
+                <span className={"shrink-0 rounded-full border px-1.5 py-0.5 text-[9px] font-bold " + PLAY_META[a.play].tone}>{a.play}</span>
+                <span className="shrink-0 font-mono text-[11px] font-bold text-amber-300">{s.totalGap}/21</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="mt-5 grid gap-3 lg:grid-cols-2">
@@ -108,7 +127,7 @@ export default function Intel() {
               <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Tailored demo</div>
               <div className="mt-2 flex flex-wrap gap-2">
                 <a href={"/crosswalk?fw=" + encodeURIComponent(sel.frameworks.join(","))} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Crosswalk their {sel.frameworks.length} frameworks →</a>
-                <a href="/classifier" className="rounded-lg border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Classify their AI →</a>
+                <a href={"/classifier?q=" + encodeURIComponent("A production AI system at " + sel.name + " (" + sel.type + (sel.sector ? ", " + sel.sector : "") + ") operating under " + (sel.jurisdictions.join("/") || "multiple regimes"))} className="rounded-lg border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Classify their AI →</a>
                 <a href="/agent-governance" className="rounded-lg border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Agent governance →</a>
                 <a href="/tool-commons" className="rounded-lg border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Run the MCP live →</a>
               </div>
