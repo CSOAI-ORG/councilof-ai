@@ -197,6 +197,7 @@ const Cra = lazy(() => import("./pages/Cra"));
 const Nis2 = lazy(() => import("./pages/Nis2"));
 const VulnerabilityDisclosure = lazy(() => import("./pages/VulnerabilityDisclosure"));
 const Intel = lazy(() => import("./pages/Intel"));
+const AccountBrief = lazy(() => import("./pages/AccountBrief"));
 const Article50 = lazy(() => import("./pages/Article50"));
 const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
@@ -696,6 +697,7 @@ function App() {
                   <Route path="/vulnerability-disclosure" component={VulnerabilityDisclosure} />
                   <Route path="/security" component={VulnerabilityDisclosure} />
                   <Route path="/intel" component={Intel} />
+                  <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />

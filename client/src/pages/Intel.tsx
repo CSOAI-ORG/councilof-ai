@@ -144,6 +144,7 @@ export default function Intel() {
 
               <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Tailored demo</div>
               <div className="mt-2 flex flex-wrap gap-2">
+                <a href={"/brief?id=" + sel.id} className="rounded-lg bg-emerald-400 px-3 py-1.5 text-xs font-black text-[#03110b] hover:bg-emerald-300">Open tailored brief →</a>
                 <a href={"/crosswalk?fw=" + encodeURIComponent(sel.frameworks.join(","))} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Crosswalk their {sel.frameworks.length} frameworks →</a>
                 <a href={"/classifier?q=" + encodeURIComponent("A production AI system at " + sel.name + " (" + sel.type + (sel.sector ? ", " + sel.sector : "") + ") operating under " + (sel.jurisdictions.join("/") || "multiple regimes"))} className="rounded-lg border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Classify their AI →</a>
                 <a href="/agent-governance" className="rounded-lg border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Agent governance →</a>
