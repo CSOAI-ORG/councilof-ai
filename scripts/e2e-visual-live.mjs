@@ -110,14 +110,14 @@ try {
       });
       return r.json();
     }, OS_BASE);
-    const verifyResp = await page.evaluate(async (osBase, canonical, signature, publicKey) => {
+    const verifyResp = await page.evaluate(async ({ osBase, canonical, signature, publicKey }) => {
       const r = await fetch(osBase + '/api/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ canonical, signature, publicKey })
       });
       return r.json();
-    }, OS_BASE, signResp.canonical, signResp.signature, signResp.publicKey);
+    }, { osBase: OS_BASE, canonical: signResp.canonical, signature: signResp.signature, publicKey: signResp.publicKey });
     log('Browser-context sign/verify round trip', verifyResp.valid === true, JSON.stringify(verifyResp));
     await page.close();
   }
