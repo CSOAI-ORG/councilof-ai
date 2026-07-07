@@ -25,6 +25,9 @@ Last pass: 2026-07 (live web verification of the EU/cyber/global cluster).
 | **China** | GenAI Measures + synthetic-content ID rules (labelling from **1 Sep 2025**) | sumsub.com | `/china-ai-law` |
 | **NIST AI RMF** | Voluntary framework, **NIST AI 100-1**, published **26 Jan 2023**. Core = **4 functions** GOVERN · MAP · MEASURE · MANAGE → categories → subcategories. Crosswalk cells verified at function level (subcategory numbers indicative). | nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf; airc.nist.gov | `/crosswalk`, `/nist-vs-eu-ai-act` |
 | **ISO/IEC 42001:2023** | AIMS standard: requirements in **clauses 4–10**; **Annex A = 38 controls across 9 control objectives** (AI policy, internal org, resources, impact assessment, AI system life cycle, **data**, information for interested parties, responsible use, third-party). **Annex B = implementation guidance** (not controls). SoA required. **Fixed drift:** crosswalk previously cited Annex B for control domains → corrected to **Annex A**. | iso.org/obp (81230); isms.online | `/crosswalk`, `/guides/iso-42001`, `/iso-42001-vs-eu-ai-act` |
+| **GDPR** | Reg. **(EU) 2016/679**, applicable **25 May 2018**. Key refs used in crosswalk verified: Art. **5** (principles), **6** (lawfulness), **9** (special categories), **13–14** (info to provide), **22** (automated decisions / profiling), **35** (DPIA). | eur-lex (2016/679) | `/crosswalk`, `/eu-ai-act-vs-gdpr` |
+| **China TC260** | National Information Security Standardization Technical Committee. **AI Safety Governance Framework v2.0 released 15 Sep 2025** (v1.0 Sep 2024); **TC260-003-2024** = Basic Security Requirements for Generative AI Service; "Law + Standard" dual-drive. | onetrust.com; gaicc.org; twobirds.com | `/frameworks/tc260`, `TC260Guide` |
+| **FedRAMP RFC-0024 / OSCAL** | RFC-0024 (Rev5 machine-readable packages). **New authorizations must adopt machine-readable/OSCAL by 30 Sep 2026**; grace period ends **30 Sep 2027** (non-compliant loses authorization). OSCAL = NIST machine-readable format (2016). | fedramp.gov/rfcs/0024; paramify.com | `/fedramp`, `/oscal` |
 
 ---
 
@@ -34,9 +37,9 @@ Last pass: 2026-07 (live web verification of the EU/cyber/global cluster).
 |---|---|---|
 | ~~NIST AI RMF~~ | — | ✅ **verified — see table above** (26 Jan 2023, 4 functions) |
 | ~~ISO/IEC 42001~~ | — | ✅ **verified — see table above** (clauses 4–10 + Annex A 38 controls; drift fixed) |
-| **GDPR** | crosswalk cells | Verify Art. 5/6/22/13-14 references |
-| **China TC260** | `/frameworks/tc260`, `TC260Guide` | Verify against the standard's current text |
-| **FedRAMP RFC-0024 / OSCAL** | `/fedramp`, `/oscal` | Verify the 30 Sep 2026 / 30 Sep 2027 OSCAL dates |
+| ~~GDPR~~ | — | ✅ **verified — see table above** (2016/679, Art. 5/6/9/13-14/22/35) |
+| ~~China TC260~~ | — | ✅ **verified — see table above** (Framework v2.0, 15 Sep 2025; TC260-003-2024) |
+| ~~FedRAMP RFC-0024 / OSCAL~~ | — | ✅ **verified — see table above** (30 Sep 2026 → 30 Sep 2027) |
 | **UK** | `/uk-ai-regulation` | Verify the 5 principles + AISI status |
 | **Canada AIDA** | `/canada-aida` | Confirm current legislative status (flagged uncertain) |
 | **Singapore** | `/singapore-ai-governance` | Verify Model AI Gov Framework + AI Verify |
