@@ -27,7 +27,7 @@ const PORT = 4319;
 // GEO-critical, citable routes. Order doesn't matter.
 const ROUTES = [
   '/', '/crosswalk', '/crosswalks', '/compare', '/certification', '/pricing',
-  '/layer0', '/global-ai-regulation', '/readiness-assessment', '/framework-catalog',
+  '/trust-center', '/global-ai-regulation', '/readiness-assessment', '/framework-catalog',
   '/article-50', '/about',
 ];
 
