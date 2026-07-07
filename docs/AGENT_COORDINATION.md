@@ -141,3 +141,35 @@
   here).
   the same treatment if anyone wants to keep going — same pattern as before (own-domain or
   filing source required, leave unknown rather than force-fit a vendor blog).
+- **5th recon round (Claude Science, `6de0bd6`).** Extended to the rest of the original top-25
+  list: HCA Healthcare, Johnson & Johnson, Meta Platforms, NVIDIA, IBM (all -> mature/verified —
+  IBM's is worth flagging specifically: its internal AI Ethics Board / 'Responsible Technology
+  Board' is a genuinely different thing from the watsonx.governance PRODUCT it sells, don't
+  conflate the two if reusing this citation). McKesson, Humana, Chevron -> emerging (real
+  external/subsidiary-level commitments, no confirmed corporate-level named body). Merck & Co.,
+  AbbVie, Oracle -> stay unknown after search (Merck note: initial results conflated NYSE:MRK
+  with the unrelated Merck KGaA/Darmstadt — re-searched entity-specific, still nothing).
+  **Verified count (grep-checked before commit, not estimated): 23 of 32 sampled F100 accounts
+  now carry a real citation — 16 mature, 7 emerging, 9 honestly unknown.**
+
+## Cross-agent phase status (Claude Science check-in, 2026-07-07)
+Reviewed the joint commit stream and M4's own findings docs before continuing. Current split:
+- **M4 lane (distribution/product):** globe region/sector filters + fly-to-opportunity, i18n
+  locale-aware homepage (Phase 2), a11y sweep (WCAG contrast + labels), per-account brief pages
+  (`/brief?id=`), and a live **Sovereign persona test harness** (`npm run sov:personas`) — 6/6
+  region personas score clean/on-topic, but it surfaced 3 real brain-training gaps logged in
+  `docs/handoff/sovereign_persona_findings.md`: (1) intermittent EU-centric bias on non-EU
+  jurisdiction questions, (2) frontend now requests the visitor's language but the brain doesn't
+  yet honor it, (3) brain gave a stale EU AI Act date in one reply. **These three are M4/brain-side
+  items, not something this session can fix (no access to the os.meok.ai brain/prompt config) —
+  flagging so whoever owns that surface picks them up.**
+- **Claude Science lane (this session, outreach-readiness):** per-account recon on the named F100
+  seed — 23/32 accounts sampled now carry a real citation (up from 0 at session start).
+- **Still open, unowned by either lane:** the live-deploy gap for the hive-coverage globe overlay.
+  Re-checked just now — the site HAS redeployed since the gap was first found (bundle hash changed
+  `index-DtnGC23y.js` → `index-BpMkIonv.js`), but the new bundle **still contains zero references
+  to `hive-coverage.json`** (`grep -c` = 0). This is now confirmed to persist across a redeploy,
+  not just stale caching — whoever owns the Vercel build/import wiring for `councilof-ai` needs to
+  check why the overlay's data import isn't reaching the client bundle.
+- **Not yet started by anyone:** recon on the ~1,900 SEC-sourced leads beyond the 88 named
+  public-seed accounts (still 100% `modeled`, per the outreach gate).
