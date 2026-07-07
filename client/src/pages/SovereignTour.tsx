@@ -9,7 +9,7 @@ type Step = { glyph: string; title: string; say: string; href?: string; label?: 
 const STEPS: Step[] = [
   { glyph: "\u25C9", title: "I am your Sovereign", say: "Welcome to the CSOAI world. I will walk you through it \u2014 the tools, the flow, what matters for you. You command; I act." },
   { glyph: "\u25A6", title: "Sovereign Town", say: "The living, signed record of AI governance \u2014 governed vs ungoverned, in real time, externally anchored to Bitcoin. This is the heartbeat.", href: "/sovereign-town", label: "Visit Sovereign Town" },
-  { glyph: "\u25A5", title: "Layer 0", say: "The eight trust controls every governed agent stands on \u2014 identity, policy, attestation. The floor beneath everything.", href: "/layer0", label: "See Layer 0" },
+  { glyph: "\u25A5", title: "Layer 0", say: "The eight trust controls every governed agent stands on \u2014 identity, policy, attestation. The floor beneath everything.", href: "/trust-center", label: "See Layer 0" },
   { glyph: "\u2756", title: "Your jurisdiction", say: "I already know the regulations and crosswalks for your region. Live AI law across 40+ jurisdictions \u2014 what applies, and what to do.", href: "/global-regulations", label: "Open Regulation Atlas" },
   { glyph: "\u21C4", title: "Crosswalks", say: "One control set mapped across EU AI Act, NIST AI RMF, ISO 42001 and TC260 \u2014 comply once, satisfy many.", href: "/crosswalks", label: "Open Crosswalks" },
   { glyph: "\u229F", title: "The MCP Fleet", say: "216 governed MCP servers across 10 hives \u2014 every tool call identity-checked, policy-gated, and attestable.", href: "/mcp-fleet", label: "See the fleet" },

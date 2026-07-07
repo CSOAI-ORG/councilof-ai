@@ -9,7 +9,7 @@ type Path = { n: number; title: string; blurb: string; ring: string; chip: strin
 
 const PATHS: Path[] = [
   { n: 1, title: "Foundations", blurb: "Stand on the floor first — identity, policy, attestation.", ring: "border-amber-300", chip: "bg-amber-100 text-amber-800", modules: [
-    { name: "Layer 0 — the 8 trust controls", href: "/layer0" },
+    { name: "Layer 0 — the 8 trust controls", href: "/trust-center" },
     { name: "The 52-Article Charter", href: "/charter" },
     { name: "SOAI-PDCA methodology", href: "/soai-pdca" },
   ] },

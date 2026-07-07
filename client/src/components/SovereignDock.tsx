@@ -31,7 +31,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /humanoid|\bpoc\b|proof of concept|one os|rogue|swarm|bad actor/i, href: "/poc", label: "the ONE OS proof of concept" },
   { re: /globe|earth|world map|3d/i, href: "/world-3d", label: "the living globe" },
   { re: /sovereign network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Sovereign network" },
-  { re: /layer ?0|protocol|trust control/i, href: "/layer0", label: "Layer 0" },
+  { re: /layer ?0|protocol|trust control/i, href: "/trust-center", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },
   { re: /\bos\b|launch|grid|everything/i, href: "/os", label: "the OS launcher" },
 ];
@@ -79,7 +79,7 @@ const APP_ROUTES: Record<string, string> = {
   emergence: "/emergence", egg: "/emergence",
   certification: "/certification", cert: "/certification", academy: "/academy",
   evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
-  layer0: "/layer0", distribution: "/distribution", command: "/command-center",
+  layer0: "/trust-center", distribution: "/distribution", command: "/command-center",
 };
 function getScreenContext(): any {
   try {
