@@ -173,3 +173,16 @@ Reviewed the joint commit stream and M4's own findings docs before continuing. C
   check why the overlay's data import isn't reaching the client bundle.
 - **Not yet started by anyone:** recon on the ~1,900 SEC-sourced leads beyond the 88 named
   public-seed accounts (still 100% `modeled`, per the outreach gate).
+
+### ⚠️ Correction — fabricated J&J citation caught and fixed (`8e39c8d`)
+An auditor caught that the J&J entry from the 5th recon round cited a nonexistent position paper
+("Doing the right thing: AI & ethics") and mischaracterized J&J's real 1943 Credo as a generic
+5-point AI-ethics list. Neither claim is supported by any search result. **Corrected:** the only
+verifiable fact is CIO Jim Swanson telling Greylock directly that J&J "created two councils, an
+AI Council and a Data Management Council" (corroborated independently) — but a third source
+(citing WSJ) reports J&J has since replaced that centralized board with a distributed model, so
+current state is uncertain. Downgraded J&J from mature/internal to emerging/unknown. **Lesson
+for anyone continuing this recon pattern: verify every specific claim (paper titles, named
+frameworks, quoted principles) actually appears in the search result text before writing it into
+`ecosystem.ts` — don't let a plausible-sounding detail slip in without a traceable source line.**
+Running total after this fix: still 23/32 sampled accounts cited, now 15 mature + 8 emerging.
