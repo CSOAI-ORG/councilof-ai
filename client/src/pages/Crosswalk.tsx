@@ -8,12 +8,12 @@ import { useEffect } from "react";
 const FRAMEWORKS = ["EU AI Act", "NIST AI RMF", "ISO/IEC 42001", "DORA", "NIS2", "GDPR", "ISO 27001", "SOC 2", "HIPAA", "MiCA", "PCI DSS", "CRA", "TC260"];
 const CONTROLS: { c: string; refs: Record<string, string> }[] = [
   { c: "Risk management", refs: { "EU AI Act": "Art. 9", "NIST AI RMF": "MAP/MEASURE", "ISO/IEC 42001": "6.1 / 8.2", "DORA": "Art. 5–6", "NIS2": "Art. 21", "CRA": "Annex I" } },
-  { c: "Data governance", refs: { "EU AI Act": "Art. 10", "NIST AI RMF": "MAP 2", "ISO/IEC 42001": "7.4 / B.7", "GDPR": "Art. 5–6", "HIPAA": "164.514", "TC260": "5.x" } },
-  { c: "Transparency & disclosure", refs: { "EU AI Act": "Art. 13 / 50", "NIST AI RMF": "GOVERN 4", "ISO/IEC 42001": "B.6", "GDPR": "Art. 13–14", "TC260": "labelling" } },
-  { c: "Human oversight", refs: { "EU AI Act": "Art. 14", "NIST AI RMF": "GOVERN 2", "ISO/IEC 42001": "B.9", "DORA": "Art. 5" } },
+  { c: "Data governance", refs: { "EU AI Act": "Art. 10", "NIST AI RMF": "MAP 2", "ISO/IEC 42001": "Annex A (data)", "GDPR": "Art. 5–6", "HIPAA": "164.514", "TC260": "5.x" } },
+  { c: "Transparency & disclosure", refs: { "EU AI Act": "Art. 13 / 50", "NIST AI RMF": "GOVERN 4", "ISO/IEC 42001": "Annex A (transparency)", "GDPR": "Art. 13–14", "TC260": "labelling" } },
+  { c: "Human oversight", refs: { "EU AI Act": "Art. 14", "NIST AI RMF": "GOVERN 2", "ISO/IEC 42001": "Annex A (oversight)", "DORA": "Art. 5" } },
   { c: "Accountability & governance", refs: { "EU AI Act": "Art. 17", "NIST AI RMF": "GOVERN 1", "ISO/IEC 42001": "5.1–5.3", "SOC 2": "CC1", "NIS2": "Art. 20" } },
   { c: "Security & resilience", refs: { "EU AI Act": "Art. 15", "NIST AI RMF": "MANAGE 4", "ISO 27001": "A.5–A.8", "DORA": "Art. 9", "NIS2": "Art. 21", "PCI DSS": "Req. 6", "CRA": "Annex I", "MiCA": "Art. 68" } },
-  { c: "Bias & fairness", refs: { "EU AI Act": "Art. 10 / Annex III", "NIST AI RMF": "MEASURE 2.11", "ISO/IEC 42001": "B.7.4", "GDPR": "Art. 22" } },
+  { c: "Bias & fairness", refs: { "EU AI Act": "Art. 10 / Annex III", "NIST AI RMF": "MEASURE 2.11", "ISO/IEC 42001": "Annex A (impact)", "GDPR": "Art. 22" } },
   { c: "Documentation & records", refs: { "EU AI Act": "Art. 11–12 / Annex IV", "NIST AI RMF": "GOVERN 1.4", "ISO/IEC 42001": "7.5", "SOC 2": "CC2", "DORA": "Art. 28 (RoI)" } },
 ];
 

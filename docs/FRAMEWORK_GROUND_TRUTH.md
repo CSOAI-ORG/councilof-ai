@@ -23,6 +23,8 @@ Last pass: 2026-07 (live web verification of the EU/cyber/global cluster).
 | **US — federal** | No omnibus law; TAKE IT DOWN Act enacted; deregulatory EOs (2025-26); state-led | whitecase.com AI Watch | `/us-ai-regulation` |
 | **South Korea** | Basic AI Act **in force Jan 2026**, extraterritorial | sumsub.com; iapp.org | `/south-korea-ai-act` |
 | **China** | GenAI Measures + synthetic-content ID rules (labelling from **1 Sep 2025**) | sumsub.com | `/china-ai-law` |
+| **NIST AI RMF** | Voluntary framework, **NIST AI 100-1**, published **26 Jan 2023**. Core = **4 functions** GOVERN · MAP · MEASURE · MANAGE → categories → subcategories. Crosswalk cells verified at function level (subcategory numbers indicative). | nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf; airc.nist.gov | `/crosswalk`, `/nist-vs-eu-ai-act` |
+| **ISO/IEC 42001:2023** | AIMS standard: requirements in **clauses 4–10**; **Annex A = 38 controls across 9 control objectives** (AI policy, internal org, resources, impact assessment, AI system life cycle, **data**, information for interested parties, responsible use, third-party). **Annex B = implementation guidance** (not controls). SoA required. **Fixed drift:** crosswalk previously cited Annex B for control domains → corrected to **Annex A**. | iso.org/obp (81230); isms.online | `/crosswalk`, `/guides/iso-42001`, `/iso-42001-vs-eu-ai-act` |
 
 ---
 
@@ -30,8 +32,8 @@ Last pass: 2026-07 (live web verification of the EU/cyber/global cluster).
 
 | Framework | On-platform at | Do next |
 |---|---|---|
-| **NIST AI RMF** | `/frameworks/nist`, `/nist-vs-eu-ai-act` | Read GOVERN/MAP/MEASURE/MANAGE fully; verify our crosswalk cells against NIST AI 100-1 |
-| **ISO/IEC 42001** | `/guides/iso-42001` | Verify clause refs (5–10, Annex A/B) + 42006:2025 for cert bodies |
+| ~~NIST AI RMF~~ | — | ✅ **verified — see table above** (26 Jan 2023, 4 functions) |
+| ~~ISO/IEC 42001~~ | — | ✅ **verified — see table above** (clauses 4–10 + Annex A 38 controls; drift fixed) |
 | **GDPR** | crosswalk cells | Verify Art. 5/6/22/13-14 references |
 | **China TC260** | `/frameworks/tc260`, `TC260Guide` | Verify against the standard's current text |
 | **FedRAMP RFC-0024 / OSCAL** | `/fedramp`, `/oscal` | Verify the 30 Sep 2026 / 30 Sep 2027 OSCAL dates |
