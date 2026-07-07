@@ -20,3 +20,8 @@
 Run before demos / after any brain change: `npm run sov:personas`. Add personas by editing
 the PERSONAS array. Not a hard CI gate (region-appropriateness can flap run-to-run); it is a
 training/monitoring tool.
+
+## Update (2026-07-07) — multilingual response gap
+- **Frontend now requests the visitor's language** (client/src/lib/sovAsk.ts appends "Respond in <language>. Keep regulation names + labels in English."). Verified the request is correct and keeps "EU AI Act" canonical.
+- **BRAIN does not yet honor it** — a Japanese-directive request came back in English. So end-to-end multilingual answers need brain-side support (model/prompt/config on os.meok.ai). **Training item for M4.** The frontend is forward-compatible: it will localize automatically once the brain complies.
+- Separately observed: the brain gave an inaccurate EU AI Act date ("mid-2025") in that reply — brain knowledge freshness is also an M4 training item (the site copy + register are correct; the brain should cite the register).
