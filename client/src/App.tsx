@@ -189,6 +189,9 @@ const WatchdogMap = lazy(() => import("./pages/WatchdogMap"));
 const IncidentReport = lazy(() => import("./pages/IncidentReport"));
 const EuActClassifier = lazy(() => import("./pages/EuActClassifier"));
 const Crosswalk = lazy(() => import("./pages/Crosswalk"));
+const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
+const Article50 = lazy(() => import("./pages/Article50"));
+const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
 const SovSpace = lazy(() => import("./pages/SovSpace"));
@@ -673,6 +676,9 @@ function App() {
                   {/* Framework Crosswalks */}
                   <Route path="/crosswalks" component={Crosswalks} />
                   <Route path="/crosswalk" component={Crosswalk} />
+                  <Route path="/agent-governance" component={AgentGovernance} />
+                  <Route path="/article-50" component={Article50} />
+                  <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />
                   {/* Individual Charter Articles */}
                   <Route path="/charter/article/:id" component={CharterArticle} />
