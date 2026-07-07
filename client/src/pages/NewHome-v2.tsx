@@ -6,6 +6,7 @@
 
 import { Link } from "wouter";
 import { startTour } from "../lib/demoTour";
+import EnterpriseTrust from "../components/EnterpriseTrust";
 import { motion } from "framer-motion";
 import {
   Shield,
@@ -237,7 +238,7 @@ export default function NewHomeV2() {
       <div className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-2 text-center text-sm">
           <span className="font-bold">AI is taking jobs. CSOAI is creating them.</span>
-          <span className="hidden sm:inline text-white/80">Become a certified AI Safety Watchdog Analyst — get paid to protect humanity.</span>
+          <span className="hidden sm:inline text-white/90">Become a certified AI Safety Watchdog Analyst — get paid to protect humanity.</span>
           <a href="/watchdog-signup" className="rounded-full bg-white/15 px-3 py-0.5 font-semibold hover:bg-white/25">Start training →</a>
           <a href="/classifier" className="rounded-full bg-white/15 px-3 py-0.5 font-semibold hover:bg-white/25">Is your AI high-risk? →</a>
         </div>
@@ -324,7 +325,7 @@ export default function NewHomeV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.5 }}
-            className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto"
+            className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto"
           >
             The world's first relationship-based AI safety infrastructure.
             Partnership, not control. Prosperity, not fear.
@@ -332,8 +333,8 @@ export default function NewHomeV2() {
 
                     <div className="mb-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link href="/start"><Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">Start free - build your own AI</Button></Link>
-            <Link href="/sov-space"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">Try Sov Space</Button></Link>
-            <Link href="/demo"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-100 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">▶ Watch the live demo</Button></Link>
+            <Link href="/sov-space"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-50 bg-transparent hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">Try Sov Space</Button></Link>
+            <Link href="/demo"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-50 bg-transparent hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">▶ Watch the live demo</Button></Link>
           </div>
 
           {/* Explore live — the AI economy + the ecosystem, one click */}
@@ -351,7 +352,7 @@ export default function NewHomeV2() {
             transition={{ duration: 0.7, delay: 0.6 }}
             className="mb-16"
           >
-            <p className="text-gray-400 text-sm mb-4">Choose your path:</p>
+            <p className="text-gray-500 text-sm mb-4">Choose your path:</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link href="/training">
                 <Button
@@ -366,7 +367,7 @@ export default function NewHomeV2() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-blue-400/50 text-blue-300 hover:bg-blue-500/10 hover:border-blue-400 px-6 py-6 text-base font-semibold rounded-xl transition-all"
+                  className="border-2 border-blue-400/50 text-blue-100 bg-transparent hover:bg-blue-500/10 hover:border-blue-400 px-6 py-6 text-base font-semibold rounded-xl transition-all"
                 >
                   <Building className="mr-2 h-5 w-5" />
                   I'm an Enterprise / Government
@@ -376,7 +377,7 @@ export default function NewHomeV2() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-purple-400/50 text-purple-300 hover:bg-purple-500/10 hover:border-purple-400 px-6 py-6 text-base font-semibold rounded-xl transition-all"
+                  className="border-2 border-purple-400/50 text-purple-100 bg-transparent hover:bg-purple-500/10 hover:border-purple-400 px-6 py-6 text-base font-semibold rounded-xl transition-all"
                 >
                   <Eye className="mr-2 h-5 w-5" />
                   I'm a Concerned Citizen
@@ -411,7 +412,7 @@ export default function NewHomeV2() {
                   <div className="text-3xl md:text-4xl font-bold text-white mb-1">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
+                  <div className="text-sm text-gray-500">{stat.label}</div>
                 </div>
               </motion.div>
             ))}
@@ -436,6 +437,9 @@ export default function NewHomeV2() {
       </section>
 
       {/* ============================================ */}
+      {/* ENTERPRISE TRUST STRIP (honest signals a CISO scans for) */}
+      <EnterpriseTrust />
+
       {/* SECTION 1.25: ZERO AI SAFETY SOLUTIONS */}
       {/* ============================================ */}
       <ZeroSafetySection />
@@ -507,7 +511,7 @@ export default function NewHomeV2() {
                     <div className="text-4xl mb-3">{item.icon}</div>
                     <h3 className="font-bold text-white mb-2">{item.title}</h3>
                     <div className="text-3xl font-bold text-red-400 mb-2">{item.stat}</div>
-                    <p className="text-gray-400 text-sm mb-3">{item.desc}</p>
+                    <p className="text-gray-500 text-sm mb-3">{item.desc}</p>
                     <p className="text-red-300 text-xs font-medium">{item.impact}</p>
                   </CardContent>
                 </Card>
@@ -552,11 +556,11 @@ export default function NewHomeV2() {
           <p className="mt-3 max-w-2xl text-emerald-50/85">Build your identity, connect your world, see governance on the globe, choose your consensus, and browse every regulation - all live.</p>
           <a data-tag="home-deadline-cta" href="/eu-ai-act-checklist" className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-5 py-3 text-sm font-bold text-amber-100 hover:bg-amber-400/20"><span className="rounded-md bg-amber-400 px-2 py-0.5 text-[10px] font-black text-slate-900">2 AUG 2026</span>EU AI Act transparency + GPAI go live - check your readiness -&gt;</a>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <a href="/sovereign" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Sovereign</div><p className="mt-1 text-xs text-white/70">One identity: voice, character, passport.</p></a>
-            <a href="/connect" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Connect socials</div><p className="mt-1 text-xs text-white/70">Give your AI character a face.</p></a>
-            <a href="/globe" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Sovereign Globe</div><p className="mt-1 text-xs text-white/70">AI governance, layered on the world.</p></a>
-            <a href="/bft" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Choose your BFT</div><p className="mt-1 text-xs text-white/70">5, 12-around-1, or 33-node swarm.</p></a>
-            <a href="/registry" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Registry</div><p className="mt-1 text-xs text-white/70">Every regulation, standard, protocol.</p></a>
+            <a href="/sovereign" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Sovereign</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
+            <a href="/connect" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Connect socials</div><p className="mt-1 text-xs text-white/90">Give your AI character a face.</p></a>
+            <a href="/globe" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Sovereign Globe</div><p className="mt-1 text-xs text-white/90">AI governance, layered on the world.</p></a>
+            <a href="/bft" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Choose your BFT</div><p className="mt-1 text-xs text-white/90">5, 12-around-1, or 33-node swarm.</p></a>
+            <a href="/registry" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Registry</div><p className="mt-1 text-xs text-white/90">Every regulation, standard, protocol.</p></a>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="/try" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Ask the Council -&gt;</a>
@@ -937,7 +941,7 @@ export default function NewHomeV2() {
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Our <span className="text-emerald-400">7 Frameworks</span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-500 max-w-3xl mx-auto">
               Master every major AI governance framework. One platform, complete global coverage.
             </p>
           </motion.div>
@@ -957,7 +961,7 @@ export default function NewHomeV2() {
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${framework.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
                         <framework.icon className="h-6 w-6 text-white" />
                       </div>
-                      <Badge variant="outline" className="text-gray-400 border-gray-600">
+                      <Badge variant="outline" className="text-gray-500 border-gray-600">
                         {framework.year}
                       </Badge>
                     </div>
@@ -965,13 +969,13 @@ export default function NewHomeV2() {
                     <p className="text-sm text-emerald-400">{framework.region}</p>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <p className="text-sm text-gray-400 leading-relaxed">{framework.description}</p>
+                    <p className="text-sm text-gray-500 leading-relaxed">{framework.description}</p>
                     <div className="flex items-center gap-2">
                       <Badge className="bg-white/10 text-gray-300 border-0">{framework.articles}</Badge>
                     </div>
                     <div className="flex gap-2 pt-2">
                       <Link href={getFrameworkGuideUrl(framework.id)}>
-                        <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white hover:bg-white/10">
+                        <Button variant="ghost" size="sm" className="text-gray-500 hover:text-white hover:bg-white/10">
                           Learn More
                         </Button>
                       </Link>
@@ -1123,7 +1127,7 @@ export default function NewHomeV2() {
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 The <span className="text-emerald-400">Byzantine Council</span>
               </h2>
-              <p className="text-xl text-gray-400 mb-8 leading-relaxed">
+              <p className="text-xl text-gray-500 mb-8 leading-relaxed">
                 33 AI agents from multiple providers working together with Byzantine fault tolerance.
                 No single company can manipulate safety decisions.
               </p>
@@ -1135,7 +1139,7 @@ export default function NewHomeV2() {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">23/33 Consensus Required</h4>
-                    <p className="text-gray-400">70% agreement for any safety decision. Byzantine fault tolerance ensures reliability even if agents fail or are compromised.</p>
+                    <p className="text-gray-500">70% agreement for any safety decision. Byzantine fault tolerance ensures reliability even if agents fail or are compromised.</p>
                   </div>
                 </div>
 
@@ -1145,7 +1149,7 @@ export default function NewHomeV2() {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">Multi-Provider Diversity</h4>
-                    <p className="text-gray-400">Agents span GPT-4, Claude, Gemini, Llama, and more. No single AI company has majority control.</p>
+                    <p className="text-gray-500">Agents span GPT-4, Claude, Gemini, Llama, and more. No single AI company has majority control.</p>
                   </div>
                 </div>
 
@@ -1155,7 +1159,7 @@ export default function NewHomeV2() {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">Human Oversight</h4>
-                    <p className="text-gray-400">Certified AI Safety Analysts review critical decisions. AI monitors AI, humans oversee all.</p>
+                    <p className="text-gray-500">Certified AI Safety Analysts review critical decisions. AI monitors AI, humans oversee all.</p>
                   </div>
                 </div>
               </div>
@@ -1405,7 +1409,7 @@ export default function NewHomeV2() {
                     </div>
                     <div>
                       <CardTitle className="text-2xl">CSOAI Certification</CardTitle>
-                      <CardDescription className="text-gray-400">AI System Compliance Badge</CardDescription>
+                      <CardDescription className="text-gray-500">AI System Compliance Badge</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
