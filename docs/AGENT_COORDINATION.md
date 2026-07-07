@@ -186,3 +186,16 @@ for anyone continuing this recon pattern: verify every specific claim (paper tit
 frameworks, quoted principles) actually appears in the search result text before writing it into
 `ecosystem.ts` — don't let a plausible-sounding detail slip in without a traceable source line.**
 Running total after this fix: still 23/32 sampled accounts cited, now 15 mature + 8 emerging.
+
+- **6th recon round (Claude Science, `5a6b848`) — completes the full 32-account F100 sample.**
+  Verizon, RTX (Raytheon), Boeing -> mature/internal/verified (RTX's is a SEC DEF 14A filing,
+  the strongest citation class). Northrop Grumman -> emerging (real detail, no named internal
+  board). **Final tally for this sample: 27 of 32 F100 accounts now carry a real citation — 18
+  mature, 9 emerging, 5 honestly unknown after genuine search (AbbVie, Bank of America,
+  ExxonMobil, Merck & Co., Oracle — none had a primary-sourced named governance body, only
+  AI-use-case press or third-party consultancy content).** This closes out the currently-sampled
+  32-account F100 batch from the original top-25-gap list + adjacent accounts. **Next scope for
+  anyone continuing:** the ~1,900 SEC-sourced leads beyond these 32 named accounts remain
+  entirely `modeled` — same per-account recon pattern applies (own-domain, SEC filing, or a
+  named-exec interview required; leave `unknown` rather than force-fit AI-use-case coverage into
+  a governance claim).
