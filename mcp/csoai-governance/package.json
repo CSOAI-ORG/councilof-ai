@@ -3,14 +3,39 @@
   "version": "0.1.0",
   "description": "CSOAI Sovereign governance MCP — seal any AI artifact to CSOAI Layer 0 with Ed25519, verify seals offline, get governed AI-governance/cyber answers, and search the 377 governed-tool catalog. Lets any Claude Science / Claude Code / MCP agent make its outputs auditable, reproducible and council-governed.",
   "type": "module",
-  "bin": { "csoai-governance-mcp": "index.mjs" },
+  "bin": {
+    "csoai-governance-mcp": "index.mjs"
+  },
   "main": "index.mjs",
-  "files": ["index.mjs", "README.md"],
-  "keywords": ["mcp", "csoai", "ai-governance", "ed25519", "signing", "provenance", "compliance", "eu-ai-act", "nist"],
+  "files": [
+    "index.mjs",
+    "README.md"
+  ],
+  "keywords": [
+    "mcp",
+    "csoai",
+    "ai-governance",
+    "ed25519",
+    "signing",
+    "provenance",
+    "compliance",
+    "eu-ai-act",
+    "nist"
+  ],
   "license": "Apache-2.0",
   "homepage": "https://csoai.org",
-  "repository": { "type": "git", "url": "https://github.com/CSOAI-ORG/councilof-ai.git", "directory": "mcp/csoai-governance" },
-  "publishConfig": { "access": "public" },
-  "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0" },
-  "engines": { "node": ">=18" }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CSOAI-ORG/councilof-ai.git",
+    "directory": "mcp/csoai-governance"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }
