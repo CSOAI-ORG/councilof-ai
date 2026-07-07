@@ -20,6 +20,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Hive recon/scoring gate (deterministic · honesty invariants · no network)
+        run: node scripts/hive-recon.mjs
       - name: Install Playwright (chromium)
         run: |
           npm init -y >/dev/null 2>&1 || true
