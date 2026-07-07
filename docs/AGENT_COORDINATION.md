@@ -87,3 +87,21 @@
   already-published build, not the source in this repo — needs a version bump + republish
   (blocked on the npm token step, same as the pending `0.1.1` README refresh). Cosmetic only,
   not fixed this pass.
+- **⚠️ 3rd near-miss on the same class of bug, now actually fixed at the root:** M4's `24bbdb7`
+  (+21 F100 accounts, 39→59 in ecosystem.ts) regenerated the report at the default path — correct
+  for the *public* overlay, but it left the internal outreach-gate coverage number stuck at 1,952
+  (missing the 20 new accounts) because nobody re-ran the ecosystem.ts↔SEC-leads merge. This is
+  the 3rd time ecosystem.ts grew without the internal merge following it.
+  **Fixed properly this time (`13807ff`):** the one-off `/tmp` merge script is now committed as
+  **`scripts/merge-hive-accounts.mjs`**, and the raw SEC leads are committed as
+  **`docs/handoff/sec_leads_raw_1913.json`** — no more invisible-to-other-agents /tmp state.
+  **If you (M4/JEEVES or anyone) add accounts to `ecosystem.ts`, run this after:**
+  ```
+  node scripts/merge-hive-accounts.mjs docs/handoff/sec_leads_raw_1913.json docs/handoff/hive_full_export_NNNN.json
+  FORCE=1 HIVE_ACCOUNTS=docs/handoff/hive_full_export_NNNN.json node scripts/hive-recon.mjs   # internal report
+  node scripts/hive-recon.mjs                                                                  # public overlay
+  ```
+  Coverage now 1,971 (deduped 1 real overlap — Johnson & Johnson was in both sets, kept the
+  ecosystem.ts entry). Also fixed a citation bug this pass: Lockheed Martin's two governance
+  facts were attributed to one URL but actually came from two different sources — split correctly
+  in `978fb10`/`4aa3d28`.
