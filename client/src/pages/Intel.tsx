@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { ECOSYSTEM, RUBRIC, PLAY_META, type Account } from "../data/ecosystem";
+import { ECOSYSTEM, PLAY_META, type Account } from "../data/ecosystem";
+import { scoreAccount } from "../lib/hiveScore";
 
 // /intel — the Distribution Hive command view. Renders the ecosystem dataset as
 // account cards, runs the fixed testing rubric per account, and tailors demo links.
@@ -11,6 +12,10 @@ export default function Intel() {
   const [sel, setSel] = useState<Account | null>(null);
   useEffect(() => { document.title = "Distribution Hive — account intelligence | CSOAI"; }, []);
   const rows = ECOSYSTEM.filter((a) => tab === "all" || a.type === tab || (tab === "fortune500" && a.type === "fortune100"));
+  const scored = rows.map((a) => ({ a, s: scoreAccount(a) }));
+  const nonAuth = scored.filter((x) => x.s.confidence !== "authority");
+  const avgGap = nonAuth.length ? (nonAuth.reduce((t, x) => t + x.s.totalGap, 0) / nonAuth.length).toFixed(1) : "0";
+  const playCount = scored.reduce((m, x) => { m[x.s.play] = (m[x.s.play] || 0) + 1; return m; }, {} as Record<string, number>);
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -26,8 +31,17 @@ export default function Intel() {
           <span className="ml-auto rounded-full bg-emerald-500/15 px-3 py-1.5 text-xs font-bold text-emerald-300">{rows.length} accounts · seed</span>
         </div>
 
+        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-emerald-500/15 bg-[#05140d] px-4 py-3 text-[12px]">
+          <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/60">Coverage (live rubric)</span>
+          <span className="text-emerald-100/80">Avg CSOAI gap <b className="text-emerald-300">{avgGap}/21</b></span>
+          {(["align", "absorb", "integrate", "displace"] as const).map((p) => playCount[p] ? (
+            <span key={p} className={"rounded-full border px-2 py-0.5 text-[10px] font-bold " + PLAY_META[p].tone}>{p} {playCount[p]}</span>
+          ) : null)}
+          <span className="ml-auto text-[10px] text-emerald-300/45">competitor scores modeled from cited battlecards · displace only w/ known vendor</span>
+        </div>
+
         <div className="mt-5 grid gap-3 lg:grid-cols-2">
-          {rows.map((a) => {
+          {scored.map(({ a, s }) => {
             const pm = PLAY_META[a.play];
             return (
               <button key={a.id} onClick={() => setSel(a)} className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4 text-left transition hover:border-emerald-400/40">
@@ -37,7 +51,15 @@ export default function Intel() {
                 </div>
                 <div className="mt-0.5 text-[11px] text-emerald-300/60">{a.type} · {a.country} · {a.region}</div>
                 <div className="mt-2 flex flex-wrap gap-1">{a.frameworks.slice(0, 5).map((f) => <span key={f} className="rounded bg-black/40 px-2 py-0.5 font-mono text-[10px] text-emerald-300/72">{f}</span>)}</div>
-                <div className="mt-2 text-[11px] text-emerald-300/60">posture: {a.posture} · vendor: {a.currentVendor} · src: {a.source}</div>
+                {s.confidence === "authority" ? (
+                  <div className="mt-2 text-[11px] text-emerald-300/60">authority · we implement their regime · posture: {a.posture}</div>
+                ) : (
+                  <div className="mt-2 flex items-center gap-2 text-[11px] text-emerald-300/60">
+                    <span>gap <b className="text-emerald-300">{s.totalGap}/21</b></span>
+                    <span className={"rounded px-1.5 py-0.5 text-[9px] font-bold " + (s.confidence === "verified" ? "bg-emerald-500/15 text-emerald-300" : "bg-amber-500/15 text-amber-300")}>{s.confidence}</span>
+                    {s.topUsps[0] && <span className="truncate text-emerald-300/50">lead: {s.topUsps[0]}</span>}
+                  </div>
+                )}
               </button>
             );
           })}
@@ -50,15 +72,27 @@ export default function Intel() {
               <div className="mt-1 text-xs text-emerald-300/60">{sel.type} · {sel.country} · jurisdictions: {sel.jurisdictions.join(", ")}</div>
               <div className={"mt-3 inline-flex rounded-full border px-3 py-1 text-xs font-bold " + PLAY_META[sel.play].tone}>{PLAY_META[sel.play].label}</div>
 
-              <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Side-by-side test rubric</div>
-              <div className="mt-2 space-y-1.5">
-                {RUBRIC.map((r) => (
-                  <div key={r} className="flex items-center justify-between rounded-lg bg-black/30 px-3 py-1.5 text-[13px]">
-                    <span className="text-emerald-100/80">{r}</span>
-                    <span className="font-mono text-emerald-300/70">score in demo →</span>
-                  </div>
-                ))}
-              </div>
+              <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Side-by-side test rubric (live)</div>
+              {scoreAccount(sel).confidence === "authority" ? (
+                <p className="mt-2 rounded-lg bg-black/30 px-3 py-2 text-[12px] text-emerald-100/80">Rule-setting authority — play is <b>align</b>: CSOAI implements their regime ({sel.frameworks.join(", ")}) across the crosswalk. Not a displace/absorb target.</p>
+              ) : (<>
+                <div className="mt-2 space-y-1.5">
+                  {scoreAccount(sel).perAxis.map((r) => (
+                    <div key={r.key} className="flex items-center justify-between gap-3 rounded-lg bg-black/30 px-3 py-1.5 text-[13px]">
+                      <span className="text-emerald-100/80">{r.label}</span>
+                      <span className="flex items-center gap-2 font-mono text-[11px]">
+                        <span className="text-emerald-300/75">CSOAI {r.csoai}</span>
+                        <span className="text-emerald-300/40">vs</span>
+                        <span className="text-amber-300/80">them {r.current}</span>
+                        {r.gap > 0 && <span className="rounded bg-emerald-500/15 px-1.5 font-bold text-emerald-300">+{r.gap}</span>}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                {(() => { const sc = scoreAccount(sel); return sc.topUsps.length ? (
+                  <p className="mt-2 text-[11px] text-emerald-300/70">Lead the demo with: <b className="text-emerald-200">{sc.topUsps.join(", ")}</b> · total gap {sc.totalGap}/{sc.maxGap} · <span className={sc.confidence === "verified" ? "text-emerald-300" : "text-amber-300"}>{sc.confidence}</span></p>
+                ) : null; })()}
+              </>)}
 
               <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Tailored demo</div>
               <div className="mt-2 flex flex-wrap gap-2">
