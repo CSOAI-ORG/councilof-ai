@@ -190,6 +190,7 @@ const IncidentReport = lazy(() => import("./pages/IncidentReport"));
 const EuActClassifier = lazy(() => import("./pages/EuActClassifier"));
 const Crosswalk = lazy(() => import("./pages/Crosswalk"));
 const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
+const AgentRegistry = lazy(() => import("./pages/AgentRegistry"));
 const Article50 = lazy(() => import("./pages/Article50"));
 const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
@@ -486,6 +487,8 @@ function App() {
           <Route path="/canada-aida">{() => <JurisdictionAct jx="canada" />}</Route>
           <Route path="/china-ai-law">{() => <JurisdictionAct jx="china" />}</Route>
           <Route path="/singapore-ai-governance">{() => <JurisdictionAct jx="singapore" />}</Route>
+          <Route path="/south-korea-ai-act">{() => <JurisdictionAct jx="korea" />}</Route>
+          <Route path="/us-ai-regulation">{() => <JurisdictionAct jx="usfederal" />}</Route>
           <Route path="/ai-act-faq" component={AiActFaq} />
           <Route path="/eu-ai-act-faq" component={AiActFaq} />
           <Route path="/conformity-assessment" component={ConformityAssessment} />
@@ -677,6 +680,7 @@ function App() {
                   <Route path="/crosswalks" component={Crosswalks} />
                   <Route path="/crosswalk" component={Crosswalk} />
                   <Route path="/agent-governance" component={AgentGovernance} />
+                  <Route path="/agent-registry" component={AgentRegistry} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />

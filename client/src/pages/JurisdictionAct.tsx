@@ -54,6 +54,30 @@ const JX: Record<string, J> = {
       { q: "Is the Model AI Governance Framework mandatory?", a: "No. It is voluntary guidance, though widely referenced as a practical baseline and extended with a generative-AI edition." },
     ],
   },
+  korea: {
+    key: "korea", eyebrow: "CSOAI - South Korea",
+    title: "South Korea Basic AI Act",
+    intro: "South Korea's Basic Act on AI entered into force in January 2026. It applies extraterritorially where AI systems affect users in Korea and introduces duties for high-impact and generative AI.",
+    approach: "Binding framework law, extraterritorial (in force Jan 2026)",
+    points: ["Applies extraterritorially where AI affects Korean users", "Duties for 'high-impact' AI: risk management, human oversight, documentation", "Transparency + labelling for generative-AI outputs", "Overseen by the Ministry of Science and ICT (MSIT)"],
+    faqs: [
+      { q: "Is South Korea's AI Basic Act in force?", a: "Yes - South Korea's Basic Act on AI entered into force in January 2026 and applies extraterritorially where AI systems affect users in Korea. Verify the current grace periods and implementing rules, which continue to develop." },
+      { q: "Who does the Korean AI Basic Act apply to?", a: "Providers and deployers of AI - including overseas ones - whose systems affect users in Korea, with heightened duties for 'high-impact' and generative AI." },
+      { q: "What does it require?", a: "Risk management, human oversight, documentation and transparency, plus labelling of generative-AI outputs; oversight sits with the Ministry of Science and ICT (MSIT)." },
+    ],
+  },
+  usfederal: {
+    key: "usfederal", eyebrow: "CSOAI - United States (federal)",
+    title: "US federal AI policy",
+    intro: "The US has no comprehensive federal AI law. Federal policy is set through executive action and is currently deregulatory and pro-innovation, leaving most binding rules to the states.",
+    approach: "Executive-led, deregulatory (no omnibus federal AI law)",
+    points: ["One AI-specific federal statute so far: the TAKE IT DOWN Act (non-consensual AI imagery)", "Deregulatory executive orders + policy frameworks (2025-2026)", "Sector regulators (e.g. FTC) apply existing law to AI", "Binding AI rules largely sit at the state level (CO, TX, CA, UT)"],
+    faqs: [
+      { q: "Does the US have a federal AI law?", a: "No comprehensive one. Congress has enacted the TAKE IT DOWN Act (targeting non-consensual AI-generated imagery); broader federal AI policy is set by executive orders and frameworks and is currently deregulatory. Most binding AI obligations are at the state level." },
+      { q: "How is the US federal approach different from the EU AI Act?", a: "The EU AI Act is a binding, risk-tiered omnibus law. The US federal approach is executive-led and pro-innovation, with the substantive obligations mostly coming from individual states (Colorado, Texas, California, Utah)." },
+      { q: "Which US states regulate AI?", a: "Notably Colorado (SB 189 / ADMT), Texas (TRAIGA), California (AI transparency laws) and Utah, plus NYC Local Law 144 for hiring - see the US state pages." },
+    ],
+  },
 };
 export default function JurisdictionAct({ jx }: { jx: string }) {
   const j = JX[jx] || JX.uk;
