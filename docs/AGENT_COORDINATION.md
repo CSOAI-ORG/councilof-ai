@@ -245,6 +245,22 @@ not evaluate "was this one actually visible" per-batch — that judgment call is
 The only way to skip the hedge is if the quote came from `fetch_article_fulltext`, `bash curl`,
 or `read_file` output that is visibly present, unredacted, in this exact turn's tool result.
 
+### Root cause found — hive-coverage.json "deploy gap" is actually a missing frontend consumer
+This was flagged repeatedly across the session as a "deploy gap" (bundle hash changes across
+redeploys, still zero references) without ever finding the actual cause. Root-caused now:
+- `public/hive-coverage.json` genuinely exists, is correctly built into the static assets, and
+  IS live at `https://www.csoai.org/hive-coverage.json` (confirmed: HTTP 200, real data,
+  `accounts: 88`, today's date) -- the recon pipeline (`scripts/hive-recon.mjs`) has been doing
+  its job correctly every round.
+- The actual gap: **`client/src/pages/WorldGlobe.tsx` (the component that renders `/globe`)
+  never fetches or imports `hive-coverage.json` anywhere.** `grep -rln "hive-coverage"
+  client/src/` returns nothing. This isn't a build/bundling/caching issue -- the overlay feature
+  was never wired into any live page component. Confirmed by checking `App.tsx`: `/globe` ->
+  `WorldGlobe` -> no reference to the file.
+- **Action needed (whoever owns `WorldGlobe.tsx` or wants to add the overlay):** `fetch('/hive-
+  coverage.json')` in a `useEffect`, then render the per-account posture/gap data as pins/overlay
+  layers on the existing globe. The data is ready and correctly shaped; it just needs a consumer.
+
 ### E2E spot-check results (2026-07-07, this window — all freshly live-tested, not read from docs)
 - **www.csoai.org routes** (9 checked): `/`, `/assess`, `/pricing`, `/login`, `/intel`,
   `/tool-commons`, `/globe`, `/crosswalk`, `/compare` — all HTTP 200.
