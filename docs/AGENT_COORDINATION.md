@@ -126,7 +126,9 @@
   internal governance body, so kept below `mature` per the honesty invariant, don't round up).
   **Bank of America and ExxonMobil** confirmed genuinely `unknown` — search only returned
   AI-*use*-case stories (personalized banking, drilling automation), not governance-program
-  citations. Combined with the earlier 6 F100 accounts: **11 of 88 public-seed accounts now
-  carry a real citation** (verified or emerging), the rest of the ~1,900 SEC leads still need
+  citations. Combined with the earlier 6 F100 accounts: **10 of 88 public-seed accounts now
+  carry a real citation** — 8 verified/mature (jpmorgan, microsoft, alphabet, unitedhealth,
+  pfizer, lockheed, att, elevance) + 2 emerging (citigroup, cvshealth) — the rest of the ~1,900
+  SEC leads still need
   the same treatment if anyone wants to keep going — same pattern as before (own-domain or
   filing source required, leave unknown rather than force-fit a vendor blog).
