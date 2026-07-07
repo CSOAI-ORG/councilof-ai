@@ -73,3 +73,17 @@
   "responsible AI", require a primary source (company's own domain or an SEC filing) naming an
   actual program/committee/principles doc before upgrading `posture`/`currentVendor`, and leave
   it `unknown` rather than force-fit a vendor blog's inference.
+- **E2E audit this pass (Claude Science, curl-based since node_modules isn't installed in this
+  checkout — playwright's `claims-e2e.mjs`/`e2e-product.mjs` could not run):** live catalog
+  378 ✅, csoai-governance-mcp present ✅, `/sign`+`/verify` round-trip genuine (valid signature
+  → `valid:true`, tampered signature → correctly rejected) ✅, all 6 funnel routes 200 ✅,
+  fresh `npx -y csoai-governance-mcp@latest` handshake returns all 4 real tool schemas ✅.
+  **Found + fixed:** `public/hive-coverage.json` on the live site was stale — the per-account
+  recon commit (`9a06415`) updated `docs/hive-recon-report.json` but never re-ran the
+  default-path public overlay, and the regression guard from `bdbbcf3` would have silently
+  skipped it anyway (its `process.exit(1)` ran before the overlay write). Fixed in `60273af`.
+  **Minor, not fixed:** the published `csoai-governance-mcp@0.1.0` npm package's `csoai_catalog`
+  tool description still says "377 governed tools" (source is 378+); this is baked into the
+  already-published build, not the source in this repo — needs a version bump + republish
+  (blocked on the npm token step, same as the pending `0.1.1` README refresh). Cosmetic only,
+  not fixed this pass.
