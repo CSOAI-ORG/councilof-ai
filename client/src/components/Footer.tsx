@@ -25,12 +25,14 @@ export function Footer() {
     {
       title: 'Frameworks',
       links: [
-        { name: 'Global Regulation Tracker', href: '/global-regulations' },
-        { name: 'SOAI-PDCA Framework', href: '/soai-pdca' },
+        { name: 'Global AI Regulation Tracker', href: '/global-ai-regulation' },
+        { name: 'Framework Crosswalk (13×8)', href: '/crosswalk' },
+        { name: 'Article 50 — transparency', href: '/article-50' },
+        { name: 'Agent Governance', href: '/agent-governance' },
+        { name: 'DORA (financial services)', href: '/dora' },
         { name: 'EU AI Act', href: '/frameworks/eu-ai-act' },
         { name: 'NIST AI RMF', href: '/frameworks/nist' },
         { name: 'ISO 42001', href: '/guides/iso-42001' },
-        { name: 'China TC260', href: '/frameworks/tc260' },
       ],
     },
     {
