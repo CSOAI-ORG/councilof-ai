@@ -32,13 +32,13 @@ export default function AccountBrief() {
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <div className="mx-auto max-w-5xl px-6 py-12">
-        <a href="/intel" className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60 hover:text-emerald-200">← Distribution Hive</a>
+        <a href="/intel" className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/75 hover:text-emerald-200">← Distribution Hive</a>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <h1 className="text-4xl font-black tracking-tight">{a.name}</h1>
           <span className={"rounded-full border px-3 py-1 text-xs font-bold " + PLAY_META[a.play].tone}>{PLAY_META[a.play].label}</span>
           {s.confidence !== "authority" && <span className="rounded-full bg-black/40 px-2.5 py-1 font-mono text-[11px] text-emerald-300/70">gap {s.totalGap}/21 · {s.confidence}</span>}
         </div>
-        <p className="mt-1 text-sm text-emerald-300/60">{a.type} · {a.country} · jurisdictions: {a.jurisdictions.join(", ") || "—"} {a.sector ? "· " + a.sector : ""} · source: {a.source}</p>
+        <p className="mt-1 text-sm text-emerald-300/75">{a.type} · {a.country} · jurisdictions: {a.jurisdictions.join(", ") || "—"} {a.sector ? "· " + a.sector : ""} · source: {a.source}</p>
 
         <p className="mt-5 max-w-3xl text-lg text-emerald-100/85">{PITCH[a.play]}</p>
 
@@ -46,18 +46,18 @@ export default function AccountBrief() {
         <div className="mt-6 overflow-hidden rounded-2xl border border-emerald-500/20" style={{ height: 380 }}>
           <iframe src={`/globe3d.html?region=${gr}`} title="globe" className="h-full w-full" style={{ border: 0 }} />
         </div>
-        <p className="mt-1.5 text-[11px] text-emerald-300/50">Globe centered on {a.region}. Toggle “Hive coverage” to see the play + gap; “fly to worst gap” / “next opportunity” to tour the market.</p>
+        <p className="mt-1.5 text-[11px] text-emerald-300/75">Globe centered on {a.region}. Toggle “Hive coverage” to see the play + gap; “fly to worst gap” / “next opportunity” to tour the market.</p>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {/* what governs them */}
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/60">What governs {a.name}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/75">What governs {a.name}</p>
             <div className="mt-2 flex flex-wrap gap-1.5">{a.frameworks.map((f) => <span key={f} className="rounded bg-black/40 px-2.5 py-1 font-mono text-[11px] text-emerald-300/80">{f}</span>)}</div>
             <a href={`/crosswalk?fw=${fw}`} className="mt-4 inline-block rounded-lg bg-emerald-500 px-3 py-2 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Crosswalk their {a.frameworks.length} frameworks → one control set</a>
           </div>
           {/* where CSOAI closes the gap */}
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/60">{s.confidence === "authority" ? "Alignment" : "Where CSOAI closes the gap"}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/75">{s.confidence === "authority" ? "Alignment" : "Where CSOAI closes the gap"}</p>
             {s.confidence === "authority" ? (
               <p className="mt-2 text-sm text-emerald-100/80">Rule-setting authority — CSOAI implements this regime across the crosswalk and proves it with signed attestations.</p>
             ) : (<>
@@ -69,7 +69,7 @@ export default function AccountBrief() {
                   </div>
                 ))}
               </div>
-              <p className="mt-2 text-[11px] text-emerald-300/60">Lead the demo with: <b className="text-emerald-200">{s.topUsps.join(", ")}</b>.</p>
+              <p className="mt-2 text-[11px] text-emerald-300/75">Lead the demo with: <b className="text-emerald-200">{s.topUsps.join(", ")}</b>.</p>
             </>)}
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function AccountBrief() {
           <a href="/assess" className="rounded-lg bg-emerald-500 px-3 py-2 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Free assessment for {a.name} →</a>
         </div>
 
-        <p className="mt-8 text-[11px] text-emerald-300/50">Org-level public data. {s.confidence === "modeled" ? "Vendor/posture modeled — confirm by recon before outreach. " : ""}Play is a {s.confidence === "modeled" ? "pre-recon hypothesis" : "scored position"}. Source: {a.source}.</p>
+        <p className="mt-8 text-[11px] text-emerald-300/75">Org-level public data. {s.confidence === "modeled" ? "Vendor/posture modeled — confirm by recon before outreach. " : ""}Play is a {s.confidence === "modeled" ? "pre-recon hypothesis" : "scored position"}. Source: {a.source}.</p>
       </div>
     </div>
   );

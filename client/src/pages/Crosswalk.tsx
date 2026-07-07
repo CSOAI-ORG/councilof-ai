@@ -63,7 +63,7 @@ export default function Crosswalk() {
         )}
 
         {/* the crosswalk matrix */}
-        <div className="mt-8 overflow-x-auto rounded-2xl border border-emerald-500/20">
+        <div tabIndex={0} role="region" aria-label="Framework crosswalk matrix (scrollable)" className="mt-8 overflow-x-auto rounded-2xl border border-emerald-500/20">
           <table className="w-full border-collapse text-left text-[12px]">
             <thead>
               <tr className="bg-[#05140d]">

@@ -41,11 +41,11 @@ export default function Intel() {
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-1.5 text-[11px]">
-          <span className="font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/40">region</span>
+          <span className="font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/75">region</span>
           {REGIONS.map((r) => (
             <button key={r} onClick={() => setRegion(r)} className={"rounded-full border px-2.5 py-1 font-semibold " + (region === r ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-emerald-400/20 text-emerald-300/70 hover:bg-emerald-500/10")}>{r}</button>
           ))}
-          <span className="ml-2 font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/40">sector</span>
+          <span className="ml-2 font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/75">sector</span>
           {SECTORS.map((s) => (
             <button key={s} onClick={() => setSector(s)} className={"rounded-full border px-2.5 py-1 font-semibold capitalize " + (sector === s ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-emerald-400/20 text-emerald-300/70 hover:bg-emerald-500/10")}>{s}</button>
           ))}
@@ -54,12 +54,12 @@ export default function Intel() {
         <div className="mt-4">
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
             <div className="rounded-xl border border-emerald-500/15 bg-[#05140d] px-3 py-2.5">
-              <div className="font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/50">Accounts</div>
+              <div className="font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/75">Accounts</div>
               <div className="text-lg font-black text-emerald-100">{rows.length}</div>
             </div>
             <div className="rounded-xl border border-emerald-500/15 bg-[#05140d] px-3 py-2.5">
-              <div className="font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/50">Avg gap</div>
-              <div className="text-lg font-black text-emerald-300">{avgGap}<span className="text-[11px] text-emerald-300/50">/21</span></div>
+              <div className="font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/75">Avg gap</div>
+              <div className="text-lg font-black text-emerald-300">{avgGap}<span className="text-[11px] text-emerald-300/75">/21</span></div>
             </div>
             {(["align", "absorb", "integrate", "displace"] as const).map((p) => (
               <div key={p} className="rounded-xl border border-emerald-500/15 bg-[#05140d] px-3 py-2.5">
@@ -68,13 +68,13 @@ export default function Intel() {
               </div>
             ))}
           </div>
-          <p className="mt-1.5 text-[10px] text-emerald-300/45">Live §4 rubric · CSOAI scores sourced to product · competitor scores modeled from cited battlecards · displace only with a known vendor.</p>
+          <p className="mt-1.5 text-[10px] text-emerald-300/75">Live §4 rubric · CSOAI scores sourced to product · competitor scores modeled from cited battlecards · displace only with a known vendor.</p>
         </div>
 
         <div className="mt-4 rounded-2xl border border-amber-400/25 bg-gradient-to-b from-amber-500/[0.06] to-transparent p-4">
           <div className="flex items-center justify-between">
             <p className="font-mono text-[10px] uppercase tracking-[2px] text-amber-300/70">Top opportunities · biggest CSOAI gap (whole dataset)</p>
-            <span className="text-[10px] text-emerald-300/40">click to open the account →</span>
+            <span className="text-[10px] text-emerald-300/75">click to open the account →</span>
           </div>
           <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
             {topGaps.map(({ a, s }, i) => (
@@ -97,15 +97,15 @@ export default function Intel() {
                   <div className="font-black text-emerald-100">{a.name}</div>
                   <span className={"shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold " + pm.tone}>{a.play}</span>
                 </div>
-                <div className="mt-0.5 text-[11px] text-emerald-300/60">{a.type} · {a.country} · {a.region}</div>
-                <div className="mt-2 flex flex-wrap gap-1">{a.frameworks.slice(0, 5).map((f) => <span key={f} className="rounded bg-black/40 px-2 py-0.5 font-mono text-[10px] text-emerald-300/72">{f}</span>)}</div>
+                <div className="mt-0.5 text-[11px] text-emerald-300/75">{a.type} · {a.country} · {a.region}</div>
+                <div className="mt-2 flex flex-wrap gap-1">{a.frameworks.slice(0, 5).map((f) => <span key={f} className="rounded bg-black/40 px-2 py-0.5 font-mono text-[10px] text-emerald-300/80">{f}</span>)}</div>
                 {s.confidence === "authority" ? (
-                  <div className="mt-2 text-[11px] text-emerald-300/60">authority · we implement their regime · posture: {a.posture}</div>
+                  <div className="mt-2 text-[11px] text-emerald-300/75">authority · we implement their regime · posture: {a.posture}</div>
                 ) : (
-                  <div className="mt-2 flex items-center gap-2 text-[11px] text-emerald-300/60">
+                  <div className="mt-2 flex items-center gap-2 text-[11px] text-emerald-300/75">
                     <span>gap <b className="text-emerald-300">{s.totalGap}/21</b></span>
                     <span className={"rounded px-1.5 py-0.5 text-[9px] font-bold " + (s.confidence === "verified" ? "bg-emerald-500/15 text-emerald-300" : "bg-amber-500/15 text-amber-300")}>{s.confidence}</span>
-                    {s.topUsps[0] && <span className="truncate text-emerald-300/50">lead: {s.topUsps[0]}</span>}
+                    {s.topUsps[0] && <span className="truncate text-emerald-300/75">lead: {s.topUsps[0]}</span>}
                   </div>
                 )}
               </button>
@@ -116,11 +116,11 @@ export default function Intel() {
         {sel && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4" onClick={() => setSel(null)}>
             <div className="max-h-[85vh] w-full max-w-lg overflow-auto rounded-2xl border border-emerald-400/30 bg-[#05140d] p-5" onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center justify-between"><div className="text-lg font-black text-emerald-100">{sel.name}</div><button onClick={() => setSel(null)} className="text-emerald-300/60 hover:text-emerald-100">✕</button></div>
-              <div className="mt-1 text-xs text-emerald-300/60">{sel.type} · {sel.country} · jurisdictions: {sel.jurisdictions.join(", ")}</div>
+              <div className="flex items-center justify-between"><div className="text-lg font-black text-emerald-100">{sel.name}</div><button onClick={() => setSel(null)} className="text-emerald-300/75 hover:text-emerald-100">✕</button></div>
+              <div className="mt-1 text-xs text-emerald-300/75">{sel.type} · {sel.country} · jurisdictions: {sel.jurisdictions.join(", ")}</div>
               <div className={"mt-3 inline-flex rounded-full border px-3 py-1 text-xs font-bold " + PLAY_META[sel.play].tone}>{PLAY_META[sel.play].label}</div>
 
-              <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Side-by-side test rubric (live)</div>
+              <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/75">Side-by-side test rubric (live)</div>
               {scoreAccount(sel).confidence === "authority" ? (
                 <p className="mt-2 rounded-lg bg-black/30 px-3 py-2 text-[12px] text-emerald-100/80">Rule-setting authority — play is <b>align</b>: CSOAI implements their regime ({sel.frameworks.join(", ")}) across the crosswalk. Not a displace/absorb target.</p>
               ) : (<>
@@ -130,7 +130,7 @@ export default function Intel() {
                       <span className="text-emerald-100/80">{r.label}</span>
                       <span className="flex items-center gap-2 font-mono text-[11px]">
                         <span className="text-emerald-300/75">CSOAI {r.csoai}</span>
-                        <span className="text-emerald-300/40">vs</span>
+                        <span className="text-emerald-300/75">vs</span>
                         <span className="text-amber-300/80">them {r.current}</span>
                         {r.gap > 0 && <span className="rounded bg-emerald-500/15 px-1.5 font-bold text-emerald-300">+{r.gap}</span>}
                       </span>
@@ -142,7 +142,7 @@ export default function Intel() {
                 ) : null; })()}
               </>)}
 
-              <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Tailored demo</div>
+              <div className="mt-4 text-[11px] font-bold uppercase tracking-wide text-emerald-300/75">Tailored demo</div>
               <div className="mt-2 flex flex-wrap gap-2">
                 <a href={"/brief?id=" + sel.id} className="rounded-lg bg-emerald-400 px-3 py-1.5 text-xs font-black text-[#03110b] hover:bg-emerald-300">Open tailored brief →</a>
                 <a href={"/crosswalk?fw=" + encodeURIComponent(sel.frameworks.join(","))} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Crosswalk their {sel.frameworks.length} frameworks →</a>
@@ -150,12 +150,12 @@ export default function Intel() {
                 <a href="/agent-governance" className="rounded-lg border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Agent governance →</a>
                 <a href="/tool-commons" className="rounded-lg border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Run the MCP live →</a>
               </div>
-              <p className="mt-3 text-[11px] text-emerald-300/50">Org-level public data. Play is a pre-recon hypothesis until an account report is run. Source: {sel.source}.</p>
+              <p className="mt-3 text-[11px] text-emerald-300/75">Org-level public data. Play is a pre-recon hypothesis until an account report is run. Source: {sel.source}.</p>
             </div>
           </div>
         )}
 
-        <p className="mt-8 text-[11px] text-emerald-300/50">Seed dataset — real public organisations, honest fields ("unknown" where not yet researched). Individual contact data is handled only via connected, licensed B2B tools under a legitimate-interest basis. See docs/DISTRIBUTION_HIVE.md.</p>
+        <p className="mt-8 text-[11px] text-emerald-300/75">Seed dataset — real public organisations, honest fields ("unknown" where not yet researched). Individual contact data is handled only via connected, licensed B2B tools under a legitimate-interest basis. See docs/DISTRIBUTION_HIVE.md.</p>
       </div>
     </div>
   );

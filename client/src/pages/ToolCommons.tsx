@@ -31,7 +31,7 @@ export default function ToolCommons() {
               <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">Install the governance layer</p>
               <p className="mt-1 text-sm text-emerald-100/80">One command drops CSOAI Layer-0 signing, verification &amp; governed compliance into Claude Code, Cursor, or any MCP agent. Live on npm.</p>
             </div>
-            <a href="https://www.npmjs.com/package/csoai-governance-mcp" target="_blank" rel="noopener noreferrer" className="shrink-0 font-mono text-[11px] text-emerald-300/60 underline hover:text-emerald-200">npm ↗</a>
+            <a href="https://www.npmjs.com/package/csoai-governance-mcp" target="_blank" rel="noopener noreferrer" className="shrink-0 font-mono text-[11px] text-emerald-300/75 underline hover:text-emerald-200">npm ↗</a>
           </div>
           <div className="mt-3 flex items-center gap-2">
             <code className="flex-1 truncate rounded-lg bg-black/50 px-3 py-2.5 text-[12px] text-emerald-200">claude mcp add csoai-governance -- npx -y csoai-governance-mcp</code>
@@ -41,20 +41,20 @@ export default function ToolCommons() {
       </section>
       <section className="mx-auto max-w-4xl px-6 pt-8">
         <ToolRunner />
-        <p className="mt-3 text-center text-[11px] uppercase tracking-[2px] text-emerald-300/40">↑ run live · ↓ connect the full fleet into your own agent</p>
+        <p className="mt-3 text-center text-[11px] uppercase tracking-[2px] text-emerald-300/75">↑ run live · ↓ connect the full fleet into your own agent</p>
       </section>
       <section className="mx-auto max-w-4xl px-6 py-8">
         <div className="grid gap-3 sm:grid-cols-2">
           {matches.map((m: any) => (
             <div key={m.name} className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
               <div className="flex items-center justify-between gap-2"><div className="truncate font-mono text-sm font-bold text-emerald-100">{m.name}</div><span className="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-300">{m.clusterLabel}</span></div>
-              <div className="mt-1 text-xs text-emerald-300/60">{m.tools} tools</div>
+              <div className="mt-1 text-xs text-emerald-300/75">{m.tools} tools</div>
               <div className="mt-3 flex items-center gap-2"><code className="flex-1 truncate rounded-lg bg-black/40 px-2.5 py-1.5 text-[11px] text-emerald-300/80">{m.connect}</code><button onClick={() => copy(m.connect, m.name)} className="shrink-0 rounded-lg bg-emerald-500 px-2.5 py-1.5 text-[11px] font-bold text-[#03110b] hover:bg-emerald-400">{copied === m.name ? "Copied" : "Copy"}</button></div>
             </div>
           ))}
         </div>
-        {matches.length === 0 && !loading && <p className="text-center text-sm text-emerald-300/40">No tools matched - try another term.</p>}
-        <p className="mt-8 text-center text-xs text-emerald-300/50">Every tool is governed by Layer 0 and signed. Open, MIT-licensed, sovereign by construction. Live via the Sovereign gateway.</p>
+        {matches.length === 0 && !loading && <p className="text-center text-sm text-emerald-300/75">No tools matched - try another term.</p>}
+        <p className="mt-8 text-center text-xs text-emerald-300/75">Every tool is governed by Layer 0 and signed. Open, MIT-licensed, sovereign by construction. Live via the Sovereign gateway.</p>
       </section>
     </div>
   );
