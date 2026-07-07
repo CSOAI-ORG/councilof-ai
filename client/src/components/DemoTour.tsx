@@ -46,7 +46,7 @@ export default function DemoTour() {
   // Proactive invite pill (idle, first visit)
   if (!active && invite && !seen) {
     return (
-      <div className="fixed bottom-20 right-4 z-[9997] pointer-events-auto max-w-[280px] rounded-2xl border border-emerald-400/40 bg-[#04120c]/95 p-3 text-emerald-50 shadow-[0_10px_40px_-8px_rgba(16,185,129,.6)] backdrop-blur-xl">
+      <div className="fixed bottom-4 right-4 sm:bottom-20 z-[9997] pointer-events-auto max-w-[calc(100vw-2rem)] sm:max-w-[280px] rounded-2xl border border-emerald-400/40 bg-[#04120c]/95 p-3 text-emerald-50 shadow-[0_10px_40px_-8px_rgba(16,185,129,.6)] backdrop-blur-xl">
         <div className="flex items-start gap-2">
           <span className="text-lg">{"◉"}</span>
           <div>
