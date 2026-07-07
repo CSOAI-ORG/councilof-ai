@@ -21,12 +21,12 @@ const JX: Record<string, J> = {
   canada: {
     key: "canada", eyebrow: "CSOAI - Canada",
     title: "Canada AIDA (Bill C-27)",
-    intro: "Canada proposed the Artificial Intelligence and Data Act (AIDA) within Bill C-27, targeting high-impact AI systems. Its legislative status has been uncertain after parliamentary changes - verify the current position.",
-    approach: "Proposed high-impact-systems regime (status uncertain)",
+    intro: "Canada's Artificial Intelligence and Data Act (AIDA) was proposed within Bill C-27, but the bill died on the order paper on 6 January 2025 when Parliament was prorogued. AIDA is not law; the government signalled in June 2025 that it will not return in its original form - only parts may survive in a new framework. Verify the latest position.",
+    approach: "AIDA proposal lapsed - Bill C-27 died Jan 2025; no comprehensive AI law in force",
     points: ["Focus on high-impact AI systems", "Risk-assessment, mitigation, and transparency duties", "Record-keeping and incident reporting", "Oversight via a proposed AI and Data Commissioner"],
     faqs: [
-      { q: "What is Canada's AIDA?", a: "The Artificial Intelligence and Data Act, proposed within Bill C-27, would regulate high-impact AI systems with risk-assessment, mitigation, transparency, and record-keeping duties. Its status has been uncertain - verify the current legislative position." },
-      { q: "Is AIDA in force?", a: "AIDA was a proposed law under Bill C-27 and its passage has been affected by parliamentary changes. Confirm the latest status before relying on it." },
+      { q: "What is Canada's AIDA?", a: "The Artificial Intelligence and Data Act, proposed within Bill C-27, would have regulated high-impact AI systems with risk-assessment, mitigation, transparency, and record-keeping duties. However, Bill C-27 died on the order paper in January 2025, so AIDA is not in force." },
+      { q: "Is AIDA in force?", a: "No. AIDA was part of Bill C-27, which died on the order paper on 6 January 2025 when Parliament was prorogued. It is not law. The government indicated in June 2025 that AIDA will not return as drafted; only parts may resurface in a future framework." },
       { q: "What is a high-impact AI system under AIDA?", a: "AIDA centres obligations on AI systems likely to have a significant impact on individuals; the precise scope was to be set out in regulations." },
     ],
   },

@@ -28,6 +28,10 @@ Last pass: 2026-07 (live web verification of the EU/cyber/global cluster).
 | **GDPR** | Reg. **(EU) 2016/679**, applicable **25 May 2018**. Key refs used in crosswalk verified: Art. **5** (principles), **6** (lawfulness), **9** (special categories), **13–14** (info to provide), **22** (automated decisions / profiling), **35** (DPIA). | eur-lex (2016/679) | `/crosswalk`, `/eu-ai-act-vs-gdpr` |
 | **China TC260** | National Information Security Standardization Technical Committee. **AI Safety Governance Framework v2.0 released 15 Sep 2025** (v1.0 Sep 2024); **TC260-003-2024** = Basic Security Requirements for Generative AI Service; "Law + Standard" dual-drive. | onetrust.com; gaicc.org; twobirds.com | `/frameworks/tc260`, `TC260Guide` |
 | **FedRAMP RFC-0024 / OSCAL** | RFC-0024 (Rev5 machine-readable packages). **New authorizations must adopt machine-readable/OSCAL by 30 Sep 2026**; grace period ends **30 Sep 2027** (non-compliant loses authorization). OSCAL = NIST machine-readable format (2016). | fedramp.gov/rfcs/0024; paramify.com | `/fedramp`, `/oscal` |
+| **UK** | No omnibus AI law. Pro-innovation, principles-based (2023 White Paper + 2024 response): **5 principles** — safety/security/robustness, transparency & explainability, fairness, accountability & governance, contestability & redress — applied by existing regulators (ICO, FCA, Ofcom, CMA); AI Safety/Security Institute. | gov.uk AI regulation; aisi.gov.uk | `/uk-ai-regulation` |
+| **Canada (AIDA)** | **AIDA is NOT law.** Proposed within Bill C-27, which **died on the order paper 6 Jan 2025** (prorogation). Government confirmed (June 2025) it will not return as drafted; only parts may resurface. **Fixed drift:** page updated from "status uncertain" → "lapsed / not in force". | iapp.org; mcinnescooper.com; parl.ca | `/canada-aida` |
+| **Singapore** | Voluntary: **Model AI Governance Framework** (2019/2020) + **Model AI Governance Framework for Generative AI** (2024) + **AI Verify** testing toolkit/foundation. No binding AI law. | imda.gov.sg; ai-verify | `/singapore-ai-governance` |
+| **MiCA / MiFID II** | MiCA = Reg. **(EU) 2023/1114** (crypto-assets): stablecoin (ART/EMT) rules from 30 Jun 2024, CASP rules from 30 Dec 2024. MiFID II = Dir. **2014/65/EU**, Art. 17 (algorithmic trading). | eur-lex | `/crosswalk` |
 
 ---
 
@@ -40,10 +44,12 @@ Last pass: 2026-07 (live web verification of the EU/cyber/global cluster).
 | ~~GDPR~~ | — | ✅ **verified — see table above** (2016/679, Art. 5/6/9/13-14/22/35) |
 | ~~China TC260~~ | — | ✅ **verified — see table above** (Framework v2.0, 15 Sep 2025; TC260-003-2024) |
 | ~~FedRAMP RFC-0024 / OSCAL~~ | — | ✅ **verified — see table above** (30 Sep 2026 → 30 Sep 2027) |
-| **UK** | `/uk-ai-regulation` | Verify the 5 principles + AISI status |
-| **Canada AIDA** | `/canada-aida` | Confirm current legislative status (flagged uncertain) |
-| **Singapore** | `/singapore-ai-governance` | Verify Model AI Gov Framework + AI Verify |
-| **MiCA / MiFID II / DORA-adjacent** | crosswalk | Verify article refs |
+| ~~UK~~ | — | ✅ **verified** (5 principles, regulator-led) |
+| ~~Canada AIDA~~ | — | ✅ **verified — AIDA lapsed (C-27 died Jan 2025); page fixed** |
+| ~~Singapore~~ | — | ✅ **verified** (Model AI Gov Framework + GenAI edition + AI Verify) |
+| ~~MiCA / MiFID II~~ | — | ✅ **verified** (2023/1114 · 2014/65/EU Art. 17) |
+
+**Register status: all listed frameworks ✅ verified against primary sources.** Re-pass ✅ rows quarterly (regs move — Colorado and Canada both changed). New frameworks get added as 🟡 and worked through the loop before the platform cites them.
 
 ---
 
