@@ -219,6 +219,7 @@ import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
 import { blogdata } from "./data/blog-content";
 import { AnalyticsProvider } from "./components/Analytics";
+import EnforcementBanner from "./components/EnforcementBanner";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -372,6 +373,7 @@ function App() {
                 <ScrollToTop />
                 <RouteTitle />
                 <RouteAnnouncer />
+                <EnforcementBanner />
                 <Header />
                 <main
                   id="main-content"
