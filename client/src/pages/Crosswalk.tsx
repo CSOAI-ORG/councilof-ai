@@ -73,7 +73,8 @@ export default function Crosswalk() {
         <p className="mt-2 text-[11px] text-emerald-300/70">References are indicative and for orientation — not legal advice. The signed, verifiable article-level mapping runs as a governed tool in the OS. Verify against primary sources.</p>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <a href="/classifier" className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Classify your AI system →</a>
+          <a href="/assess" className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Get your signed assessment →</a>
+          <a href="/classifier" className="rounded-xl border border-emerald-500/30 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">Classify your AI system →</a>
           <a href="/tool-commons" className="rounded-xl border border-emerald-500/30 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">Run the live crosswalk tool →</a>
           <a href="/compare" className="rounded-xl border border-emerald-500/30 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">CSOAI vs Vanta / Drata / Credo →</a>
         </div>

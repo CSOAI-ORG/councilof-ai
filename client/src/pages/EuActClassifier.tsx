@@ -74,6 +74,7 @@ export default function EuActClassifier() {
             {tier && <div className={"mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-black " + tier.color}>● {tier.label}</div>}
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-emerald-50/90">{out.text}</p>
             <div className="mt-4 flex flex-wrap gap-2 border-t border-emerald-500/15 pt-4 text-xs">
+              <a href="/assess" className="rounded-lg bg-emerald-500 px-3 py-1.5 font-bold text-[#03110b] hover:bg-emerald-400">Get your full signed assessment →</a>
               <a href="/high-risk-ai-systems" className="rounded-lg border border-emerald-500/25 px-3 py-1.5 font-semibold text-emerald-200/80 hover:bg-white/5">Annex III high-risk list →</a>
               <a href="/readiness" className="rounded-lg border border-emerald-500/25 px-3 py-1.5 font-semibold text-emerald-200/80 hover:bg-white/5">Deadline readiness →</a>
               <a href="/try" className="rounded-lg bg-emerald-500 px-3 py-1.5 font-bold text-[#03110b] hover:bg-emerald-400">Take it to the Council →</a>
