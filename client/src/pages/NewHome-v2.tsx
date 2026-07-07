@@ -7,6 +7,7 @@
 import { Link } from "wouter";
 import { startTour } from "../lib/demoTour";
 import EnterpriseTrust from "../components/EnterpriseTrust";
+import RegionBanner from "../components/RegionBanner";
 import { motion } from "framer-motion";
 import {
   Shield,
@@ -439,6 +440,7 @@ export default function NewHomeV2() {
 
       {/* ============================================ */}
       {/* ENTERPRISE TRUST STRIP (honest signals a CISO scans for) */}
+      <section className="bg-slate-900 px-6 py-8"><RegionBanner /></section>
       <EnterpriseTrust />
 
       {/* SECTION 1.25: ZERO AI SAFETY SOLUTIONS */}
