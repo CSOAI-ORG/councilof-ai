@@ -1,0 +1,32 @@
+name: Claims E2E (live truth check)
+
+# Verifies every claim on the live site is functionally true — tools execute,
+# seals are real Ed25519, counts match copy. Runs after each push to master
+# (waits for Vercel deploy), nightly, and on demand. Fails if any claim fails.
+
+on:
+  push:
+    branches: [master]
+  schedule:
+    - cron: "0 6 * * *" # daily 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Playwright (chromium)
+        run: |
+          npm init -y >/dev/null 2>&1 || true
+          npm i -D playwright@1.61.1 >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Wait for Vercel deploy (push only)
+        if: github.event_name == 'push'
+        run: sleep 90
+      - name: Run claims verification against live site + brain
+        run: node scripts/claims-e2e.mjs
