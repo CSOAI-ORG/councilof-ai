@@ -28,7 +28,8 @@ export default function EnterpriseTrust() {
             return s.href ? <a key={s.label} href={s.href} className="block">{Inner}</a> : <div key={s.label}>{Inner}</div>;
           })}
         </div>
-        <p className="mt-4 text-center text-[11px] text-emerald-100/60">Honest by design: we show what's true and verifiable, not badges we don't hold. Formal certifications (e.g. SOC 2, ISO 42001) are pursued as the platform matures.</p>
+        <p className="mt-5 text-center text-sm font-semibold text-emerald-100/90">Governance shouldn't cost more than the AI it governs. Open-source core · free to start · own your data · <span className="text-emerald-300">no per-seat rent.</span></p>
+        <p className="mt-2 text-center text-[11px] text-emerald-100/60">Honest by design: we show what's true and verifiable, not badges we don't hold. Formal certifications (e.g. SOC 2, ISO 42001) are pursued as the platform matures.</p>
       </div>
     </section>
   );
