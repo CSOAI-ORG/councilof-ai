@@ -5,7 +5,6 @@
  */
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { trpc } from '@/lib/trpc';
 
 interface User {
   id: number;
@@ -38,8 +37,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   // tRPC mutations
-  const loginMutation = trpc.auth.login.useMutation();
-  const registerMutation = trpc.auth.register.useMutation();
 
   // Check for existing session on mount
   useEffect(() => {
@@ -60,39 +57,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    try {
-      const result = await loginMutation.mutateAsync({ email, password });
-
-      if (result.success && result.token && result.user) {
-        setToken(result.token);
-        setUser(result.user);
-        localStorage.setItem(TOKEN_KEY, result.token);
-        localStorage.setItem(USER_KEY, JSON.stringify(result.user));
-      } else {
-        throw new Error('Login failed');
-      }
-    } catch (error: any) {
-      // Fallback to mock login for demo purposes when API fails
-      console.warn('API login failed, using fallback:', error.message);
-
-      // Allow demo login to work even without backend
-      if (email === 'demo@csoai.com' && password === 'demo123') {
-        const mockUser: User = {
-          id: 1,
-          email: 'demo@csoai.com',
-          name: 'Demo User',
-          role: 'user',
-          subscriptionTier: 'free',
-        };
-        setUser(mockUser);
-        setToken('mock-token');
-        localStorage.setItem(USER_KEY, JSON.stringify(mockUser));
-        localStorage.setItem(TOKEN_KEY, 'mock-token');
-        return;
-      }
-
-      throw error;
+    // Real signed-auth backend (api-server /api/auth/login). No mock fallback in production —
+    // a failed login must surface, not silently "succeed" with a fake account.
+    const API = ((import.meta as any).env?.VITE_API_BASE) || "";
+    const r = await fetch(`${API}/api/auth/login`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.error || "Login failed");
     }
+    const result = await r.json();
+    const u: User = { id: 0, email: result.user?.email ?? email, name: result.user?.name ?? "", role: "user", subscriptionTier: "free" };
+    setToken(result.token); setUser(u);
+    localStorage.setItem(TOKEN_KEY, result.token);
+    localStorage.setItem(USER_KEY, JSON.stringify(u));
   };
 
   const logout = () => {
@@ -103,37 +83,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signup = async (email: string, password: string, name?: string) => {
-    try {
-      const result = await registerMutation.mutateAsync({
-        email,
-        password,
-        name: name || email.split('@')[0],
-      });
-
-      if (result.success && result.token && result.user) {
-        setToken(result.token);
-        setUser(result.user);
-        localStorage.setItem(TOKEN_KEY, result.token);
-        localStorage.setItem(USER_KEY, JSON.stringify(result.user));
-      } else {
-        throw new Error('Registration failed');
-      }
-    } catch (error: any) {
-      // Fallback to mock registration when API fails
-      console.warn('API registration failed, using fallback:', error.message);
-
-      const mockUser: User = {
-        id: Date.now(),
-        email,
-        name: name || email.split('@')[0],
-        role: 'user',
-        subscriptionTier: 'free',
-      };
-      setUser(mockUser);
-      setToken('mock-token');
-      localStorage.setItem(USER_KEY, JSON.stringify(mockUser));
-      localStorage.setItem(TOKEN_KEY, 'mock-token');
+    // Real signed-auth backend (api-server /api/auth/register). No mock fallback —
+    // registration must actually create a persisted, signed account or fail loudly.
+    const API = ((import.meta as any).env?.VITE_API_BASE) || "";
+    const r = await fetch(`${API}/api/auth/register`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, name: name || email.split("@")[0] }),
+    });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.error || "Registration failed");
     }
+    const result = await r.json();
+    const u: User = { id: 0, email: result.user?.email ?? email, name: result.user?.name ?? "", role: "user", subscriptionTier: "free" };
+    setToken(result.token); setUser(u);
+    localStorage.setItem(TOKEN_KEY, result.token);
+    localStorage.setItem(USER_KEY, JSON.stringify(u));
   };
 
   // Role helpers
