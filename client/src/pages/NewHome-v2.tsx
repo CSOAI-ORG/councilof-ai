@@ -450,7 +450,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 1.5: WHY AI SAFETY MATTERS NOW */}
       {/* ============================================ */}
-      <section className="py-20 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
+      <section className="py-14 md:py-20 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
         <div className="container mx-auto px-6 max-w-6xl">
           <motion.div
             initial="hidden"
@@ -462,7 +462,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-red-500/20 text-red-300 border-red-500/30 text-sm px-4 py-1">
               The Crisis Is Real
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold mb-6">
               Why AI Safety Matters <span className="text-red-400">Right Now</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -552,7 +552,7 @@ export default function NewHomeV2() {
 
       {/* ============================================ */}
       {/* SECTION 1.75: OS FUNNEL STRIP */}
-      <section className="py-20 bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white">
+      <section className="py-14 md:py-20 bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white">
         <div className="max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Enter the OS</p>
           <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">Five doors into the Sovereign OS</h2>
@@ -574,7 +574,7 @@ export default function NewHomeV2() {
 
       {/* SECTION 2: ECOSYSTEM DIAGRAM */}
       {/* ============================================ */}
-      <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <motion.div
             initial="hidden"
@@ -586,7 +586,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Complete Integration
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
               One Platform. <span className="text-emerald-600">Everything Connected.</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -609,7 +609,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 3: THE CSOAI ADVANTAGE */}
       {/* ============================================ */}
-      <section className="py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-6 max-w-6xl">
           <motion.div
             initial="hidden"
@@ -621,7 +621,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-red-100 text-red-700 border-red-200 text-sm px-4 py-1">
               The Problem & Solution
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
               The CSOAI <span className="text-emerald-600">Advantage</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -737,7 +737,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 3.5: COMPARISON TABLE */}
       {/* ============================================ */}
-      <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-6 max-w-4xl">
           <motion.div
             initial="hidden"
@@ -749,7 +749,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Why Choose CSOAI?
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
               The Only Platform <span className="text-emerald-600">Solving All Four Problems</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -764,7 +764,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 4: FOR EVERY STAKEHOLDER */}
       {/* ============================================ */}
-      <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <motion.div
             initial="hidden"
@@ -776,7 +776,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Built for Everyone
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
               For Every <span className="text-emerald-600">Stakeholder</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -929,7 +929,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 5: OUR FRAMEWORKS */}
       {/* ============================================ */}
-      <section className="py-24 bg-slate-900 text-white">
+      <section className="py-16 md:py-24 bg-slate-900 text-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <motion.div
             initial="hidden"
@@ -941,7 +941,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-400/30 text-sm px-4 py-1">
               Global Coverage
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold mb-6">
               Our <span className="text-emerald-400">7 Frameworks</span>
             </h2>
             <p className="text-xl text-gray-500 max-w-3xl mx-auto">
@@ -1004,7 +1004,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 6: THE MATERNAL COVENANT */}
       {/* ============================================ */}
-      <section className="py-24 bg-gradient-to-b from-emerald-50 to-white">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-emerald-50 to-white">
         <div className="container mx-auto px-6 max-w-5xl">
           <motion.div
             initial="hidden"
@@ -1016,7 +1016,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-rose-100 text-rose-700 border-rose-200 text-sm px-4 py-1">
               Article 1: Core Innovation
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
               The <span className="text-rose-600">Maternal Covenant</span>
             </h2>
           </motion.div>
@@ -1114,7 +1114,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 7: BYZANTINE COUNCIL */}
       {/* ============================================ */}
-      <section className="py-24 bg-slate-900 text-white overflow-hidden">
+      <section className="py-16 md:py-24 bg-slate-900 text-white overflow-hidden">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
@@ -1127,7 +1127,7 @@ export default function NewHomeV2() {
               <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-400/30 text-sm px-4 py-1">
                 Real-Time Monitoring
               </Badge>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold mb-6">
                 The <span className="text-emerald-400">Byzantine Council</span>
               </h2>
               <p className="text-xl text-gray-500 mb-8 leading-relaxed">
@@ -1194,7 +1194,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 8: PROSPERITY FUND */}
       {/* ============================================ */}
-      <section className="py-24 bg-gradient-to-b from-amber-50 to-white">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-amber-50 to-white">
         <div className="container mx-auto px-6 max-w-6xl">
           <motion.div
             initial="hidden"
@@ -1206,7 +1206,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200 text-sm px-4 py-1">
               Economic Justice
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
               The <span className="text-amber-600">Prosperity Fund</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -1290,7 +1290,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 9: TRAINING & CERTIFICATION */}
       {/* ============================================ */}
-      <section className="py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -1302,7 +1302,7 @@ export default function NewHomeV2() {
               <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
                 Jump-Start Your Career
               </Badge>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
                 ALL 33 Courses <span className="text-emerald-600">100% FREE</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -1394,7 +1394,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 10: LICENSING & COMPLIANCE */}
       {/* ============================================ */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -1450,7 +1450,7 @@ export default function NewHomeV2() {
               <Badge className="mb-4 bg-slate-100 text-slate-700 border-slate-200 text-sm px-4 py-1">
                 Regulatory Body
               </Badge>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
                 Licensing & <span className="text-emerald-600">Compliance</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -1487,7 +1487,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 11: TRUST SIGNALS */}
       {/* ============================================ */}
-      <section className="py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-6 max-w-6xl">
           <motion.div
             initial="hidden"
@@ -1499,7 +1499,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Trust & Credibility
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
               Built on <span className="text-emerald-600">Transparency</span>
             </h2>
           </motion.div>
@@ -1590,7 +1590,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 12: FAQ */}
       {/* ============================================ */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-6 max-w-4xl">
           <motion.div
             initial="hidden"
@@ -1602,7 +1602,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Got Questions?
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
               Frequently Asked <span className="text-emerald-600">Questions</span>
             </h2>
           </motion.div>
@@ -1647,7 +1647,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 12.5: RESOURCES & TOOLS */}
       {/* ============================================ */}
-      <section className="py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <motion.div
             initial="hidden"
@@ -1659,7 +1659,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-blue-100 text-blue-700 border-blue-200 text-sm px-4 py-1">
               Resources & Tools
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
               Everything You Need to <span className="text-emerald-600">Get Started</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -1766,7 +1766,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 13: FINAL CTA */}
       {/* ============================================ */}
-      <section className="py-24 bg-gradient-to-br from-emerald-600 via-green-600 to-teal-600 relative overflow-hidden">
+      <section className="py-16 md:py-24 bg-gradient-to-br from-emerald-600 via-green-600 to-teal-600 relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div
