@@ -150,7 +150,7 @@ No API key needed; override backend with `CSOAI_GATEWAY` (default `https://os.me
 ## 8. Open items (⚠️ need a human — mostly Nick's accounts)
 
 1. **Publish the MCP to npm** — ✅ **DONE: `csoai-governance-mcp@0.1.0` is LIVE on npm** → `npx csoai-governance-mcp` (or `claude mcp add csoai-governance -- npx -y csoai-governance-mcp`).
-2. **Marketplace listing** — add `csoai-governance-mcp` to the backend registry/sync repo that generates the live 377 catalog (that registry is on the brain side, not this repo — point an agent at it).
+2. **Marketplace listing** — ✅ **DONE 2026-07-07:** `csoai-governance-mcp` registered in `meok-os-deploy/api/_data/tools.json` (CSOAI-ORG/clawd-workspace) + redeployed. Live-verified: `/api/tools?q=csoai-governance-mcp` returns it (cluster `framework-regulation`, 4 tools). Catalog total moved 377→378. (Note: `MCP_DEPLOYMENT_MANIFEST.json`, a separate/larger 531-server file feeding councilof-ai's own `/api/mcp` fleet endpoint, was also updated but is NOT what generates the public 377/378 count — don't confuse the two files if this needs touching again.)
 3. **ACLED + FIRMS keys** — set `VITE_ACLED_KEY` + `VITE_ACLED_EMAIL` + `VITE_FIRMS_MAP_KEY` to light the two dark Watchdog feeds (`lib/liveFeeds.ts` scaffold is ready).
 4. **Older SaaS tools → `/os`** — provide the repo/URL list to import into the launcher grid.
 5. Optional: `/api/status` isn't CORS-open cross-origin (trust chips already use `/health` instead); enable ACAO for `csoai.org`/`os.csoai.org` on the brain if you want that stat live.

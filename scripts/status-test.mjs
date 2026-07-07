@@ -8,6 +8,6 @@ console.log("version v3.0.0:",/v3\.0\.0/.test(t));
 console.log("surface meok/csoai/defoneos:",/meok/.test(t)&&/defoneos/.test(t));
 console.log("protocols (sign/verify/govern/avatar/social):",["Sign","Verify","Govern","Avatar","Social","Legacy Bridge"].filter(x=>t.includes(x)).length+"/6");
 console.log("orchestrator live:",/Orchestrator/.test(t));
-console.log("governed tools 377:",/377/.test(t));
+{ const m = t.match(/(\d{3,4})\+?\s*governed/i); const n = m ? parseInt(m[1], 10) : null; console.log("governed tools 377+:", n !== null && n >= 377, `(found ${n})`); }
 console.log("net:",net.join(","));
 await b.close();

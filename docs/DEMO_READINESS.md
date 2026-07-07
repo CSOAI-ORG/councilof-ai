@@ -12,7 +12,7 @@ node scripts/claims-e2e.mjs      # hits the LIVE site + brain, prints a pass/FAI
 ## What it proves (each = a claim we make on the site)
 | Claim on the platform | Test | Must be true |
 |---|---|---|
-| "377 governed MCP tools" | `/api/tools` total | equals the number in our copy (377) |
+| "377+ governed MCP tools" | `/api/tools` total | at least 377 (catalog grows as new MCPs register — e.g. csoai-governance-mcp took it to 378 on 2026-07-07); update copy's number periodically, don't demo a stale exact figure |
 | "live tools execute" | `/api/mcp tools/list` + `tools/call` | ≥5 tools run server-side, real output |
 | "governed answers" | `meok_govern` | returns real frameworks, not jargon |
 | **"Ed25519 · Layer 0 signing"** | `/api/sign` | returns a **real signature + publicKey** (not empty) |
@@ -26,6 +26,8 @@ node scripts/claims-e2e.mjs      # hits the LIVE site + brain, prints a pass/FAI
 
 ## Latest result
 **2026-07 · 12 pass · 0 FAIL** — all headline claims verified functionally true on the live site + brain (Ed25519 signature len=128 alg=ed25519; `/api/tools` total=377; ToolRunner/classifier/report/workbench all execute; globe renders).
+
+**2026-07-07 update (API-layer only, re-verified by Claude Science):** `/api/tools` total is now **378** (csoai-governance-mcp registered + deployed) — still a genuine pass under the "377+" rule above. Re-ran the 6 API-level checks (tools count, live MCP tools/list, meok_govern, Ed25519 sign+verify round-trip, brain health, dynamic OG) — all 6 pass. Did NOT re-run the 6 browser-level checks (ToolRunner/classifier/report/workbench/council-viz/globe) this pass — Playwright's Chromium binary could not be downloaded in this sandbox; treat those 6 as last-verified under the 2026-07 run above, not re-confirmed today.
 
 ## Pre-demo checklist (per account)
 1. `node scripts/claims-e2e.mjs` → **0 FAIL** (block the demo otherwise).

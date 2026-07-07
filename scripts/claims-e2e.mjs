@@ -18,7 +18,9 @@ async function rpc(method, params) {
 }
 
 async function apiTruth() {
-  try { const d = await (await fetch(BRAIN + "/tools?q=governance")).json(); d.total === 377 ? pass('CLAIM "377 tools"', `/api/tools total=${d.total}`) : fail('CLAIM "377 tools"', `actual=${d.total} — update copy`); } catch (e) { fail("377 tools", e.message); }
+  // Catalog count is expected to GROW as new governed MCPs are registered (e.g. csoai-governance-mcp
+  // took it 377→378 on 2026-07-07) — check it's a sane, growing number, not frozen at one exact value.
+  try { const d = await (await fetch(BRAIN + "/tools?q=governance")).json(); (typeof d.total === "number" && d.total >= 377) ? pass('CLAIM "377+ tools"', `/api/tools total=${d.total} (baseline 377, grows as catalog is registered)`) : fail('CLAIM "377+ tools"', `actual=${d.total} — below baseline, investigate`); } catch (e) { fail("377+ tools", e.message); }
   try { const d = await rpc("tools/list"); const n = (d.result?.tools || []).length; n >= 5 ? pass("Live MCP tools", `${n} execute server-side`) : fail("Live MCP tools", `only ${n}`); } catch (e) { fail("tools/list", e.message); }
   try { const d = await rpc("tools/call", { name: "meok_govern", arguments: { industry: "a bank" } }); const t = d.result?.content?.map((c) => c.text).join(" ") || ""; /EU AI Act|DORA|GDPR/.test(t) ? pass("meok_govern executes", t.slice(0, 55)) : fail("meok_govern", "no framework output"); } catch (e) { fail("meok_govern", e.message); }
   try { const r = await fetch(BRAIN + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "claims-test" }) }); const d = await r.json(); (d.signature && d.publicKey) ? pass('CLAIM "Ed25519 signing"', `real sig len=${String(d.signature).length}, alg=${d.alg || "?"}`) : fail("Ed25519 signing", "no signature — the signed claim would be FALSE"); } catch (e) { fail("Ed25519 signing", e.message); }
