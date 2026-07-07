@@ -80,6 +80,21 @@ const JURIS_REGIMES = {
   ca: ["canada-aida"],
 };
 
+// sector → sector-specific regimes (merged with jurisdiction regimes). Keyed on an
+// optional `sector` field — the ingestion contract for JEEVES's lead export.
+const SECTOR_REGIMES = {
+  banking:   ["dora", "eu-ai-act", "basel-ai", "nis2"],
+  insurance: ["dora", "eu-ai-act", "eiopa-ai", "nis2"],
+  finance:   ["dora", "eu-ai-act", "nis2"],
+  health:    ["eu-ai-act-highrisk", "hipaa", "mdr-ai", "iso-42001"],
+  pharma:    ["eu-ai-act-highrisk", "gxp-ai", "iso-42001"],
+  defence:   ["nis2", "eu-ai-act", "nato-ai", "itar-ear"],
+  "ai-lab":  ["eu-ai-act-gpai", "frontier-safety", "iso-42001"],
+  telecom:   ["nis2", "cra", "eu-ai-act"],
+  energy:    ["nis2", "cra", "eu-ai-act"],
+  publicsector: ["eu-ai-act-highrisk", "nis2", "iso-42001"],
+};
+
 // ---- load accounts (ecosystem.ts by default; JSON export via HIVE_ACCOUNTS) ----
 function loadAccounts() {
   const ext = process.env.HIVE_ACCOUNTS;
@@ -105,8 +120,14 @@ function loadAccounts() {
 function scoreAccount(a) {
   const posture = a.posture || "unknown";
   const vendor = (a.currentVendor || "unknown").toLowerCase();
-  const frameworks = (a.frameworks && a.frameworks.length ? a.frameworks
-    : [...new Set((a.jurisdictions || []).flatMap((j) => JURIS_REGIMES[j] || []))]);
+  // Frameworks in scope = explicit row value, else derived from jurisdiction + sector.
+  const derived = [
+    ...(a.jurisdictions || []).flatMap((j) => JURIS_REGIMES[j] || []),
+    ...(a.sector ? (SECTOR_REGIMES[String(a.sector).toLowerCase()] || []) : []),
+  ];
+  const frameworks = (a.frameworks && a.frameworks.length)
+    ? [...new Set([...a.frameworks, ...(a.sector ? (SECTOR_REGIMES[String(a.sector).toLowerCase()] || []) : [])])]
+    : [...new Set(derived)];
 
   // Regulators/governments AUTHOR the rules → the "test" is IMPLEMENTATION coverage,
   // not gap-selling. Play = align; we measure that CSOAI implements their framework.
