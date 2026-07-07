@@ -10,13 +10,13 @@ type St = { key: string; eyebrow: string; title: string; intro: string; scope: s
 const STATES: Record<string, St> = {
   colorado: {
     key: "colorado", eyebrow: "CSOAI - Colorado AI Act",
-    title: "The Colorado AI Act (SB 24-205)",
+    title: "Colorado AI regulation (SB 24-205 repealed → ADMT law SB 26-189)",
     intro: "The first comprehensive US state AI law. It targets algorithmic discrimination in consequential decisions and imposes a duty of reasonable care on developers and deployers of high-risk AI. Effective 2026 (verify the current date - it has been amended).",
     scope: ["High-risk AI in employment decisions", "Lending and financial services", "Housing and insurance", "Healthcare, legal, and education access"],
     duties: ["Use reasonable care to avoid algorithmic discrimination", "Complete impact assessments for high-risk systems", "Notify consumers when AI drives a consequential decision", "Disclose to the Attorney General on discovery of risk"],
     faqs: [
       { q: "What does the Colorado AI Act require?", a: "It requires developers and deployers of high-risk AI to use reasonable care to protect consumers from algorithmic discrimination, complete impact assessments, and provide consumer notices for consequential decisions." },
-      { q: "When does the Colorado AI Act take effect?", a: "It is scheduled to take effect in 2026. The exact date has been subject to legislative amendment - verify the current effective date, as state AI laws are evolving." },
+      { q: "When does the Colorado AI Act take effect?", a: "Important update: the original Colorado AI Act (SB 24-205) was repealed before taking effect and replaced by a new Automated Decision Making Technology (ADMT) law, SB 26-189, scheduled to take effect 1 January 2027 with a 60-day cure period and Attorney-General-only enforcement. Verify the current text, as state AI laws are evolving." },
       { q: "Who does it apply to?", a: "Both developers and deployers of high-risk AI systems used in consequential decisions affecting Colorado consumers." },
     ],
   },

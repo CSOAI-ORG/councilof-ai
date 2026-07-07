@@ -1,0 +1,96 @@
+import { useEffect } from "react";
+
+// /crosswalk — the single most citable public asset CSOAI owns: an open,
+// crawlable map of how 13 global AI-governance frameworks align to 8 universal
+// controls. schema.org Dataset + FAQPage JSON-LD so answer engines can cite it.
+// Indicative references — the signed, article-level crosswalk runs in the OS.
+
+const FRAMEWORKS = ["EU AI Act", "NIST AI RMF", "ISO/IEC 42001", "DORA", "NIS2", "GDPR", "ISO 27001", "SOC 2", "HIPAA", "MiCA", "PCI DSS", "CRA", "TC260"];
+const CONTROLS: { c: string; refs: Record<string, string> }[] = [
+  { c: "Risk management", refs: { "EU AI Act": "Art. 9", "NIST AI RMF": "MAP/MEASURE", "ISO/IEC 42001": "6.1 / 8.2", "DORA": "Art. 5–6", "NIS2": "Art. 21", "CRA": "Annex I" } },
+  { c: "Data governance", refs: { "EU AI Act": "Art. 10", "NIST AI RMF": "MAP 2", "ISO/IEC 42001": "7.4 / B.7", "GDPR": "Art. 5–6", "HIPAA": "164.514", "TC260": "5.x" } },
+  { c: "Transparency & disclosure", refs: { "EU AI Act": "Art. 13 / 50", "NIST AI RMF": "GOVERN 4", "ISO/IEC 42001": "B.6", "GDPR": "Art. 13–14", "TC260": "labelling" } },
+  { c: "Human oversight", refs: { "EU AI Act": "Art. 14", "NIST AI RMF": "GOVERN 2", "ISO/IEC 42001": "B.9", "DORA": "Art. 5" } },
+  { c: "Accountability & governance", refs: { "EU AI Act": "Art. 17", "NIST AI RMF": "GOVERN 1", "ISO/IEC 42001": "5.1–5.3", "SOC 2": "CC1", "NIS2": "Art. 20" } },
+  { c: "Security & resilience", refs: { "EU AI Act": "Art. 15", "NIST AI RMF": "MANAGE 4", "ISO 27001": "A.5–A.8", "DORA": "Art. 9", "NIS2": "Art. 21", "PCI DSS": "Req. 6", "CRA": "Annex I", "MiCA": "Art. 68" } },
+  { c: "Bias & fairness", refs: { "EU AI Act": "Art. 10 / Annex III", "NIST AI RMF": "MEASURE 2.11", "ISO/IEC 42001": "B.7.4", "GDPR": "Art. 22" } },
+  { c: "Documentation & records", refs: { "EU AI Act": "Art. 11–12 / Annex IV", "NIST AI RMF": "GOVERN 1.4", "ISO/IEC 42001": "7.5", "SOC 2": "CC2", "DORA": "Art. 28 (RoI)" } },
+];
+
+const FAQ = [
+  { q: "What is an AI governance framework crosswalk?", a: "A crosswalk maps the overlapping requirements of different regulations and standards to a single set of controls, so that implementing one control satisfies the equivalent obligation in every framework it maps to — you comply once and evidence everywhere." },
+  { q: "Which frameworks does the CSOAI crosswalk cover?", a: "13+ including the EU AI Act, NIST AI RMF, ISO/IEC 42001, DORA, NIS2, GDPR, ISO 27001, SOC 2, HIPAA, MiCA, PCI DSS, the Cyber Resilience Act (CRA), and China TC260 — mapped to 8 universal AI-governance controls." },
+  { q: "How does a crosswalk save time on EU AI Act compliance?", a: "Most EU AI Act obligations (risk management, data governance, transparency, oversight, documentation) already overlap with ISO 42001 and NIST AI RMF. Mapping them means existing controls can be reused as evidence rather than rebuilt, cutting duplicate work ahead of the 2 August 2026 enforcement date." },
+  { q: "Is the CSOAI crosswalk verifiable?", a: "Yes — the signed, article-level crosswalk runs as a governed MCP tool inside the CSOAI OS and every output can be sealed to Layer 0 (Ed25519) for an auditable, reproducible record." },
+];
+
+function days(to: string) { return Math.max(0, Math.ceil((new Date(to + "T00:00:00Z").getTime() - Date.now()) / 86400000)); }
+
+export default function Crosswalk() {
+  useEffect(() => { document.title = "AI governance framework crosswalk — 13 frameworks × 8 controls | CSOAI"; }, []);
+  const ld = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "Dataset", name: "CSOAI AI Governance Framework Crosswalk", description: "Open crosswalk mapping 13 global AI-governance frameworks (EU AI Act, NIST AI RMF, ISO 42001, DORA, NIS2, GDPR, and more) to 8 universal controls.", keywords: ["EU AI Act", "NIST AI RMF", "ISO 42001", "AI governance", "compliance crosswalk", "DORA", "NIS2"], creator: { "@type": "Organization", name: "CSOAI", url: "https://csoai.org" }, license: "https://opensource.org/licenses/MIT", url: "https://csoai.org/crosswalk" },
+      { "@type": "FAQPage", mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
+    ],
+  };
+  const aug = days("2026-08-02"), dec = days("2026-12-02");
+
+  return (
+    <div className="min-h-screen bg-[#03110b] text-emerald-50">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
+      <div className="mx-auto max-w-5xl px-6 py-12">
+        <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Open · crawlable · citable</p>
+        <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The AI governance <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">framework crosswalk.</span></h1>
+        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">How <b>13 global frameworks</b> map to <b>8 universal controls</b>. Comply once, evidence everywhere. The signed, article-level version runs inside the <a href="/os" className="text-emerald-300 underline">CSOAI OS</a>.</p>
+
+        {/* dual enforcement countdown */}
+        <div className="mt-5 flex flex-wrap gap-3">
+          <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-2 text-sm"><b className="text-amber-200">{aug} days</b> <span className="text-amber-100/70">→ EU AI Act GPAI + Art. 50 transparency enforceable (2 Aug 2026)</span></div>
+          <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm"><b className="text-emerald-200">{dec} days</b> <span className="text-emerald-100/70">→ Art. 50 AI-content marking (2 Dec 2026)</span></div>
+        </div>
+
+        {/* the crosswalk matrix */}
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-emerald-500/20">
+          <table className="w-full border-collapse text-left text-[12px]">
+            <thead>
+              <tr className="bg-[#05140d]">
+                <th className="sticky left-0 z-10 bg-[#05140d] px-3 py-2 font-bold text-emerald-100">Control</th>
+                {FRAMEWORKS.map((f) => <th key={f} className="px-2 py-2 font-semibold text-emerald-300/80 whitespace-nowrap">{f}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {CONTROLS.map((row, i) => (
+                <tr key={row.c} className={i % 2 ? "bg-white/[0.02]" : ""}>
+                  <td className="sticky left-0 z-10 bg-[#03110b] px-3 py-2 font-semibold text-emerald-100 whitespace-nowrap">{row.c}</td>
+                  {FRAMEWORKS.map((f) => <td key={f} className="px-2 py-2 text-emerald-200/70 whitespace-nowrap">{row.refs[f] || <span className="text-emerald-300/20">·</span>}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-2 text-[11px] text-emerald-300/45">References are indicative and for orientation — not legal advice. The signed, verifiable article-level mapping runs as a governed tool in the OS. Verify against primary sources.</p>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href="/classifier" className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Classify your AI system →</a>
+          <a href="/tool-commons" className="rounded-xl border border-emerald-500/30 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">Run the live crosswalk tool →</a>
+          <a href="/compare" className="rounded-xl border border-emerald-500/30 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">CSOAI vs Vanta / Drata / Credo →</a>
+        </div>
+
+        {/* FAQ (matches JSON-LD) */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-black">Frequently asked</h2>
+          <div className="mt-4 space-y-3">
+            {FAQ.map((f) => (
+              <details key={f.q} className="rounded-xl border border-emerald-500/20 bg-[#05140d] p-4">
+                <summary className="cursor-pointer font-semibold text-emerald-100">{f.q}</summary>
+                <p className="mt-2 text-sm leading-relaxed text-emerald-100/75">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

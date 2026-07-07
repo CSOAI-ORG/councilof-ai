@@ -189,6 +189,7 @@ import DemoTour from "./components/DemoTour";
 import WatchdogMap from "./pages/WatchdogMap";
 import IncidentReport from "./pages/IncidentReport";
 import EuActClassifier from "./pages/EuActClassifier";
+import Crosswalk from "./pages/Crosswalk";
 import DemoOS from "./pages/DemoOS";
 import PocShowcase from "./pages/PocShowcase";
 import SovSpace from "./pages/SovSpace";
@@ -648,6 +649,7 @@ function App() {
                   <Route path="/ecosystem" component={Integrations} />
                   {/* Framework Crosswalks */}
                   <Route path="/crosswalks" component={Crosswalks} />
+                  <Route path="/crosswalk" component={Crosswalk} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />
                   {/* Individual Charter Articles */}
                   <Route path="/charter/article/:id" component={CharterArticle} />
