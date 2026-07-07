@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
+import CouncilVote from "../components/CouncilVote";
 
 // TryCouncil — the 30-second WOW. The world's first AI Governance Council, live.
 // Type a compliance question; five specialised agents (Oracle, Skeptic, Architect,
@@ -83,6 +84,7 @@ export default function TryCouncil() {
   const [liveLines, setLiveLines] = useState<Record<string, string>>({});
   const [liveState, setLiveState] = useState<"idle" | "running" | "done">("idle");
   const [sig, setSig] = useState("");
+  const [round, setRound] = useState(0);
 
   function ask(question: string) {
     const text = question.trim();
@@ -90,6 +92,7 @@ export default function TryCouncil() {
     setQ(text);
     const d = classify(text);
     setResult(d);
+    setRound((r) => r + 1);
     setShown(0);
     setSent(false);
     setLiveLines({}); setLiveState("idle"); setSig("");
@@ -144,6 +147,7 @@ export default function TryCouncil() {
         )}
         {result && (
           <>
+            <div className="mb-5"><CouncilVote trigger={round} verdict={"Verdict: " + result.tier} /></div>
             <div className={"rounded-2xl border p-5 " + TIER_TONE[result.tier]}>
               <div className="flex flex-wrap items-center gap-3">
                 <span className="rounded-lg bg-white/60 px-3 py-1 text-xs font-bold uppercase tracking-wide">Verdict</span>
