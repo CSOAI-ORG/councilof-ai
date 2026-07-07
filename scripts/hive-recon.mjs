@@ -163,7 +163,7 @@ function scoreAccount(a) {
     .sort((x, y) => perAxis[y].gap - perAxis[x].gap).slice(0, 3);
 
   return { id: a.id, name: a.name, type: a.type, region: a.region, country: a.country,
-    jurisdictions: a.jurisdictions || [], frameworks, posture, vendor,
+    hq: a.hq || null, jurisdictions: a.jurisdictions || [], frameworks, posture, vendor,
     play, confidence, totalGap, maxGap: AXES.length * 3, perAxis, topUsps,
     source: a.source || null };
 }
@@ -219,6 +219,19 @@ if (rerun !== JSON.stringify(reports)) fails.push("non-deterministic scoring");
 const outDir = resolve(ROOT, "docs");
 writeFileSync(resolve(outDir, "hive-recon-report.json"),
   JSON.stringify({ summary, reports }, null, 2));
+
+// Public coverage overlay for the globe (Hive §5) — PUBLIC seed ONLY. When the internal
+// lead export is scored (HIVE_ACCOUNTS set), we do NOT write to public/ (boundary guard).
+if (!process.env.HIVE_ACCOUNTS) {
+  const coverage = reports.filter((r) => Array.isArray(r.hq) && r.hq.length === 2).map((r) => ({
+    id: r.id, name: r.name, type: r.type, region: r.region, country: r.country,
+    hq: r.hq, play: r.play, gap: r.totalGap, maxGap: r.maxGap, confidence: r.confidence,
+    topUsp: r.topUsps[0] || null,
+  }));
+  writeFileSync(resolve(ROOT, "public/hive-coverage.json"),
+    JSON.stringify({ generated: summary.generated, note: "public seed — org-level, cited; internal leads excluded", accounts: coverage.length, coverage }, null, 2));
+  console.log(`Public overlay: public/hive-coverage.json (${coverage.length} pins)`);
+}
 
 console.log(`\n# Distribution Hive — recon/scoring test  (source: ${src})\n`);
 console.log(`Accounts scored : ${summary.accounts}`);
