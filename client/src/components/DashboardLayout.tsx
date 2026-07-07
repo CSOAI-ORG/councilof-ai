@@ -110,7 +110,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </Link>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button aria-label="Open in new tab" variant="ghost" size="icon" className="h-8 w-8">
                 <ExternalLink className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -178,6 +178,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               variant="ghost"
               size="icon"
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              aria-label="Collapse or expand sidebar"
               className="h-8 w-8"
             >
               <ChevronLeft
@@ -198,6 +199,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
+              aria-label="Toggle light/dark theme"
               className="h-8 w-8"
             >
               {theme === "dark" ? (
@@ -207,7 +209,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               )}
             </Button>
             <Link href="/settings">
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button aria-label="Settings" variant="ghost" size="icon" className="h-8 w-8">
                 <Settings className="h-4 w-4" />
               </Button>
             </Link>
