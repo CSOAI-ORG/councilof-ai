@@ -36,3 +36,10 @@
 
 ## The rule that governs both of us
 **Nothing ships to a demo that isn't `claims-e2e` 12/0 green and register-✅ sourced.** One shot per account. Truth is the product.
+
+## Session log — 2026-07-07
+- **MCP distribution: DONE.** `csoai-governance-mcp@0.1.0` published to npm, installs via `npx`, and **self-lists in the live catalog** (verified `/api/tools total=378`). On-site funnel added: `/tool-commons` now shows a headline one-command install block (`claude mcp add csoai-governance -- npx -y csoai-governance-mcp`). Package README/`0.1.1` teed up for a README refresh on next publish (Nick's token step).
+- **Catalog 377 → 378** (governance MCP added). Tool-count claims reconciled repo-wide: dynamic surfaces show the **live** count, static copy uses **"370+"** (drift-proof), tests use a **`>=377` floor**. `claims-e2e.mjs` previously asserted `=== 377` and would have false-failed — now fixed.
+- **⚠️ Parallel-edit near-miss:** M4 (`3cb779f`) and frontend (`126703b`) independently fixed the 377 hardcoding, hitting the *same 4 files* → rebase conflict. Resolved cleanly by taking M4's base (better test guard) + layering frontend's 14 non-overlapping copy/MCP files. **Lesson: before a repo-wide sweep, drop a one-line note here naming the files you're about to touch.**
+- Live-verified after every push: build clean ×3, 17/17 routes 200, claims **12/0**, sitemap 291 URLs.
+- **npm token exposed in plaintext during publish — Nick to revoke** (npmjs.com → Access Tokens).
