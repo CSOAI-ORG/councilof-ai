@@ -149,7 +149,7 @@ No API key needed; override backend with `CSOAI_GATEWAY` (default `https://os.me
 
 ## 8. Open items (⚠️ need a human — mostly Nick's accounts)
 
-1. **Publish the MCP to npm** — `cd mcp/csoai-governance && npm login && npm publish` (publishConfig already public → global `npx csoai-governance-mcp`). *Owner-only (npm token).*
+1. **Publish the MCP to npm** — ✅ **DONE: `csoai-governance-mcp@0.1.0` is LIVE on npm** → `npx csoai-governance-mcp` (or `claude mcp add csoai-governance -- npx -y csoai-governance-mcp`).
 2. **Marketplace listing** — add `csoai-governance-mcp` to the backend registry/sync repo that generates the live 377 catalog (that registry is on the brain side, not this repo — point an agent at it).
 3. **ACLED + FIRMS keys** — set `VITE_ACLED_KEY` + `VITE_ACLED_EMAIL` + `VITE_FIRMS_MAP_KEY` to light the two dark Watchdog feeds (`lib/liveFeeds.ts` scaffold is ready).
 4. **Older SaaS tools → `/os`** — provide the repo/URL list to import into the launcher grid.

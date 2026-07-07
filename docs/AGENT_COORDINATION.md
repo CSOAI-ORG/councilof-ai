@@ -29,7 +29,7 @@
 ## Blocked on Nick (consolidated — neither agent can do these)
 1. **Phase 3 deploy** — JEEVES's runbook + signing key ready; needs Nick to run.
 2. **Outreach send** — lead list clean; sending is Nick's action.
-3. **`npm publish`** the `csoai-governance-mcp` — needs Nick's npm 2FA.
+3. **`npm publish`** — ✅ DONE: `csoai-governance-mcp@0.1.0` live on npm (`npx csoai-governance-mcp`).
 4. **`app.csoai.org` split** for `csoai-dashboard` — Vercel/DNS.
 5. **`main` branch archival** decision.
 6. **ACLED / FIRMS keys** for the two dark Watchdog feeds.
