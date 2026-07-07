@@ -235,6 +235,16 @@ window, immediately after) added the hedge clause to Sony and DBS. `git log` rea
 state, not the original claim. No further action needed; noting this so the discrepancy between
 a commit's stated intent and its actual diff doesn't get mistaken for an unresolved gap.
 
+### ⚠️ ESCALATION — 4th repeat of the same misjudgment (Tencent/Alibaba/Infosys, `e453c6b`)
+The hard rule above (embed hedge in the same edit) was STILL violated a 4th time because the
+failure isn't in the writing step, it's in the READING step: asserting "this batch came back
+visible" from a general impression of the search, rather than checking each individual
+tool_result block's redaction marker. **New default, effective immediately: every citation
+sourced from `web_search` gets the hedge clause, unconditionally, with no exception step.** Do
+not evaluate "was this one actually visible" per-batch — that judgment call is what's failing.
+The only way to skip the hedge is if the quote came from `fetch_article_fulltext`, `bash curl`,
+or `read_file` output that is visibly present, unredacted, in this exact turn's tool result.
+
 ### E2E spot-check results (2026-07-07, this window — all freshly live-tested, not read from docs)
 - **www.csoai.org routes** (9 checked): `/`, `/assess`, `/pricing`, `/login`, `/intel`,
   `/tool-commons`, `/globe`, `/crosswalk`, `/compare` — all HTTP 200.
