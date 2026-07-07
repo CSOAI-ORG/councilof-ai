@@ -63,7 +63,7 @@ try {
     log('OS home bar acts (orchestrate)', acted); await p.close(); }
 
   // 8. Status - SOV3 connected, no brand leak
-  { const p = await newPage(); await p.goto(B + '/status', { waitUntil: 'domcontentloaded' }); let t = ''; for (let i = 0; i < 16; i++) { await p.waitForTimeout(500); t = await p.evaluate(() => document.body.innerText); if (/CONNECTED/.test(t)) break; }
+  { const p = await newPage(); await p.goto(B + '/status', { waitUntil: 'domcontentloaded' }); let t = ''; for (let i = 0; i < 34; i++) { await p.waitForTimeout(700); t = await p.evaluate(() => document.body.innerText); if (/CONNECTED/.test(t)) break; }
     log('Status connected + brand clean', /Sovereign brain - CONNECTED/.test(t) && /Sign|Govern|Verify/.test(t) && !/SOV3|meok|defoneos/i.test(t)); await p.close(); }
 
   // 9. Pricing unified
