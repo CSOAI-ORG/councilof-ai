@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import TrustMarquee from "../components/TrustMarquee";
 import ToolRunner from "../components/ToolRunner";
+import { detectLocale } from "../lib/locale";
+const OS_LOCALE = detectLocale();
 
 const OS_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 const OS_APP_ROUTES: Record<string, string> = { revenue: "/pricing", pricing: "/pricing", plans: "/pricing", king: "/try", council: "/try", try: "/try", setup: "/start", onboard: "/start", graph: "/graph", knowledge: "/graph", space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", tools: "/tool-commons", commons: "/commons", status: "/status", os: "/os", emergence: "/emergence", egg: "/emergence", certification: "/certification", academy: "/academy", evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator", layer0: "/layer0", distribution: "/distribution" };
@@ -174,6 +176,7 @@ export default function OsLauncher() {
           <div className="flex-1 min-w-[280px]">
             <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">The AI governance operating system</p>
             <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">Open the grid.</h1>
+            <p className="mt-2 text-sm text-emerald-200/85">📍 <b className="text-emerald-100">{OS_LOCALE.region.label}</b> — {OS_LOCALE.greeting} <span className="text-emerald-300/55">Governs here: {OS_LOCALE.region.frameworks.slice(0, 3).join(" · ")}.</span></p>
             <p className="mt-4 max-w-xl text-emerald-50/80">
               Every CSOAI tool, one surface. Watch the governed‑vs‑ungoverned moat in real time, then launch any
               app — all standing on one signed Layer 0 floor, externally anchored to Bitcoin.

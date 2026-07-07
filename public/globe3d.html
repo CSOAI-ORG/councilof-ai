@@ -224,8 +224,21 @@ if(viewer){
   }catch(e){}
 
   // --- Immersive opening: start far in space, then sweep in ---
+  // Region-aware intro: fly to the VISITOR's region on load ("loads local").
+  function __globeRegion(){ try{
+    var q=new URLSearchParams(location.search).get('region');
+    var Q={EU:[9,50.5],UK:[-1.5,52.5],US:[-98,39.5],JP:[138,37],KR:[127.8,36.5],CN:[104,35],SG:[103.8,1.35],CA:[-96,56],IN:[79,22]};
+    if(q && Q[q.toUpperCase()]) return Q[q.toUpperCase()];
+    var tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+    var M={'Europe/London':[-1.5,52.5],'Asia/Tokyo':[138,37],'Asia/Seoul':[127.8,36.5],'Asia/Shanghai':[104,35],'Asia/Hong_Kong':[104,35],'Asia/Singapore':[103.8,1.35],'Asia/Kolkata':[79,22],'Asia/Calcutta':[79,22]};
+    if(M[tz]) return M[tz];
+    if(tz.indexOf('Europe/')===0) return [9,50.5];
+    if(tz.indexOf('America/')===0) return [-98,39.5];
+    return [6,32];
+  }catch(e){ return [6,32]; } }
+  var __rc=__globeRegion();
   viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(10,25,38000000)});
-  setTimeout(function(){ try{ viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(6,32,20000000), orientation:{heading:Cesium.Math.toRadians(-12),pitch:Cesium.Math.toRadians(-78)}, duration:4.2, easingFunction:Cesium.EasingFunction.QUADRATIC_IN_OUT}); }catch(e){} }, 250);
+  setTimeout(function(){ try{ viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(__rc[0],__rc[1],17000000), orientation:{heading:Cesium.Math.toRadians(-8),pitch:Cesium.Math.toRadians(-76)}, duration:4.2, easingFunction:Cesium.EasingFunction.QUADRATIC_IN_OUT}); }catch(e){} }, 250);
 
   // --- Focus pulse: an expanding ring at a point so narration lands visually ---
   function focusPulse(lng,lat,col){
