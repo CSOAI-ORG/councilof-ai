@@ -48,8 +48,24 @@ export async function callTool(name: string, args: Record<string, any>): Promise
 }
 
 // Seal any text to Layer 0 (Ed25519) → SOV: fingerprint. Real cryptographic proof.
+// Uses the /sign endpoint (the one that actually returns a signature); falls back
+// to a real in-browser SHA-256 content hash if the brain is unreachable — never faked.
 export async function sealArtifact(artifact: string): Promise<ToolResult> {
-  return callTool("meok_sign", { artifact });
+  try {
+    const r = await fetch(GW + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: artifact }) });
+    if (r.ok) {
+      const d = await r.json();
+      const sig = String((d && (d.signature || d.sig)) || "");
+      const fp = String((d && (d.fingerprint || d.publicKey || d.key)) || "");
+      if (sig || fp) return { ok: true, text: "SOV:" + fp.slice(0, 40) + "\nsig " + sig.slice(0, 56) + " · Ed25519 · Layer 0", raw: d };
+    }
+  } catch (e) {}
+  try {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(artifact));
+    const hex = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    return { ok: true, text: "sha256:" + hex.slice(0, 48) + " · content hash (offline, brain unreachable)" };
+  } catch (e) {}
+  return { ok: false, text: "Seal unavailable." };
 }
 
 // Friendly labels for the known live tools.
