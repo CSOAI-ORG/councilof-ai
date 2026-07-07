@@ -105,3 +105,14 @@
   ecosystem.ts entry). Also fixed a citation bug this pass: Lockheed Martin's two governance
   facts were attributed to one URL but actually came from two different sources — split correctly
   in `978fb10`/`4aa3d28`.
+- **Confirmed M4's displace-logic fix (`1f0415a`) is correct and reconciled coverage to 1,999**
+  after the +29 EU/APAC global dataset (Claude Science, `9b9faeb`). `scripts/merge-hive-accounts.mjs`
+  worked exactly as designed on its first real re-use — no ad-hoc scripting needed.
+- **⚠️ Deploy gap found (not fixed — outside this session's reach):** the LIVE `www.csoai.org`
+  bundle (`assets/index-DtnGC23y.js` as of this check) does **not** contain any reference to
+  `hive-coverage.json` — meaning the globe-overlay feature (`faad379` onward, several commits
+  ago) has not actually reached production yet. `/globe`, `/sovspace`, `/sov-town` all return 200
+  and the SPA routes resolve fine, but the coverage-pin layer itself is running old code. Whoever
+  owns the deploy trigger (Vercel project push / cron) needs to redeploy `councilof-ai` — this
+  isn't a code bug, just confirming the gap explicitly so nobody assumes the live globe already
+  shows the reconciled 1,999-account data.
