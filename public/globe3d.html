@@ -86,6 +86,7 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
     <span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fbbf24;vertical-align:middle"></i> integrate</span>
     <span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fb7185;vertical-align:middle"></i> displace</span>
     <span style="opacity:.7">· dot size = CSOAI gap</span>
+    <button onclick="window.__hiveFlyWorst&&window.__hiveFlyWorst()" style="margin-left:auto;cursor:pointer;background:rgba(251,113,133,.15);border:1px solid rgba(251,113,133,.4);color:#fecaca;border-radius:6px;padding:2px 7px;font-size:9px;font-weight:700">▶ fly to worst gap</button>
   </div>
   <div class="lyr" data-layer="labs"><span class="sw"><i></i></span><span class="nm">AI labs & safety<small>frontier labs + safety institutes</small></span></div>
   <div class="lyr" data-layer="auton"><span class="sw"><i></i></span><span class="nm">Autonomous systems<small>robotaxis · ports · drones · humanoids</small></span></div>
@@ -311,18 +312,29 @@ if(viewer){
   // ----- Hive coverage overlay (from hive-coverage.json, PUBLIC seed) — play + CSOAI gap -----
   (function(){ try{ fetch('/hive-coverage.json').then(function(r){return r.json();}).then(function(d){
     var COL={ align:'#34d399', absorb:'#38bdf8', integrate:'#fbbf24', displace:'#fb7185' };
+    var worst=null, worstEnt=null;
     (d && d.coverage || []).forEach(function(a){
       if(!a.hq || a.hq.length!==2) return;
+      if(a.play!=='align' && (!worst || a.gap>worst.gap)) worst=a;
       var col=COL[a.play]||'#34d399';
       var sz = 6 + Math.round((a.gap/(a.maxGap||21))*10); // small=aligned, large=big CSOAI gap
       var gapLine = a.play==='align' ? '<p style="opacity:.7">Authority · CSOAI implements their regime · play: align</p>'
         : '<p><b>Play:</b> '+a.play+' ('+a.confidence+')</p><p><b>CSOAI gap:</b> '+a.gap+'/'+(a.maxGap||21)+'</p>'+(a.topUsp?'<p><b>Lead with:</b> '+a.topUsp+'</p>':'');
-      try{ viewer.entities.add({ layerTag:'coverage', show:false, name:a.name,
+      try{ var __ce=viewer.entities.add({ layerTag:'coverage', show:false, name:a.name,
         description:'<h3>'+a.name+'</h3><p>'+(a.type||'')+' · '+(a.region||'')+'</p>'+gapLine+'<p style="opacity:.6">org-level · public seed · displace only w/ known vendor</p>',
         position:Cesium.Cartesian3.fromDegrees(a.hq[0], a.hq[1], 18000),
         point:{ pixelSize:sz, color:Cesium.Color.fromCssColorString(col).withAlpha(.9), outlineColor:Cesium.Color.WHITE, outlineWidth:1.4, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.25,4e7,.4) },
-        label:{ text:a.play==='align'?'':a.name, font:'600 11px system-ui', fillColor:Cesium.Color.fromCssColorString('#fde68a'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#03110b').withAlpha(.72), pixelOffset:new Cesium.Cartesian2(0,-15), scale:0.82, distanceDisplayCondition:new Cesium.DistanceDisplayCondition(0, 7e6) } }); }catch(x){}
+        label:{ text:a.play==='align'?'':a.name, font:'600 11px system-ui', fillColor:Cesium.Color.fromCssColorString('#fde68a'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#03110b').withAlpha(.72), pixelOffset:new Cesium.Cartesian2(0,-15), scale:0.82, distanceDisplayCondition:new Cesium.DistanceDisplayCondition(0, 7e6) } });
+        if(worst && a.id===worst.id) worstEnt=__ce; }catch(x){}
     });
+    // fly-to-worst-gap demo hook: turn on coverage, fly to the biggest-gap account, open its card
+    window.__hiveFlyWorst=function(){ if(!worst) return; try{
+      var chip=document.querySelector('.lyr[data-layer="coverage"] .sw'); if(chip && !chip.classList.contains('on')){ chip.classList.add('on'); viewer.entities.values.forEach(function(e){ if(e.layerTag==='coverage') e.show=true; }); }
+      viewer.entities.values.forEach(function(e){ if(e.layerTag==='coverage') e.show=true; });
+      if(typeof stopOrbit==='function'){ try{stopOrbit();}catch(_){} } if(typeof spinning!=='undefined') spinning=false;
+      viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(worst.hq[0], worst.hq[1], 1600000), orientation:{heading:0,pitch:Cesium.Math.toRadians(-70),roll:0}, duration:2.6 });
+      if(worstEnt) setTimeout(function(){ try{ viewer.selectedEntity=worstEnt; }catch(_){} }, 2700);
+    }catch(x){} };
   }).catch(function(){}); }catch(e){} })();
 
   // ----- Frameworks (colored by status), visible by default -----

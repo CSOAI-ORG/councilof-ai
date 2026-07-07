@@ -28,6 +28,9 @@ function days(to: string) { return Math.max(0, Math.ceil((new Date(to + "T00:00:
 
 export default function Crosswalk() {
   useEffect(() => { document.title = "AI governance framework crosswalk — 13 frameworks × 8 controls | CSOAI"; }, []);
+  const fwParam = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("fw") : null;
+  const SLUG_MAP: Record<string, string> = { "eu-ai-act": "EU AI Act", "eu-ai-act-gpai": "EU AI Act", "eu-ai-act-highrisk": "EU AI Act", "nist-ai-rmf": "NIST AI RMF", "iso-42001": "ISO/IEC 42001", "dora": "DORA", "nis2": "NIS2", "gdpr": "GDPR", "gdpr-uk": "GDPR", "iso-27001": "ISO 27001", "soc-2": "SOC 2", "hipaa": "HIPAA", "mica": "MiCA", "pci-dss": "PCI DSS", "cra": "CRA", "tc260": "TC260" };
+  const hi = new Set((fwParam ? fwParam.split(",") : []).map((s) => SLUG_MAP[s.trim().toLowerCase()]).filter(Boolean) as string[]);
   const ld = {
     "@context": "https://schema.org",
     "@graph": [
@@ -51,20 +54,28 @@ export default function Crosswalk() {
           <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm"><b className="text-emerald-200">{dec} days</b> <span className="text-emerald-100/70">→ Art. 50 AI-content marking (2 Dec 2026)</span></div>
         </div>
 
+        {hi.size > 0 && (
+          <div className="mt-5 rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm">
+            <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">Tailored view · frameworks in scope for this account</span>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">{[...hi].map((f) => <span key={f} className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-[11px] font-bold text-[#03110b]">{f}</span>)}</div>
+            <p className="mt-1.5 text-[11px] text-emerald-300/60">Comply once across these → evidence everywhere. Highlighted columns below.</p>
+          </div>
+        )}
+
         {/* the crosswalk matrix */}
         <div className="mt-8 overflow-x-auto rounded-2xl border border-emerald-500/20">
           <table className="w-full border-collapse text-left text-[12px]">
             <thead>
               <tr className="bg-[#05140d]">
                 <th className="sticky left-0 z-10 bg-[#05140d] px-3 py-2 font-bold text-emerald-100">Control</th>
-                {FRAMEWORKS.map((f) => <th key={f} className="px-2 py-2 font-semibold text-emerald-300/80 whitespace-nowrap">{f}</th>)}
+                {FRAMEWORKS.map((f) => <th key={f} className={"px-2 py-2 font-semibold whitespace-nowrap " + (hi.has(f) ? "bg-emerald-500/25 text-emerald-100" : "text-emerald-300/80")}>{f}</th>)}
               </tr>
             </thead>
             <tbody>
               {CONTROLS.map((row, i) => (
                 <tr key={row.c} className={i % 2 ? "bg-white/[0.02]" : ""}>
                   <td className="sticky left-0 z-10 bg-[#03110b] px-3 py-2 font-semibold text-emerald-100 whitespace-nowrap">{row.c}</td>
-                  {FRAMEWORKS.map((f) => <td key={f} className="px-2 py-2 text-emerald-200/70 whitespace-nowrap">{row.refs[f] || <span className="text-emerald-300/20">·</span>}</td>)}
+                  {FRAMEWORKS.map((f) => <td key={f} className={"px-2 py-2 whitespace-nowrap " + (hi.has(f) ? "bg-emerald-500/10 text-emerald-100" : "text-emerald-200/70")}>{row.refs[f] || <span className="text-emerald-300/20">·</span>}</td>)}
                 </tr>
               ))}
             </tbody>
