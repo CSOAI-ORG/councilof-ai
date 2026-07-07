@@ -9,11 +9,11 @@ export const TOUR: TourStep[] = [
     path: "/",
     title: "I'm your Sovereign - not a checklist",
     usp: "A live governance brain, not compliance software",
-    say: "Quick tour. Everyone else hands you a compliance checklist and a dashboard. CSOAI is different: I'm a sovereign governance brain - 377 governed tools, a 33-agent council, and cryptographic proof behind every answer. Let me show you, live.",
+    say: "Quick tour. Everyone else hands you a compliance checklist and a dashboard. CSOAI is different: I'm a sovereign governance brain - 370+ governed tools, a 33-agent council, and cryptographic proof behind every answer. Let me show you, live.",
   },
   {
     path: "/os",
-    title: "The Sovereign OS - 377 governed tools",
+    title: "The Sovereign OS - 370+ governed tools",
     usp: "An operating system for AI governance, not a dashboard",
     say: "This is the OS. Every capability - crosswalks, risk, cyber, attestation - is a live tool running on the Sovereign brain, keyless and on-demand. Nobody else ships governance as a working operating system. Open any tile and it just runs.",
     tip: "Click any tool - it opens live in a window.",

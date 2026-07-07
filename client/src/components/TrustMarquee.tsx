@@ -24,7 +24,7 @@ function LiveStats({ dark }: { dark?: boolean }) {
   }, []);
   const chips = [
     { v: s.agents ? String(s.agents) : "33", l: "agent Byzantine council" },
-    { v: s.tools ? String(s.tools) : "377", l: "governed MCP tools" },
+    { v: s.tools ? String(s.tools) : "378", l: "governed MCP tools" },
     { v: s.episodes ? fmt(s.episodes) + "+" : "Ed25519", l: s.episodes ? "memory episodes" : "Layer 0 signing" },
     { v: "0.95", l: "care-floor" },
   ];

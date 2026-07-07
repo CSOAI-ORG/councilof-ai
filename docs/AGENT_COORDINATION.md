@@ -24,7 +24,7 @@
 - **Leads:** JEEVES owns `csoai_leads_domain_fixed.db` (240 real orgs, domains verified). Frontend's `ecosystem.json` / `/intel` is **regulators-only + honest placeholders** for the *public* site — **named enterprise leads stay in JEEVES's internal DB, never published on csoai.org** (privacy/positioning). If we want the globe to show real enterprise pins, JEEVES exports an anonymised/aggregate feed; frontend consumes it.
 - **Product surfaces:** JEEVES's `/assess`, `/pricing` (Paddle), `/login` (auth) must be **discoverable** in the frontend nav/funnel — frontend surfaces them (done: `/assess` added to nav).
 - **Truth:** the ground-truth register + claims harness are **shared** — JEEVES runs `claims-e2e.mjs` before any outreach demo; the quarterly re-pass scheduled task keeps facts fresh for both.
-- **MCP catalogue:** JEEVES's GitHub retagging separated utility MCPs from CSOAI-governance branding — frontend's "377 tools / 300+ MCP" copy is verified against the live `/api/tools` count by the harness, so retagging GitHub topics doesn't affect the claim.
+- **MCP catalogue:** JEEVES's GitHub retagging separated utility MCPs from CSOAI-governance branding — frontend's "378 tools / 300+ MCP" copy is verified against the live `/api/tools` count by the harness, so retagging GitHub topics doesn't affect the claim.
 
 ## Blocked on Nick (consolidated — neither agent can do these)
 1. **Phase 3 deploy** — JEEVES's runbook + signing key ready; needs Nick to run.

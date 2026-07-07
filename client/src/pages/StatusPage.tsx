@@ -75,7 +75,7 @@ export default function StatusPage() {
           </div>
           <div className="mt-3 grid gap-2 sm:grid-cols-4 text-sm">
             <Stat label="Substrate" value="Layer 0" />
-            <Stat label="Governed tools" value={tools != null ? tools.toLocaleString() : "377"} />
+            <Stat label="Governed tools" value={tools != null ? tools.toLocaleString() : "378"} />
             <Stat label="Orchestrator" value={brain.orchestrator ? "live" : "-"} ok={!!brain.orchestrator} />
             <Stat label="OpenAI-compat" value={brain.openai_compat ? "live" : "-"} ok={!!brain.openai_compat} />
             <Stat label="Groq" value={brain.groq ? "on" : "-"} ok={!!brain.groq} />

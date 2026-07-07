@@ -4,7 +4,7 @@ const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KN
 const EX = ["audit", "compliance", "EU AI Act", "payments", "defence", "identity"];
 export default function ToolCommons() {
   const [q, setQ] = useState(""); const [data, setData] = useState<any>(null); const [loading, setLoading] = useState(false); const [copied, setCopied] = useState("");
-  useEffect(() => { document.title = "Tool Commons - 377 governed MCP tools | CSOAI"; run("governance"); }, []);
+  useEffect(() => { document.title = "Tool Commons - 370+ governed MCP tools | CSOAI"; run("governance"); }, []);
   async function run(query?: string) {
     const term = (query !== undefined ? query : q).trim() || "governance"; setQ(term); setLoading(true);
     try { const r = await fetch(GW + "/tools?q=" + encodeURIComponent(term)); if (r.ok) setData(await r.json()); } catch (e) {}
@@ -19,8 +19,8 @@ export default function ToolCommons() {
         <div className="relative mx-auto max-w-4xl px-6 pt-16 pb-10 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - open tool commons</p>
           <h1 className="mt-3 text-5xl sm:text-6xl font-black tracking-tight">The open <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">tool commons.</span></h1>
-          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">{data ? data.total : "377"}+ governed MCP tools - search, connect with one command, run them inside the Sovereign OS. Open source, made easy.</p>
-          <div className="mt-7 flex gap-2 max-w-2xl mx-auto"><input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Search 377 governed tools..." className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-4 text-base text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" /><button onClick={() => run()} className="rounded-xl bg-emerald-500 px-6 py-4 text-base font-bold text-[#03110b] hover:bg-emerald-400">{loading ? "..." : "Search"}</button></div>
+          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">{data ? data.total : "378"}+ governed MCP tools - search, connect with one command, run them inside the Sovereign OS. Open source, made easy.</p>
+          <div className="mt-7 flex gap-2 max-w-2xl mx-auto"><input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Search 370+ governed tools..." className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-4 text-base text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" /><button onClick={() => run()} className="rounded-xl bg-emerald-500 px-6 py-4 text-base font-bold text-[#03110b] hover:bg-emerald-400">{loading ? "..." : "Search"}</button></div>
           <div className="mt-3 flex flex-wrap justify-center gap-2">{EX.map((e) => (<button key={e} onClick={() => run(e)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-3 py-1 text-xs text-emerald-200/80 hover:bg-emerald-500/15">{e}</button>))}</div>
         </div>
       </section>

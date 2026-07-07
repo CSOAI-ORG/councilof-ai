@@ -54,7 +54,7 @@ const GROUPS: { title: string; blurb: string; accent: string; items: Item[] }[] 
     title: "Open-source & the commons", accent: "#34d399",
     blurb: "The CSOAI Charter is open (CC BY 4.0); the core is MIT. Governed MCP tools you can pip-install today.",
     items: [
-      { name: "Tool Commons — 377 governed MCP tools", note: "pip install, Layer 0 covered", href: "/tool-commons", tag: "Open" },
+      { name: "Tool Commons — 370+ governed MCP tools", note: "pip install, Layer 0 covered", href: "/tool-commons", tag: "Open" },
       { name: "MCP Fleet — 216 servers, 10 hives", note: "Layer 0 wrapped", href: "/mcp-fleet", tag: "Open" },
       { name: "Framework crosswalks — CC BY 4.0", note: "22+ frameworks, cite freely", href: "/crosswalks", tag: "CC BY" },
       { name: "Open Commons media", note: "Creative-Commons search", href: "/commons", tag: "Open" },

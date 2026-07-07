@@ -2,7 +2,7 @@
 
 Give **any** MCP-capable agent — Claude Science, Claude Code, Cursor, or your own —
 the CSOAI Sovereign's governance layer. Seal your outputs to **Layer 0** with Ed25519,
-verify them offline, ask governed compliance questions, and search the **377 governed
+verify them offline, ask governed compliance questions, and search the **370+ governed
 CSOAI tools**.
 
 This is how a science/code agent makes its work **auditable, reproducible and
@@ -15,7 +15,7 @@ council-governed** — the missing governance floor under an AI workbench.
 | `csoai_sign` | Ed25519-seal an artifact (decision, figure, report, dataset hash) to CSOAI Layer 0 → returns signature, public key, `SOV:…` fingerprint |
 | `csoai_verify` | Verify a seal offline against its public key |
 | `csoai_govern` | Ask the CSOAI Sovereign a governance/cyber question (EU AI Act, NIST, ISO 42001, NIS2, DORA, GDPR) — role-locked |
-| `csoai_catalog` | Search the 377 governed CSOAI tools / MCPs |
+| `csoai_catalog` | Search the 370+ governed CSOAI tools / MCPs |
 
 No API key required for the public governance surface. Override the backend with
 `CSOAI_GATEWAY` (default `https://os.meok.ai/api`).
