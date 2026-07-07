@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "wouter";
 import { chargeSovereign } from "../lib/sovCharge";
 import { askSovereign } from "../lib/sovAsk";
 import { fetchHealth } from "../lib/sovHealth";
@@ -103,6 +104,9 @@ async function orchestrate(message: string, context: any): Promise<{ say: string
 }
 
 export default function SovereignDock() {
+  const [, navigate] = useLocation();
+  // Drive the site WITH the dock still present (SPA nav, no hard reload) — external → new tab.
+  const go = (href: string) => { if (/^https?:\/\//.test(href)) window.open(href, "_blank"); else navigate(href); };
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [msgs, setMsgs] = useState<Msg[]>([{ role: "sov", text: "I am your Sovereign. Ask me anything, or tell me what to do - I answer with live world data and take you where you need to go." }]);
@@ -155,8 +159,8 @@ export default function SovereignDock() {
     const know = KNOWLEDGE.find((k) => k.re.test(t));
     if (know && !hit) { setMsgs((m) => m.concat({ role: "sov", text: know.a })); return; }
     if (hit) {
-      setMsgs((m) => m.concat({ role: "sov", text: "Opening " + hit.label + " - taking you there now." }));
-      setTimeout(() => { window.location.assign(hit.href); }, 650);
+      setMsgs((m) => m.concat({ role: "sov", text: "Opening " + hit.label + " — taking you there now (I stay with you)." }));
+      setTimeout(() => { go(hit.href); }, 650);
       return;
     }
     // SOV3: the Sovereign is page-aware. For a command or an "explain this page"
@@ -169,7 +173,7 @@ export default function SovereignDock() {
       if (o && (o.say || o.actions.length)) {
         const route = o.actions.map(routeForAction).find(Boolean) as string | undefined;
         setMsgs((m) => m.concat({ role: "sov", text: o.say || (route ? "Opening that for you." : "Done.") }));
-        if (route) setTimeout(() => { if (/^https?:\/\//.test(route)) window.open(route, "_blank"); else window.location.assign(route); }, 950);
+        if (route) setTimeout(() => { go(route); }, 950);
         return;
       }
     }
@@ -229,9 +233,9 @@ export default function SovereignDock() {
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>
           </div>
           <div className="flex flex-wrap gap-1.5 border-b border-emerald-500/10 px-3 py-2">
-            <button onClick={() => { startTour(); window.location.assign("/"); }} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Live tour</button>
+            <button onClick={() => { startTour(); go("/"); }} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Live tour</button>
             <button onClick={() => act("explain this page and what I can do here")} className="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold text-emerald-100 hover:bg-emerald-500/30">Explain this page</button>
-            {QUICK.map((q) => (<a key={q.label} href={q.href} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</a>))}
+            {QUICK.map((q) => (<button key={q.label} onClick={() => go(q.href)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</button>))}
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
             {msgs.map((m, i) => (<div key={i} className={m.role === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[90%] whitespace-pre-wrap rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.text}</div>))}
