@@ -192,6 +192,8 @@ const Crosswalk = lazy(() => import("./pages/Crosswalk"));
 const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
 const AgentRegistry = lazy(() => import("./pages/AgentRegistry"));
 const GlobalAIRegulation = lazy(() => import("./pages/GlobalAIRegulation"));
+const Cra = lazy(() => import("./pages/Cra"));
+const Nis2 = lazy(() => import("./pages/Nis2"));
 const Article50 = lazy(() => import("./pages/Article50"));
 const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
@@ -683,6 +685,8 @@ function App() {
                   <Route path="/agent-governance" component={AgentGovernance} />
                   <Route path="/agent-registry" component={AgentRegistry} />
                   <Route path="/global-ai-regulation" component={GlobalAIRegulation} />
+                  <Route path="/cra" component={Cra} />
+                  <Route path="/nis2" component={Nis2} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />

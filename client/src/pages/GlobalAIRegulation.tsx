@@ -9,6 +9,8 @@ const ROWS: Row[] = [
   { region: "🇪🇺 European Union", law: "EU AI Act (Reg. 2024/1689)", status: "In force — GPAI live; Art. 50 + high-risk enforceable 2 Aug 2026", tone: "amber", href: "/ai-governance" },
   { region: "🇪🇺 EU — transparency", law: "Article 50 (transparency/marking)", status: "2 Aug 2026 (legacy marking 2 Dec 2026)", tone: "amber", href: "/article-50" },
   { region: "🇪🇺 EU — finance", law: "DORA (Reg. 2022/2554)", status: "Active enforcement 2026 — RoI audits, TLPT", tone: "amber", href: "/dora" },
+  { region: "🇪🇺 EU — cyber (networks)", law: "NIS2 (Dir. 2022/2555)", status: "Transposition deadline Oct 2026", tone: "amber", href: "/nis2" },
+  { region: "🇪🇺 EU — cyber (products)", law: "Cyber Resilience Act (2024/2847)", status: "Reporting 11 Sep 2026; main obligations 11 Dec 2027", tone: "amber", href: "/cra" },
   { region: "🇺🇸 United States", law: "Federal AI policy", status: "No omnibus law — executive-led, deregulatory; state-led rules", tone: "slate", href: "/us-ai-regulation" },
   { region: "🇺🇸 Colorado", law: "SB 189 (ADMT)", status: "SB 24-205 repealed May 2026 → ADMT law, eff. 1 Jan 2027", tone: "slate", href: "/colorado-ai-act" },
   { region: "🇺🇸 Texas", law: "TRAIGA (HB 149)", status: "In force 1 Jan 2026", tone: "emerald", href: "/texas-ai-act" },
