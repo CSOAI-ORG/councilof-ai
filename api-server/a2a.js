@@ -97,4 +97,7 @@ router.post("/api/a2a/route", express.json({ limit: "256kb" }), async (req, res)
   res.json({ status: "routed", envelope: env, forwarded });
 });
 
+// ---- named exports so other routers (e.g. assess.js) reuse the SAME signer + canonical
+//      rules instead of re-implementing crypto (anti-duplication: one signing spine). ----
+export { canon, signBytes, verifyBytes, KID, pubB64 };
 export default router;

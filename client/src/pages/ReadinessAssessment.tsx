@@ -244,6 +244,10 @@ export default function ReadinessAssessment() {
               recommendations and understand your compliance obligations.
             </p>
 
+            <a href="/assess" className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-base font-bold text-emerald-950 hover:bg-emerald-400 mb-8">
+              Or run the free signed AI risk check &rarr;
+            </a>
+
             <div className="grid grid-cols-3 gap-4 mb-12">
               <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 border border-white/20">
                 <div className="text-3xl font-bold text-blue-400 mb-2">5 min</div>

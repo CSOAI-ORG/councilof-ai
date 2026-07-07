@@ -48,7 +48,7 @@ export default function ConformityAssessment() {
         </div>
         <div className="mt-6 flex flex-wrap gap-3">
           <a href="/high-risk-ai-systems" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Am I high-risk? -&gt;</a>
-          <a href="/readiness" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Scan my readiness -&gt;</a>
+          <a href="/assess" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Run the free signed risk check -&gt;</a>
           <a href="/ai-act-faq" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">More FAQs -&gt;</a>
         </div>
       </section>

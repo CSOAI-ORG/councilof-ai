@@ -35,6 +35,7 @@ const JurisdictionAct = lazy(() => import("./pages/JurisdictionAct"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AISystems = lazy(() => import("./pages/AISystems"));
 const RiskAssessment = lazy(() => import("./pages/RiskAssessment"));
+const AssessTool = lazy(() => import("./pages/AssessTool"));
 const Compliance = lazy(() => import("./pages/Compliance"));
 const AgentCouncil = lazy(() => import("./pages/AgentCouncil"));
 const Watchdog = lazy(() => import("./pages/Watchdog"));
@@ -577,6 +578,7 @@ function App() {
                   <Route path="/dashboard" component={Dashboard} />
                   <Route path="/ai-systems" component={AISystems} />
                   <Route path="/risk-assessment" component={RiskAssessment} />
+                  <Route path="/assess" component={AssessTool} />
                   <Route path="/compliance" component={Compliance} />
                   <Route path="/agent-council" component={AgentCouncil} />
                   <Route path="/watchdog" component={Watchdog} />

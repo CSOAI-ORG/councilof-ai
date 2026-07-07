@@ -332,9 +332,10 @@ export default function NewHomeV2() {
           </motion.p>
 
                     <div className="mb-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link href="/start"><Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">Start free - build your own AI</Button></Link>
-            <Link href="/sov-space"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-50 bg-transparent hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">Try Sov Space</Button></Link>
-            <Link href="/demo"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-50 bg-transparent hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">▶ Watch the live demo</Button></Link>
+            <Link href="/assess"><Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">Free AI Risk Check - signed in 2 min</Button></Link>
+            <Link href="/start"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">Start free - build your own AI</Button></Link>
+            <Link href="/sov-space"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">Try Sov Space</Button></Link>
+            <Link href="/demo"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-100 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">▶ Watch the live demo</Button></Link>
           </div>
 
           {/* Explore live — the AI economy + the ecosystem, one click */}
@@ -554,7 +555,7 @@ export default function NewHomeV2() {
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Enter the OS</p>
           <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">Five doors into the Sovereign OS</h2>
           <p className="mt-3 max-w-2xl text-emerald-50/85">Build your identity, connect your world, see governance on the globe, choose your consensus, and browse every regulation - all live.</p>
-          <a data-tag="home-deadline-cta" href="/eu-ai-act-checklist" className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-5 py-3 text-sm font-bold text-amber-100 hover:bg-amber-400/20"><span className="rounded-md bg-amber-400 px-2 py-0.5 text-[10px] font-black text-slate-900">2 AUG 2026</span>EU AI Act transparency + GPAI go live - check your readiness -&gt;</a>
+          <a data-tag="home-deadline-cta" href="/assess" className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-5 py-3 text-sm font-bold text-amber-100 hover:bg-amber-400/20"><span className="rounded-md bg-amber-400 px-2 py-0.5 text-[10px] font-black text-slate-900">2 AUG 2026</span>EU AI Act transparency + GPAI go live - run your free signed risk check -&gt;</a>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             <a href="/sovereign" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Sovereign</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
             <a href="/connect" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Connect socials</div><p className="mt-1 text-xs text-white/90">Give your AI character a face.</p></a>

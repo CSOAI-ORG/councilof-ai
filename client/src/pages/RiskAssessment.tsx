@@ -51,6 +51,11 @@ export default function RiskAssessment() {
           </p>
         </div>
 
+        <a href="/assess" className="block rounded-xl border border-emerald-300 bg-emerald-50 px-5 py-4 hover:bg-emerald-100 transition">
+          <div className="text-sm font-bold text-emerald-800">Want a signed result in 2 minutes instead?</div>
+          <div className="text-xs text-emerald-700">Run the free EU AI Act risk check and get a cryptographically signed, independently verifiable verdict &rarr;</div>
+        </a>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {assessmentTypes.map((type, idx) => {
             const Icon = type.icon;

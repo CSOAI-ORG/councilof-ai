@@ -16,6 +16,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import crypto from "node:crypto";
 import a2a from "./a2a.js"; // Layer 0 + A2A gateway (/api/gate, /api/a2a/*)
+import assess from "./assess.js"; // EU AI Act signed assessment (/api/assess)
 
 const PORT = process.env.PORT || 8080;
 const APP_ORIGIN = process.env.APP_ORIGIN || "https://councilof.ai";
@@ -43,6 +44,7 @@ app.use(rateLimit({ windowMs: 60_000, max: 120, standardHeaders: true, legacyHea
 
 // Layer 0 + A2A gateway routes (Ed25519 envelopes, Sovereign Gate decisions, verify/route)
 app.use(a2a);
+app.use(assess);
 
 // ---- in-memory stores (TODO: persist) ----
 const tokens = new Map();      // connectionId -> { provider, token, createdAt }
