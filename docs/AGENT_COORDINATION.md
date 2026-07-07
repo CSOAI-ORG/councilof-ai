@@ -199,3 +199,15 @@ Running total after this fix: still 23/32 sampled accounts cited, now 15 mature 
   entirely `modeled` — same per-account recon pattern applies (own-domain, SEC filing, or a
   named-exec interview required; leave `unknown` rather than force-fit AI-use-case coverage into
   a governance claim).
+
+### ⚠️ Standing caution — "re-verified" language and redacted transcripts (`733723c`)
+An auditor caught this twice on the same 4 accounts (RTX/Verizon/Boeing/Northrop): claiming a
+citation is "confirmed" or "exact match" after a fresh search is not itself sufficient — if the
+search-result plaintext is marked redacted/elided in the persisted transcript, **no future
+reader can independently verify it, regardless of what the agent saw in that turn.** Re-running
+the same search and getting the same redaction doesn't add evidence. **Corrected language for
+future recon:** state that the URL is real/on-topic (which IS checkable — it's in the visible
+result list) without claiming the specific quoted text is "confirmed." If exact-quote
+verification matters, the quote needs to come from a source whose content is NOT redacted in the
+transcript (e.g. `fetch_article_fulltext`, or content read via `read_file`/`bash curl`, which
+persist in full).
