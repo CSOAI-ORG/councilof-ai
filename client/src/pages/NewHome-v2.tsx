@@ -357,7 +357,7 @@ export default function NewHomeV2() {
               <Link href="/training">
                 <Button
                   size="lg"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-6 text-base font-semibold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 transition-all group"
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-6 text-base font-semibold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 transition-all group"
                 >
                   <GraduationCap className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                   I Want to Become an Analyst
@@ -532,7 +532,7 @@ export default function NewHomeV2() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/training">
-                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                   <Shield className="mr-2 h-5 w-5" />
                   Become an AI Safety Analyst
                 </Button>
@@ -563,7 +563,7 @@ export default function NewHomeV2() {
             <a href="/registry" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Registry</div><p className="mt-1 text-xs text-white/90">Every regulation, standard, protocol.</p></a>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="/try" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Ask the Council -&gt;</a>
+            <a href="/try" className="rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Ask the Council -&gt;</a>
             <a href="/meok-law" className="rounded-xl border border-emerald-300/50 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Your jurisdiction stack -&gt;</a>
           </div>
         </div>
@@ -889,7 +889,7 @@ export default function NewHomeV2() {
             <motion.div variants={fadeInUp}>
               <Card className="h-full border-2 border-emerald-300 bg-emerald-50/50 hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-emerald-600 text-white">Most Popular</Badge>
+                  <Badge className="bg-emerald-700 text-white">Most Popular</Badge>
                 </div>
                 <CardHeader>
                   <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -911,7 +911,7 @@ export default function NewHomeV2() {
                     </div>
                   ))}
                   <Link href="/training">
-                    <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <Button className="w-full mt-4 bg-emerald-700 hover:bg-emerald-800 text-white">
                       Start Free Training
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -980,7 +980,7 @@ export default function NewHomeV2() {
                         </Button>
                       </Link>
                       <Link href="/training">
-                        <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                        <Button size="sm" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                           Start Training
                         </Button>
                       </Link>
@@ -1165,7 +1165,7 @@ export default function NewHomeV2() {
               </div>
 
               <Link href="/agent-council">
-                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                   Explore the Council
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -1328,7 +1328,7 @@ export default function NewHomeV2() {
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/training">
-                  <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                     <GraduationCap className="mr-2 h-5 w-5" />
                     Start Free Training
                   </Button>
@@ -1372,7 +1372,7 @@ export default function NewHomeV2() {
                     },
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-4">
-                      <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
+                      <div className="w-10 h-10 bg-emerald-700 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
                         {item.step}
                       </div>
                       <div>
@@ -1471,7 +1471,7 @@ export default function NewHomeV2() {
               </div>
 
               <Link href="/enterprise">
-                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                   Register Your AI System
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -1569,7 +1569,7 @@ export default function NewHomeV2() {
                 Limited to 100 founding members worldwide.
               </p>
               <Link href="/founding-council-agreement">
-                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button className="bg-emerald-700 hover:bg-emerald-800 text-white">
                   Apply for Founding Membership
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -1752,7 +1752,7 @@ export default function NewHomeV2() {
               </Button>
             </Link>
             <Link href="/compare">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                 Why Choose CSOAI <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
