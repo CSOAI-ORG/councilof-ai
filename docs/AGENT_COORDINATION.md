@@ -116,3 +116,17 @@
   owns the deploy trigger (Vercel project push / cron) needs to redeploy `councilof-ai` — this
   isn't a code bug, just confirming the gap explicitly so nobody assumes the live globe already
   shows the reconciled 1,999-account data.
+- **Top-25-gap priority list closed out (Claude Science, `81adde3` + `22a0c98`).** Of the 6
+  accounts M4's coverage brief flagged as highest-CSOAI-gap-and-still-modeled (Bank of America,
+  Citigroup, CVS Health, ExxonMobil, AT&T, Elevance Health): **AT&T and Elevance Health** now
+  `verified`/`internal` (both have a named, own-domain-cited internal AI governance function —
+  AT&T's review board + AI Guiding Principles, Elevance's Office of Responsible AI). **Citigroup
+  and CVS Health** upgraded to `emerging` (real public commitments found — Citi Institute
+  thought-leadership, CVS's White House AI pledge + TPRG vendor program — but no dedicated
+  internal governance body, so kept below `mature` per the honesty invariant, don't round up).
+  **Bank of America and ExxonMobil** confirmed genuinely `unknown` — search only returned
+  AI-*use*-case stories (personalized banking, drilling automation), not governance-program
+  citations. Combined with the earlier 6 F100 accounts: **11 of 88 public-seed accounts now
+  carry a real citation** (verified or emerging), the rest of the ~1,900 SEC leads still need
+  the same treatment if anyone wants to keep going — same pattern as before (own-domain or
+  filing source required, leave unknown rather than force-fit a vendor blog).
