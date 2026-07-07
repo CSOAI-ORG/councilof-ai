@@ -9,9 +9,16 @@ const TABS = ["all", "regulator", "fortune500", "sector"] as const;
 
 export default function Intel() {
   const [tab, setTab] = useState<string>("all");
+  const [region, setRegion] = useState<string>("all");
+  const [sector, setSector] = useState<string>("all");
   const [sel, setSel] = useState<Account | null>(null);
   useEffect(() => { document.title = "Distribution Hive — account intelligence | CSOAI"; }, []);
-  const rows = ECOSYSTEM.filter((a) => tab === "all" || a.type === tab || (tab === "fortune500" && a.type === "fortune100"));
+  const REGIONS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.region)))];
+  const SECTORS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.sector).filter(Boolean) as string[]))];
+  const rows = ECOSYSTEM.filter((a) =>
+    (tab === "all" || a.type === tab || (tab === "fortune500" && a.type === "fortune100")) &&
+    (region === "all" || a.region === region) &&
+    (sector === "all" || a.sector === sector));
   const scored = rows.map((a) => ({ a, s: scoreAccount(a) }));
   const nonAuth = scored.filter((x) => x.s.confidence !== "authority");
   const avgGap = nonAuth.length ? (nonAuth.reduce((t, x) => t + x.s.totalGap, 0) / nonAuth.length).toFixed(1) : "0";
@@ -31,6 +38,17 @@ export default function Intel() {
             <button key={t} onClick={() => setTab(t)} className={"rounded-full border px-3 py-1.5 text-xs font-semibold capitalize " + (tab === t ? "border-emerald-400 bg-emerald-500 text-[#03110b]" : "border-emerald-400/25 bg-emerald-500/5 text-emerald-200/80 hover:bg-emerald-500/15")}>{t}</button>
           ))}
           <span className="ml-auto rounded-full bg-emerald-500/15 px-3 py-1.5 text-xs font-bold text-emerald-300">{rows.length} accounts · seed</span>
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center gap-1.5 text-[11px]">
+          <span className="font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/40">region</span>
+          {REGIONS.map((r) => (
+            <button key={r} onClick={() => setRegion(r)} className={"rounded-full border px-2.5 py-1 font-semibold " + (region === r ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-emerald-400/20 text-emerald-300/70 hover:bg-emerald-500/10")}>{r}</button>
+          ))}
+          <span className="ml-2 font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/40">sector</span>
+          {SECTORS.map((s) => (
+            <button key={s} onClick={() => setSector(s)} className={"rounded-full border px-2.5 py-1 font-semibold capitalize " + (sector === s ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-emerald-400/20 text-emerald-300/70 hover:bg-emerald-500/10")}>{s}</button>
+          ))}
         </div>
 
         <div className="mt-4">
