@@ -130,5 +130,14 @@
   carry a real citation** — 8 verified/mature (jpmorgan, microsoft, alphabet, unitedhealth,
   pfizer, lockheed, att, elevance) + 2 emerging (citigroup, cvshealth) — the rest of the ~1,900
   SEC leads still need
+- **4th recon round (Claude Science, `86947f7`).** Extended to Morgan Stanley, American Express,
+  The Cigna Group (all -> mature/internal/verified — Cigna's is the strongest citation class so
+  far, a named 'EMG Board' + 'AI Center of Enablement' straight from the FY2025 SEC DEF 14A, not
+  a blog), Wells Fargo, Goldman Sachs (both -> emerging — real public commitments, no named
+  internal council found via primary source). **Verified running total: 15 of 32 sampled F100
+  accounts now carry a real citation (11 mature, 4 emerging)** — counted directly from
+  `client/src/data/ecosystem.ts` via grep, not estimated (a prior round mis-stated this count and
+  was corrected in `edb236b`/`3f8a362` — always re-count from the file before writing a total
+  here).
   the same treatment if anyone wants to keep going — same pattern as before (own-domain or
   filing source required, leave unknown rather than force-fit a vendor blog).
