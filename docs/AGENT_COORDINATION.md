@@ -234,3 +234,22 @@ window, immediately after) added the hedge clause to Sony and DBS. `git log` rea
 `c7eb4bb`'s self-description as inaccurate for its own diff — check `2411d2e` for the corrected
 state, not the original claim. No further action needed; noting this so the discrepancy between
 a commit's stated intent and its actual diff doesn't get mistaken for an unresolved gap.
+
+### E2E spot-check results (2026-07-07, this window — all freshly live-tested, not read from docs)
+- **www.csoai.org routes** (9 checked): `/`, `/assess`, `/pricing`, `/login`, `/intel`,
+  `/tool-commons`, `/globe`, `/crosswalk`, `/compare` — all HTTP 200.
+- **API layer is on os.meok.ai, not www.csoai.org** (confirmed by direct curl — csoai.org's
+  `/api/*` paths return the SPA HTML shell, not JSON; this is the correct/expected architecture
+  per the distribution-unified doc, not a bug).
+- **os.meok.ai/api/tools**: `total: 378`, `csoai-governance-mcp` present — confirmed live.
+- **Sign/verify/tamper round trip** (genuinely re-run this window, not read from a report):
+  `POST /api/sign` with `{"payload":{"test":"e2e-batch-2026-07-07"}}` → real Ed25519 signature
+  (128 hex chars); `POST /api/verify` with the correct signature → `{"valid":true,...}`; same
+  request with one hex char flipped in the signature → `{"valid":false,"message":"signature does
+  NOT match — reject"}`. Note: the verify endpoint's expected field is `canonical` (from the sign
+  response), not `payload` — a first attempt with the wrong field name got a 400, corrected and
+  re-tested before reporting.
+- **npm package** `csoai-governance-mcp`: still live at `0.1.0` (registry check).
+- Not yet independently re-tested this window: `/orchestrate` (flagged thin in the prior E2E
+  report), full visual/browser rendering (needs Playwright, unavailable — no `node_modules` in
+  this checkout).
