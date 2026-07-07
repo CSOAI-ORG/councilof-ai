@@ -221,22 +221,32 @@ const reportPath = resolve(outDir, "hive-recon-report.json");
 
 // REGRESSION GUARD: docs/hive-recon-report.json tracks the outreach-gate coverage number
 // (Nick's rule: "no outreach until the harness covers the full ~2000-lead TAM"). A run against
-// the default ecosystem.ts-only set (27 accounts) must never silently clobber a prior run that
-// covered more accounts -- that happened once (2026-07-07, fixed) when a globe-overlay commit
-// ran the default path and dropped 1,940 -> 27. Refuse unless FORCE=1 or accounts didn't shrink.
+// the default ecosystem.ts-only set (27/39 accounts) must never silently clobber a prior run
+// that covered more accounts -- that happened twice (2026-07-07, fixed) when commits that only
+// meant to touch ecosystem.ts / the public overlay ran the default path and dropped the internal
+// coverage number. Refuse to overwrite the INTERNAL report unless FORCE=1 or accounts didn't
+// shrink -- but this must NOT block the public overlay refresh below, which is an independent,
+// always-safe, public-only artifact (a default-path run is often exactly how ecosystem.ts edits
+// are meant to reach the public overlay). Learned the hard way: the first version of this guard
+// called process.exit(1) here, which also skipped the public-overlay write further down --
+// silently leaving public/hive-coverage.json stale after legitimate ecosystem.ts edits.
+let skipInternalReportWrite = false;
 try {
   const prev = JSON.parse(readFileSync(reportPath, "utf8"));
   const prevN = prev?.summary?.accounts ?? 0;
   if (summary.accounts < prevN && !process.env.FORCE) {
-    console.error(`\n❌ REFUSING TO WRITE ${reportPath}: this run scored ${summary.accounts} accounts,`);
-    console.error(`   but it already covers ${prevN}. This would regress the outreach-gate coverage number.`);
-    console.error(`   If this is intentional, re-run with FORCE=1. Otherwise pass the full export:`);
-    console.error(`   HIVE_ACCOUNTS=docs/handoff/hive_full_export_1940.json npm run hive:recon\n`);
-    process.exit(1);
+    console.error(`\n⚠️  SKIPPING internal report write (${reportPath}): this run scored`);
+    console.error(`   ${summary.accounts} accounts, but it already covers ${prevN}. Continuing to`);
+    console.error(`   refresh the PUBLIC overlay only (safe, always-current). To also update the`);
+    console.error(`   internal outreach-gate number, re-run with the full export:`);
+    console.error(`   HIVE_ACCOUNTS=docs/handoff/hive_full_export_1952.json npm run hive:recon\n`);
+    skipInternalReportWrite = true;
   }
 } catch { /* no prior report — first run, nothing to guard */ }
 
-writeFileSync(reportPath, JSON.stringify({ summary, reports }, null, 2));
+if (!skipInternalReportWrite) {
+  writeFileSync(reportPath, JSON.stringify({ summary, reports }, null, 2));
+}
 
 // Public coverage overlay for the globe (Hive §5) — PUBLIC seed ONLY. When the internal
 // lead export is scored (HIVE_ACCOUNTS set), we do NOT write to public/ (boundary guard).
@@ -261,7 +271,9 @@ console.log(`\nSample (first 3 non-authority):`);
 for (const r of reports.filter((x) => x.play !== "align").slice(0, 3)) {
   console.log(`  · ${r.name} → play=${r.play} (${r.confidence}), gap=${r.totalGap}/${r.maxGap}, lead-with: ${r.topUsps.join(", ") || "n/a"}`);
 }
-console.log(`\nReport written: docs/hive-recon-report.json`);
+console.log(skipInternalReportWrite
+  ? `\ndocs/hive-recon-report.json: NOT written (would regress coverage — see warning above)`
+  : `\nReport written: docs/hive-recon-report.json`);
 
 if (fails.length) {
   console.log(`\n❌ ${fails.length} GATE FAILURE(S):`);
