@@ -224,6 +224,29 @@ function ScrollToTop() {
   return null;
 }
 
+// Global SEO title fixer — gives proper titles to pages that don't set their own,
+// so no route falls back to the generic default. Pages that set their own title
+// aren't listed here and are left untouched.
+const ROUTE_TITLES: Record<string, string> = {
+  "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
+  "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
+  "/trust-center": "Trust Center — security, compliance & Layer 0 | CSOAI",
+  "/certification": "CEASAI certification — the ISO 42001 fast-path | CSOAI",
+  "/courses": "AI governance courses & training | CSOAI",
+  "/api-docs": "API & MCP documentation | CSOAI",
+  "/academy": "Sovereign Academy — AI governance training | CSOAI",
+  "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
+  "/models": "AI model registry & scoreboard | CSOAI",
+};
+function RouteTitle() {
+  const [location] = useLocation();
+  useEffect(() => {
+    const t = ROUTE_TITLES[location];
+    if (t) document.title = t;
+  }, [location]);
+  return null;
+}
+
 /**
  * Announce route changes to screen readers
  */
@@ -341,6 +364,7 @@ function App() {
                 {/* Skip Navigation - must be first focusable element */}
                 <SkipNavigation />
                 <ScrollToTop />
+                <RouteTitle />
                 <RouteAnnouncer />
                 <Header />
                 <main
