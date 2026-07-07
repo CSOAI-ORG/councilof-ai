@@ -62,6 +62,7 @@ const navigation = [
       { name: 'Agent governance', href: '/agent-governance', description: 'Govern AI agents — the agentic era' },
       { name: 'Article 50 countdown', href: '/article-50', description: 'The 2 Aug / 2 Dec transparency cliff' },
       { name: 'Cyber: DORA · NIS2 · CRA', href: '/cra', description: 'The EU cybersecurity stack, crosswalked' },
+      { name: 'Free AI assessment', href: '/assess', description: 'Signed readiness assessment — see your gaps in minutes' },
       { name: 'Rediscovered, Not Invented', href: '/lineage', description: 'The 4,000-year governance architecture' },
       { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
       { name: 'Open the full launcher', href: '/os', description: 'Every app on one grid' },
