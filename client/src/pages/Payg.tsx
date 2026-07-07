@@ -43,7 +43,7 @@ export default function Payg() {
             <div className="text-4xl font-extrabold">{t.price}</div>
             <div className="text-sm text-muted-foreground mt-1 mb-4">{t.calls} @ £0.05 each</div>
             <Button asChild className="w-full">
-              <a href="/billing">Top up {t.price} →</a>
+              <a href="/pricing">Top up {t.price} →</a>
             </Button>
           </Card>
         ))}

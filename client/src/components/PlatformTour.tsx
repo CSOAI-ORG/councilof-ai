@@ -70,7 +70,7 @@ export function startTour() {
         },
       },
       {
-        element: '[href="/get-started"]',
+        element: '[href="/start"]',
         popover: {
           title: "Ready to Start?",
           description: "Click 'Get Started' to begin your journey as an AI Safety Analyst. Join the movement protecting humanity from AI risks while building a rewarding career.",

@@ -918,13 +918,13 @@ export default function ComparisonPage() {
               Average migration time: <span className="font-semibold text-foreground">2-4 weeks</span>
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="/migration-guide">
+              <Link href="/compare">
                 <Button variant="outline">
                   <Briefcase className="h-4 w-4 mr-2" />
                   View Migration Guide
                 </Button>
               </Link>
-              <Link href="/contact">
+              <Link href="/start">
                 <Button>
                   <ArrowRight className="h-4 w-4 mr-2" />
                   Talk to Migration Team
@@ -1022,7 +1022,7 @@ export default function ComparisonPage() {
                   Schedule a Demo
                 </Button>
               </Link>
-              <Link href="/contact">
+              <Link href="/start">
                 <Button variant="ghost" size="lg" className="px-8">
                   Contact Sales
                 </Button>

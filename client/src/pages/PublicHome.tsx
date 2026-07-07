@@ -46,7 +46,7 @@ export default function PublicHome() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link href="/home">
+            <Link href="/">
               <Button variant="ghost" size="sm">Sign In</Button>
             </Link>
             <Link href="/watchdog-signup">
@@ -77,7 +77,7 @@ export default function PublicHome() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-              <Link href="/home">
+              <Link href="/">
                 <Button size="lg" className="gap-2">
                   Start Compliance Check
                   <ArrowRight className="w-4 h-4" />
@@ -485,7 +485,7 @@ export default function PublicHome() {
                 Achieve compliance before the August 2026 EU AI Act deadline. 
                 Avoid €35M fines with proactive governance.
               </p>
-              <Link href="/home">
+              <Link href="/">
                 <Button variant="outline" size="sm">Start Assessment</Button>
               </Link>
             </div>

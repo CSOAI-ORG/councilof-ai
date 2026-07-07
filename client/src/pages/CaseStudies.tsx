@@ -801,7 +801,7 @@ export default function CaseStudies() {
               className="border-emerald-400 text-emerald-300 hover:bg-emerald-900/20 text-lg px-8 py-6 font-semibold transition-all duration-200"
               asChild
             >
-              <Link href="/contact">
+              <Link href="/start">
                 Contact Sales
               </Link>
             </Button>

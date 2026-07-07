@@ -141,7 +141,7 @@ curl -X POST https://api.coai.org/v1/council/submit \\
           </Link>
           
           <div className="flex items-center gap-3">
-            <Link href="/home">
+            <Link href="/">
               <Button variant="ghost" size="sm">Dashboard</Button>
             </Link>
             <Link href="/settings">

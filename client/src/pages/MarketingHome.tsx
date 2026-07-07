@@ -656,7 +656,7 @@ export default function MarketingHome() {
                   </a>
                 </li>
                 <li>
-                  <a href="/contact" className="hover:text-foreground transition-colors">
+                  <a href="/start" className="hover:text-foreground transition-colors">
                     Contact
                   </a>
                 </li>
