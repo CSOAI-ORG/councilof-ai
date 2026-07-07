@@ -38,7 +38,7 @@ export default function PlansPage() {
               {t.tag && <span className={"self-start rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide " + (t.accent === "amber" ? "bg-amber-400/15 text-amber-200" : "bg-emerald-500/15 text-emerald-300")}>{t.tag}</span>}
               <div className="mt-2 text-lg font-bold">{t.name}</div>
               <div className="mt-1 text-3xl font-black text-emerald-100">{t.price}</div>
-              <div className="text-xs text-emerald-300/60">{t.sub}</div>
+              <div className="text-xs text-emerald-300/75">{t.sub}</div>
               <ul className="mt-4 flex-1 space-y-2 text-sm text-emerald-100/80">
                 {t.feats.map((f) => (<li key={f} className="flex gap-2"><span className="text-emerald-400">+</span>{f}</li>))}
               </ul>
@@ -58,7 +58,7 @@ export default function PlansPage() {
             {meters.map((m) => (<div key={m[0]} className="flex items-center justify-between rounded-lg border border-emerald-500/10 bg-[#05140d] px-3 py-2 text-sm"><span className="text-emerald-200/80">{m[0]}</span><span className="font-mono text-emerald-300">{m[1]}</span></div>))}
           </div>
         </div>
-        <p className="mt-6 text-center text-xs text-emerald-300/50">You own your data - export or delete anytime. EU AI Act Article 50 transparent. CSOAI Ltd, UK. MIT-licensed core.</p>
+        <p className="mt-6 text-center text-xs text-emerald-300/75">You own your data - export or delete anytime. EU AI Act Article 50 transparent. CSOAI Ltd, UK. MIT-licensed core.</p>
       </section>
     </div>
   );

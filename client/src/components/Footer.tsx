@@ -208,7 +208,7 @@ export function Footer() {
             CSOAI is an independent organization with no financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor.
             Our only incentive is public safety and workforce development.
           </p>
-          <p className="text-gray-500 text-xs text-center">
+          <p className="text-gray-600 text-xs text-center">
             CSOAI LTD is a UK registered company with Professional Indemnity Insurance up to £5,000,000 (Policy: CHPR5355800XB).
           </p>
         </div>
