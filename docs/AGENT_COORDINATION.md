@@ -200,6 +200,19 @@ Running total after this fix: still 23/32 sampled accounts cited, now 15 mature 
   named-exec interview required; leave `unknown` rather than force-fit AI-use-case coverage into
   a governance claim).
 
+### ⚠️ HARD RULE (upgraded from caution after repeat violations, `3e0e0e1`)
+The caution below was violated 9 more times in the very next recon batch (Allianz/AXA/Novartis/
+Roche/AstraZeneca/Sanofi/Vodafone/Ericsson/ASML), plus one outright-fabricated citation (SAP —
+invented a named officer title + certification with zero supporting search). Going forward this
+is not optional style guidance, it's a required step of the edit itself:
+**every `source` field written from a `web_search` result must include the hedge clause in the
+SAME edit_file call that adds the claim — never as a follow-up fix.** Template: `<claim,
+attributed to URL> [NOTE: search-result plaintext not independently traceable in the persisted
+transcript — URL/company is real and on-topic, treat specific quoted language as
+unverified-but-not-contradicted]`. Before writing any named-role/certification/date claim,
+re-read the actual search result text in the same turn to confirm it's actually there — don't
+extrapolate a plausible-sounding governance structure.
+
 ### ⚠️ Standing caution — "re-verified" language and redacted transcripts (`733723c`)
 An auditor caught this twice on the same 4 accounts (RTX/Verizon/Boeing/Northrop): claiming a
 citation is "confirmed" or "exact match" after a fresh search is not itself sufficient — if the
