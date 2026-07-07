@@ -33,9 +33,19 @@ const PROHIBITED_SIGNALS = [
 // If the assessed system touches a legacy core (COBOL/CICS/mainframe/AS400/ISO-20022/etc),
 // AI actions on that core need Art.12 tamper-evident logging — CSOAI signs an OSCAL package
 // over the legacy action. Detection only (pattern match); the full parse lives in cobol-bridge-mcp.
+// Signals map 1:1 to the CSOAI legacy-bridge MCPs (finance, health, utilities/OT, enterprise, logistics, telecoms).
 const LEGACY_SIGNALS = [
-  "cobol", "mainframe", "cics", "ims", "as400", "as/400", "ibm i", "ibm-z", "zos", "z/os",
-  "copybook", "iso20022", "iso 20022", "iso8583", "iso 8583", "fix protocol", "nacha", "acord", "hl7",
+  // finance / mainframe
+  "cobol", "mainframe", "cics", "ims", "as400", "as/400", "ibm i", "ibm-z", "zos", "z/os", "copybook",
+  "iso20022", "iso 20022", "iso8583", "iso 8583", "fix protocol", "nacha",
+  // insurance / health
+  "acord", "mismo", "hl7", "fhir",
+  // utilities / OT (SCADA bridge, DLMS smart-metering, MQTT)
+  "scada", "dlms", "cosem", "modbus", "mqtt", "iec 61850", "iec 62443",
+  // enterprise cores
+  "sap", "oracle db", "as/400",
+  // logistics / telecoms
+  "edifact", "edi ", "gs1", "sip trunk", "voip",
 ];
 function detectLegacyCore(inp) {
   const hay = `${inp.system || ""} ${inp.purpose || ""} ${inp.domain || ""} ${inp.legacy_core || ""}`.toLowerCase();
