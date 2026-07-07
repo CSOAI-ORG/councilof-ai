@@ -65,7 +65,7 @@ export default function Article50() {
             ))}
           </div>
         </div>
-        <p className="mt-6 text-[11px] text-emerald-300/45">Dates verified July 2026 (AI Omnibus provisional agreement, May 2026). Indicative guidance, not legal advice — verify against primary EU sources.</p>
+        <p className="mt-6 text-[11px] text-emerald-300/70">Dates verified July 2026 (AI Omnibus provisional agreement, May 2026). Indicative guidance, not legal advice — verify against primary EU sources.</p>
       </div>
     </div>
   );

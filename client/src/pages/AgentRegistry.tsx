@@ -39,7 +39,7 @@ export default function AgentRegistry() {
                 <div className="font-black text-emerald-100">{a.name}</div>
                 <span className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (a.status === "signed" ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/15 text-amber-300")}>{a.status === "signed" ? "✔ Ed25519 signed" : "in review"}</span>
               </div>
-              <div className="mt-0.5 font-mono text-[11px] text-emerald-300/50">{a.domain}</div>
+              <div className="mt-0.5 font-mono text-[11px] text-emerald-300/72">{a.domain}</div>
               <p className="mt-2 text-xs text-emerald-100/70">{a.purpose}</p>
               <div className="mt-2 flex flex-wrap gap-1">{a.tools.split(" · ").map((t) => <span key={t} className="rounded bg-black/40 px-2 py-0.5 font-mono text-[10px] text-emerald-300/70">{t}</span>)}</div>
             </div>
@@ -55,7 +55,7 @@ export default function AgentRegistry() {
             <a href="/try" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Council review a decision →</a>
           </div>
         </div>
-        <p className="mt-6 text-[11px] text-emerald-300/45">Shown agents are part of the CSOAI Sovereign network. Enterprise/government agent registration mints cards under your own namespace.</p>
+        <p className="mt-6 text-[11px] text-emerald-300/70">Shown agents are part of the CSOAI Sovereign network. Enterprise/government agent registration mints cards under your own namespace.</p>
       </div>
     </div>
   );

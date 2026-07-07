@@ -34,7 +34,7 @@ export default function AgentGovernance() {
           {RISKS.map((r) => (
             <div key={r.t} className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
               <div className="text-sm font-black text-emerald-100">{r.t}</div>
-              <p className="mt-1 text-xs text-emerald-100/60">{r.d}</p>
+              <p className="mt-1 text-xs text-emerald-100/72">{r.d}</p>
               <div className="mt-3 border-t border-emerald-500/15 pt-2 text-[12px] text-emerald-300/90">▸ {r.ctrl}</div>
             </div>
           ))}

@@ -80,7 +80,7 @@ export default function EuActClassifier() {
             </div>
           </div>
         )}
-        <p className="mt-6 text-[11px] text-emerald-300/45">Indicative classification to guide you — not legal advice. For a signed, council-reviewed determination, run it through the Workbench.</p>
+        <p className="mt-6 text-[11px] text-emerald-300/70">Indicative classification to guide you — not legal advice. For a signed, council-reviewed determination, run it through the Workbench.</p>
       </div>
     </div>
   );

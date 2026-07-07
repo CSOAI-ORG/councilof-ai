@@ -55,7 +55,7 @@ export default function Nis2() {
             ))}
           </div>
         </div>
-        <p className="mt-6 text-[11px] text-emerald-300/45">Status verified July 2026; national transposition varies. Indicative guidance, not legal advice — verify against your member state's implementation.</p>
+        <p className="mt-6 text-[11px] text-emerald-300/70">Status verified July 2026; national transposition varies. Indicative guidance, not legal advice — verify against your member state's implementation.</p>
       </div>
     </div>
   );

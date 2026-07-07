@@ -78,7 +78,7 @@ export default function IncidentReport() {
             <button onClick={submit} disabled={busy || !what.trim()} className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400 disabled:opacity-40">
               {busy ? "Sealing to Layer 0…" : "Submit + seal report ▶"}
             </button>
-            <p className="text-[11px] text-emerald-300/45">Your report is content-sealed with Ed25519 when the Sovereign brain is reachable; the receipt below is your proof it existed, unaltered, at this time.</p>
+            <p className="text-[11px] text-emerald-300/70">Your report is content-sealed with Ed25519 when the Sovereign brain is reachable; the receipt below is your proof it existed, unaltered, at this time.</p>
           </div>
         ) : (
           <div className="mt-7 rounded-2xl border border-emerald-400/40 bg-emerald-500/[0.06] p-6">

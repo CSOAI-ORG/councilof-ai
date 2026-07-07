@@ -46,7 +46,7 @@ export default function GlobalAIRegulation() {
           {ROWS.map((r) => (
             <a key={r.region + r.law} href={r.href} className="flex flex-col gap-1 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4 transition hover:border-emerald-400/40 hover:bg-[#06180f] sm:flex-row sm:items-center sm:gap-4">
               <div className="w-full font-black text-emerald-100 sm:w-56 sm:shrink-0">{r.region}</div>
-              <div className="flex-1"><div className="text-sm font-semibold text-emerald-100/90">{r.law}</div><div className="text-xs text-emerald-100/55">{r.status}</div></div>
+              <div className="flex-1"><div className="text-sm font-semibold text-emerald-100/90">{r.law}</div><div className="text-xs text-emerald-100/70">{r.status}</div></div>
               <span className={"shrink-0 rounded-full border px-3 py-1 text-[11px] font-bold " + TONE[r.tone]}>open →</span>
             </a>
           ))}
@@ -69,7 +69,7 @@ export default function GlobalAIRegulation() {
             ))}
           </div>
         </div>
-        <p className="mt-6 text-[11px] text-emerald-300/45">Status verified mid-2026. Fast-moving area — indicative, not legal advice; verify against primary sources.</p>
+        <p className="mt-6 text-[11px] text-emerald-300/70">Status verified mid-2026. Fast-moving area — indicative, not legal advice; verify against primary sources.</p>
       </div>
     </div>
   );

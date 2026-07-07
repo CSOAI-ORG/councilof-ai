@@ -70,7 +70,7 @@ export default function Crosswalk() {
             </tbody>
           </table>
         </div>
-        <p className="mt-2 text-[11px] text-emerald-300/45">References are indicative and for orientation — not legal advice. The signed, verifiable article-level mapping runs as a governed tool in the OS. Verify against primary sources.</p>
+        <p className="mt-2 text-[11px] text-emerald-300/70">References are indicative and for orientation — not legal advice. The signed, verifiable article-level mapping runs as a governed tool in the OS. Verify against primary sources.</p>
 
         <div className="mt-6 flex flex-wrap gap-3">
           <a href="/classifier" className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Classify your AI system →</a>
