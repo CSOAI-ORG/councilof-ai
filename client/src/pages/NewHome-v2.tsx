@@ -269,7 +269,7 @@ export default function NewHomeV2() {
           >
             <Sparkles className="h-4 w-4 text-emerald-400" />
             <span className="text-emerald-300 text-sm font-medium">
-              Now Live | Join 10,000+ Members Building AI Safety
+              Now Live — open, governed AI-safety infrastructure
             </span>
           </motion.div>
 
@@ -331,6 +331,19 @@ export default function NewHomeV2() {
             The world's first relationship-based AI safety infrastructure.
             Partnership, not control. Prosperity, not fear.
           </motion.p>
+
+          {/* Honest differentiator — what sets CSOAI apart from checklist-compliance tools */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.55 }}
+            className="mb-10 flex flex-wrap gap-2 justify-center items-center text-xs"
+          >
+            <span className="text-gray-500 mr-1">Not a compliance checklist —</span>
+            {["Agentic-native", "Ed25519-signed proof", "13-framework crosswalk", "One-command install", "Your data stays yours"].map((x) => (
+              <span key={x} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-3 py-1.5 font-semibold text-emerald-100/90">{x}</span>
+            ))}
+          </motion.div>
 
                     <div className="mb-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link href="/assess"><Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">Free AI Risk Check - signed in 2 min</Button></Link>
