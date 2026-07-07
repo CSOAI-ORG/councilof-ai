@@ -43,13 +43,21 @@
 - **⚠️ Parallel-edit near-miss:** M4 (`3cb779f`) and frontend (`126703b`) independently fixed the 377 hardcoding, hitting the *same 4 files* → rebase conflict. Resolved cleanly by taking M4's base (better test guard) + layering frontend's 14 non-overlapping copy/MCP files. **Lesson: before a repo-wide sweep, drop a one-line note here naming the files you're about to touch.**
 - Live-verified after every push: build clean ×3, 17/17 routes 200, claims **12/0**, sitemap 291 URLs.
 - **npm token exposed in plaintext during publish — Nick to revoke** (npmjs.com → Access Tokens).
-- **hive-recon coverage: 27 → 1,940 accounts** (`94d4772`, Claude Science). Sourced 1,913 new
-  company rows from SEC EDGAR's free public API (real ticker/CIK/SIC per row), merged with the
-  27 existing regulator rows, re-ran `hive-recon.mjs` end to end. All gates passed; every
-  non-authority company row correctly stayed `confidence:"modeled"` (no fabricated
-  posture/vendor). Reusable export at `docs/handoff/hive_full_export_1940.json`
-  (`HIVE_ACCOUNTS=docs/handoff/hive_full_export_1940.json node scripts/hive-recon.mjs`).
-  **Touched files this pass: `docs/hive-recon-report.json`, `docs/handoff/hive_full_export_1940.json`
-  only** — did not touch `scripts/hive-recon.mjs` itself or `client/src/data/ecosystem.ts`.
+- **hive-recon coverage: 27 → 1,952 accounts** (`94d4772`→`8d543cd`, Claude Science). Sourced 1,913
+  company rows from SEC EDGAR's free public API (real ticker/CIK/SIC per row), merged with
+  ecosystem.ts's 39 accounts (23 regulators + 16 real named orgs incl. the F100 seed from
+  `4364ca2`). All gates pass; every non-authority company row correctly stays
+  `confidence:"modeled"` (no fabricated posture/vendor). Current export:
+  `docs/handoff/hive_full_export_1952.json`
+  (`HIVE_ACCOUNTS=docs/handoff/hive_full_export_1952.json node scripts/hive-recon.mjs`).
+- **⚠️ Second near-miss, now fixed:** `faad379` (globe overlay) and `4364ca2` (F100 seed) each ran
+  `hive-recon.mjs` at its *default* path while wiring an unrelated feature, silently overwriting
+  `docs/hive-recon-report.json` down to 27, then 39 — undoing the outreach-gate coverage twice.
+  **Fixed in `8d543cd`:** the script now refuses to write a report with fewer accounts than the
+  one already on disk (needs `FORCE=1` to intentionally shrink). **If your change touches
+  `ecosystem.ts` or any other input `hive-recon.mjs` reads, re-run it against the full export
+  afterward** (`HIVE_ACCOUNTS=docs/handoff/hive_full_export_1952.json`), not the bare
+  `npm run hive:recon` default — the guard will now stop you if you forget, but merging the new
+  rows into the full export (like this reconciliation did) is still a manual step.
   Remaining gap to the outreach gate: per-account recon (public web) to replace "modeled" with
-  cited real facts, company by company — not done by this pass, coverage-count only.
+  cited real facts, company by company — not done by any of this, coverage-count only.
