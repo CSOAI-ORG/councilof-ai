@@ -17,6 +17,7 @@ export type Account = {
   hq: [number, number];               // [lng, lat] → globe pin
   jurisdictions: string[];
   frameworks: string[];               // in-scope regimes (derived from sector + jurisdiction)
+  sector?: string;                    // optional: banking|health|pharma|defence|ai-lab|energy|telecom|insurance
   posture: Posture;
   currentVendor: string;              // "unknown" unless genuinely public
   play: Play;                         // hypothesis until recon
@@ -54,6 +55,21 @@ export const ECOSYSTEM: Account[] = [
   { id: "ent-us-health", name: "[US health system]", type: "fortune500", region: "US", country: "USA", hq: [-87.63, 41.88], jurisdictions: ["us"], frameworks: ["hipaa", "nist-ai-rmf", "co-admt"], posture: "unknown", currentVendor: "unknown", play: "absorb", source: "pending-recon" },
   { id: "ent-ai-lab", name: "[Frontier AI lab]", type: "sector", region: "US", country: "USA", hq: [-122.42, 37.77], jurisdictions: ["us", "eu"], frameworks: ["eu-ai-act-gpai", "nist-ai-rmf"], posture: "mature", currentVendor: "internal", play: "integrate", source: "pending-recon" },
   { id: "ent-eu-insurer", name: "[EU insurer]", type: "fortune500", region: "EU", country: "—", hq: [8.54, 47.37], jurisdictions: ["eu"], frameworks: ["eu-ai-act", "dora", "solvency-ii"], posture: "unknown", currentVendor: "unknown", play: "integrate", source: "pending-recon" },
+
+  // Real Fortune-100 public organisations (org-level firmographics; posture/vendor UNKNOWN
+  // until per-account recon — scored as 'modeled'). Source = each org's official domain.
+  { id: "jpmorgan", name: "JPMorgan Chase", type: "fortune100", region: "US", country: "USA", hq: [-73.98, 40.75], jurisdictions: ["us", "eu"], frameworks: ["dora", "eu-ai-act", "nist-ai-rmf", "gdpr"], sector: "banking", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "jpmorganchase.com" },
+  { id: "bofa", name: "Bank of America", type: "fortune100", region: "US", country: "USA", hq: [-80.84, 35.23], jurisdictions: ["us"], frameworks: ["nist-ai-rmf", "us-state-ai"], sector: "banking", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "bankofamerica.com" },
+  { id: "citigroup", name: "Citigroup", type: "fortune100", region: "US", country: "USA", hq: [-74.01, 40.71], jurisdictions: ["us", "eu"], frameworks: ["dora", "eu-ai-act", "nist-ai-rmf"], sector: "banking", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "citigroup.com" },
+  { id: "unitedhealth", name: "UnitedHealth Group", type: "fortune100", region: "US", country: "USA", hq: [-93.46, 44.93], jurisdictions: ["us"], frameworks: ["hipaa", "nist-ai-rmf", "co-admt"], sector: "health", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "unitedhealthgroup.com" },
+  { id: "cvshealth", name: "CVS Health", type: "fortune100", region: "US", country: "USA", hq: [-71.51, 42.00], jurisdictions: ["us"], frameworks: ["hipaa", "nist-ai-rmf"], sector: "health", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "cvshealth.com" },
+  { id: "pfizer", name: "Pfizer", type: "fortune100", region: "US", country: "USA", hq: [-73.97, 40.75], jurisdictions: ["us", "eu"], frameworks: ["eu-ai-act-highrisk", "gxp-ai", "nist-ai-rmf"], sector: "pharma", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "pfizer.com" },
+  { id: "microsoft", name: "Microsoft", type: "fortune100", region: "US", country: "USA", hq: [-122.13, 47.64], jurisdictions: ["us", "eu"], frameworks: ["eu-ai-act-gpai", "nist-ai-rmf", "iso-42001"], sector: "ai-lab", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "microsoft.com" },
+  { id: "alphabet", name: "Alphabet (Google)", type: "fortune100", region: "US", country: "USA", hq: [-122.08, 37.42], jurisdictions: ["us", "eu"], frameworks: ["eu-ai-act-gpai", "nist-ai-rmf", "iso-42001"], sector: "ai-lab", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "abc.xyz" },
+  { id: "exxonmobil", name: "ExxonMobil", type: "fortune100", region: "US", country: "USA", hq: [-96.94, 32.86], jurisdictions: ["us"], frameworks: ["nist-ai-rmf", "us-state-ai"], sector: "energy", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "corporate.exxonmobil.com" },
+  { id: "lockheed", name: "Lockheed Martin", type: "fortune100", region: "US", country: "USA", hq: [-77.10, 38.98], jurisdictions: ["us"], frameworks: ["nist-ai-rmf", "itar-ear", "nato-ai"], sector: "defence", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "lockheedmartin.com" },
+  { id: "att", name: "AT&T", type: "fortune100", region: "US", country: "USA", hq: [-96.80, 32.78], jurisdictions: ["us"], frameworks: ["nist-ai-rmf", "us-state-ai"], sector: "telecom", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "about.att.com" },
+  { id: "elevance", name: "Elevance Health", type: "fortune100", region: "US", country: "USA", hq: [-86.16, 39.77], jurisdictions: ["us"], frameworks: ["hipaa", "nist-ai-rmf", "co-admt"], sector: "insurance", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "elevancehealth.com" },
 ];
 
 // The fixed testing rubric axes (see DISTRIBUTION_HIVE.md §4).

@@ -31,13 +31,24 @@ export default function Intel() {
           <span className="ml-auto rounded-full bg-emerald-500/15 px-3 py-1.5 text-xs font-bold text-emerald-300">{rows.length} accounts · seed</span>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-emerald-500/15 bg-[#05140d] px-4 py-3 text-[12px]">
-          <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/60">Coverage (live rubric)</span>
-          <span className="text-emerald-100/80">Avg CSOAI gap <b className="text-emerald-300">{avgGap}/21</b></span>
-          {(["align", "absorb", "integrate", "displace"] as const).map((p) => playCount[p] ? (
-            <span key={p} className={"rounded-full border px-2 py-0.5 text-[10px] font-bold " + PLAY_META[p].tone}>{p} {playCount[p]}</span>
-          ) : null)}
-          <span className="ml-auto text-[10px] text-emerald-300/45">competitor scores modeled from cited battlecards · displace only w/ known vendor</span>
+        <div className="mt-4">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+            <div className="rounded-xl border border-emerald-500/15 bg-[#05140d] px-3 py-2.5">
+              <div className="font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/50">Accounts</div>
+              <div className="text-lg font-black text-emerald-100">{rows.length}</div>
+            </div>
+            <div className="rounded-xl border border-emerald-500/15 bg-[#05140d] px-3 py-2.5">
+              <div className="font-mono text-[9px] uppercase tracking-[1px] text-emerald-300/50">Avg gap</div>
+              <div className="text-lg font-black text-emerald-300">{avgGap}<span className="text-[11px] text-emerald-300/50">/21</span></div>
+            </div>
+            {(["align", "absorb", "integrate", "displace"] as const).map((p) => (
+              <div key={p} className="rounded-xl border border-emerald-500/15 bg-[#05140d] px-3 py-2.5">
+                <div className={"font-mono text-[9px] uppercase tracking-[1px] " + PLAY_META[p].tone.split(" ")[0]}>{p}</div>
+                <div className="text-lg font-black text-emerald-100">{playCount[p] || 0}</div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-1.5 text-[10px] text-emerald-300/45">Live §4 rubric · CSOAI scores sourced to product · competitor scores modeled from cited battlecards · displace only with a known vendor.</p>
         </div>
 
         <div className="mt-5 grid gap-3 lg:grid-cols-2">

@@ -2,26 +2,27 @@
   "summary": {
     "generated": "2026-07-07",
     "source": "client/src/data/ecosystem.ts",
-    "accounts": 27,
+    "accounts": 39,
     "byPlay": {
       "align": 23,
-      "integrate": 3,
+      "integrate": 15,
       "displace": 1
     },
     "byType": {
       "regulator": 23,
       "fortune500": 3,
-      "sector": 1
+      "sector": 1,
+      "fortune100": 12
     },
     "byConfidence": {
       "n/a-authority": 23,
-      "modeled": 3,
+      "modeled": 15,
       "verified": 1
     },
-    "avgGap": 2.37,
+    "avgGap": 6.87,
     "dataCompleteness": {
       "verifiedOrAuthority": 24,
-      "modeled": 3,
+      "modeled": 15,
       "note": "modeled rows need per-account recon (public web) to fill currentVendor+posture with cited facts before outreach"
     }
   },
@@ -1745,6 +1746,853 @@
         "integrationEffort"
       ],
       "source": "pending-recon"
+    },
+    {
+      "id": "jpmorgan",
+      "name": "JPMorgan Chase",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -73.98,
+        40.75
+      ],
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "nist-ai-rmf",
+        "gdpr",
+        "basel-ai",
+        "nis2"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "jpmorganchase.com"
+    },
+    {
+      "id": "bofa",
+      "name": "Bank of America",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -80.84,
+        35.23
+      ],
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "us-state-ai",
+        "dora",
+        "eu-ai-act",
+        "basel-ai",
+        "nis2"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "bankofamerica.com"
+    },
+    {
+      "id": "citigroup",
+      "name": "Citigroup",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -74.01,
+        40.71
+      ],
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "nist-ai-rmf",
+        "basel-ai",
+        "nis2"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "citigroup.com"
+    },
+    {
+      "id": "unitedhealth",
+      "name": "UnitedHealth Group",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -93.46,
+        44.93
+      ],
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf",
+        "co-admt",
+        "eu-ai-act-highrisk",
+        "mdr-ai",
+        "iso-42001"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "unitedhealthgroup.com"
+    },
+    {
+      "id": "cvshealth",
+      "name": "CVS Health",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -71.51,
+        42
+      ],
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf",
+        "eu-ai-act-highrisk",
+        "mdr-ai",
+        "iso-42001"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "cvshealth.com"
+    },
+    {
+      "id": "pfizer",
+      "name": "Pfizer",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -73.97,
+        40.75
+      ],
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-highrisk",
+        "gxp-ai",
+        "nist-ai-rmf",
+        "iso-42001"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "pfizer.com"
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -122.13,
+        47.64
+      ],
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-gpai",
+        "nist-ai-rmf",
+        "iso-42001",
+        "frontier-safety"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "microsoft.com"
+    },
+    {
+      "id": "alphabet",
+      "name": "Alphabet (Google)",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -122.08,
+        37.42
+      ],
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-gpai",
+        "nist-ai-rmf",
+        "iso-42001",
+        "frontier-safety"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "abc.xyz"
+    },
+    {
+      "id": "exxonmobil",
+      "name": "ExxonMobil",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -96.94,
+        32.86
+      ],
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "us-state-ai",
+        "nis2",
+        "cra",
+        "eu-ai-act"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "corporate.exxonmobil.com"
+    },
+    {
+      "id": "lockheed",
+      "name": "Lockheed Martin",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -77.1,
+        38.98
+      ],
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "itar-ear",
+        "nato-ai",
+        "nis2",
+        "eu-ai-act"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "lockheedmartin.com"
+    },
+    {
+      "id": "att",
+      "name": "AT&T",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -96.8,
+        32.78
+      ],
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "us-state-ai",
+        "nis2",
+        "cra",
+        "eu-ai-act"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "about.att.com"
+    },
+    {
+      "id": "elevance",
+      "name": "Elevance Health",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "hq": [
+        -86.16,
+        39.77
+      ],
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf",
+        "co-admt",
+        "dora",
+        "eu-ai-act",
+        "eiopa-ai",
+        "nis2"
+      ],
+      "posture": "unknown",
+      "vendor": "unknown",
+      "play": "integrate",
+      "confidence": "modeled",
+      "totalGap": 17,
+      "maxGap": 21,
+      "perAxis": {
+        "frameworkCoverage": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "agenticGovernance": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "verifiableProof": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        },
+        "liveTooling": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "enforcementTiming": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "sovereignty": {
+          "csoai": 3,
+          "current": 1,
+          "gap": 2
+        },
+        "integrationEffort": {
+          "csoai": 3,
+          "current": 0,
+          "gap": 3
+        }
+      },
+      "topUsps": [
+        "agenticGovernance",
+        "verifiableProof",
+        "integrationEffort"
+      ],
+      "source": "elevancehealth.com"
     }
   ]
 }
