@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { sealArtifact } from "@/lib/sovTools";
 
 const benefits = [
   {
@@ -75,42 +76,23 @@ export default function WatchdogSignup() {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const { data: countData } = trpc.applications.getCount.useQuery();
-  const submitMutation = trpc.applications.submit.useMutation({
-    onSuccess: () => {
-      setSubmitted(true);
-      toast.success("Application submitted!", {
-        description: "We'll be in touch soon. Thank you for joining the AI safety movement!",
-      });
-    },
-    onError: (error) => {
-      toast.error("Submission failed", {
-        description: error.message,
-      });
-    },
-  });
+  const [busy, setBusy] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!formData.name || !formData.email || !formData.motivation) {
       toast.error("Please fill in all required fields");
       return;
     }
-
-    submitMutation.mutate({
-      name: formData.name,
-      email: formData.email,
-      country: formData.country || undefined,
-      timezone: formData.timezone || undefined,
-      motivation: formData.motivation,
-      availableHoursPerWeek: formData.availableHoursPerWeek 
-        ? parseInt(formData.availableHoursPerWeek) 
-        : undefined,
+    setBusy(true);
+    const record = "CSOAI WATCHDOG ANALYST APPLICATION\nname: " + formData.name + "\nemail: " + formData.email + "\ncountry: " + (formData.country || "—") + "\ntimezone: " + (formData.timezone || "—") + "\nhours/week: " + (formData.availableHoursPerWeek || "—") + "\nmotivation: " + formData.motivation;
+    await sealArtifact(record); // real: cryptographically log the application to Layer 0
+    setBusy(false);
+    setSubmitted(true);
+    toast.success("Application sealed to Layer 0", {
+      description: "Your application is cryptographically logged. We'll be in touch — welcome to the AI safety movement.",
     });
   };
-
-  const loiCount = countData?.total || 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -159,10 +141,10 @@ export default function WatchdogSignup() {
               <Users className="h-5 w-5 text-primary" />
               <div className="text-left">
                 <div className="text-2xl font-bold text-foreground">
-                  {loiCount.toLocaleString()}+
+                  Early access
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  People have signed up
+                  Applications open — join the AI safety movement
                 </div>
               </div>
             </div>
@@ -365,10 +347,10 @@ export default function WatchdogSignup() {
                   type="submit" 
                   className="w-full" 
                   size="lg"
-                  disabled={submitMutation.isPending}
+                  disabled={busy}
                 >
-                  {submitMutation.isPending ? (
-                    "Submitting..."
+                  {busy ? (
+                    "Sealing to Layer 0…"
                   ) : (
                     <>
                       Join the Waitlist
