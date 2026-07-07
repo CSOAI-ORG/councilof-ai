@@ -536,6 +536,7 @@ function App() {
           <Route path="/map-regions" component={RegionsMap} />
           <Route path="/compare" component={Compare} />
           <Route path="/vs" component={Compare} />
+          <Route path="/vs/:slug">{(p: any) => <Compare focus={p.slug} />}</Route>
           <Route path="/vs-competitors" component={Compare} />
           <Route path="/rfc-0024" component={Fedramp} />
           <Route path="/aug-2026" component={Readiness} />

@@ -29,6 +29,7 @@ const ROUTES = [
   '/', '/crosswalk', '/crosswalks', '/compare', '/certification', '/pricing',
   '/layer0', '/global-ai-regulation', '/readiness-assessment', '/framework-catalog',
   '/article-50', '/about',
+  '/vs/vanta', '/vs/drata', '/vs/credo-ai', '/vs/onetrust',
 ];
 
 const MIME = {

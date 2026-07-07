@@ -26,25 +26,38 @@ const JSONLD = {
   mainEntity: FAQS.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 };
 
-export default function Compare() {
+const COMPETITORS: Record<string, string> = { vanta: "Vanta", drata: "Drata", "credo-ai": "Credo AI", credo: "Credo AI", "credoai": "Credo AI", onetrust: "OneTrust" };
+
+export default function Compare({ focus }: { focus?: string } = {}) {
+  const comp = focus ? COMPETITORS[focus.toLowerCase()] : undefined;
+  const h1 = comp ? `CSOAI vs ${comp}` : "CSOAI vs Vanta vs Drata vs Credo AI vs OneTrust";
+  const pageTitle = comp ? `CSOAI vs ${comp} — AI governance comparison (2026)` : "CSOAI vs Vanta vs Drata vs Credo AI vs OneTrust — AI governance comparison (2026)";
+  const intro = comp
+    ? `${comp} is a capable, closed compliance platform; CSOAI is the open-source, cryptographically-verifiable Layer 0 alternative. The honest matrix — where ${comp} is strong, and where only CSOAI goes.`
+    : "Framework coverage and capability, side by side. The honest matrix - where everyone is strong, and where only CSOAI goes.";
   useEffect(() => {
-    document.title = "CSOAI vs Vanta vs Drata vs Credo AI vs OneTrust — AI governance comparison (2026)";
+    document.title = pageTitle;
     let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     const prev = m?.content;
     if (!m) { m = document.createElement("meta"); m.name = "description"; document.head.appendChild(m); }
-    m.content = "Honest side-by-side comparison of the best AI governance platforms in 2026 — CSOAI vs Vanta, Drata, Credo AI and OneTrust — across EU AI Act, NIST AI RMF, ISO 42001, FedRAMP/OSCAL and signed verifiable governance.";
-    var s = document.createElement("script"); s.type = "application/ld+json"; s.id = "cmp-ld"; s.text = JSON.stringify(JSONLD);
+    m.content = comp
+      ? `CSOAI vs ${comp} — honest 2026 comparison of AI governance platforms across EU AI Act, NIST AI RMF, ISO 42001, FedRAMP/OSCAL. CSOAI is open-source, MCP-native and signs every verdict (Ed25519, offline-verifiable) — ${comp} does not.`
+      : "Honest side-by-side comparison of the best AI governance platforms in 2026 — CSOAI vs Vanta, Drata, Credo AI and OneTrust — across EU AI Act, NIST AI RMF, ISO 42001, FedRAMP/OSCAL and signed verifiable governance.";
+    const ld = comp
+      ? { ...JSONLD, mainEntity: [{ "@type": "Question", name: `CSOAI vs ${comp} — what is the difference?`, acceptedAnswer: { "@type": "Answer", text: `${comp} is a closed compliance platform. CSOAI is an open-source, MCP-native Layer 0 governance OS that signs every governed action (Ed25519) to an offline-verifiable ledger, maps 1,686 controls across 26 frameworks, and issues independent Watchdog Certification — no vendor dashboard to trust.` } }, ...JSONLD.mainEntity] }
+      : JSONLD;
+    var s = document.createElement("script"); s.type = "application/ld+json"; s.id = "cmp-ld"; s.text = JSON.stringify(ld);
     document.getElementById("cmp-ld")?.remove(); document.head.appendChild(s);
     return () => { document.getElementById("cmp-ld")?.remove(); if (prev !== undefined && m) m.content = prev; };
-  }, []);
+  }, [pageTitle]);
   return (
     <div className="min-h-screen bg-white">
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - comparison</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">CSOAI vs Vanta vs Drata vs Credo AI vs OneTrust</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Framework coverage and capability, side by side. The honest matrix - where everyone is strong, and where only CSOAI goes.</p>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">{h1}</h1>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">{intro}</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-12 overflow-x-auto">
