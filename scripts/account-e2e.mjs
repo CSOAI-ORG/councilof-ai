@@ -69,11 +69,13 @@ for (const a of sample) {
     pass.briefDepth = /\b(align|integrate|displace)\b/i.test(bt) && /lead the demo with|Alignment/i.test(bt) && bd.globe;
     if (!pass.briefDepth) gaps.push("brief depth (play/USPs/region-globe) incomplete");
     await bp.close();
-    // 3. crosswalk pre-framed
-    const cp = await ctx.newPage(); await cp.goto(SITE + "/crosswalk?fw=" + encodeURIComponent((a.frameworks || []).join(",")), { waitUntil: "domcontentloaded" }); await cp.waitForTimeout(2000);
-    pass.crosswalk = await cp.evaluate(() => /Tailored view|frameworks in scope/i.test(document.body.innerText));
-    if (!pass.crosswalk) gaps.push("crosswalk not tailored (no mapped framework?)");
-    await cp.close();
+    // 3. crosswalk pre-framed — enterprise-adoption feature; regulators author frameworks, they don't crosswalk to them, so only assert it for adopters
+    if (a.type !== "regulator" && a.type !== "government") {
+      const cp = await ctx.newPage(); await cp.goto(SITE + "/crosswalk?fw=" + encodeURIComponent((a.frameworks || []).join(",")), { waitUntil: "domcontentloaded" }); await cp.waitForTimeout(2000);
+      pass.crosswalk = await cp.evaluate(() => /Tailored view|frameworks in scope/i.test(document.body.innerText));
+      if (!pass.crosswalk) gaps.push("crosswalk not tailored (no mapped framework?)");
+      await cp.close();
+    }
   } catch (e) { gaps.push("render error: " + (e.message || "").slice(0, 50)); }
   await ctx.close();
   // 4. Sovereign region+sector question (direct)

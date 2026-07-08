@@ -30,3 +30,17 @@ training/monitoring tool.
 - **24/26 fully clean; 2 flagged:** Novartis (EU/pharma) and TSMC (APAC/ai-lab) — Sovereign did NOT lead with their local regime (EU AI Act / APAC MAS-METI-ISO). Same intermittent EU-centric / generic-lead bias the persona test caught; confirms it is real and shows on ~8% of accounts run-to-run.
 - **Training direction for M4:** in the Sovereign system prompt / retrieval, for a stated jurisdiction lead the FIRST sentence with that jurisdiction's regime (EU->EU AI Act, JP->METI, KR->AI Basic Act, SG->MAS, US->NIST/HIPAA), then note cross-border exposure. `npm run` -> `ACCOUNTS=novartis,tsmc node scripts/account-e2e.mjs` reproduces.
 - Frontend/experience side is clean: region homepage, tailored brief (play+USPs+region globe), pre-framed crosswalk all pass 26/26.
+
+## Full-universe sweep (88 accounts, 2026-07-08) — brain signal for M4
+`ACCOUNTS=all node scripts/account-e2e.mjs` → **avg experience 95%**. Frontend clean. Two brain-lane patterns quantified across the whole book:
+
+**A) Region-lead miss (11 enterprise accounts):** Sovereign didn't open with the account's LOCAL regime.
+- US: Wells Fargo, Goldman Sachs, American Express, Humana, Merck — led generic/EU-first instead of US (NIST AI RMF / state ADMT).
+- EU: Allianz, Sanofi, Ericsson, Siemens — didn't lead with EU AI Act / DORA.
+- APAC: TSMC — didn't lead with APAC regime.
+
+**B) Off-topic / thin for a sector (2 accounts):** AXA (insurance) + Siemens (global2000) — Sovereign returned off-topic/empty for the sector framing.
+
+Root cause = brain prompt/retrieval (region + sector priors), not frontend. Frontend already passes region homepage, tailored brief, and localized globe for every one of these. Fix belongs in Sovereign training/retrieval (M4 lane).
+
+_Harness note:_ crosswalk-tailoring check is now gated to enterprises only (regulators author frameworks, they don't crosswalk to them) — removed 11 false-positive "crosswalk not tailored" flags on regulator accounts.
