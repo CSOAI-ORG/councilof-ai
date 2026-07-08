@@ -25,3 +25,8 @@ training/monitoring tool.
 - **Frontend now requests the visitor's language** (client/src/lib/sovAsk.ts appends "Respond in <language>. Keep regulation names + labels in English."). Verified the request is correct and keeps "EU AI Act" canonical.
 - **BRAIN does not yet honor it** — a Japanese-directive request came back in English. So end-to-end multilingual answers need brain-side support (model/prompt/config on os.meok.ai). **Training item for M4.** The frontend is forward-compatible: it will localize automatically once the brain complies.
 - Separately observed: the brain gave an inaccurate EU AI Act date ("mid-2025") in that reply — brain knowledge freshness is also an M4 training item (the site copy + register are correct; the brain should cite the register).
+
+## Update (2026-07-08) — scaled account-e2e (26 accounts) confirms the region-lead gap
+- **24/26 fully clean; 2 flagged:** Novartis (EU/pharma) and TSMC (APAC/ai-lab) — Sovereign did NOT lead with their local regime (EU AI Act / APAC MAS-METI-ISO). Same intermittent EU-centric / generic-lead bias the persona test caught; confirms it is real and shows on ~8% of accounts run-to-run.
+- **Training direction for M4:** in the Sovereign system prompt / retrieval, for a stated jurisdiction lead the FIRST sentence with that jurisdiction's regime (EU->EU AI Act, JP->METI, KR->AI Basic Act, SG->MAS, US->NIST/HIPAA), then note cross-border exposure. `npm run` -> `ACCOUNTS=novartis,tsmc node scripts/account-e2e.mjs` reproduces.
+- Frontend/experience side is clean: region homepage, tailored brief (play+USPs+region globe), pre-framed crosswalk all pass 26/26.
