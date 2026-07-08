@@ -6,7 +6,7 @@ import SovereignSpot from "../components/SovereignSpot";
 // Date-accurate: transparency/notice from 2 Aug 2026; full high-risk obligations phase to Dec 2027.
 
 type Faq = { q: string; a: string };
-type Sector = { key: string; eyebrow: string; title: string; intro: string; highRisk: string[]; obligations: string[]; faqs: Faq[] };
+type Sector = { key: string; eyebrow: string; title: string; intro: string; highRisk: string[]; obligations: string[]; faqs: Faq[]; callout?: string; leftLabel?: string; rightLabel?: string };
 const SECTORS: Record<string, Sector> = {
   healthcare: {
     key: "healthcare", eyebrow: "CSOAI - healthcare + EU AI Act",
@@ -68,6 +68,20 @@ const SECTORS: Record<string, Sector> = {
       { q: "How does the AI Act interact with GxP and EMA guidance?", a: "The AI Act sits alongside GxP and EMA expectations on AI. Validation and documentation work can be aligned, but the AI-Act-specific duties for high-risk and GPAI systems are additional." },
     ],
   },
+  defence: {
+    key: "defence", eyebrow: "CSOAI - defence + national security",
+    title: "AI in defence and the EU AI Act - what is excluded, what still applies",
+    intro: "Defence AI is the exception, not the rule, under the EU AI Act. The honest answer most sources get wrong: exclusively-military AI is carved out - but a lot of what defence organisations run is not exclusively military, and stays firmly in scope.",
+    callout: "The EU AI Act does NOT apply to AI systems placed on the market, put into service, or used exclusively for military, defence, or national-security purposes (Article 2(3)). The exclusion turns on exclusive purpose - not on who operates the system.",
+    leftLabel: "What is still in scope", rightLabel: "What still governs it",
+    highRisk: ["Dual-use AI also offered in civilian markets", "Non-military security, border, and migration-management AI (Annex III)", "Ordinary back-office AI - HR, procurement, finance - at a defence organisation", "General-purpose / foundation models used in defence contexts (GPAI duties)"],
+    obligations: ["Classify each system: exclusively-military vs dual-use / civilian", "Apply the EU AI Act to everything not exclusively military", "Align military systems with national defence-AI strategy + NATO principles of responsible use", "Export controls, procurement governance, and classified-domain assurance"],
+    faqs: [
+      { q: "Does the EU AI Act apply to military AI?", a: "No. Article 2(3) excludes AI systems used exclusively for military, defence, or national-security purposes. The exclusion is about exclusive purpose, not about the organisation operating the system." },
+      { q: "So are defence contractors fully exempt?", a: "No. Dual-use AI, non-military security uses, and ordinary back-office AI at a defence organisation remain in scope. Only the exclusively-military systems are carved out." },
+      { q: "What governs military AI instead?", a: "National defence-AI strategies, NATO's principles of responsible use of AI, export controls, and procurement rules - plus classified-domain assurance. CSOAI's signed, offline-verifiable governance maps cleanly onto these without publishing anything sensitive." },
+    ],
+  },
 };
 
 export default function SectorAct({ sector }: { sector: string }) {
@@ -91,11 +105,16 @@ export default function SectorAct({ sector }: { sector: string }) {
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">{s.eyebrow}</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">{s.title}</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">{s.intro}</p>
+          {s.callout && (
+            <div className="mt-5 max-w-2xl rounded-xl border border-amber-300/40 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
+              <span className="font-bold text-amber-200">Key carve-out — </span>{s.callout}
+            </div>
+          )}
         </div>
       </section>
       <section className="max-w-5xl mx-auto px-6 py-12 grid gap-8 lg:grid-cols-2">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">High-risk uses in your sector</h2>
+          <h2 className="text-xl font-bold text-gray-900">{s.leftLabel || "High-risk uses in your sector"}</h2>
           <ul className="mt-4 space-y-2">
             {s.highRisk.map((x) => (
               <li key={x} className="flex items-start gap-2 rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-700"><span className="mt-0.5 text-amber-500 font-black">!</span>{x}</li>
@@ -103,7 +122,7 @@ export default function SectorAct({ sector }: { sector: string }) {
           </ul>
         </div>
         <div>
-          <h2 className="text-xl font-bold text-gray-900">What you must do</h2>
+          <h2 className="text-xl font-bold text-gray-900">{s.rightLabel || "What you must do"}</h2>
           <ul className="mt-4 space-y-2">
             {s.obligations.map((x) => (
               <li key={x} className="flex items-start gap-2 rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-700"><span className="mt-0.5 text-emerald-600 font-black">+</span>{x}</li>

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import { askSovereign } from "../lib/sovAsk";
+import { sovActions, describeActions } from "../lib/sovAgent";
+import { Link } from "wouter";
 
 const GLOBE_GW = "https://os.meok.ai/api";
 const PLACE_HINTS: { re: RegExp; id: string }[] = [
@@ -109,7 +111,11 @@ function project(lat: number, lng: number, rot: number) {
 }
 
 export default function WorldGlobe() {
-  useEffect(() => { document.title = "The Sovereign Globe - AI governance, layered on the world | CSOAI"; }, []);
+  useEffect(() => {
+    document.title = "The Sovereign Globe - AI governance, layered on the world | CSOAI";
+    // Handoff from Sov Space: /globe?ask=… auto-asks + drives the globe agentically.
+    try { const a = new URLSearchParams(window.location.search).get("ask"); if (a) { setAsk(a); setTimeout(() => runAsk(a), 400); } } catch (e) {}
+  }, []);
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setAsk(d); const t = setTimeout(() => runAsk(d), 700); return () => clearTimeout(t); } }, []);
   const [hiveAccounts, setHiveAccounts] = useState<HiveAccount[]>([]);
   const [hiveSel, setHiveSel] = useState<HiveAccount | null>(null);
@@ -129,6 +135,7 @@ export default function WorldGlobe() {
   const [asking, setAsking] = useState(false);
   const [threat, setThreat] = useState<"idle" | "rogue" | "stopped">("idle");
   const [threatMsg, setThreatMsg] = useState("");
+  const [acted, setActed] = useState("");
   const raf = useRef<number | null>(null);
   const tt = useRef<number[]>([]);
 
@@ -153,6 +160,15 @@ export default function WorldGlobe() {
     const hint = PLACE_HINTS.find((h) => h.re.test(t));
     const pin = hint ? FRAMEWORKS.find((p) => p.id === hint.id) : null;
     if (pin) { setLayers((l) => ({ ...l, fw: true })); setSel(pin); setSpin(false); setRot((((-pin.lng) % 360) + 360) % 360); }
+    // AGENTIC: the Sovereign drives the globe as it answers — toggle layers, fly to the
+    // region, or respond to a rogue swarm, straight from what you asked.
+    const acts = sovActions(t);
+    setActed(describeActions(acts.filter((a) => a.kind !== "simulate")));
+    for (const a of acts) {
+      if (a.kind === "layer") setLayers((l) => ({ ...l, [a.layer]: true }));
+      else if (a.kind === "region" && !pin) { setSpin(false); setRot((((-a.lng) % 360) + 360) % 360); }
+      else if (a.kind === "threat" && threat === "idle") runThreat();
+    }
     const ind = GLOBE_IND.find((w) => new RegExp("\\b" + w + "\\b", "i").test(t));
     const [c, gov] = await Promise.all([globeChat(t), ind ? globeGovern(ind) : Promise.resolve(null)]);
     let out = c || "";
@@ -291,10 +307,13 @@ export default function WorldGlobe() {
           <div className="mt-5 border-t border-white/10 pt-4">
             <label className="text-[11px] uppercase tracking-wide text-emerald-300/60">Ask the Sovereign about the world</label>
             <div className="mt-2 flex gap-2">
-              <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="e.g. what governs a hospital AI in Germany?" className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-emerald-400 focus:outline-none" />
+              <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="e.g. show the watchdog heat over London and stop any rogue swarm" className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-emerald-400 focus:outline-none" />
               <button onClick={() => runAsk()} disabled={asking} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-60">{asking ? "…" : "Ask"}</button>
             </div>
+            <p className="mt-1 text-[11px] text-white/40">Agentic — the Sovereign flies the globe, toggles layers, and responds to threats as it answers.</p>
+            {acted && <div className="mt-2 inline-block rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">◉ {acted}</div>}
             {ans && <div className="mt-3 max-h-52 overflow-y-auto whitespace-pre-wrap rounded-lg bg-black/30 px-3 py-2 text-sm leading-relaxed text-white/85">{ans}</div>}
+            {ans && <Link href={"/simulate?q=" + encodeURIComponent(ask)} className="mt-3 inline-block rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-200 hover:bg-white/5">Run this through the full 33-agent simulation →</Link>}
           </div>
         </div>
       </section>

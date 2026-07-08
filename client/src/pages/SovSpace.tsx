@@ -63,7 +63,12 @@ export default function SovSpace() {
   const endRef = useRef<HTMLDivElement | null>(null);
   const timers = useRef<any[]>([]);
 
-  useEffect(() => { document.title = "Sovereign Space - simulate, experiment, govern | CSOAI"; }, []);
+  useEffect(() => {
+    document.title = "Sovereign Space - simulate, experiment, govern | CSOAI";
+    // Handoff from the Sovereign Globe: /simulate?q=… pre-loads the scenario so one
+    // Sovereign flows from "ask on the globe" straight into "run the full simulation".
+    try { const q = new URLSearchParams(window.location.search).get("q"); if (q) setScenario(q); } catch (e) {}
+  }, []);
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setScenario(d); const t = setTimeout(() => run(d), 700); return () => clearTimeout(t); } }, []);
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [log]);
   useEffect(() => () => { timers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} }, []);
@@ -180,6 +185,7 @@ export default function SovSpace() {
             <button onClick={() => run()} disabled={running} className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">{running ? "Running..." : "Run experiment"}</button>
             <button onClick={reset} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm font-semibold text-emerald-100 hover:bg-white/5">Reset</button>
             <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm text-emerald-100 hover:bg-white/5">{voiceOn ? "Voice on" : "Voice off"}</button>
+            <a href={"/globe" + (scenario ? "?ask=" + encodeURIComponent(scenario) : "")} className="rounded-xl border border-sky-400/40 px-3 py-2 text-sm font-semibold text-sky-100 hover:bg-white/5">See it on the Sovereign Globe →</a>
           </div>
           <div className="mt-3 flex-1 space-y-2 overflow-y-auto rounded-xl border border-emerald-500/10 bg-black/20 p-3 text-sm" style={{ minHeight: 180 }}>
             {log.length === 0 && <div className="text-emerald-300/40">The Sovereign will narrate here as your experiment runs.</div>}
