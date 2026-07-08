@@ -29,6 +29,15 @@ const ROUTES = [
   '/', '/crosswalk', '/crosswalks', '/compare', '/vs/vanta', '/vs/drata', '/vs/credo-ai', '/vs/onetrust', '/certification', '/pricing',
   '/trust-center', '/global-ai-regulation', '/readiness-assessment', '/framework-catalog',
   '/article-50', '/about',
+  // Jurisdiction cluster
+  '/uk-ai-regulation', '/canada-aida', '/china-ai-law', '/singapore-ai-governance',
+  // Sector deadline pages
+  '/healthcare-ai-act', '/finance-ai-act', '/hr-ai-act',
+  // AEO / high-intent cluster
+  '/eu-ai-act-checklist', '/gpai', '/penalties', '/nist-vs-eu-ai-act', '/iso-42001-vs-eu-ai-act',
+  '/high-risk-ai-systems', '/ai-act-summary', '/ai-governance', '/eu-ai-act-timeline',
+  // Cyber + readiness
+  '/dora', '/nis2', '/cra', '/fedramp', '/readiness',
 ];
 
 const MIME = {
