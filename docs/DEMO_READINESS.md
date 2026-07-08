@@ -29,6 +29,20 @@ node scripts/claims-e2e.mjs      # hits the LIVE site + brain, prints a pass/FAI
 
 **2026-07-07 update (API-layer only, re-verified by Claude Science):** `/api/tools` total is now **378** (csoai-governance-mcp registered + deployed) — still a genuine pass under the "377+" rule above. Re-ran the 6 API-level checks (tools count, live MCP tools/list, meok_govern, Ed25519 sign+verify round-trip, brain health, dynamic OG) — all 6 pass. Did NOT re-run the 6 browser-level checks (ToolRunner/classifier/report/workbench/council-viz/globe) this pass — Playwright's Chromium binary could not be downloaded in this sandbox; treat those 6 as last-verified under the 2026-07 run above, not re-confirmed today.
 
+**2026-07-08 update (API-layer only, re-verified by Claude Science):** `/api/tools total=378`
+still holds; Ed25519 sign returns a genuine 128-char signature (`alg=ed25519`); brain health OK
+(`sovereign-backend`); dynamic OG image 200. Playwright's local Chromium binary is still not
+runnable in this sandbox (`ms-playwright` cache directory itself is permission-blocked here, a step
+past the earlier "download blocked" finding — this looks like a sandbox-specific restriction, not
+something fixable by retrying the install). As a **weaker substitute**, HTTP-checked the 6
+browser-level demo pages for basic reachability only: `/tool-commons`, `/classifier`, `/report`,
+`/workbench`, `/try`, `/globe3d.html` all return 200. **This does NOT confirm the interactive
+content on those pages actually renders or functions** (ToolRunner execution, classifier output,
+council visualization, globe canvas) — a 200 only proves the route resolves, not that the claim on
+that page is true. Treat the 6 browser-level claims as still last-verified under the 2026-07 run
+above; for a real re-check, run `scripts/e2e-visual-live.mjs` from a machine where Playwright's
+browser can actually install (i.e. not this sandbox).
+
 ## Pre-demo checklist (per account)
 1. `node scripts/claims-e2e.mjs` → **0 FAIL** (block the demo otherwise).
 2. Open the account's tailored path (`/crosswalk`, `/dora`, `/classifier`…) and dry-run the exact flow you'll show.
