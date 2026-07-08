@@ -26,6 +26,25 @@
 - **Truth:** the ground-truth register + claims harness are **shared** — JEEVES runs `claims-e2e.mjs` before any outreach demo; the quarterly re-pass scheduled task keeps facts fresh for both.
 - **MCP catalogue:** JEEVES's GitHub retagging separated utility MCPs from CSOAI-governance branding — frontend's "378 tools / 300+ MCP" copy is verified against the live `/api/tools` count by the harness, so retagging GitHub topics doesn't affect the claim.
 
+## 🔒 LANE CLAIM (2026-07-08) — Claude Science taking per-account deep-dive on the 2,363-lead DB
+Nick asked for a one-by-one deep-dive across the full lead database (site content, AI/governance
+posture, domain resolution) feeding it back into a structured per-account record. **Claiming this
+lane now to avoid M2/M4 duplicating it.** Facts checked before starting:
+- Canonical DB: `sovereign-charters/csoai_leads.db` — 2,363 leads total, NOT ~1,900/~2,000 as
+  earlier docs said (tier breakdown: 0=40, 1=10, 2=40, 3=20, 5=30, 6=50, 8=50, 9=2023, 10=100).
+- **1,913 of the 2,023 tier-9 (SEC-sourced) leads have NO domain resolved at all** (`domain IS
+  NULL OR ''`) — this is the actual hard blocker before any "visit their site" work can start.
+  Domain resolution has to be phase 1, not a footnote.
+- `report_json` on tier-9 rows currently only carries SEC/EDGAR metadata (CIK, SIC code, ticker) —
+  zero AI-governance-posture research has been done on any of the 1,913 yet.
+- Given the scale (2,363 accounts × site-fetch + governance research + AI-OS crosswalk), this is
+  being run as a batched, scripted pipeline (domain resolution -> site fetch -> governance-signal
+  extraction -> structured JSON back into `report_json`), not literally one at a time by hand.
+  Progress logged here in batches so M2/M4 can see live coverage state and don't re-run the same
+  accounts.
+- If you're M2 or M4 reading this: **don't start a parallel per-account sweep on this DB** — check
+  back here for current coverage before touching `leads.report_json` or `side_by_side`.
+
 ## Blocked on Nick (consolidated — neither agent can do these)
 1. **Phase 3 deploy** — JEEVES's runbook + signing key ready; needs Nick to run.
 2. **Outreach send** — lead list clean; sending is Nick's action.
