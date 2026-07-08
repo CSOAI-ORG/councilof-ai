@@ -15,11 +15,18 @@ async function page() {
   return { p, errs };
 }
 function ok(name, cond, note = "") { results.push({ name, pass: !!cond, note }); }
+// Resilient nav: survive transient network blips (ERR_NETWORK_CHANGED etc) with a retry.
+async function go(p, url) {
+  for (let i = 0; i < 3; i++) {
+    try { await p.goto(url, { waitUntil: "networkidle", timeout: 30000 }); return true; }
+    catch (e) { if (i === 2) throw e; await p.waitForTimeout(1500); }
+  }
+}
 
 // 1) /globe — 3D globe, mode toggle, agentic ask, threat
 {
   const { p, errs } = await page();
-  await p.goto(BASE + "/globe", { waitUntil: "networkidle", timeout: 30000 });
+  await go(p, BASE + "/globe");
   let ready = false; p.on("console", () => {});
   await p.waitForTimeout(2500);
   const has3d = await p.$('iframe[src*="globe3d"]');
@@ -39,7 +46,7 @@ function ok(name, cond, note = "") { results.push({ name, pass: !!cond, note });
 // 2) /intel — globe, click account flies, tour button
 {
   const { p, errs } = await page();
-  await p.goto(BASE + "/intel", { waitUntil: "networkidle", timeout: 30000 });
+  await go(p, BASE + "/intel");
   await p.waitForTimeout(1500);
   ok("/intel globe", await p.$('iframe[src*="globe3d"]') != null);
   ok("/intel tour btn", await p.evaluate(() => /Tour the top gaps/i.test(document.body.innerText)));
@@ -53,7 +60,7 @@ function ok(name, cond, note = "") { results.push({ name, pass: !!cond, note });
 // 3) /simulate — greeting, globe, handoff prefill
 {
   const { p, errs } = await page();
-  await p.goto(BASE + "/simulate?q=a%20hiring%20AI%20in%20Germany", { waitUntil: "networkidle", timeout: 30000 });
+  await go(p, BASE + "/simulate?q=a%20hiring%20AI%20in%20Germany");
   await p.waitForTimeout(1500);
   ok("/simulate globe", await p.$('iframe[src*="globe3d"]') != null);
   ok("/simulate greeting", await p.evaluate(() => /Governing AI|governance/i.test(document.body.innerText)));
@@ -66,7 +73,7 @@ function ok(name, cond, note = "") { results.push({ name, pass: !!cond, note });
 // 4) /brief — HQ fly + convene + deep links
 {
   const { p, errs } = await page();
-  await p.goto(BASE + "/brief?id=jpmorgan", { waitUntil: "networkidle", timeout: 30000 });
+  await go(p, BASE + "/brief?id=jpmorgan");
   await p.waitForTimeout(1500);
   ok("/brief globe", await p.$('iframe[src*="globe3d"]') != null);
   ok("/brief HQ caption", await p.evaluate(() => /flown to .*HQ/i.test(document.body.innerText)));
@@ -78,11 +85,48 @@ function ok(name, cond, note = "") { results.push({ name, pass: !!cond, note });
 // 5) Sector + GEO pages
 for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-act", "critical infrastructure"], ["/pharma-ai-act", "drug-discovery"], ["/vs/vanta", "CSOAI vs Vanta"]]) {
   const { p, errs } = await page();
-  await p.goto(BASE + path, { waitUntil: "networkidle", timeout: 30000 });
-  await p.waitForTimeout(700);
-  ok(path + " content", await p.evaluate((n) => document.body.innerText.includes(n) || document.title.includes(n), needle));
-  ok(path + " schema", await p.evaluate(() => document.querySelectorAll('script[type="application/ld+json"]').length > 0));
-  ok(path + " console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
+  try {
+    await go(p, BASE + path);
+    await p.waitForTimeout(700);
+    ok(path + " content", await p.evaluate((n) => document.body.innerText.includes(n) || document.title.includes(n), needle));
+    ok(path + " schema", await p.evaluate(() => document.querySelectorAll('script[type="application/ld+json"]').length > 0));
+    ok(path + " console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
+  } catch (e) { ok(path + " load", false, String(e.message).slice(0, 40)); }
+  await p.close();
+}
+
+// 6) DRIVE-COMMAND SPY — prove the globe actually RECEIVES commands when you interact.
+{
+  const { p, errs } = await page();
+  await go(p, BASE + "/intel");
+  await p.waitForTimeout(2800);
+  const frame = p.frames().find((f) => f.url().includes("globe3d"));
+  if (frame) {
+    await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
+    const acct = await p.$('button:has-text("JPMorgan"), button:has-text("Chase"), button:has-text("Wells")');
+    if (acct) await acct.click();
+    await p.waitForTimeout(1600);
+    const cmds = await frame.evaluate(() => window.__spy || []);
+    ok("/intel globe RECEIVES flyTo on click", cmds.includes("flyTo"), "got: " + JSON.stringify(cmds));
+  } else ok("/intel globe RECEIVES flyTo on click", false, "no globe frame");
+  ok("/intel spy console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
+  await p.close();
+}
+
+// 7) DRIVE-COMMAND SPY — /globe threat button drives the 3D globe (flyTo + neutralize).
+{
+  const { p, errs } = await page();
+  await go(p, BASE + "/globe");
+  await p.waitForTimeout(2800);
+  const frame = p.frames().find((f) => f.url().includes("globe3d"));
+  if (frame) {
+    await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
+    const threatBtn = await p.$('button:has-text("Rogue swarm")');
+    if (threatBtn) await threatBtn.click();
+    await p.waitForTimeout(3200);
+    const cmds = await frame.evaluate(() => window.__spy || []);
+    ok("/globe threat drives globe", cmds.includes("flyTo") || cmds.includes("neutralize"), "got: " + JSON.stringify(cmds));
+  } else ok("/globe threat drives globe", false, "no globe frame");
   await p.close();
 }
 
