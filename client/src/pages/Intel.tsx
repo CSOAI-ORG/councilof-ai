@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ECOSYSTEM, PLAY_META, type Account } from "../data/ecosystem";
 import { scoreAccount } from "../lib/hiveScore";
+import { flyAndConvene } from "../lib/globeDrive";
 
 // /intel — the Distribution Hive command view. Renders the ecosystem dataset as
 // account cards, runs the fixed testing rubric per account, and tailors demo links.
@@ -12,6 +13,10 @@ export default function Intel() {
   const [region, setRegion] = useState<string>("all");
   const [sector, setSector] = useState<string>("all");
   const [sel, setSel] = useState<Account | null>(null);
+  const globeRef = useRef<HTMLIFrameElement | null>(null);
+  // Persistent globe, mounted once: whenever you pick an account, the Sovereign flies it
+  // to that account's exact HQ and pulses the point — the market lights up as you click.
+  useEffect(() => { if (sel) flyAndConvene(globeRef.current?.contentWindow, sel.hq[0], sel.hq[1], { height: 1400000, duration: 2.8, spiral: false }); }, [sel]);
   useEffect(() => { document.title = "Distribution Hive — account intelligence | CSOAI"; }, []);
   const REGIONS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.region)))];
   const SECTORS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.sector).filter(Boolean) as string[]))];
@@ -86,6 +91,14 @@ export default function Intel() {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="mt-5 overflow-hidden rounded-2xl border border-emerald-500/20">
+          <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
+            <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">Live globe — {sel ? "flown to " + sel.name + " · " + sel.country : "pick an account to fly the market"}</div>
+            {sel && <a href={"/brief?id=" + sel.id} className="text-[11px] font-semibold text-emerald-200 hover:underline">Open tailored brief →</a>}
+          </div>
+          <iframe ref={globeRef} src="/globe3d.html" title="hive globe" loading="lazy" className="block h-[340px] w-full" style={{ border: 0 }} />
         </div>
 
         <div className="mt-5 grid gap-3 lg:grid-cols-2">
