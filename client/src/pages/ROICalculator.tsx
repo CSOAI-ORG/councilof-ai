@@ -217,10 +217,13 @@ export default function ROICalculator() {
           {/* Results Section */}
           <div className="space-y-6">
             <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30 rounded-lg p-8">
-              <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
+              <h2 className="text-2xl font-bold mb-3 flex items-center gap-2">
                 <TrendingUp className="w-6 h-6 text-blue-400" />
-                Your ROI Impact
+                Your ROI Impact (illustrative)
               </h2>
+              <p className="mb-6 text-xs text-amber-200/80 border border-amber-400/30 bg-amber-500/10 rounded px-3 py-2">
+                Illustrative estimate using industry-standard assumptions — not based on measured CSOAI outcome data. Your actual results will vary.
+              </p>
 
               {/* Annual Cost Savings Card */}
               <div className="bg-slate-800/50 rounded-lg p-6 mb-4 border border-slate-700">
@@ -228,7 +231,7 @@ export default function ROICalculator() {
                   <div>
                     <p className="text-sm text-slate-400 mb-1">Annual Cost Savings</p>
                     <p className="text-3xl font-bold text-green-400">{formatCurrency(annualSavings)}</p>
-                    <p className="text-xs text-slate-500 mt-2">35% reduction in compliance costs</p>
+                    <p className="text-xs text-slate-500 mt-2">assumes a 35% reduction in compliance costs</p>
                   </div>
                   <DollarSign className="w-8 h-8 text-green-400 flex-shrink-0" />
                 </div>

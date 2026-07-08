@@ -56,7 +56,7 @@ const caseStudies: CaseStudy[] = [
       'A major European bank deployed high-risk AI systems for credit scoring and lending decisions across 15 countries. They faced fragmented regulatory requirements across EU member states and needed to demonstrate compliance with the newly enacted EU AI Act while maintaining system performance.',
     solution:
       'CSOAI implemented a centralized governance hub that mapped their AI systems against EU AI Act requirements, managed documentation automatically, tracked real-time compliance status, and generated audit-ready reports. The platform monitored model bias, fairness metrics, and explainability across all lending algorithms.',
-    frameworks: ['EU AI Act', 'Basel III', 'ISO 42001', 'GDPR'],
+    frameworks: ['EU AI Act', 'DORA', 'Model risk (SR 11-7)', 'ISO 42001', 'GDPR'],
     results: [
       {
         metric: 'Regulatory Readiness',
@@ -131,7 +131,7 @@ const caseStudies: CaseStudy[] = [
       'A government agency tasked with AI oversight needed to monitor AI systems deployed across public sector organizations including law enforcement, benefits administration, and immigration. They required transparency, civil rights protection, and cross-agency governance.',
     solution:
       'CSOAI deployed a government-grade governance platform with public transparency dashboards, civil rights impact assessment tools, cross-agency AI registry, automated compliance monitoring, and democratized accountability mechanisms. The system enabled oversight without stifling innovation.',
-    frameworks: ['NIST AI RMF', 'EU AI Act', 'Executive Orders', 'ISO 42001'],
+    frameworks: ['NIST AI RMF', 'EU AI Act', 'OMB M-25-21', 'ISO 42001'],
     results: [
       {
         metric: 'AI Systems Monitored',
@@ -242,7 +242,7 @@ const caseStudies: CaseStudy[] = [
       'A multinational corporation deployed AI-powered supply chain optimization, pricing engines, and customer analytics across 45 countries with different regulatory requirements (EU AI Act, NIST RMF, national AI strategies, data protection laws). Managing compliance across jurisdictions was impossible with legacy tools.',
     solution:
       'CSOAI deployed a global governance platform that automatically mapped AI systems against country-specific requirements, maintained jurisdiction-specific compliance dashboards, managed localized documentation, tracked regulatory changes in real-time, and provided unified reporting. The system reduced compliance risk across all markets.',
-    frameworks: ['EU AI Act', 'NIST AI RMF', 'UK AI Bill', 'China AI Regulations', 'ISO 42001'],
+    frameworks: ['EU AI Act', 'NIST AI RMF', 'UK AI framework', 'China TC260', 'ISO 42001'],
     results: [
       {
         metric: 'Compliance Coverage',
@@ -329,11 +329,12 @@ export default function CaseStudies() {
   const featuredCaseStudy = caseStudies.find(cs => cs.featured);
   const regularCaseStudies = filteredCaseStudies.filter(cs => !cs.featured || selectedIndustry !== 'all');
 
+  // Defensible, verifiable figures only — no invented traction stats.
   const stats = [
-    { label: 'Organizations Governed', value: '500+', icon: <Building2 className="w-6 h-6" />, color: 'emerald' },
-    { label: 'AI Systems Monitored', value: '12,000+', icon: <Cpu className="w-6 h-6" />, color: 'blue' },
-    { label: 'Countries Covered', value: '45+', icon: <Globe className="w-6 h-6" />, color: 'purple' },
-    { label: 'Compliance Frameworks', value: '8+', icon: <Shield className="w-6 h-6" />, color: 'indigo' },
+    { label: 'Frameworks mapped', value: '26', icon: <Shield className="w-6 h-6" />, color: 'emerald' },
+    { label: 'Controls crosswalked', value: '1,686', icon: <Cpu className="w-6 h-6" />, color: 'emerald' },
+    { label: 'Every governed action', value: 'Signed', icon: <Building2 className="w-6 h-6" />, color: 'emerald' },
+    { label: 'Verify offline', value: 'In-browser', icon: <Globe className="w-6 h-6" />, color: 'emerald' },
   ];
 
   const getStatColors = (color: string) => {
@@ -356,13 +357,16 @@ export default function CaseStudies() {
         <div className="absolute top-1/2 left-1/4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
 
         <div className="container max-w-6xl relative z-10">
-          <Badge className="mb-4 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Real-World Results</Badge>
+          <Badge className="mb-4 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Illustrative Scenarios</Badge>
           <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-            How Organizations Govern AI with CSOAI
+            How Organizations Can Govern AI with CSOAI
           </h1>
           <p className="text-xl text-gray-300 leading-relaxed max-w-3xl">
-            From financial institutions to government agencies, organizations worldwide are using CSOAI to achieve compliance,
-            reduce risk, and accelerate AI deployment with confidence.
+            Representative scenarios showing how financial institutions, healthcare, government and industry can use CSOAI to
+            close compliance gaps, reduce risk, and deploy AI with confidence.
+          </p>
+          <p className="mt-4 text-sm text-amber-200/80 max-w-3xl border border-amber-400/30 bg-amber-500/10 rounded-lg px-4 py-2">
+            Note: the scenarios and figures below are illustrative composites to show what CSOAI enables — not measured or attributed client outcomes.
           </p>
         </div>
       </div>
@@ -619,9 +623,11 @@ export default function CaseStudies() {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-semibold transition-all duration-200">
-                    Read Full Case Study
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                  <Button asChild className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-semibold transition-all duration-200">
+                    <a href="/crosswalk">
+                      See how it works
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </a>
                   </Button>
                 </div>
               </Card>
@@ -780,8 +786,8 @@ export default function CaseStudies() {
             Ready to Govern Your AI Systems?
           </h2>
           <p className="text-xl text-gray-300 mb-10 leading-relaxed">
-            Join 500+ organizations that have transformed their AI governance with CSOAI.
-            From rapid compliance to continuous monitoring, we've got you covered.
+            Start governing your AI with CSOAI — from rapid gap-closure to continuous,
+            signed, offline-verifiable monitoring.
           </p>
 
           <div className="flex flex-col md:flex-row gap-6 justify-center">
@@ -830,9 +836,9 @@ export default function CaseStudies() {
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-200/20 to-emerald-100/20 text-emerald-400 flex items-center justify-center mb-3">
                 <Award className="w-6 h-6" />
               </div>
-              <h3 className="font-bold mb-2">Proven Results</h3>
+              <h3 className="font-bold mb-2">Built for every industry</h3>
               <p className="text-gray-300 text-sm">
-                Thousands of success stories across industries and geographies
+                One signed control set mapped across sectors and geographies
               </p>
             </div>
           </div>
