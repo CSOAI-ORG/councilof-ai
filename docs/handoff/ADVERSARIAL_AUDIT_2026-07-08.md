@@ -9,12 +9,18 @@ consistency between the deployed bundle and source, and infrastructure hygiene.
 ### 1. [REAL, FIXED] Missing security headers on the main site
 `www.csoai.org` sent only `strict-transport-security` on every page checked (/, /pricing, /assess,
 /globe, /tool-commons). Missing: `X-Frame-Options` (clickjacking), `X-Content-Type-Options`
-(MIME-sniffing), `Referrer-Policy`, `Permissions-Policy`. By contrast the API backend
-(`os.meok.ai`) already has all of these correctly set -- it runs `helmet()` in `api-server/
-server.js`; the static Vite frontend on Vercel had no equivalent. For a company selling AI
-*governance and cybersecurity*, its own marketing site missing basic security headers is the kind
-of thing a technical prospect's security team checks first (many enterprises run automated header
-scans during vendor due diligence).
+(MIME-sniffing), `Referrer-Policy`, `Permissions-Policy`. By contrast `os.meok.ai` (curl-verified
+live) already sends all 4 of these correctly. **Correction (auditor-caught):** an earlier version
+of this doc attributed that to "it runs `helmet()` in `api-server/server.js`" -- checked, and that's
+wrong: `server.js` contains only a bare `app.use(helmet())` with no custom config, and `helmet()`'s
+default middleware set does not include `Permissions-Policy` (it requires explicit configuration).
+`X-Frame-Options`/`X-Content-Type-Options`/`Referrer-Policy` are plausibly helmet defaults, but
+`Permissions-Policy`'s actual source on that service is unverified -- could be a different file,
+a platform-level default, or something not checked here. The 4 headers ARE genuinely live on
+`os.meok.ai` (re-confirmed by direct curl), just not fully explained by the `helmet()` line alone.
+Either way: for a company selling AI *governance and cybersecurity*, its own marketing site missing
+basic security headers is the kind of thing a technical prospect's security team checks first (many
+enterprises run automated header scans during vendor due diligence).
 
 **Fix applied:** added a `headers` block to `vercel.json` setting `X-Frame-Options`,
 `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` on all routes.
