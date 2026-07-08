@@ -1,0 +1,35 @@
+name: Sov Stack E2E (agentic globe/sim/hive)
+
+# Verifies the unified agentic Sovereign stack on the live site: every surface loads
+# console-clean, interactions fire, and the globe actually RECEIVES its drive commands
+# (postMessage spy). Runs after each push to master (waits for Vercel deploy), nightly,
+# and on demand. Fails if any surface or drive-path regresses.
+
+on:
+  push:
+    branches: [master]
+  schedule:
+    - cron: "30 6 * * *" # daily 06:30 UTC (after claims-e2e)
+  workflow_dispatch:
+
+jobs:
+  sov-stack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Playwright (chromium)
+        run: |
+          npm init -y >/dev/null 2>&1 || true
+          npm i -D playwright@1.61.1 >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Wait for Vercel deploy (push only)
+        if: github.event_name == 'push'
+        run: sleep 100
+      - name: Run Sov-stack E2E against live site
+        env:
+          E2E_BASE: https://csoai.org
+        run: node scripts/sov-stack-e2e.mjs
