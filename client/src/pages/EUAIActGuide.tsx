@@ -108,8 +108,8 @@ export default function EUAIActGuide() {
   const keyDates = [
     {
       date: "July 12, 2024",
-      event: "EU AI Act Adopted",
-      description: "European Parliament formally adopted the AI Act after years of negotiation.",
+      event: "Published in the Official Journal",
+      description: "The AI Act (Regulation (EU) 2024/1689) was published in the EU Official Journal, entering into force on 1 August 2024. Parliament had adopted it on 13 March 2024.",
       status: "completed"
     },
     {
@@ -145,7 +145,7 @@ export default function EUAIActGuide() {
   ];
 
   const digitalOmnibus = {
-    proposalDate: "November 26, 2025",
+    proposalDate: "November 19, 2025",
     description: "The European Commission proposed the Digital Omnibus to simplify and streamline reporting obligations under the AI Act and other digital regulations.",
     keyChanges: [
       {
@@ -204,7 +204,7 @@ export default function EUAIActGuide() {
       category: "Data Governance",
       icon: BarChart3,
       requirements: [
-        "Training data must be relevant, representative, and error-free",
+        "Training data must be relevant, representative, and — to the best extent possible — free of errors and complete (Art. 10(3))",
         "Examination for possible biases",
         "Appropriate data governance measures",
         "Clear data lineage documentation"
@@ -428,8 +428,8 @@ export default function EUAIActGuide() {
               <div className="space-y-4 text-lg text-muted-foreground">
                 <p>
                   The <strong className="text-foreground">EU Artificial Intelligence Act</strong> (Regulation 2024/1689) is the world's
-                  first comprehensive legal framework for artificial intelligence. Adopted on July 12, 2024,
-                  and entering into force on August 1, 2024, it establishes a risk-based approach to AI regulation.
+                  first comprehensive legal framework for artificial intelligence. Published in the Official
+                  Journal on July 12, 2024 and entering into force on August 1, 2024, it establishes a risk-based approach to AI regulation.
                 </p>
                 <p>
                   The Act aims to ensure that AI systems placed on the EU market are safe, respect fundamental

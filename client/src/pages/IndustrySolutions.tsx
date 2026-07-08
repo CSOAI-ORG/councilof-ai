@@ -44,8 +44,8 @@ const industries: IndustryData[] = [
       'Financial institutions face unprecedented regulatory pressure to govern AI systems used in critical decision-making. From credit scoring to algorithmic trading, every AI deployment must demonstrate compliance, fairness, and explainability.',
     regulations: [
       'EU AI Act (High-Risk Classification)',
-      'Basel III AI Requirements',
-      'PRA/FCA Guidance on ML in Banking',
+      'Model risk management (US SR 11-7 / UK PRA SS1/23)',
+      'DORA (ICT & operational resilience)',
       'Fair Lending Laws & FCRA',
       'SOX & MiFID II',
     ],
@@ -196,7 +196,7 @@ const industries: IndustryData[] = [
       'Educational institutions deploying AI must prioritize student protection, fairness, and accessibility. AI systems affect student outcomes, and transparency is essential for trust.',
     regulations: [
       'EU AI Act (AI Literacy Mandate)',
-      'FERPA (Family Education Privacy Act)',
+      'FERPA (Family Educational Rights and Privacy Act)',
       'GDPR (Student Data Protection)',
       'ADA & Accessibility Laws',
       'Local Education Regulations',
@@ -330,7 +330,7 @@ const industries: IndustryData[] = [
       'Trustworthiness & adversarial attacks',
     ],
     solution: [
-      '40-nation NATO-grade governance',
+      'NATO-aligned governance (32 member nations)',
       'DSRB pipeline integration',
       'International alignment frameworks',
       'Safety & accountability protocols',
