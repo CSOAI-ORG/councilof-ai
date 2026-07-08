@@ -38,6 +38,8 @@ const ROUTES = [
   '/high-risk-ai-systems', '/ai-act-summary', '/ai-governance', '/eu-ai-act-timeline',
   // Cyber + readiness
   '/dora', '/nis2', '/cra', '/fedramp', '/readiness',
+  // Commercial-intent competitor pages (focus-aware Compare)
+  '/vs/vanta', '/vs/drata', '/vs/credo-ai', '/vs/onetrust',
 ];
 
 const MIME = {
