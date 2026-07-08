@@ -54,14 +54,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { lazy, Suspense } from "react";
 import AnimatedParticles from "@/components/AnimatedParticles";
-import EcosystemDiagram from "@/components/EcosystemDiagram";
-import CouncilVisualization from "@/components/CouncilVisualization";
 import EUAIActCountdown from "@/components/EUAIActCountdown";
-import ComparisonTable from "@/components/ComparisonTable";
-import GovernanceNetwork from "@/components/GovernanceNetwork";
-import ZeroSafetySection from "@/components/ZeroSafetySection";
-import Testimonials from "@/components/Testimonials";
+// Below-the-fold sections — lazy-loaded to keep the initial landing bundle small (defers recharts + network viz off first paint).
+const EcosystemDiagram = lazy(() => import("@/components/EcosystemDiagram"));
+const CouncilVisualization = lazy(() => import("@/components/CouncilVisualization"));
+const ComparisonTable = lazy(() => import("@/components/ComparisonTable"));
+const GovernanceNetwork = lazy(() => import("@/components/GovernanceNetwork"));
+const ZeroSafetySection = lazy(() => import("@/components/ZeroSafetySection"));
+const Testimonials = lazy(() => import("@/components/Testimonials"));
 
 // Animation variants
 const fadeInUp = {
@@ -458,7 +460,7 @@ export default function NewHomeV2() {
 
       {/* SECTION 1.25: ZERO AI SAFETY SOLUTIONS */}
       {/* ============================================ */}
-      <ZeroSafetySection />
+      <Suspense fallback={<div className="min-h-[300px]" />}><ZeroSafetySection /></Suspense>
 
       {/* ============================================ */}
       {/* SECTION 1.5: WHY AI SAFETY MATTERS NOW */}
@@ -614,7 +616,7 @@ export default function NewHomeV2() {
             viewport={{ once: true }}
             variants={scaleIn}
           >
-            <EcosystemDiagram />
+            <Suspense fallback={<div className="min-h-[300px]" />}><EcosystemDiagram /></Suspense>
           </motion.div>
         </div>
       </section>
@@ -770,7 +772,7 @@ export default function NewHomeV2() {
             </p>
           </motion.div>
 
-          <ComparisonTable />
+          <Suspense fallback={<div className="min-h-[300px]" />}><ComparisonTable /></Suspense>
         </div>
       </section>
 
@@ -1012,7 +1014,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 5.5: GOVERNANCE NETWORK */}
       {/* ============================================ */}
-      <GovernanceNetwork />
+      <Suspense fallback={<div className="min-h-[300px]" />}><GovernanceNetwork /></Suspense>
 
       {/* ============================================ */}
       {/* SECTION 6: THE MATERNAL COVENANT */}
@@ -1197,7 +1199,7 @@ export default function NewHomeV2() {
               className="relative"
             >
               <div className="aspect-square max-w-lg mx-auto bg-slate-800/50 rounded-3xl border border-slate-700 overflow-hidden">
-                <CouncilVisualization autoAnimate={true} showLabels={true} useLiveData={false} />
+                <Suspense fallback={<div className="min-h-[300px]" />}><CouncilVisualization autoAnimate={true} showLabels={true} useLiveData={false} /></Suspense>
               </div>
             </motion.div>
           </div>
@@ -1598,7 +1600,7 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 11.5: TESTIMONIALS */}
       {/* ============================================ */}
-      <Testimonials />
+      <Suspense fallback={<div className="min-h-[300px]" />}><Testimonials /></Suspense>
 
       {/* ============================================ */}
       {/* SECTION 12: FAQ */}
