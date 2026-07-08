@@ -8,6 +8,7 @@ import { Link } from "wouter";
 import { startTour } from "../lib/demoTour";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
+import ConsensusHero from "../components/ConsensusHero";
 import { motion } from "framer-motion";
 import {
   Shield,
@@ -461,6 +462,23 @@ export default function NewHomeV2() {
       {/* SECTION 1.25: ZERO AI SAFETY SOLUTIONS */}
       {/* ============================================ */}
       <Suspense fallback={<div className="min-h-[300px]" />}><ZeroSafetySection /></Suspense>
+
+      {/* ============================================ */}
+      {/* SECTION 1.4: CONSENSUS-TO-PROOF (one-glance story) */}
+      {/* ============================================ */}
+      <section className="py-14 md:py-20 bg-slate-950">
+        <div className="container mx-auto px-6 max-w-6xl text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">How it works, in one glance</p>
+          <h2 className="mt-3 text-3xl md:text-4xl xl:text-5xl font-black text-white">
+            Many frameworks. One <span className="text-emerald-400">signed</span> proof.
+          </h2>
+          <p className="mt-3 max-w-2xl mx-auto text-gray-300">
+            Governance rules from every jurisdiction reach a Byzantine-fault-tolerant council consensus — and out comes one
+            Ed25519-signed record anyone can verify offline, without trusting a vendor dashboard.
+          </p>
+          <ConsensusHero className="mt-8 w-full max-w-4xl mx-auto rounded-2xl" />
+        </div>
+      </section>
 
       {/* ============================================ */}
       {/* SECTION 1.5: WHY AI SAFETY MATTERS NOW */}
