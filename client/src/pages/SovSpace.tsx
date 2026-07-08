@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
+import { sovActions } from "../lib/sovAgent";
+
+// Map the agent's region → the codes the embedded 3D globe understands (loads local).
+const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
+function ssGlobeCode(text: string): string { const r = sovActions(text).find((a) => a.kind === "region"); return r && r.kind === "region" ? (SS_GLOBE_CODE[r.region] || "") : ""; }
 
 // Sovereign Space - the CSOAI AI-OS simulation. Feed data + text, watch the
 // 33-agent council deliberate, and the Sovereign narrates + speaks every step.
@@ -60,6 +65,7 @@ export default function SovSpace() {
   const [verdictText, setVerdictText] = useState("");
   const [sig, setSig] = useState("");
   const [voiceOn, setVoiceOn] = useState(true);
+  const [globeRegion, setGlobeRegion] = useState("");
   const endRef = useRef<HTMLDivElement | null>(null);
   const timers = useRef<any[]>([]);
 
@@ -67,7 +73,7 @@ export default function SovSpace() {
     document.title = "Sovereign Space - simulate, experiment, govern | CSOAI";
     // Handoff from the Sovereign Globe: /simulate?q=… pre-loads the scenario so one
     // Sovereign flows from "ask on the globe" straight into "run the full simulation".
-    try { const q = new URLSearchParams(window.location.search).get("q"); if (q) setScenario(q); } catch (e) {}
+    try { const q = new URLSearchParams(window.location.search).get("q"); if (q) { setScenario(q); setGlobeRegion(ssGlobeCode(q)); } } catch (e) {}
   }, []);
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setScenario(d); const t = setTimeout(() => run(d), 700); return () => clearTimeout(t); } }, []);
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [log]);
@@ -142,6 +148,7 @@ export default function SovSpace() {
   async function run(override?: string) {
     timers.current.forEach(clearTimeout); timers.current = [];
     if (override) setScenario(override);
+    setGlobeRegion(ssGlobeCode(override ?? scenario)); // fly the embedded globe to the scenario's jurisdiction
     setLog(["Convening the council over your scenario..."]); setVerdictText(""); setSig(""); setDone(false); setRunning(true); phaseRef.current = 2; chargeSovereign(10);
     const scen = ((override ?? scenario) || "").trim() || SAMPLE;
     const ind = ssIndustry(scen);
@@ -193,6 +200,15 @@ export default function SovSpace() {
             {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council verdict:</b> {verdictText}</div> : <div className="mb-2"><b>Verdict:</b> signed and ledgered.</div>}{sig ? <div className="font-mono text-[10px] text-emerald-300/70 break-all">Layer 0 ledger hash - SHA-256: {sig}</div> : null}<div className="mt-3 flex flex-wrap gap-2"><a href="/system-card" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect on the live Council →</a></div></div>}
             <div ref={endRef} />
           </div>
+        </div>
+      </section>
+      <section className="mx-auto max-w-6xl px-6 pb-8">
+        <div className="overflow-hidden rounded-2xl border border-sky-500/25">
+          <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
+            <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Sovereign Globe — {globeRegion ? "flown to " + globeRegion + " for your scenario" : "one Sovereign, one world — run a scenario to fly it"}</div>
+            <a href={"/globe" + (scenario ? "?ask=" + encodeURIComponent(scenario) : "")} className="text-[11px] font-semibold text-sky-200 hover:underline">Open the full globe →</a>
+          </div>
+          <iframe key={globeRegion} src={"/globe3d.html" + (globeRegion ? "?region=" + globeRegion : "")} title="Sovereign globe" loading="lazy" className="block h-[360px] w-full" style={{ border: 0 }} />
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-6 pb-16">
