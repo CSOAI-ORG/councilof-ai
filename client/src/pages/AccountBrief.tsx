@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ECOSYSTEM, PLAY_META, type Account } from "../data/ecosystem";
 import { scoreAccount } from "../lib/hiveScore";
+import { flyAndConvene } from "../lib/globeDrive";
 
 // /brief?id=<accountId> — a per-account tailored one-pager: region-flown globe, the
 // frameworks that govern them, the CSOAI play + the exact USPs to lead with, and
@@ -20,7 +21,15 @@ const PITCH: Record<string, string> = {
 export default function AccountBrief() {
   const id = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("id") : null;
   const a = ECOSYSTEM.find((x) => x.id === id);
+  const globeRef = useRef<HTMLIFrameElement | null>(null);
   useEffect(() => { document.title = a ? `${a.name} — CSOAI tailored brief` : "Account brief — CSOAI"; }, [a]);
+  // The Sovereign flies the globe to THIS account's exact HQ and pulses it — the brief
+  // opens on their own city, not just their region. Precise, tailored, "as we speak".
+  useEffect(() => {
+    if (!a) return;
+    const t = setTimeout(() => flyAndConvene(globeRef.current?.contentWindow, a.hq[0], a.hq[1], { height: 1200000, duration: 3.4, spiral: false }), 1500);
+    return () => clearTimeout(t);
+  }, [a]);
   if (!a) return (
     <div className="min-h-screen bg-[#03110b] p-12 text-emerald-50">Account not found. <a href="/intel" className="text-emerald-300 underline">Back to the Hive →</a></div>
   );
@@ -44,9 +53,9 @@ export default function AccountBrief() {
 
         {/* region-flown globe */}
         <div className="mt-6 overflow-hidden rounded-2xl border border-emerald-500/20" style={{ height: 380 }}>
-          <iframe src={`/globe3d.html?region=${gr}`} title="globe" className="h-full w-full" style={{ border: 0 }} />
+          <iframe ref={globeRef} src={`/globe3d.html?region=${gr}`} title="globe" className="h-full w-full" style={{ border: 0 }} />
         </div>
-        <p className="mt-1.5 text-[11px] text-emerald-300/75">Globe centered on {a.region}. Toggle “Hive coverage” to see the play + gap; “fly to worst gap” / “next opportunity” to tour the market.</p>
+        <p className="mt-1.5 text-[11px] text-emerald-300/75">Globe flown to {a.name}'s HQ ({a.country}). Toggle “Hive coverage” to see the play + gap; “fly to worst gap” / “next opportunity” to tour the market.</p>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {/* what governs them */}

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import { sovActions } from "../lib/sovAgent";
 import { detectLocale, REGIONS } from "../lib/locale";
+import { flyAndConvene, neutralize } from "../lib/globeDrive";
 
 // Map the agent's region → the codes the embedded 3D globe understands (loads local).
 const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -68,17 +69,15 @@ export default function SovSpace() {
   const [voiceOn, setVoiceOn] = useState(true);
   const [loc] = useState(() => detectLocale());
   const globeRef = useRef<HTMLIFrameElement | null>(null);
-  // Drive the embedded 3D globe via its postMessage command API (buffered until ready).
-  function driveGlobe(msg: any) { try { globeRef.current?.contentWindow?.postMessage(msg, "*"); } catch (e) {} }
-  // The Sovereign flies the globe to the scenario's jurisdiction (auto-pulses the point)
-  // and convenes the 33-agent council spiral RIGHT THERE — narration lands visually.
+  // The Sovereign flies the embedded globe to the scenario's jurisdiction (auto-pulses),
+  // convenes the 33-agent council spiral there, and neutralizes any rogue-swarm threat.
   function flyToScenario(text: string) {
     const code = ssGlobeCode(text);
     const prof = (code && REGIONS[code]) ? REGIONS[code] : REGIONS.GLOBAL;
     const [lng, lat] = prof.globe;
-    driveGlobe({ cmd: "flyTo", lng, lat, height: 3200000, duration: 3.2, col: "#34d399" });
-    window.setTimeout(() => driveGlobe({ cmd: "bftSpiral", lng, lat }), 3300);
-    if (sovActions(text).some((a) => a.kind === "threat")) window.setTimeout(() => driveGlobe({ cmd: "neutralize" }), 6600);
+    const win = globeRef.current?.contentWindow;
+    flyAndConvene(win, lng, lat, { spiral: true });
+    if (sovActions(text).some((a) => a.kind === "threat")) window.setTimeout(() => neutralize(win), 6600);
   }
   // Globe loads-local to the visitor's region on arrival, then flies to the scenario's jurisdiction on run.
   const [globeRegion, setGlobeRegion] = useState(() => (loc.region.code === "GLOBAL" ? "" : loc.region.code));
