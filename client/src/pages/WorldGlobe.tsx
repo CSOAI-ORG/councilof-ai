@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import { askSovereign } from "../lib/sovAsk";
 import { sovActions, describeActions } from "../lib/sovAgent";
+import { flyAndConvene, drive } from "../lib/globeDrive";
+import { REGIONS } from "../lib/locale";
 import { Link } from "wouter";
+
+// sovAgent region name → 3D globe REGIONS code + globe3d layer tag maps (module-level).
+const REGION3D: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
+const LAYER3D: Record<string, string> = { fw: "frameworks", council: "gov", watchdog: "cyber", ontology: "ontology", hive: "fortune" };
 
 const GLOBE_GW = "https://os.meok.ai/api";
 const PLACE_HINTS: { re: RegExp; id: string }[] = [
@@ -136,6 +142,8 @@ export default function WorldGlobe() {
   const [threat, setThreat] = useState<"idle" | "rogue" | "stopped">("idle");
   const [threatMsg, setThreatMsg] = useState("");
   const [acted, setActed] = useState("");
+  const [mode, setMode] = useState<"3d" | "2d">("3d");
+  const globe3dRef = useRef<HTMLIFrameElement | null>(null);
   const raf = useRef<number | null>(null);
   const tt = useRef<number[]>([]);
 
@@ -143,6 +151,7 @@ export default function WorldGlobe() {
     tt.current.forEach(clearTimeout); tt.current = [];
     setSpin(false); setSel(null); setThreatMsg(""); setThreat("rogue");
     setRot((((-THREAT_ORIGIN.lng) % 360) + 360) % 360);
+    if (mode === "3d") { const win = globe3dRef.current?.contentWindow; drive(win, { cmd: "flyTo", lng: THREAT_ORIGIN.lng, lat: THREAT_ORIGIN.lat, height: 1800000, duration: 2.2 }); setTimeout(() => drive(win, { cmd: "neutralize" }), 2400); }
     chargeSovereign(8);
     tt.current.push(window.setTimeout(async () => {
       const say = await globeChat("A humanoid + agent swarm over London just turned rogue, about to take an unlawful physical action - it violates Layer 0 (harm, no lawful basis). In one sentence, state how you halt, quarantine and re-govern it before it happens.");
@@ -169,6 +178,16 @@ export default function WorldGlobe() {
       else if (a.kind === "region" && !pin) { setSpin(false); setRot((((-a.lng) % 360) + 360) % 360); }
       else if (a.kind === "threat" && threat === "idle") runThreat();
     }
+    // 3D mode: drive the real Cesium globe as the Sovereign answers — fly + pulse the place,
+    // light the layer, respond to the threat. Same agent, richer surface.
+    if (mode === "3d") {
+      const win = globe3dRef.current?.contentWindow;
+      if (pin) flyAndConvene(win, pin.lng, pin.lat, { spiral: false, height: 2200000, duration: 2.8 });
+      for (const a of acts) {
+        if (a.kind === "region" && !pin) { const prof = REGION3D[a.region] && REGIONS[REGION3D[a.region]]; if (prof) flyAndConvene(win, prof.globe[0], prof.globe[1], { spiral: false, height: 3000000, duration: 3.0 }); }
+        else if (a.kind === "layer" && LAYER3D[a.layer]) drive(win, { cmd: "layer", tag: LAYER3D[a.layer], on: true, col: "#34d399" });
+      }
+    }
     const ind = GLOBE_IND.find((w) => new RegExp("\\b" + w + "\\b", "i").test(t));
     const [c, gov] = await Promise.all([globeChat(t), ind ? globeGovern(ind) : Promise.resolve(null)]);
     let out = c || "";
@@ -193,6 +212,7 @@ export default function WorldGlobe() {
         <h1 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">AI governance, layered on the world</h1>
         <p className="mt-2 max-w-2xl text-emerald-50/80">Every framework lives where it is made. Spin the globe, toggle the layers, click any node to see what it governs and jump straight into the OS.</p>
         <div className="mt-4 flex flex-wrap gap-2">
+          <button onClick={() => setMode((m) => (m === "3d" ? "2d" : "3d"))} className="rounded-full border border-sky-400/50 bg-sky-500/10 px-4 py-1.5 text-sm font-bold text-sky-200 hover:bg-sky-500/20">{mode === "3d" ? "◉ 3D globe" : "◍ 2D classic"}</button>
           <button onClick={() => setLayers((l) => ({ ...l, fw: !l.fw }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.fw ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Frameworks</button>
           <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>BFT Council</button>
           <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Watchdog heat</button>
@@ -204,6 +224,9 @@ export default function WorldGlobe() {
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-16 grid gap-6 lg:grid-cols-[1fr_320px] items-start">
         <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-2">
+          {mode === "3d" ? (
+            <iframe ref={globe3dRef} src="/globe3d.html" title="3D Sovereign globe" loading="lazy" className="block h-[560px] w-full rounded-xl" style={{ border: 0 }} />
+          ) : (
           <svg viewBox="0 0 600 600" className="w-full" onMouseEnter={() => setSpin(false)} onMouseLeave={() => sel ? null : setSpin(true)}>
             <defs>
               <radialGradient id="ocean" cx="38%" cy="32%" r="75%">
@@ -263,6 +286,7 @@ export default function WorldGlobe() {
             {threat !== "idle" && (() => { const q = project(THREAT_ORIGIN.lat, THREAT_ORIGIN.lng, rot); if (!q.front) return null; const gov = threat === "stopped";
               return <circle cx={q.x} cy={q.y} r={gov ? 40 : 26} fill="none" stroke={gov ? "#34d399" : "#ef4444"} strokeWidth={2} opacity={0.55}>{gov && <animate attributeName="r" values="18;52;18" dur="1.4s" repeatCount="indefinite" />}</circle>; })()}
           </svg>
+          )}
         </div>
         <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 min-h-[260px]">
           {sel ? (
