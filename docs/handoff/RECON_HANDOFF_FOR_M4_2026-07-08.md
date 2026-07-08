@@ -13,6 +13,12 @@ Each entry follows the same honesty-hedge convention as the ecosystem.ts 61-acco
 standard hedge (search-result plaintext not independently traceable in this transcript --
 URL/company is real, treat quoted specifics as unverified-but-not-confirmed).
 
+**Lead_id-to-company mapping re-verified 2026-07-08** (auditor caught that 2 of the 10 writes
+-- Mastercard/T9-0021, Cisco/T9-0023 -- were made without a confirming `SELECT` first, unlike
+the other 8. Re-ran the SELECT after the fact: both map correctly, `T9-0021` = `Mastercard Inc`,
+`T9-0023` = `CISCO SYSTEMS, INC.` No mismatch occurred, but the process gap was real -- confirm
+`lead_id` -> `company_legal_name` before merging any of these, not after.):
+
 ## T9-0001 — NVIDIA CORP — **verified**
 verified/mature -- own-domain
 
