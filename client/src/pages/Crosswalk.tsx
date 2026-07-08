@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import EnforcementTimeline from "../components/EnforcementTimeline";
 
 // /crosswalk — the single most citable public asset CSOAI owns: an open,
 // crawlable map of how 13 global AI-governance frameworks align to 8 universal
@@ -38,7 +39,6 @@ export default function Crosswalk() {
       { "@type": "FAQPage", mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
     ],
   };
-  const aug = days("2026-08-02"), aug27 = days("2027-08-02");
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -48,10 +48,10 @@ export default function Crosswalk() {
         <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The AI governance <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">framework crosswalk.</span></h1>
         <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">How <b>13 AI-governance &amp; adjacent compliance frameworks</b> map to <b>8 universal controls</b>. Comply once, evidence everywhere. The signed, article-level version runs inside the <a href="/os" className="text-emerald-300 underline">CSOAI OS</a>.</p>
 
-        {/* dual enforcement countdown */}
-        <div className="mt-5 flex flex-wrap gap-3">
-          <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-2 text-sm"><b className="text-amber-200">{aug} days</b> <span className="text-amber-100/70">→ EU AI Act high-risk (Annex III) + Art. 50 transparency obligations apply (2 Aug 2026)</span></div>
-          <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm"><b className="text-emerald-200">{aug27} days</b> <span className="text-emerald-100/70">→ Annex I product-safety high-risk + legacy GPAI compliance (2 Aug 2027)</span></div>
+        {/* EU AI Act staggered-application timeline (branded, date-accurate) */}
+        <div className="mt-5 rounded-2xl border border-emerald-500/15 bg-[#03110b]/60 p-3">
+          <p className="mb-1 px-2 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">EU AI Act — staggered application</p>
+          <EnforcementTimeline className="w-full" />
         </div>
 
         {hi.size > 0 && (
