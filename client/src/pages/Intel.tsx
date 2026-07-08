@@ -50,10 +50,16 @@ export default function Intel() {
     tourTimers.current.forEach(clearTimeout); tourTimers.current = [];
     if (touring) { setTouring(false); return; }
     setTouring(true);
-    topGaps.forEach(({ a }, i) => {
+    const order = [...topGaps].reverse(); // build UP to the single biggest gap = the climax
+    order.forEach(({ a }, i) => {
+      const last = i === order.length - 1;
       tourTimers.current.push(window.setTimeout(() => {
-        setSel(a);
-        if (i === topGaps.length - 1) tourTimers.current.push(window.setTimeout(() => setTouring(false), 3200));
+        setSel(a); // flies + pulses + narrates via the sel effect
+        if (last) {
+          // Climax: convene the full 33-agent council over the single biggest opportunity.
+          tourTimers.current.push(window.setTimeout(() => { flyAndConvene(globeRef.current?.contentWindow, a.hq[0], a.hq[1], { spiral: true, height: 1200000, duration: 3.0 }); speak(`The single biggest opportunity: ${a.name}. Convening the full thirty-three agent council.`); }, 1600));
+          tourTimers.current.push(window.setTimeout(() => setTouring(false), 7200));
+        }
       }, i * 3800));
     });
   }
