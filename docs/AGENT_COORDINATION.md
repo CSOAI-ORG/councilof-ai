@@ -70,6 +70,15 @@ lane now to avoid M2/M4 duplicating it.** Facts checked before starting:
 - ~~If you're M2 or M4 reading this: don't start a parallel per-account sweep on this DB~~ —
   **retracted, see correction above: this is M4's file, not mine to gate.**
 
+## 🔍 LANE NOTE (2026-07-08) — Claude Science running a deep adversarial audit pass
+Nick asked for testing/auditing beyond the standard harnesses — things `claims-e2e.mjs` (happy-path
+claim verification) and `account-e2e.mjs` (M2's per-account UX walk) don't cover: error handling,
+malformed input, security headers, cross-data consistency (does the globe agree with ecosystem.ts
+agree with hive-coverage.json?), broken links, and anything a skeptical prospect might poke at live.
+**Read-only reconnaissance first, then targeted fixes where I find real, reproducible issues** —
+logging findings here as I go so M2/M4 don't duplicate. Not touching `auth*`/`payments*`/
+`AssessTool*`/`sovereign-charters` (M4's) or the account-experience harness (M2's).
+
 ## Blocked on Nick (consolidated — neither agent can do these)
 1. **Phase 3 deploy** — JEEVES's runbook + signing key ready; needs Nick to run.
 2. **Outreach send** — lead list clean; sending is Nick's action.
