@@ -55,7 +55,7 @@ export const REGIMES: Regime[] = [
   {
     slug: "nist-ai-rmf", name: "NIST AI RMF", region: "United States", authority: "NIST (voluntary framework)",
     kind: "ai", status: "voluntary",
-    summary: "The AI Risk Management Framework 1.0 plus the Generative AI Profile — voluntary, function-based (Govern, Map, Measure, Manage). With EO 14110 revoked (Jan 2025), the operative US federal baseline is OMB M-24-10 (agency AI use/governance) + NIST AI RMF, layered with state law (Colorado, California).",
+    summary: "The AI Risk Management Framework 1.0 plus the Generative AI Profile — voluntary, function-based (Govern, Map, Measure, Manage). With EO 14110 revoked (Jan 2025), the operative US federal baseline is OMB M-25-21 (which rescinded and replaced M-24-10 in April 2025) + NIST AI RMF, layered with state law (Colorado, California).",
     topTools: [
       "Govern/Map/Measure/Manage program scaffold",
       "AI system inventory + context mapping",
@@ -68,10 +68,10 @@ export const REGIMES: Regime[] = [
     nextDates: [
       { date: "ongoing", event: "GenAI Profile (NIST-AI-600-1) adoption across agencies + vendors" },
       { date: "2026", event: "Sector crosswalks + NIST assurance guidance expand" },
-      { date: "in effect", event: "OMB M-24-10 governs federal agencies' AI use (CAIOs, risk practices) — EO 14110 revoked Jan 2025" },
-      { date: "ongoing", event: "Federal procurement + M-24-10 increasingly reference RMF conformance" },
+      { date: "in effect", event: "OMB M-25-21 governs federal agencies' AI use (CAIOs, risk practices) — rescinded and replaced M-24-10 in Apr 2025; EO 14110 revoked Jan 2025" },
+      { date: "ongoing", event: "Federal procurement + M-25-21 increasingly reference RMF conformance" },
       { date: "2026–27", event: "Alignment work between RMF and ISO/IEC 42001 controls" },
-      { date: "1 Jan 2027", event: "State laws bite (Colorado AI Act) leaning on RMF as the reasonable-care baseline" },
+      { date: "1 Jan 2027", event: "State AI laws begin to bite (e.g. Colorado SB 26-189 / ADMT)" },
       { date: "ongoing", event: "CISA + sector guidance for AI in critical infrastructure" },
     ],
     csoai: "The Govern/Map/Measure/Manage scaffold as a live program, model cards + bias audits, red-team logging — mapped to EU AI Act so one evidence set serves both.",
@@ -128,9 +128,9 @@ export const REGIMES: Regime[] = [
     hiveSlug: "gdpr",
   },
   {
-    slug: "colorado-ai-act", name: "Colorado AI Act (SB 24-205)", region: "United States · Colorado", authority: "Colorado Attorney General",
+    slug: "colorado-ai-act", name: "Colorado AI framework (SB 26-189 / ADMT)", region: "United States · Colorado", authority: "Colorado Attorney General",
     kind: "ai", status: "phasing-in",
-    summary: "The first comprehensive US state AI law — a duty of reasonable care to protect consumers from algorithmic discrimination by high-risk AI in consequential decisions.",
+    summary: "Originally the first comprehensive US state AI law (SB 24-205 — a duty of reasonable care against algorithmic discrimination in consequential decisions), but repealed and replaced in May 2026 by SB 26-189, a scaled-back ADMT framework that drops the duty of care and impact-assessment mandates. Effective 1 Jan 2027. The requirements below reflect the original SB 24-205 regime.",
     topTools: [
       "High-risk consequential-decision inventory",
       "Algorithmic-discrimination risk management program",
@@ -141,9 +141,9 @@ export const REGIMES: Regime[] = [
       "Developer↔deployer documentation exchange",
     ],
     nextDates: [
-      { date: "1 Jan 2027", event: "Act takes effect (amended from Feb 2026) — duty of reasonable care begins" },
-      { date: "2026", event: "AG implementing rules on impact assessments + notices" },
-      { date: "ongoing", event: "Other US states modelling laws on Colorado's approach" },
+      { date: "1 Jan 2027", event: "SB 26-189 (ADMT framework) takes effect — repealed & replaced the original SB 24-205 AI Act, dropping its duty of care and impact-assessment mandates" },
+      { date: "2026", event: "AG rulemaking under the scaled-back ADMT framework" },
+      { date: "ongoing", event: "Other US states watching Colorado's pivot away from the EU-style model" },
       { date: "ongoing", event: "Interaction with NIST RMF as the reasonable-care benchmark" },
       { date: "2026–27", event: "Enforcement posture + safe-harbour clarifications" },
       { date: "ongoing", event: "Business-community amendments debated in legislature" },
