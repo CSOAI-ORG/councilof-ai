@@ -72,7 +72,17 @@ function serve() {
 
 async function main() {
   const srv = await serve();
-  const browser = await chromium.launch();
+  let browser;
+  try {
+    browser = await chromium.launch();
+  } catch (e) {
+    // Build-safe: if chromium isn't installed (e.g. Vercel install --ignore-scripts),
+    // skip prerender WITHOUT failing the deploy. SPA still ships; run prerender where chromium exists.
+    console.log(`\n⚠ prerender skipped — chromium unavailable (${String(e.message || e).slice(0, 80)}).`);
+    console.log('  To enable in CI/Vercel: add "npx playwright install chromium" before "npm run prerender".');
+    srv.close();
+    return; // exit 0
+  }
   const page = await browser.newPage();
   let ok = 0, fail = 0;
   for (const route of ROUTES) {
