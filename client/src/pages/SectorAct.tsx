@@ -44,6 +44,30 @@ const SECTORS: Record<string, Sector> = {
       { q: "How does this relate to NYC Local Law 144?", a: "Both require bias auditing of automated employment tools. A single bias-audit program can be designed to satisfy NYC LL144 and EU AI Act expectations together." },
     ],
   },
+  energy: {
+    key: "energy", eyebrow: "CSOAI - energy + critical infrastructure + EU AI Act",
+    title: "AI in energy and critical infrastructure and the EU AI Act",
+    intro: "AI that keeps electricity, gas, water, and heating flowing safely is named high-risk in Annex III of the EU AI Act. Transparency duties land 2 Aug 2026; full high-risk obligations phase in by Dec 2027 - and NIS2 and the Cyber Resilience Act run alongside for critical infrastructure.",
+    highRisk: ["AI as a safety component in the supply of electricity, gas, water, or heating", "Grid balancing, load forecasting, and outage-prevention control", "AI in the operation of critical digital infrastructure", "Automated control that, on failure, endangers supply or safety"],
+    obligations: ["Human oversight of safety-critical control decisions", "Robustness, accuracy, and cybersecurity testing", "Technical documentation, logging, and traceability", "Aligning evidence with NIS2 and the Cyber Resilience Act"],
+    faqs: [
+      { q: "Is energy-grid AI high-risk under the EU AI Act?", a: "Yes. AI intended as a safety component in the management and operation of critical infrastructure, including the supply of water, gas, heating, and electricity, is listed as a high-risk use in Annex III of the EU AI Act." },
+      { q: "Does the AI Act overlap with NIS2 for critical infrastructure?", a: "Yes. Energy operators face NIS2 cybersecurity duties as essential entities and, where AI is a safety component, the AI Act's high-risk obligations on top. Much governance evidence can be shared across both." },
+      { q: "When do energy AI obligations apply?", a: "Transparency duties apply from 2 August 2026; the full high-risk obligations phase in by December 2027 under the Digital Omnibus." },
+    ],
+  },
+  pharma: {
+    key: "pharma", eyebrow: "CSOAI - pharma + life sciences + EU AI Act",
+    title: "AI in pharma and life sciences and the EU AI Act",
+    intro: "Not all pharma AI is high-risk - early-stage drug-discovery models often sit outside Annex III - but AI inside medical devices, clinical decision support, and safety-critical pharmacovigilance can be. GPAI duties for foundation models apply from 2 Aug 2026, and GxP and EMA expectations run in parallel. Here is the honest line.",
+    highRisk: ["AI as a safety component of a medical device (MDR / IVDR overlap)", "Clinical decision support used in trials or care", "Safety-signal detection in pharmacovigilance, where safety-critical", "Note: pure early-stage drug-discovery AI is often not Annex III high-risk"],
+    obligations: ["GPAI transparency and documentation for foundation models (from 2 Aug 2026)", "Human oversight and validation for device or clinical AI", "Alignment with GxP and EMA expectations on AI", "Data governance, bias testing, logging, and traceability"],
+    faqs: [
+      { q: "Is drug-discovery AI high-risk under the EU AI Act?", a: "Often not. Early-stage drug-discovery models are typically not listed in Annex III. AI becomes high-risk when it is a safety component of a medical device or used in clinical decision-making." },
+      { q: "Do foundation models used in pharma have obligations?", a: "Yes. General-purpose AI (GPAI) models carry transparency and documentation duties that apply from 2 August 2026, regardless of sector." },
+      { q: "How does the AI Act interact with GxP and EMA guidance?", a: "The AI Act sits alongside GxP and EMA expectations on AI. Validation and documentation work can be aligned, but the AI-Act-specific duties for high-risk and GPAI systems are additional." },
+    ],
+  },
 };
 
 export default function SectorAct({ sector }: { sector: string }) {

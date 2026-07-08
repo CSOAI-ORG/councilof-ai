@@ -40,6 +40,8 @@ const ROUTES = [
   '/dora', '/nis2', '/cra', '/fedramp', '/readiness',
   // Commercial-intent competitor pages (focus-aware Compare)
   '/vs/vanta', '/vs/drata', '/vs/credo-ai', '/vs/onetrust',
+  // Net-new sector pages
+  '/energy-ai-act', '/pharma-ai-act',
 ];
 
 const MIME = {

@@ -521,6 +521,8 @@ function App() {
           <Route path="/healthcare-ai-act">{() => <SectorAct sector="healthcare" />}</Route>
           <Route path="/finance-ai-act">{() => <SectorAct sector="finance" />}</Route>
           <Route path="/hr-ai-act">{() => <SectorAct sector="hr" />}</Route>
+          <Route path="/energy-ai-act">{() => <SectorAct sector="energy" />}</Route>
+          <Route path="/pharma-ai-act">{() => <SectorAct sector="pharma" />}</Route>
           <Route path="/vanta-alternative">{() => <AltPage comp="vanta" />}</Route>
           <Route path="/onetrust-alternative">{() => <AltPage comp="onetrust" />}</Route>
           <Route path="/credo-ai-alternative">{() => <AltPage comp="credo" />}</Route>
