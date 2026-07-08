@@ -99,7 +99,29 @@ a visually wrong location. Verified in isolation (Python re-implementation of th
 the Citigroup/Goldman/Verizon cluster resolves to 3 distinct, closely-spaced coordinates. Type-check
 and full `vite build` both pass clean.
 
-## Priority
-Findings #1 (missing security headers) and #7 (globe coordinate collisions hiding real accounts)
-are both fixed. #2 (rate limiting) is worth a note for later, not urgent for a pre-revenue demo
-site. #3-6 turned out to be false leads, caught and cleared before being reported as real.
+### 8. [Self-corrected mid-audit] Initially fetched the WRONG pricing chunk
+While checking the live `/pricing` page, first fetched a JS chunk (`Pricing-CmFZjIdh.js`) that
+turned out to be the **demoted legacy page** (`Pricing.tsx`, now only served at `/pricing-legacy`)
+-- its content (a "£1,500/£5,000/yr Analyst License" training-certification model) is real and
+live, just not at `/pricing`. Traced the actual live route via `App.tsx` (`/pricing` -> `PlansPage`
+component) and re-fetched the correct chunk (`PlansPage-XMSHZ-M5.js`): confirms the intended,
+already-consolidated pricing (Sovereign/Pro/Operator/Team/Enterprise, Pro at $99/mo or $82.50/mo
+billed yearly + PAYG credits), matching M2's own commit message for that consolidation
+(`f3feb37`). Not a bug -- correcting the record so this mix-up isn't mistaken for a real finding
+by a future reader of this doc.
+
+### 9. [REAL, confirmed, not fixed -- M4's lane] Checkout backend genuinely not configured
+`PlansPage` CTAs correctly route to `/signup?plan=X` rather than calling checkout directly (sound
+design -- doesn't expose a broken call on the pricing page itself). But `os.meok.ai/api/checkout`
+itself returns `{"ok":false,"reason":"not_configured","message":"Checkout isn't live yet — add a
+Stripe TEST key + price IDs to go-live (test mode first)."}` -- an honest, non-crashing stub, not a
+silent failure or fake success. This confirms there is currently no live payment path end-to-end,
+consistent with the "Blocked on Nick" list already in `docs/AGENT_COORDINATION.md` (Phase 3
+deploy / Stripe-alternative decision). Not touching -- `payments*`/`checkout*` are explicitly
+M4's owned files per the Who's-who table.
+
+## Priority (updated)
+Findings #1 (missing security headers) and #7 (globe coordinate collisions) are fixed and pushed.
+#9 confirms a known, already-tracked blocker (checkout not live) rather than surfacing a new one.
+#2 (rate limiting) still just a note for later. #3-6, #8 were false leads/self-corrections, caught
+before being reported as real bugs.
