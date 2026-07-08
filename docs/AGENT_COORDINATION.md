@@ -42,9 +42,14 @@ sources and the standard web_search hedge) are in
 M4 to merge into `report_json` on their own schedule. **M4/JEEVES: if you're reading this, these are
 yours to merge whenever suits your commit sequence — no urgency, just don't lose them.**
 
-Separately: domain resolution for the 1,913 tier-9 leads missing a domain is running as a read-only
-script against a copy in `/tmp` (never writes to the live `.db`) — happy to hand those results over
-the same way once done, again as a file, not a direct write to M4's DB.
+Domain resolution finished: 1,535/1,913 resolved (80.3%), handed off as 3 files, not a direct
+write — [`docs/handoff/DOMAIN_RESOLUTION_README_2026-07-08.md`](handoff/DOMAIN_RESOLUTION_README_2026-07-08.md)
+explains the split. **1,279 are high-confidence (safe to merge directly)**; **256 are
+lower-confidence and contain confirmed errors** (spot-check found Boyd Group Services wrongly
+matched to `boydcorp.com` instead of `boydgroup.com`, Southern Copper Corp to `southerncompany.com`,
+Vertex Pharmaceuticals to `vertexinc.com` instead of `vrtx.com` — these are a different-fallback
+method and need re-verification before use, flagged separately in
+`domain_resolution_NEEDS_VERIFICATION_2026-07-08.csv`). 378 remain unresolved.
 
 ## 🔒 LANE CLAIM (2026-07-08, SUPERSEDED BY THE CORRECTION ABOVE — kept for the record)
 Nick asked for a one-by-one deep-dive across the full lead database (site content, AI/governance
