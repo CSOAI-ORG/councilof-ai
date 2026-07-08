@@ -29,7 +29,7 @@ const JSONLD = {
 const FOCUS: Record<string, string> = { vanta: "Vanta", drata: "Drata", "credo-ai": "Credo AI", credo: "Credo AI", onetrust: "OneTrust" };
 export default function Compare({ focus }: { focus?: string }) {
   const fname = focus ? (FOCUS[focus.toLowerCase()] || "") : "";
-  const focusFaq = fname ? { q: `CSOAI vs ${fname} — what's the difference?`, a: `${fname} is a strong compliance-automation platform. CSOAI is AI-governance-native and open: every governed decision is Ed25519-signed and offline-verifiable, 13 frameworks crosswalk to one control set, it installs in one command, and your data and models stay yours. Use ${fname} for evidence collection; use CSOAI to prove AI governance across the EU AI Act, NIST AI RMF and ISO 42001 — with a free, open tier.` } : null;
+  const focusFaq = fname ? { q: `CSOAI vs ${fname} — what's the difference?`, a: `${fname} is a strong compliance-automation platform. CSOAI is AI-governance-native and open: every governed decision is Ed25519-signed and offline-verifiable, 26 frameworks crosswalk to one control set, it installs in one command, and your data and models stay yours. Use ${fname} for evidence collection; use CSOAI to prove AI governance across the EU AI Act, NIST AI RMF and ISO 42001 — with a free, open tier.` } : null;
   const allFaqs = focusFaq ? [focusFaq, ...FAQS] : FAQS;
   useEffect(() => {
     document.title = fname ? `CSOAI vs ${fname} — AI governance comparison (2026) | CSOAI` : "CSOAI vs Vanta vs Drata vs Credo AI vs OneTrust — AI governance comparison (2026)";

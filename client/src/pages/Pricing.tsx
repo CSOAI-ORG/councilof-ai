@@ -426,7 +426,7 @@ export default function Pricing() {
               </CardHeader>
               <CardContent className="text-center">
                 <div className="mb-6">
-                  <span className="text-5xl font-bold text-white">49</span>
+                  <span className="text-5xl font-bold text-white">£49</span>
                   <span className="text-slate-400 text-lg ml-1">one-time</span>
                 </div>
 
@@ -490,18 +490,18 @@ export default function Pricing() {
                     onCheckedChange={setIsYearlyLicense}
                   />
                   <span className={`text-sm ${isYearlyLicense ? 'text-white' : 'text-slate-400'}`}>
-                    Yearly <Badge className="ml-1 bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">Save 40%+</Badge>
+                    Yearly <Badge className="ml-1 bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">Save £40/yr</Badge>
                   </span>
                 </div>
 
                 <div className="mb-6">
                   <span className="text-5xl font-bold text-white">
-                    {isYearlyLicense ? '199' : '19.99'}
+                    £{isYearlyLicense ? '199' : '19.99'}
                   </span>
                   <span className="text-slate-400 text-lg ml-1">/{isYearlyLicense ? 'year' : 'month'}</span>
                   {isYearlyLicense && (
                     <p className="text-sm text-emerald-400 mt-1">
-                      vs 239.88/year if paid monthly
+                      vs £239.88/year if paid monthly
                     </p>
                   )}
                 </div>
@@ -604,7 +604,7 @@ export default function Pricing() {
                     <div className="mb-6">
                       {tier.price ? (
                         <>
-                          <span className="text-5xl font-bold text-white">{tier.price.toLocaleString()}</span>
+                          <span className="text-5xl font-bold text-white">£{tier.price.toLocaleString()}</span>
                           <span className="text-slate-400">/{tier.period}</span>
                         </>
                       ) : (

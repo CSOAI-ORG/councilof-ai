@@ -15,7 +15,7 @@ const SCRUTINY = [
   "Material AI risk factors in your 10-K / 20-F (Reg S-K Item 105)",
   "AI-washing: the SEC settled charges vs two advisers in Mar 2024 for overstated AI use",
   "Board and audit-committee oversight of AI as a governance matter",
-  "The SEC's predictive-data-analytics proposal for advisers and broker-dealers",
+  "Proposed (not yet adopted): the SEC's 2023 predictive-data-analytics rule for advisers and broker-dealers",
 ];
 const DEFENSIBLE = [
   "A signed, board-ready System Card per material AI system - offline-verifiable",
@@ -27,7 +27,7 @@ const FAQS = [
   { q: "Does the SEC require AI disclosure?", a: "There is no standalone SEC AI-disclosure rule as of 2026. But existing rules already apply: material AI-related risks must be disclosed in 10-K risk factors and MD&A under Reg S-K, and misleading AI claims can trigger enforcement. Treat AI as a material-disclosure and governance matter now." },
   { q: "What is AI-washing and why does the SEC care?", a: "AI-washing is overstating or misrepresenting a company's use of AI. In March 2024 the SEC settled charges against two investment advisers for it. The safeguard is simple: only claim AI capabilities you can evidence - which is exactly what a signed System Card provides." },
   { q: "Where does AI belong in a 10-K?", a: "Material AI risks belong in Item 105 risk factors and, where AI affects results or operations, in MD&A. Governance and board oversight of AI can also be described. The bar is materiality and accuracy - not a specific AI form." },
-  { q: "How does CSOAI help a public company?", a: "CSOAI produces a signed, offline-verifiable System Card and governance evidence per AI system, so your disclosures are backed by proof rather than assertion. It maps one control set across NIST AI RMF, ISO 42001, and the EU AI Act, and is honest vs Vanta, Drata, and Credo AI." },
+  { q: "How does CSOAI help a public company?", a: "CSOAI produces a signed, offline-verifiable System Card and governance evidence per AI system, so your disclosures are backed by proof rather than assertion. It maps one control set across NIST AI RMF, ISO 42001, and the EU AI Act, and is honest about how it compares to Vanta, Drata, and Credo AI." },
 ];
 
 export default function SECDisclosure() {

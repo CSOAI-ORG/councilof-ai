@@ -202,7 +202,7 @@ const getFrameworkGuideUrl = (id: string): string => {
 const faqs = [
   {
     question: "What is CSOAI?",
-    answer: "CSOAI (Civil Society Oversight of AI) is the world's first relationship-based AI safety infrastructure organization. We provide operational infrastructure for AI governance, combining licensing, training, monitoring, and economic redistribution into one unified platform. Unlike think tanks, we offer market-driven enforcement and real operational systems.",
+    answer: "CSOAI (Civil Society Oversight of AI) is an independent, relationship-based AI safety infrastructure organization. We provide operational infrastructure for AI governance, combining licensing, training, monitoring, and economic redistribution into one unified platform. Unlike think tanks, we offer market-driven enforcement and real operational systems.",
   },
   {
     question: "How do I get certified as an AI Safety Analyst?",
@@ -226,7 +226,7 @@ const faqs = [
   },
   {
     question: "Can I earn money as an AI Safety Analyst?",
-    answer: "Absolutely! Certified analysts earn £45-150/hour depending on experience and specialization. You can work remotely, set your own hours, and choose which AI systems to monitor. Top analysts working full-time can earn £100,000-300,000+ annually. Our job marketplace connects you directly with enterprises needing compliance monitoring.",
+    answer: "Yes — it's a real, paid role. Rates on the marketplace currently range roughly £45–150/hour depending on experience, specialisation, and demand, and the work is remote with hours you set. Earnings vary and are not guaranteed — they depend on how much you work and the demand for your specialisation. Our job marketplace connects you directly with enterprises needing compliance monitoring.",
   },
   {
     question: "How do enterprises register AI systems?",
@@ -330,7 +330,7 @@ export default function NewHomeV2() {
             transition={{ duration: 0.7, delay: 0.5 }}
             className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto"
           >
-            The world's first relationship-based AI safety infrastructure.
+            A relationship-based approach to AI safety — partnership, not control.
             Partnership, not control. Prosperity, not fear.
           </motion.p>
 
@@ -491,29 +491,29 @@ export default function NewHomeV2() {
               {
                 icon: "👤",
                 title: "Hiring Discrimination",
-                stat: "2x",
-                desc: "AI hiring tools have rejected qualified women at twice the rate of men",
-                impact: "Millions of career opportunities lost",
+                stat: "Documented",
+                desc: "AI hiring tools have been found to disadvantage women — Amazon scrapped a recruiting model that penalised CVs mentioning “women’s” (Reuters, 2018)",
+                impact: "Careers shaped by unaudited models",
               },
               {
                 icon: "🏥",
                 title: "Medical Errors",
-                stat: "30%",
-                desc: "AI diagnostic tools show significant error rates in diverse populations",
+                stat: "Known risk",
+                desc: "AI diagnostic tools can underperform for under-represented groups when trained on non-diverse data (peer-reviewed literature)",
                 impact: "Lives put at risk by biased training data",
               },
               {
                 icon: "💰",
                 title: "Financial Bias",
-                stat: "£4.5B",
-                desc: "Annual cost of AI-driven lending discrimination globally",
+                stat: "Under scrutiny",
+                desc: "AI lending and pricing models have produced discriminatory outcomes, drawing regulator attention (e.g. US CFPB, UK FCA)",
                 impact: "Families denied loans, homes, opportunities",
               },
               {
                 icon: "🚗",
                 title: "Autonomous Failures",
-                stat: "400+",
-                desc: "Reported autonomous vehicle incidents requiring investigation",
+                stat: "Investigated",
+                desc: "Autonomous-vehicle incidents remain under active safety investigation by regulators (e.g. NHTSA)",
                 impact: "Safety gaps in real-world deployment",
               },
             ].map((item, i) => (
@@ -581,7 +581,7 @@ export default function NewHomeV2() {
             <a href="/registry" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Registry</div><p className="mt-1 text-xs text-white/90">Every regulation, standard, protocol.</p></a>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="/try" className="rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Ask the Council -&gt;</a>
+            <a href="/try" className="rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-800">Ask the Council -&gt;</a>
             <a href="/meok-law" className="rounded-xl border border-emerald-300/50 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Your jurisdiction stack -&gt;</a>
           </div>
         </div>
@@ -920,7 +920,7 @@ export default function NewHomeV2() {
                     "ALL 33 courses completely FREE",
                     "Industry-recognized certification (£49 exam)",
                     "Analyst License: £199/year",
-                    "Earn £45-150/hour remotely",
+                    "Marketplace rates ~£45–150/hour (varies)",
                     "Join a growing profession",
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-2 text-gray-600 text-sm">
