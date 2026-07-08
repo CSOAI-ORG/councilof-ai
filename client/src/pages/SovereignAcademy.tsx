@@ -9,11 +9,11 @@ type Path = { n: number; title: string; blurb: string; ring: string; chip: strin
 
 const PATHS: Path[] = [
   { n: 1, title: "Foundations", blurb: "Stand on the floor first — identity, policy, attestation.", ring: "border-amber-300", chip: "bg-amber-100 text-amber-800", modules: [
-    { name: "Layer 0 — the 8 trust controls", href: "/trust-center" },
+    { name: "Layer 0 — the 8 trust controls", href: "/layer0" },
     { name: "The 52-Article Charter", href: "/charter" },
     { name: "SOAI-PDCA methodology", href: "/soai-pdca" },
   ] },
-  { n: 2, title: "Your jurisdiction", blurb: "Learn the law that governs you — wherever you are.", ring: "border-emerald-300", chip: "bg-emerald-100 text-emerald-800", modules: [
+  { n: 2, title: "Your jurisdiction", blurb: "Learn the frameworks and law that apply to you — wherever you are.", ring: "border-emerald-300", chip: "bg-emerald-100 text-emerald-800", modules: [
     { name: "EU AI Act", href: "/eu-ai-act" },
     { name: "NIST AI RMF", href: "/nist-ai-rmf" },
     { name: "ISO/IEC 42001", href: "/iso-42001" },
@@ -42,7 +42,7 @@ export default function SovereignAcademy() {
             <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Learn by living it</p>
           </div>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Sovereign Academy</h1>
-          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">No manuals. Your Sovereign walks you through governance as a journey — from the Layer 0 floor to the law that governs you, into the tools, to certification. Every step flows into the real OS.</p>
+          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">No manuals. Your Sovereign walks you through governance as a journey — from the Layer 0 floor to the frameworks and law that apply to you, into the tools, to certification. Every step flows into the real OS.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="/tour" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Take the guided tour {"\u2192"}</a>
             <a href="/readiness-assessment" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Free readiness check {"\u2192"}</a>

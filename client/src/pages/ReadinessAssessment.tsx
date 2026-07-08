@@ -90,9 +90,9 @@ const regions = ["EU", "UK", "US", "Canada", "Asia-Pacific", "Middle East", "Afr
 
 const regulationsByRegion: Record<string, string[]> = {
   EU: ["EU AI Act", "GDPR", "Directive 2019/1937"],
-  UK: ["UK AI Bill", "UK GDPR", "FCA regulations"],
-  US: ["NIST AI RMF", "FTC Guidelines", "Executive Order 14110", "CFPB Rules"],
-  Canada: ["AIDA (Proposed)", "PIPEDA", "Provincial Privacy Laws"],
+  UK: ["UK pro-innovation AI framework (no enacted AI statute yet)", "UK GDPR", "FCA/PRA guidance"],
+  US: ["NIST AI RMF", "OMB M-25-21", "FTC Guidelines", "State AI laws (Colorado, California)"],
+  Canada: ["AIDA (lapsed with Bill C-27, 2025)", "PIPEDA", "Provincial Privacy Laws"],
   "Asia-Pacific": ["Singapore PDPC Framework", "Japan AI Guidelines", "South Korea AI Ethics"],
   "Middle East": ["UAE AI Ethics Framework"],
   Africa: ["AU Digital Transformation Strategy"],
