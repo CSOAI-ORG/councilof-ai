@@ -38,9 +38,13 @@ function tzFor(a) { for (const j of a.jurisdictions || []) if (JUR_TZ[j]) return
 
 async function ask(q) { try { const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "You are the CSOAI Sovereign — AI governance & cyber. Be concise, on-topic.\n\nUser question: " + q }) }); const d = await r.json(); return String(d.response || ""); } catch { return ""; } }
 
-const ids = (process.env.ACCOUNTS || "jpmorgan,hsbc,deutschebank,samsung,unitedhealth,airbus,dbs,tcs,nist,mas-sg").split(",");
 const all = loadAccounts();
-const sample = ids.map((id) => all.find((a) => a.id === id.trim())).filter(Boolean);
+const envAcc = (process.env.ACCOUNTS || "").trim();
+// ACCOUNTS=all sweeps the full universe; ACCOUNTS=id1,id2 targets; default = curated 10.
+const sample = envAcc.toLowerCase() === "all"
+  ? all
+  : (envAcc || "jpmorgan,hsbc,deutschebank,samsung,unitedhealth,airbus,dbs,tcs,nist,mas-sg")
+      .split(",").map((id) => all.find((a) => a.id === id.trim())).filter(Boolean);
 
 const b = await chromium.launch();
 const reports = [];
