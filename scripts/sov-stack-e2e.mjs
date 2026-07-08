@@ -130,6 +130,44 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   await p.close();
 }
 
+// 8) SPY — /brief "Convene the council" drives flyTo + bftSpiral over the HQ.
+{
+  const { p } = await page();
+  try {
+    await go(p, BASE + "/brief?id=jpmorgan");
+    await p.waitForTimeout(2600);
+    const frame = p.frames().find((f) => f.url().includes("globe3d"));
+    if (frame) {
+      await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
+      const btn = await p.$('button:has-text("Convene the 33-agent council")');
+      if (btn) await btn.click();
+      await p.waitForTimeout(3800);
+      const cmds = await frame.evaluate(() => window.__spy || []);
+      ok("/brief convene drives council", cmds.includes("flyTo") && cmds.includes("bftSpiral"), "got: " + JSON.stringify(cmds));
+    } else ok("/brief convene drives council", false, "no globe frame");
+  } catch (e) { ok("/brief convene drives council", false, String(e.message).slice(0, 40)); }
+  await p.close();
+}
+
+// 9) SPY — /simulate "Run experiment" convenes the council on the scenario's jurisdiction.
+{
+  const { p } = await page();
+  try {
+    await go(p, BASE + "/simulate?q=a%20hiring%20AI%20in%20Germany");
+    await p.waitForTimeout(2600);
+    const frame = p.frames().find((f) => f.url().includes("globe3d"));
+    if (frame) {
+      await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
+      const run = await p.$('button:has-text("Run experiment")');
+      if (run) await run.click();
+      await p.waitForTimeout(4400);
+      const cmds = await frame.evaluate(() => window.__spy || []);
+      ok("/simulate run drives council", cmds.includes("flyTo") && cmds.includes("bftSpiral"), "got: " + JSON.stringify(cmds));
+    } else ok("/simulate run drives council", false, "no globe frame");
+  } catch (e) { ok("/simulate run drives council", false, String(e.message).slice(0, 40)); }
+  await p.close();
+}
+
 await b.close();
 const pass = results.filter((r) => r.pass).length;
 console.log(`\n=== Sov stack E2E: ${pass}/${results.length} passed ===`);
