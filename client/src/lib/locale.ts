@@ -37,6 +37,16 @@ export const GREETINGS: Record<string, string> = {
   it: "Governance dell'IA per la tua regione.",
   pt: "Governança de IA para a sua região.",
   nl: "AI-governance voor jouw regio.",
+  ar: "حوكمة الذكاء الاصطناعي، أينما تعمل.",
+  hi: "आपके क्षेत्र के लिए AI गवर्नेंस।",
+  ru: "Управление ИИ для вашего региона.",
+  pl: "Zarządzanie AI dla Twojego regionu.",
+  tr: "Bölgeniz için yapay zekâ yönetişimi.",
+  sv: "AI-styrning för din region.",
+  id: "Tata kelola AI untuk wilayah Anda.",
+  th: "ธรรมาภิบาล AI สำหรับภูมิภาคของคุณ",
+  vi: "Quản trị AI cho khu vực của bạn.",
+  he: "ממשל בינה מלאכותית לאזור שלך.",
 };
 
 function tzRegion(tz: string): string {

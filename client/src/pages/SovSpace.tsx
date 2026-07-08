@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import { sovActions } from "../lib/sovAgent";
-import { detectLocale } from "../lib/locale";
+import { detectLocale, REGIONS } from "../lib/locale";
 
 // Map the agent's region → the codes the embedded 3D globe understands (loads local).
 const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -67,6 +67,19 @@ export default function SovSpace() {
   const [sig, setSig] = useState("");
   const [voiceOn, setVoiceOn] = useState(true);
   const [loc] = useState(() => detectLocale());
+  const globeRef = useRef<HTMLIFrameElement | null>(null);
+  // Drive the embedded 3D globe via its postMessage command API (buffered until ready).
+  function driveGlobe(msg: any) { try { globeRef.current?.contentWindow?.postMessage(msg, "*"); } catch (e) {} }
+  // The Sovereign flies the globe to the scenario's jurisdiction (auto-pulses the point)
+  // and convenes the 33-agent council spiral RIGHT THERE — narration lands visually.
+  function flyToScenario(text: string) {
+    const code = ssGlobeCode(text);
+    const prof = (code && REGIONS[code]) ? REGIONS[code] : REGIONS.GLOBAL;
+    const [lng, lat] = prof.globe;
+    driveGlobe({ cmd: "flyTo", lng, lat, height: 3200000, duration: 3.2, col: "#34d399" });
+    window.setTimeout(() => driveGlobe({ cmd: "bftSpiral", lng, lat }), 3300);
+    if (sovActions(text).some((a) => a.kind === "threat")) window.setTimeout(() => driveGlobe({ cmd: "neutralize" }), 6600);
+  }
   // Globe loads-local to the visitor's region on arrival, then flies to the scenario's jurisdiction on run.
   const [globeRegion, setGlobeRegion] = useState(() => (loc.region.code === "GLOBAL" ? "" : loc.region.code));
   const endRef = useRef<HTMLDivElement | null>(null);
@@ -151,7 +164,8 @@ export default function SovSpace() {
   async function run(override?: string) {
     timers.current.forEach(clearTimeout); timers.current = [];
     if (override) setScenario(override);
-    setGlobeRegion(ssGlobeCode(override ?? scenario)); // fly the embedded globe to the scenario's jurisdiction
+    setGlobeRegion(ssGlobeCode(override ?? scenario)); // label
+    flyToScenario(override ?? scenario); // fly + pulse + convene the council ON the globe
     setLog(["Convening the council over your scenario..."]); setVerdictText(""); setSig(""); setDone(false); setRunning(true); phaseRef.current = 2; chargeSovereign(10);
     const scen = ((override ?? scenario) || "").trim() || SAMPLE;
     const ind = ssIndustry(scen);
@@ -216,7 +230,7 @@ export default function SovSpace() {
             <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Sovereign Globe — {globeRegion ? "flown to " + globeRegion + " for your scenario" : "one Sovereign, one world — run a scenario to fly it"}</div>
             <a href={"/globe" + (scenario ? "?ask=" + encodeURIComponent(scenario) : "")} className="text-[11px] font-semibold text-sky-200 hover:underline">Open the full globe →</a>
           </div>
-          <iframe key={globeRegion} src={"/globe3d.html" + (globeRegion ? "?region=" + globeRegion : "")} title="Sovereign globe" loading="lazy" className="block h-[360px] w-full" style={{ border: 0 }} />
+          <iframe ref={globeRef} src={"/globe3d.html" + (loc.region.code !== "GLOBAL" ? "?region=" + loc.region.code : "")} title="Sovereign globe" loading="lazy" className="block h-[360px] w-full" style={{ border: 0 }} />
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-6 pb-16">
