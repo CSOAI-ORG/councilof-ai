@@ -74,8 +74,32 @@ bug.
 - Signature verification correctly rejects garbage input, mismatched-length hex, and tampered
   signatures with proper `valid:false` responses, not crashes or stack traces.
 
+### 7. [REAL, FIXED] 6 account clusters on the globe share identical HQ coordinates -- silently unclickable
+Checked `public/hive-coverage.json` for coordinate sanity (range, duplicates). All 88 accounts have
+valid lat/lng, but 6 groups share an **identical** `[lng, lat]` pair -- most notably Citigroup,
+Goldman Sachs, and Verizon are all authored at the exact same point `[-74.01, 40.71]` in
+`ecosystem.ts`. Verified via web_search this isn't simply wrong data -- Citigroup (388 Greenwich
+St) and Goldman Sachs (200 West St) genuinely are blocks apart in Lower Manhattan, and Verizon's
+building is across the street from Goldman's -- but "genuinely close" is exactly the case that
+breaks a world-scale globe render.
+
+Traced the actual rendering code in `WorldGlobe.tsx`: each hive account renders as its own SVG `<g>`
+in array order, so identical coordinates stack the dots exactly on top of each other -- **only the
+last one in array order is ever visible or clickable; the others are completely unreachable via the
+globe UI**, with no visual cue that anything is hidden underneath. Confirmed precisely: of the 6
+clusters, only `edpb`, `dbs`, `shell`, `verizon`, `mckesson`, `siemens` were reachable; `eu-ai-office`,
+`mas-sg`, `ent-eu-bank`, `citigroup`, `goldmansachs`, `exxonmobil`, `allianz` were silently hidden.
+
+**Fix applied:** since re-typing "more precise" coordinates wouldn't actually solve this (real HQs
+can be genuinely close), added a `deconflictHiveCoords()` helper in `WorldGlobe.tsx` that applies a
+small, deterministic (id-hash-seeded, so stable across reloads -- not random jitter that would move
+around on every render) offset to every account after the first at a given point, spread in a ring
+(~0.35deg per collision-rank) so all remain individually visible/clickable without moving anyone to
+a visually wrong location. Verified in isolation (Python re-implementation of the same logic) that
+the Citigroup/Goldman/Verizon cluster resolves to 3 distinct, closely-spaced coordinates. Type-check
+and full `vite build` both pass clean.
+
 ## Priority
-Only finding #1 (missing security headers) is worth fixing immediately -- real, cheap, and directly
-relevant to how a security-conscious prospect will judge the product. #2 (rate limiting) is worth a
-note for later, not urgent for a pre-revenue demo site. #3-5 turned out to be false leads, caught
-before being reported as real.
+Findings #1 (missing security headers) and #7 (globe coordinate collisions hiding real accounts)
+are both fixed. #2 (rate limiting) is worth a note for later, not urgent for a pre-revenue demo
+site. #3-6 turned out to be false leads, caught and cleared before being reported as real.

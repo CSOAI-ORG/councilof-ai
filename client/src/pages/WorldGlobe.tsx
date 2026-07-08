@@ -29,6 +29,27 @@ function hiveColor(h: HiveAccount): string {
   if (h.confidence === "verified") return "#34d399"; // real, cited governance posture - green
   return "#94a3b8"; // modeled/unconfirmed - grey
 }
+// Audit fix (2026-07-08): several real accounts share an identical or near-identical [lng,lat]
+// (e.g. Citigroup/Goldman Sachs/Verizon all authored at the same Lower-Manhattan point) -- at
+// world-globe zoom this stacks their dots exactly on top of each other, so only the last-rendered
+// one is ever visible or clickable and the others are silently unreachable. Apply a small,
+// deterministic (id-hash-seeded, so stable across reloads) offset to every member of a cluster
+// after the first, spread in a ring so each stays clickable without moving anyone to a wrong city.
+function deconflictHiveCoords(accounts: HiveAccount[]): HiveAccount[] {
+  const seen = new Map<string, number>(); // "lng,lat" (rounded) -> count already placed
+  const hashSeed = (id: string) => { let h = 0; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0; return h; };
+  return accounts.map((a) => {
+    const key = a.hq[0].toFixed(2) + "," + a.hq[1].toFixed(2);
+    const n = seen.get(key) || 0;
+    seen.set(key, n + 1);
+    if (n === 0) return a; // first one at this point keeps the real coordinate
+    const angle = (hashSeed(a.id) % 360) * (Math.PI / 180);
+    const ringRadius = 0.35 * n; // degrees -- small enough to stay visually "at" the same city
+    const lng = a.hq[0] + ringRadius * Math.cos(angle);
+    const lat = a.hq[1] + ringRadius * Math.sin(angle);
+    return { ...a, hq: [lng, lat] as [number, number] };
+  });
+}
 const FRAMEWORKS: Pin[] = [
   { id: "euaa", name: "EU AI Act", region: "EU", lat: 50.85, lng: 4.35, color: "#2563eb", href: "/readiness", note: "Transparency 2 Aug 2026; high-risk Dec 2027 (Omnibus). Brussels." },
   { id: "gdpr", name: "GDPR", region: "EU", lat: 50.85, lng: 4.36, color: "#1d4ed8", href: "/meok-law", note: "Data + automated-decision safeguards. Brussels." },
@@ -94,7 +115,7 @@ export default function WorldGlobe() {
   const [hiveSel, setHiveSel] = useState<HiveAccount | null>(null);
   useEffect(() => {
     fetch("/hive-coverage.json").then((r) => (r.ok ? r.json() : null)).then((d) => {
-      if (d && Array.isArray(d.coverage)) setHiveAccounts(d.coverage as HiveAccount[]);
+      if (d && Array.isArray(d.coverage)) setHiveAccounts(deconflictHiveCoords(d.coverage as HiveAccount[]));
     }).catch(() => {});
   }, []);
   const [rot, setRot] = useState(0);
