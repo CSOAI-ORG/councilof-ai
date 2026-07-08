@@ -22,6 +22,9 @@ const TZ = { EU: ["Europe/Berlin", "de-DE"], UK: ["Europe/London", "en-GB"], US:
 const JUR_TZ = { jp: ["Asia/Tokyo", "ja-JP"], kr: ["Asia/Seoul", "ko-KR"], cn: ["Asia/Shanghai", "zh-CN"], sg: ["Asia/Singapore", "en-SG"], in: ["Asia/Kolkata", "en-IN"], uk: ["Europe/London", "en-GB"], eu: ["Europe/Berlin", "de-DE"], us: ["America/New_York", "en-US"] };
 // region → a regime keyword we expect the localized homepage to surface
 const REGIME = { EU: /EU AI Act/i, UK: /UK|principles/i, US: /NIST/i, APAC: /MAS|METI|AI Basic Act|ISO/i };
+// jurisdiction-aware LOCAL regime the Sovereign should lead with (Agent-3 building block).
+const LOCAL = { jp: /METI|APPI|Japan/i, kr: /AI Basic Act|Korea|PIPA/i, cn: /TC260|China|GenAI/i, sg: /MAS|FEAT|Model AI Governance|Singapore/i, in: /DPDP|MeitY|India/i, uk: /UK|ICO|principles/i, eu: /EU AI Act|GDPR|DORA|NIS2/i, us: /NIST|HIPAA|FTC|state/i };
+function localRegime(a) { for (const j of a.jurisdictions || []) if (LOCAL[j]) return LOCAL[j]; return REGIME[a.region] || /governance/i; }
 
 function loadAccounts() {
   const ts = readFileSync(resolve(ROOT, "client/src/data/ecosystem.ts"), "utf8");
@@ -54,9 +57,13 @@ for (const a of sample) {
     await hp.close();
     // 2. tailored brief
     const bp = await ctx.newPage(); await bp.goto(SITE + "/brief?id=" + a.id, { waitUntil: "domcontentloaded" }); await bp.waitForTimeout(2200);
-    const bt = await bp.evaluate(() => document.body.innerText);
+    const bd = await bp.evaluate(() => ({ txt: document.body.innerText, globe: !!document.querySelector('iframe[src^="/globe3d.html?region="]') }));
+    const bt = bd.txt;
     pass.brief = bt.includes(a.name) && !!(a.frameworks || []).find((f) => bt.includes(f));
     if (!pass.brief) gaps.push("brief missing name or frameworks");
+    // brief DEPTH: play + 'lead with' USPs (or alignment) + region-flown globe
+    pass.briefDepth = /\b(align|integrate|displace)\b/i.test(bt) && /lead the demo with|Alignment/i.test(bt) && bd.globe;
+    if (!pass.briefDepth) gaps.push("brief depth (play/USPs/region-globe) incomplete");
     await bp.close();
     // 3. crosswalk pre-framed
     const cp = await ctx.newPage(); await cp.goto(SITE + "/crosswalk?fw=" + encodeURIComponent((a.frameworks || []).join(",")), { waitUntil: "domcontentloaded" }); await cp.waitForTimeout(2000);
@@ -69,6 +76,11 @@ for (const a of sample) {
   const sov = await ask(`I run a ${a.sector || a.type} in ${a.country}. What AI-governance rules apply and how do I comply?`);
   pass.sovereign = !!sov && /governance|EU AI Act|NIST|ISO|DORA|HIPAA|MAS|METI|risk|framework|compliance/i.test(sov);
   if (!pass.sovereign) gaps.push("Sovereign off-topic/empty for " + (a.sector || a.type));
+  // region-appropriateness: does the Sovereign lead with THEIR local regime (not EU-first everywhere)?
+  if (a.type !== "regulator" && a.type !== "government") {
+    pass.regionMatch = !!sov && localRegime(a).test(sov);
+    if (!pass.regionMatch) gaps.push("Sovereign didn't lead with " + a.region + " local regime");
+  }
   const score = Object.values(pass).filter(Boolean).length;
   reports.push({ id: a.id, name: a.name, region: a.region, sector: a.sector || a.type, play: a.play, score, of: Object.keys(pass).length, gaps });
   console.log(`${score}/${Object.keys(pass).length} ${a.name} (${a.region}/${a.sector || a.type}) ${gaps.length ? "· GAPS: " + gaps.join("; ") : "· clean"}`);
