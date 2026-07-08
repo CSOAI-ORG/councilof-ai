@@ -14,9 +14,12 @@ export default function Intel() {
   const [sector, setSector] = useState<string>("all");
   const [sel, setSel] = useState<Account | null>(null);
   const globeRef = useRef<HTMLIFrameElement | null>(null);
+  const [touring, setTouring] = useState(false);
+  const tourTimers = useRef<number[]>([]);
   // Persistent globe, mounted once: whenever you pick an account, the Sovereign flies it
   // to that account's exact HQ and pulses the point — the market lights up as you click.
   useEffect(() => { if (sel) flyAndConvene(globeRef.current?.contentWindow, sel.hq[0], sel.hq[1], { height: 1400000, duration: 2.8, spiral: false }); }, [sel]);
+  useEffect(() => () => { tourTimers.current.forEach(clearTimeout); }, []);
   useEffect(() => { document.title = "Distribution Hive — account intelligence | CSOAI"; }, []);
   const REGIONS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.region)))];
   const SECTORS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.sector).filter(Boolean) as string[]))];
@@ -30,6 +33,19 @@ export default function Intel() {
   const playCount = scored.reduce((m, x) => { m[x.s.play] = (m[x.s.play] || 0) + 1; return m; }, {} as Record<string, number>);
   // worst-gap leaderboard — ranked across the WHOLE dataset (not the current tab)
   const topGaps = ECOSYSTEM.map((a) => ({ a, s: scoreAccount(a) })).filter((x) => x.s.confidence !== "authority").sort((x, y) => y.s.totalGap - x.s.totalGap).slice(0, 8);
+  // Auto-fly tour: the Sovereign walks the globe through the biggest market opportunities,
+  // flying + pulsing each HQ in turn (reuses the fly-on-select effect via setSel).
+  function tourGaps() {
+    tourTimers.current.forEach(clearTimeout); tourTimers.current = [];
+    if (touring) { setTouring(false); return; }
+    setTouring(true);
+    topGaps.forEach(({ a }, i) => {
+      tourTimers.current.push(window.setTimeout(() => {
+        setSel(a);
+        if (i === topGaps.length - 1) tourTimers.current.push(window.setTimeout(() => setTouring(false), 3200));
+      }, i * 3800));
+    });
+  }
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -96,7 +112,10 @@ export default function Intel() {
         <div className="mt-5 overflow-hidden rounded-2xl border border-emerald-500/20">
           <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
             <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">Live globe — {sel ? "flown to " + sel.name + " · " + sel.country : "pick an account to fly the market"}</div>
-            {sel && <a href={"/brief?id=" + sel.id} className="text-[11px] font-semibold text-emerald-200 hover:underline">Open tailored brief →</a>}
+            <div className="flex items-center gap-3">
+              <button onClick={tourGaps} className={"rounded-full border px-3 py-1 text-[11px] font-bold " + (touring ? "border-amber-400 bg-amber-500/20 text-amber-100" : "border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/10")}>{touring ? "◉ touring the market…" : "▶ Tour the top gaps"}</button>
+              {sel && <a href={"/brief?id=" + sel.id} className="text-[11px] font-semibold text-emerald-200 hover:underline">Open tailored brief →</a>}
+            </div>
           </div>
           <iframe ref={globeRef} src="/globe3d.html" title="hive globe" loading="lazy" className="block h-[340px] w-full" style={{ border: 0 }} />
         </div>
