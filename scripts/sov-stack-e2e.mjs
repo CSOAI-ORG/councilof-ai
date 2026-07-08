@@ -168,6 +168,25 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   await p.close();
 }
 
+// 10) SPY — /simulate with a THREAT scenario also drives neutralize on the globe.
+{
+  const { p } = await page();
+  try {
+    await go(p, BASE + "/simulate?q=a%20rogue%20swarm%20of%20agents%20in%20London");
+    await p.waitForTimeout(2600);
+    const frame = p.frames().find((f) => f.url().includes("globe3d"));
+    if (frame) {
+      await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
+      const run = await p.$('button:has-text("Run experiment")');
+      if (run) await run.click();
+      await p.waitForTimeout(7600); // neutralize is scheduled ~6.6s after run
+      const cmds = await frame.evaluate(() => window.__spy || []);
+      ok("/simulate threat drives neutralize", cmds.includes("neutralize"), "got: " + JSON.stringify(cmds));
+    } else ok("/simulate threat drives neutralize", false, "no globe frame");
+  } catch (e) { ok("/simulate threat drives neutralize", false, String(e.message).slice(0, 40)); }
+  await p.close();
+}
+
 await b.close();
 const pass = results.filter((r) => r.pass).length;
 console.log(`\n=== Sov stack E2E: ${pass}/${results.length} passed ===`);
