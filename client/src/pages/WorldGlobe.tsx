@@ -5,6 +5,7 @@ import { sovActions, describeActions } from "../lib/sovAgent";
 import { flyAndConvene, drive } from "../lib/globeDrive";
 import { REGIONS } from "../lib/locale";
 import { Link } from "wouter";
+import SovNav from "../components/SovNav";
 
 // sovAgent region name → 3D globe REGIONS code + globe3d layer tag maps (module-level).
 const REGION3D: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -208,6 +209,7 @@ export default function WorldGlobe() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">
+        <SovNav />
         <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the sovereign globe</p>
         <h1 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">AI governance, layered on the world</h1>
         <p className="mt-2 max-w-2xl text-emerald-50/80">Every framework lives where it is made. Spin the globe, toggle the layers, click any node to see what it governs and jump straight into the OS.</p>

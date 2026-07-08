@@ -3,6 +3,7 @@ import { chargeSovereign } from "../lib/sovCharge";
 import { sovActions } from "../lib/sovAgent";
 import { detectLocale, REGIONS } from "../lib/locale";
 import { flyAndConvene, neutralize } from "../lib/globeDrive";
+import SovNav from "../components/SovNav";
 
 // Map the agent's region → the codes the embedded 3D globe understands (loads local).
 const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -191,6 +192,7 @@ export default function SovSpace() {
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <section className="relative overflow-hidden mx-auto max-w-6xl px-6 pt-14 pb-6">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 30% -10%, rgba(16,185,129,.18), transparent 60%)" }} />
+        <div className="relative"><SovNav /></div>
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Sovereign Space</p>
         <h1 className="relative mt-2 text-5xl sm:text-6xl font-black tracking-tight">Simulate. Experiment. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Govern.</span></h1>
         <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the 33-agent council deliberate live while your Sovereign narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
