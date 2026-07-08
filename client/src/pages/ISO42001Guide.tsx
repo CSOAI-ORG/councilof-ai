@@ -421,7 +421,7 @@ export default function ISO42001Guide() {
     },
     {
       question: "What are the Annex A controls in ISO 42001?",
-      answer: "Annex A provides reference control objectives and controls across five domains: (1) AI system impact assessment controls, (2) AI system development controls, (3) Data for AI systems controls, (4) AI system operation controls, and (5) Third-party and customer relationship controls. Organizations select applicable controls based on their risk assessment and context."
+      answer: "Annex A provides 38 reference controls organized under 9 control objectives (A.2–A.10): AI policy; internal organization; resources for AI systems; assessing impacts of AI systems; AI system life cycle; data for AI systems; information for interested parties; use of AI systems; and third-party relationships. Organizations select applicable controls based on their risk assessment and context."
     },
     {
       question: "How does ISO 42001 address AI ethics?",
@@ -670,7 +670,7 @@ export default function ISO42001Guide() {
             <Badge variant="secondary" className="text-sm mb-4">Supporting Guidance</Badge>
             <h2 className="text-4xl font-bold mb-4">Informative Annexes</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              ISO 42001 includes four informative annexes providing additional guidance for implementation.
+              ISO/IEC 42001 includes the normative Annex A (38 reference controls across 9 objectives) plus three informative annexes (B–D) providing implementation guidance.
             </p>
           </motion.div>
 
