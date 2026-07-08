@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import { sovActions } from "../lib/sovAgent";
+import { detectLocale } from "../lib/locale";
 
 // Map the agent's region → the codes the embedded 3D globe understands (loads local).
 const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -65,7 +66,9 @@ export default function SovSpace() {
   const [verdictText, setVerdictText] = useState("");
   const [sig, setSig] = useState("");
   const [voiceOn, setVoiceOn] = useState(true);
-  const [globeRegion, setGlobeRegion] = useState("");
+  const [loc] = useState(() => detectLocale());
+  // Globe loads-local to the visitor's region on arrival, then flies to the scenario's jurisdiction on run.
+  const [globeRegion, setGlobeRegion] = useState(() => (loc.region.code === "GLOBAL" ? "" : loc.region.code));
   const endRef = useRef<HTMLDivElement | null>(null);
   const timers = useRef<any[]>([]);
 
@@ -178,6 +181,11 @@ export default function SovSpace() {
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Sovereign Space</p>
         <h1 className="relative mt-2 text-5xl sm:text-6xl font-black tracking-tight">Simulate. Experiment. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Govern.</span></h1>
         <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the 33-agent council deliberate live while your Sovereign narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
+        <div className="relative mt-4 inline-flex max-w-2xl flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-emerald-500/20 bg-black/25 px-3 py-2 text-sm">
+          <span className="font-semibold text-emerald-200">{loc.greeting}</span>
+          <span className="text-emerald-100/40">·</span>
+          <span className="text-emerald-100/75">{loc.region.label}: {loc.region.frameworks.slice(0, 3).join(", ")}</span>
+        </div>
       </section>
       <section className="mx-auto grid max-w-6xl gap-5 px-6 pb-12 lg:grid-cols-[1.1fr_1fr]">
         <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20">
