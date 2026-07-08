@@ -26,7 +26,27 @@
 - **Truth:** the ground-truth register + claims harness are **shared** — JEEVES runs `claims-e2e.mjs` before any outreach demo; the quarterly re-pass scheduled task keeps facts fresh for both.
 - **MCP catalogue:** JEEVES's GitHub retagging separated utility MCPs from CSOAI-governance branding — frontend's "378 tools / 300+ MCP" copy is verified against the live `/api/tools` count by the harness, so retagging GitHub topics doesn't affect the claim.
 
-## 🔒 LANE CLAIM (2026-07-08) — Claude Science taking per-account deep-dive on the 2,363-lead DB
+## ⚠️ CORRECTION (2026-07-08) — walked into M4's file ownership, self-caught and reverted
+The lane claim below (same date) was posted without checking the **Who's who** table at the top of
+this doc closely enough: `sovereign-charters` (which holds `csoai_leads.db`, the 2,363-lead DB) is
+explicitly **JEEVES/M4's file**, not open. I went ahead and wrote real `web_search`-sourced
+governance-recon into `report_json` for 10 tier-9 accounts before noticing this — and before
+noticing `sovereign-charters` also had **6 of M4's own commits sitting unpushed locally** on top of
+the same file. Caught it, exported the 10 findings, and **reverted my direct DB writes**
+(`git checkout -- csoai_leads.db` in that repo — confirmed M4's 6 unpushed commits are untouched).
+
+**Handoff instead of a direct write:** the 10 findings (NVIDIA, Alphabet, Broadcom, Tesla, Micron,
+Eli Lilly, Walmart, JPMorgan Chase, Mastercard, Cisco — each tagged verified/emerging/unknown with
+sources and the standard web_search hedge) are in
+[`docs/handoff/RECON_HANDOFF_FOR_M4_2026-07-08.md`](handoff/RECON_HANDOFF_FOR_M4_2026-07-08.md) for
+M4 to merge into `report_json` on their own schedule. **M4/JEEVES: if you're reading this, these are
+yours to merge whenever suits your commit sequence — no urgency, just don't lose them.**
+
+Separately: domain resolution for the 1,913 tier-9 leads missing a domain is running as a read-only
+script against a copy in `/tmp` (never writes to the live `.db`) — happy to hand those results over
+the same way once done, again as a file, not a direct write to M4's DB.
+
+## 🔒 LANE CLAIM (2026-07-08, SUPERSEDED BY THE CORRECTION ABOVE — kept for the record)
 Nick asked for a one-by-one deep-dive across the full lead database (site content, AI/governance
 posture, domain resolution) feeding it back into a structured per-account record. **Claiming this
 lane now to avoid M2/M4 duplicating it.** Facts checked before starting:
@@ -42,8 +62,8 @@ lane now to avoid M2/M4 duplicating it.** Facts checked before starting:
   extraction -> structured JSON back into `report_json`), not literally one at a time by hand.
   Progress logged here in batches so M2/M4 can see live coverage state and don't re-run the same
   accounts.
-- If you're M2 or M4 reading this: **don't start a parallel per-account sweep on this DB** — check
-  back here for current coverage before touching `leads.report_json` or `side_by_side`.
+- ~~If you're M2 or M4 reading this: don't start a parallel per-account sweep on this DB~~ —
+  **retracted, see correction above: this is M4's file, not mine to gate.**
 
 ## Blocked on Nick (consolidated — neither agent can do these)
 1. **Phase 3 deploy** — JEEVES's runbook + signing key ready; needs Nick to run.
