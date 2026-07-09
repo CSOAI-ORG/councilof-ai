@@ -8,7 +8,7 @@ import { chargeSovereign } from "../lib/sovCharge";
 
 const GW = "https://os.meok.ai/api";
 // Keep substrate codenames off the public UI.
-function clean(s: any): string { return typeof s === "string" ? s.replace(/defoneos/gi, "CSOAI").replace(/DAIC\/ATI/g, "DAIC/ATI") : String(s ?? ""); }
+function clean(s: any): string { return typeof s === "string" ? s.replace(/defoneos/gi, "CSOAI") : String(s ?? ""); }
 
 type Card = any;
 
@@ -65,7 +65,7 @@ export default function SystemCard() {
             Assurance regimes — UK <b className="text-emerald-200">JSP 936</b>, the EU AI Act, NIST — all require proof that a
             high-risk AI system was governed across its lifecycle. But there's a missing primitive: an <b className="text-emerald-200">independent,
             tamper-evident record</b> anyone can verify without trusting a vendor's dashboard. Consultancies sell assurance as a
-            service; <b className="text-emerald-200">nobody ships the cryptographic System Card.</b> CSOAI does.
+            service; <b className="text-emerald-200">no commercial assurance vendor we've found ships a tamper-evident, cryptographic System Card.</b> CSOAI does.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             {["Defence & CNI", "Government", "Fortune 500 CISO", "Regulators & NIST", "High-risk AI suppliers"].map((t) => (

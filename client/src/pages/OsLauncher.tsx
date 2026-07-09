@@ -183,7 +183,7 @@ export default function OsLauncher() {
             </p>
             <div className="mt-6">
               <div className="flex gap-2">
-                <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="Ask your Sovereign anything — or press ⌘K to command the OS" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-3.5 text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
+                <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="Ask your Sovereign anything…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-3.5 text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
                 <button onClick={runAsk} className="rounded-xl bg-emerald-500 px-6 py-3.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60" disabled={asking}>{asking ? "Reasoning…" : "Ask"}</button>
               </div>
               {answer && <div className="mt-3 whitespace-pre-wrap rounded-xl border border-emerald-400/25 bg-white/[0.03] px-4 py-3 text-sm leading-relaxed text-emerald-50/90">{answer}</div>}
@@ -202,8 +202,8 @@ export default function OsLauncher() {
             </svg>
             <div>
               <div className="font-mono text-lg text-emerald-300">{ring}%</div>
-              <div className="text-[11px] text-emerald-100/50">Article 50 readiness</div>
-              <div className="mt-1 text-[11px] text-emerald-100/40">Layer 0 · 8 controls</div>
+              <div className="text-[11px] text-emerald-100/50">CSOAI Layer-0 coverage</div>
+              <div className="mt-1 text-[11px] text-emerald-100/40">platform build · 8 controls</div>
             </div>
           </div>
         </div>

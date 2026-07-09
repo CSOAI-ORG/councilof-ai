@@ -75,7 +75,7 @@ const JX: Record<string, J> = {
     faqs: [
       { q: "Does the US have a federal AI law?", a: "No comprehensive one. Congress has enacted the TAKE IT DOWN Act (targeting non-consensual AI-generated imagery); broader federal AI policy is set by executive orders and frameworks and is currently deregulatory. Most binding AI obligations are at the state level." },
       { q: "How is the US federal approach different from the EU AI Act?", a: "The EU AI Act is a binding, risk-tiered omnibus law. The US federal approach is executive-led and pro-innovation, with the substantive obligations mostly coming from individual states (Colorado, Texas, California, Utah)." },
-      { q: "Which US states regulate AI?", a: "Notably Colorado (SB 189 / ADMT), Texas (TRAIGA), California (AI transparency laws) and Utah, plus NYC Local Law 144 for hiring - see the US state pages." },
+      { q: "Which US states regulate AI?", a: "Notably Colorado (SB 26-189 / ADMT, which in May 2026 repealed and replaced the original SB 24-205 AI Act; effective 1 Jan 2027), Texas (TRAIGA), California (AI transparency laws) and Utah, plus NYC Local Law 144 for hiring - see the US state pages." },
     ],
   },
 };

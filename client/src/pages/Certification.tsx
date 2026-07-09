@@ -3,7 +3,7 @@
  * Take the certification test to become a Watchdog Analyst
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Award,
@@ -63,12 +63,12 @@ const sampleQuestions = [
   },
   {
     id: 4,
-    question: "In the CSOAI 33-Agent Council, what percentage of votes is needed for consensus?",
+    question: "In the CSOAI 33-agent Council, how many votes ratify a decision (the BFT quorum)?",
     options: [
-      "50% (simple majority)",
-      "67% (two-thirds majority)",
-      "75% (three-quarters majority)",
-      "100% (unanimous)"
+      "17 of 33 (simple majority)",
+      "23 of 33 (Byzantine two-thirds quorum, ~70%)",
+      "25 of 33 (three-quarters)",
+      "33 of 33 (unanimous)"
     ],
     correctAnswer: 1,
   },
@@ -95,6 +95,7 @@ export default function Certification() {
   const [timeRemaining, setTimeRemaining] = useState(60 * 60); // 60 minutes
   const [score, setScore] = useState<number | null>(null);
   const [passed, setPassed] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
 
   const { data: certificates } = trpc.certification.getMyCertificates.useQuery();
   const hasCertificate = certificates && certificates.length > 0;
@@ -132,6 +133,7 @@ export default function Certification() {
     });
     
     const percentScore = (correct / sampleQuestions.length) * 100;
+    setCorrectCount(correct);
     setScore(percentScore);
     setPassed(percentScore >= 70);
     setTestState("results");
@@ -142,6 +144,17 @@ export default function Certification() {
       toast.error("You didn't pass this time. Review the material and try again.");
     }
   };
+
+  // Real exam countdown — decrement while testing; auto-submit at zero (enforces the stated time limit).
+  useEffect(() => {
+    if (testState !== "testing") return;
+    const t = setInterval(() => setTimeRemaining((s) => (s <= 1 ? 0 : s - 1)), 1000);
+    return () => clearInterval(t);
+  }, [testState]);
+  useEffect(() => {
+    if (testState === "testing" && timeRemaining === 0) handleSubmit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeRemaining, testState]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -400,15 +413,15 @@ export default function Certification() {
                   {score?.toFixed(0)}%
                 </div>
                 <p className="text-sm text-muted-foreground mb-6">
-                  {Object.keys(answers).length} of {sampleQuestions.length} questions answered correctly
+                  {correctCount} of {sampleQuestions.length} questions answered correctly
                 </p>
 
                 {passed ? (
                   <div className="space-y-4">
                     <div className="p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
                       <p className="text-green-700 dark:text-green-300">
-                        Your certificate has been issued. You can now access the Analyst Workbench
-                        and start reviewing AI safety cases.
+                        You&apos;ve passed the assessment. Your certificate is being processed and will
+                        appear in your Analyst Workbench shortly, where you can start reviewing AI safety cases.
                       </p>
                     </div>
                     

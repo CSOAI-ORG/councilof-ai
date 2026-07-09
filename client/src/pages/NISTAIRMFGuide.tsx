@@ -94,8 +94,8 @@ export default function NISTAIRMFGuide() {
         },
         {
           id: "MP-4",
-          title: "Risk Tolerance",
-          description: "Organizational risk tolerance for AI systems is established and understood."
+          title: "Third-Party Risks & Benefits Mapped",
+          description: "Risks and benefits are mapped for all components of the AI system, including third-party software and data."
         },
         {
           id: "MP-5",
@@ -158,8 +158,8 @@ export default function NISTAIRMFGuide() {
         },
         {
           id: "MG-3",
-          title: "Risk Monitoring",
-          description: "AI risk management activities are monitored and adjustments made as needed."
+          title: "Third-Party Risks Managed",
+          description: "AI risks and benefits from third-party entities are managed (e.g. monitoring and risk controls for third-party resources and pre-trained models)."
         },
         {
           id: "MG-4",
@@ -238,7 +238,7 @@ export default function NISTAIRMFGuide() {
       ]
     },
     {
-      name: "Fair with Managed Bias",
+      name: "Fair – with Harmful Bias Managed",
       icon: Scale,
       description: "AI systems are designed and deployed to minimize harmful bias and promote equitable outcomes.",
       keyAspects: [
@@ -310,7 +310,7 @@ export default function NISTAIRMFGuide() {
       framework: "OECD AI Principles",
       alignment: "Very High",
       alignmentColor: "text-green-600",
-      description: "The AI RMF was developed in consultation with OECD and explicitly supports implementation of OECD AI Principles through its trustworthy characteristics.",
+      description: "The AI RMF was developed by NIST through an open, congressionally-directed process, and it aligns with and supports the OECD AI Principles through its trustworthy characteristics.",
       keyMappings: [
         "Human-centered values aligned",
         "Transparency requirements match",
@@ -426,7 +426,7 @@ export default function NISTAIRMFGuide() {
     },
     {
       question: "What are the 7 characteristics of trustworthy AI?",
-      answer: "The NIST AI RMF identifies seven characteristics: (1) Valid and Reliable, (2) Safe, (3) Secure and Resilient, (4) Accountable and Transparent, (5) Explainable and Interpretable, (6) Privacy-Enhanced, and (7) Fair with Managed Bias. These characteristics may overlap and can be in tension with each other, requiring careful balancing."
+      answer: "The NIST AI RMF identifies seven characteristics: (1) Valid and Reliable, (2) Safe, (3) Secure and Resilient, (4) Accountable and Transparent, (5) Explainable and Interpretable, (6) Privacy-Enhanced, and (7) Fair – with Harmful Bias Managed. These characteristics may overlap and can be in tension with each other, requiring careful balancing."
     },
     {
       question: "How does GOVERN differ from the other core functions?",
@@ -446,7 +446,7 @@ export default function NISTAIRMFGuide() {
     },
     {
       question: "How does the AI RMF address AI bias?",
-      answer: "The AI RMF addresses bias through its 'Fair with Managed Bias' trustworthy characteristic. It emphasizes that bias can emerge at any point in the AI lifecycle and requires proactive identification, measurement, and mitigation. The framework recognizes that eliminating all bias may not be possible but managing harmful bias is essential."
+      answer: "The AI RMF addresses bias through its 'Fair – with Harmful Bias Managed' trustworthy characteristic. It emphasizes that bias can emerge at any point in the AI lifecycle and requires proactive identification, measurement, and mitigation. The framework recognizes that eliminating all bias may not be possible but managing harmful bias is essential."
     },
     {
       question: "What resources does NIST provide for AI RMF implementation?",

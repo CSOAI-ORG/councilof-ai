@@ -38,7 +38,7 @@ interface AccordionItem {
 interface CertificationItem {
   name: string;
   icon: React.ReactNode;
-  status: "Certified" | "Compliant";
+  status: "Certified" | "Compliant" | "In Progress";
   description: string;
 }
 
@@ -50,19 +50,19 @@ export default function TrustCenter() {
     {
       name: "ISO 27001",
       icon: <Shield className="h-8 w-8" />,
-      status: "Certified",
+      status: "In Progress",
       description: "Information Security Management System",
     },
     {
       name: "ISO 42001",
       icon: <Cpu className="h-8 w-8" />,
-      status: "Certified",
+      status: "In Progress",
       description: "AI Management System",
     },
     {
       name: "SOC 2 Type II",
       icon: <Lock className="h-8 w-8" />,
-      status: "Certified",
+      status: "In Progress",
       description: "Security, Availability, and Confidentiality",
     },
     {
@@ -322,6 +322,8 @@ export default function TrustCenter() {
                     className={
                       cert.status === "Certified"
                         ? "bg-green-100 text-green-700 border-green-300"
+                        : cert.status === "In Progress"
+                        ? "bg-amber-100 text-amber-700 border-amber-300"
                         : "bg-emerald-100 text-emerald-700 border-emerald-300"
                     }
                   >
@@ -744,9 +746,9 @@ export default function TrustCenter() {
         <div className="container max-w-4xl mx-auto">
           <div className="text-center text-sm text-gray-600">
             <p>
-              Last updated: February 2026. For the most current security information and certifications,
-              please contact security@csoai.ai. CSOAI's security certifications are independently
-              verified by accredited third-party auditors.
+              Last updated: February 2026. For the most current security and certification status,
+              please contact security@csoai.ai. Certifications marked &ldquo;In Progress&rdquo; are
+              being pursued; where a certification is held, it is verified by an accredited third-party auditor.
             </p>
           </div>
         </div>

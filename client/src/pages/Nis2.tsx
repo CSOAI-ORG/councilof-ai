@@ -1,20 +1,20 @@
 import { useEffect } from "react";
 
 // /nis2 — NIS2 Directive (EU 2022/2555). Network & information security for
-// essential and important entities. Member-state transposition deadline Oct 2026;
-// Cooperation Group adopted common incident-reporting templates (26 May 2026).
-// Overlaps DORA by ~65%. Management is personally accountable.
+// essential and important entities. Member-state transposition deadline was 17 Oct 2024
+// (several states still completing). Significant overlap with DORA on ICT risk.
+// Management is personally accountable.
 const REQS = [
   { t: "Risk management", d: "Technical & organisational measures for network and information security — proportionate to risk (Art. 21)." },
-  { t: "Incident reporting", d: "Early warning within 24h, notification within 72h, final report within 1 month — common EU templates adopted May 2026 (Art. 23)." },
+  { t: "Incident reporting", d: "Early warning within 24h, notification within 72h, final report within 1 month, using the EU common reporting templates (Art. 23)." },
   { t: "Supply-chain security", d: "Assess and manage the security of suppliers and service providers." },
   { t: "Management accountability", d: "Management bodies approve and oversee cyber-risk measures — and can be held personally liable (Art. 20)." },
 ];
 const FAQ = [
   { q: "What is the NIS2 Directive?", a: "NIS2 (Directive (EU) 2022/2555) is the EU's cybersecurity law for 'essential' and 'important' entities across critical sectors. It mandates risk-management measures, incident reporting, supply-chain security and management accountability." },
-  { q: "When does NIS2 apply?", a: "NIS2 is being transposed into national law across member states, with the transposition deadline in October 2026. The Cooperation Group adopted common incident-reporting templates in May 2026. Verify your national implementation, which varies by member state." },
+  { q: "When does NIS2 apply?", a: "NIS2 (Directive (EU) 2022/2555) had a member-state transposition deadline of 17 October 2024; several member states are still completing transposition, so national implementation varies. Verify your member state's law." },
   { q: "What are the NIS2 reporting timelines?", a: "For significant incidents: an early warning within 24 hours, a notification within 72 hours, and a final report within one month — following the EU common templates." },
-  { q: "How do NIS2 and DORA overlap?", a: "NIS2 and DORA overlap by roughly 65% on ICT risk management, incident reporting and third-party/supply-chain risk. For financial entities in scope of both, CSOAI's DORA×NIS2 crosswalk maps the overlap once to avoid duplicated controls." },
+  { q: "How do NIS2 and DORA overlap?", a: "NIS2 and DORA overlap substantially on ICT risk management, incident reporting and third-party/supply-chain risk. Note DORA is lex specialis for financial entities — where both could apply, DORA's ICT rules take precedence. CSOAI's DORA×NIS2 crosswalk maps the overlap once to avoid duplicated controls." },
   { q: "How does CSOAI help with NIS2?", a: "CSOAI maps NIS2 to one control set, crosswalks it to DORA and the Cyber Resilience Act, structures incident reporting to the common templates, and produces Layer-0 (Ed25519) signed evidence for supervisors." },
 ];
 
@@ -27,7 +27,7 @@ export default function Nis2() {
       <div className="mx-auto max-w-4xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Cybersecurity · NIS2 Directive</p>
         <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Network security, <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">with the board on the hook.</span></h1>
-        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">NIS2 raises cybersecurity duties for essential and important entities across the EU — with 24/72-hour incident reporting and <b>personal management accountability</b>. Transposition lands October 2026.</p>
+        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">NIS2 raises cybersecurity duties for essential and important entities across the EU — with 24/72-hour incident reporting and <b>personal management accountability</b>. The transposition deadline was 17 October 2024; national implementation is still being completed.</p>
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           {REQS.map((r) => (

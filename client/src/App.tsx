@@ -21,6 +21,8 @@ const Penalties = lazy(() => import("./pages/Penalties"));
 const NistVsEuAct = lazy(() => import("./pages/NistVsEuAct"));
 const Iso42001VsEuAct = lazy(() => import("./pages/Iso42001VsEuAct"));
 const SectorAct = lazy(() => import("./pages/SectorAct"));
+const SECDisclosure = lazy(() => import("./pages/SECDisclosure"));
+const PersonaRouter = lazy(() => import("./pages/PersonaRouter"));
 const Workbench = lazy(() => import("./pages/Workbench"));
 const AltPage = lazy(() => import("./pages/AltPage"));
 const EuActVsGdpr = lazy(() => import("./pages/EuActVsGdpr"));
@@ -498,6 +500,9 @@ function App() {
           <Route path="/singapore-ai-governance">{() => <JurisdictionAct jx="singapore" />}</Route>
           <Route path="/south-korea-ai-act">{() => <JurisdictionAct jx="korea" />}</Route>
           <Route path="/us-ai-regulation">{() => <JurisdictionAct jx="usfederal" />}</Route>
+          <Route path="/sec-disclosure">{() => <SECDisclosure />}</Route>
+          <Route path="/sec-ai-disclosure">{() => <SECDisclosure />}</Route>
+          <Route path="/for/:persona">{(params: any) => <PersonaRouter persona={params.persona} />}</Route>
           <Route path="/ai-act-faq" component={AiActFaq} />
           <Route path="/eu-ai-act-faq" component={AiActFaq} />
           <Route path="/conformity-assessment" component={ConformityAssessment} />

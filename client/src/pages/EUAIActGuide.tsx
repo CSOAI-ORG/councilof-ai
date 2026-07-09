@@ -108,8 +108,8 @@ export default function EUAIActGuide() {
   const keyDates = [
     {
       date: "July 12, 2024",
-      event: "EU AI Act Adopted",
-      description: "European Parliament formally adopted the AI Act after years of negotiation.",
+      event: "Published in the Official Journal",
+      description: "The AI Act (Regulation (EU) 2024/1689) was published in the EU Official Journal, entering into force on 1 August 2024. Parliament had adopted it on 13 March 2024.",
       status: "completed"
     },
     {
@@ -145,7 +145,7 @@ export default function EUAIActGuide() {
   ];
 
   const digitalOmnibus = {
-    proposalDate: "November 26, 2025",
+    proposalDate: "November 19, 2025",
     description: "The European Commission proposed the Digital Omnibus to simplify and streamline reporting obligations under the AI Act and other digital regulations.",
     keyChanges: [
       {
@@ -204,7 +204,7 @@ export default function EUAIActGuide() {
       category: "Data Governance",
       icon: BarChart3,
       requirements: [
-        "Training data must be relevant, representative, and error-free",
+        "Training data must be relevant, representative, and — to the best extent possible — free of errors and complete (Art. 10(3))",
         "Examination for possible biases",
         "Appropriate data governance measures",
         "Clear data lineage documentation"
@@ -342,7 +342,7 @@ export default function EUAIActGuide() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-indigo-500/10 to-purple-500/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/20 via-teal-500/10 to-teal-500/10" />
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10" />
         <div className="container max-w-7xl mx-auto px-6 relative z-10">
           <motion.div
@@ -351,14 +351,14 @@ export default function EUAIActGuide() {
             className="text-center space-y-6 max-w-4xl mx-auto"
           >
             <div className="flex items-center justify-center gap-2 mb-4">
-              <Badge variant="outline" className="text-sm px-4 py-2 bg-blue-500/10 border-blue-500/30">
+              <Badge variant="outline" className="text-sm px-4 py-2 bg-emerald-500/10 border-emerald-500/30">
                 <Globe className="h-4 w-4 mr-2" />
                 European Union Regulation 2024/1689
               </Badge>
             </div>
             <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
               The Complete Guide to the
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"> EU AI Act</span>
+              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> EU AI Act</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               The world's first comprehensive AI regulation. Understand the risk-based framework,
@@ -367,7 +367,7 @@ export default function EUAIActGuide() {
             </p>
             <div className="flex flex-wrap gap-4 justify-center pt-4">
               <Link href="/courses">
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700">
                   <GraduationCap className="mr-2 h-5 w-5" />
                   Start EU AI Act Training
                 </Button>
@@ -394,7 +394,7 @@ export default function EUAIActGuide() {
         <div className="container max-w-7xl mx-auto px-6 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold text-blue-600">Aug 2024</div>
+              <div className="text-3xl font-bold text-emerald-600">Aug 2024</div>
               <div className="text-sm text-muted-foreground">Entry into Force</div>
             </div>
             <div>
@@ -402,7 +402,7 @@ export default function EUAIActGuide() {
               <div className="text-sm text-muted-foreground">Prohibited AI Ban</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-purple-600">Aug 2026</div>
+              <div className="text-3xl font-bold text-teal-600">Aug 2026</div>
               <div className="text-sm text-muted-foreground">High-Risk Deadline</div>
             </div>
             <div>
@@ -428,8 +428,8 @@ export default function EUAIActGuide() {
               <div className="space-y-4 text-lg text-muted-foreground">
                 <p>
                   The <strong className="text-foreground">EU Artificial Intelligence Act</strong> (Regulation 2024/1689) is the world's
-                  first comprehensive legal framework for artificial intelligence. Adopted on July 12, 2024,
-                  and entering into force on August 1, 2024, it establishes a risk-based approach to AI regulation.
+                  first comprehensive legal framework for artificial intelligence. Published in the Official
+                  Journal on July 12, 2024 and entering into force on August 1, 2024, it establishes a risk-based approach to AI regulation.
                 </p>
                 <p>
                   The Act aims to ensure that AI systems placed on the EU market are safe, respect fundamental
@@ -441,9 +441,9 @@ export default function EUAIActGuide() {
                 </p>
               </div>
               <div className="flex gap-4 pt-4">
-                <Card className="flex-1 p-4 bg-blue-500/5 border-blue-500/20">
+                <Card className="flex-1 p-4 bg-emerald-500/5 border-emerald-500/20">
                   <div className="flex items-center gap-3">
-                    <Scale className="h-8 w-8 text-blue-600" />
+                    <Scale className="h-8 w-8 text-emerald-600" />
                     <div>
                       <div className="font-semibold">Risk-Based</div>
                       <div className="text-sm text-muted-foreground">4 Risk Tiers</div>
@@ -462,9 +462,9 @@ export default function EUAIActGuide() {
               </div>
             </div>
             <div className="relative">
-              <Card className="p-8 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-blue-200 dark:border-blue-800">
+              <Card className="p-8 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-emerald-200 dark:border-emerald-800">
                 <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                  <Gavel className="h-5 w-5 text-blue-600" />
+                  <Gavel className="h-5 w-5 text-emerald-600" />
                   Core Principles
                 </h3>
                 <ul className="space-y-4">
@@ -578,7 +578,7 @@ export default function EUAIActGuide() {
           </motion.div>
 
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-green-500 via-blue-500 to-purple-500 hidden md:block" />
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-green-500 via-emerald-500 to-teal-500 hidden md:block" />
             <div className="space-y-8">
               {keyDates.map((item, idx) => (
                 <motion.div
@@ -593,7 +593,7 @@ export default function EUAIActGuide() {
                     <Card className={`inline-block p-6 ${
                       item.status === 'completed' ? 'bg-green-500/5 border-green-500/20' :
                       item.status === 'imminent' ? 'bg-red-500/5 border-red-500/20' :
-                      'bg-blue-500/5 border-blue-500/20'
+                      'bg-emerald-500/5 border-emerald-500/20'
                     }`}>
                       <div className="flex items-center gap-2 mb-2">
                         <Badge variant={
@@ -606,12 +606,12 @@ export default function EUAIActGuide() {
                         </Badge>
                       </div>
                       <h3 className="text-xl font-bold">{item.event}</h3>
-                      <p className="text-2xl font-bold text-blue-600 my-2">{item.date}</p>
+                      <p className="text-2xl font-bold text-emerald-600 my-2">{item.date}</p>
                       <p className="text-muted-foreground">{item.description}</p>
                     </Card>
                   </div>
-                  <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-background border-4 border-blue-500 z-10">
-                    <Calendar className="h-5 w-5 text-blue-600" />
+                  <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-background border-4 border-emerald-500 z-10">
+                    <Calendar className="h-5 w-5 text-emerald-600" />
                   </div>
                   <div className="flex-1 hidden md:block" />
                 </motion.div>
@@ -681,8 +681,8 @@ export default function EUAIActGuide() {
             <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 w-full mb-8 h-auto">
               {highRiskRequirements.map((req) => (
                 <TabsTrigger
-                  key={req.category.toLowerCase().replace(' ', '-')}
-                  value={req.category.toLowerCase().replace(' ', '-')}
+                  key={req.category.toLowerCase().replace(/[^a-z0-9]+/g,"-")}
+                  value={req.category.toLowerCase().replace(/[^a-z0-9]+/g,"-")}
                   className="text-xs md:text-sm py-3"
                 >
                   <req.icon className="h-4 w-4 mr-1 hidden sm:inline" />
@@ -692,11 +692,11 @@ export default function EUAIActGuide() {
             </TabsList>
 
             {highRiskRequirements.map((req) => (
-              <TabsContent key={req.category.toLowerCase().replace(' ', '-')} value={req.category.toLowerCase().replace(' ', '-')}>
+              <TabsContent key={req.category.toLowerCase().replace(/[^a-z0-9]+/g,"-")} value={req.category.toLowerCase().replace(/[^a-z0-9]+/g,"-")}>
                 <Card className="p-8">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="p-4 rounded-xl bg-blue-500/10">
-                      <req.icon className="h-8 w-8 text-blue-600" />
+                    <div className="p-4 rounded-xl bg-emerald-500/10">
+                      <req.icon className="h-8 w-8 text-emerald-600" />
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold">{req.category}</h3>
@@ -921,15 +921,15 @@ export default function EUAIActGuide() {
             <Link href="/guides/nist-ai-rmf">
               <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-blue-500/10">
-                    <Building2 className="h-6 w-6 text-blue-600" />
+                  <div className="p-2 rounded-lg bg-emerald-500/10">
+                    <Building2 className="h-6 w-6 text-emerald-600" />
                   </div>
                   <h3 className="font-bold">NIST AI RMF</h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-4">
                   The US voluntary framework that aligns well with EU AI Act requirements.
                 </p>
-                <span className="text-blue-600 text-sm font-medium flex items-center">
+                <span className="text-emerald-600 text-sm font-medium flex items-center">
                   Read Guide <ArrowRight className="ml-2 h-4 w-4" />
                 </span>
               </Card>
@@ -937,15 +937,15 @@ export default function EUAIActGuide() {
             <Link href="/guides/iso-42001">
               <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-purple-500/10">
-                    <Award className="h-6 w-6 text-purple-600" />
+                  <div className="p-2 rounded-lg bg-teal-500/10">
+                    <Award className="h-6 w-6 text-teal-600" />
                   </div>
                   <h3 className="font-bold">ISO/IEC 42001</h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-4">
                   The certifiable AI management system standard supporting EU compliance.
                 </p>
-                <span className="text-purple-600 text-sm font-medium flex items-center">
+                <span className="text-teal-600 text-sm font-medium flex items-center">
                   Read Guide <ArrowRight className="ml-2 h-4 w-4" />
                 </span>
               </Card>

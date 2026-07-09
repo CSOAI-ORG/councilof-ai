@@ -528,13 +528,11 @@ export default function About() {
                 </div>
                 <div className="mt-6">
                   <a
-                    href="/legal/professional-indemnity-certificate.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="mailto:security@csoai.ai?subject=Certificate%20of%20Insurance%20request"
                     className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
                   >
                     <Download className="h-4 w-4" />
-                    Download Certificate of Insurance (PDF)
+                    Certificate of Insurance — available on request
                   </a>
                 </div>
               </div>
