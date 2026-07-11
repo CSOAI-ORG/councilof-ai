@@ -56,3 +56,38 @@ browser can actually install (i.e. not this sandbox).
 - Regulatory dates: only state ✅ rows from the ground-truth register; flag anything else "indicative — verify".
 
 *If it's not green here, it's not ready to show. Green here = we can walk into any room and it works.*
+
+
+## 2026-07-11 — Monday whole-site demo readiness (Claude Science)
+
+Nick asked for full whole-site readiness ahead of Monday. Ran BOTH shared CI harnesses fresh
+(triggered `workflow_dispatch` manually, not relying on a stale scheduled run), on GitHub's hosted
+runners (this sandbox's local Chromium install remains blocked — see note above, unrelated to the
+site):
+
+- **`claims-e2e.yml`** (run 29111890641, 2026-07-10 17:41 UTC): **`RESULT: 12 pass · 0 FAIL`**.
+  All 12 headline claims genuinely verified, including the browser-rendered ones (ToolRunner output,
+  classifier tier, workbench seal, 33-agent council viz, live Cesium globe) -- not just HTTP 200s.
+- **`sov-stack-e2e.yml`** (run 29137955971, 2026-07-11 03:29 UTC): **`Sov stack E2E: 37/37 passed`**.
+  Covers the newer agentic-globe suite: 2D/3D globe rendering, /intel|/simulate|/brief drive chains,
+  sector pages (/defence-ai-act, /energy-ai-act, /pharma-ai-act), competitor pages (/vs/vanta), and
+  postMessage-spy-verified behavior (click -> flyTo, threat -> flyTo+neutralize, convene ->
+  flyTo+bftSpiral).
+
+Also independently re-ran the API-layer claims by hand (tools catalog=378, live MCP tools/list=5,
+`meok_govern` real framework lookup, Ed25519 sign+verify full round trip incl. tamper-rejection,
+dynamic OG image) -- all matched the harness's results exactly, cross-confirming the harness itself
+isn't just green by coincidence.
+
+Spot-checked all key demo routes live: `/`, `/pricing`, `/assess`, `/globe`, `/intel`, `/poc`,
+`/tool-commons`, `/classifier`, `/report`, `/workbench`, `/try` -- all 200.
+
+`FRAMEWORK_GROUND_TRUTH.md` last full pass: 2026-07 (this month) -- all listed frameworks ✅,
+EU AI Act dates correctly reflect the May-2026 Digital Omnibus delay (Art. 50 @ 2 Aug 2026, not the
+original date). MCP one-liner (`npx csoai-governance-mcp`) confirmed still live at `0.1.0`.
+
+**Verdict: green. Both CI truth gates pass fresh, right now, on the actual deployed commit
+(`19bda30`) -- not a cached/stale result.** Nothing outstanding blocks a Monday demo from a
+technical-correctness standpoint. Remaining items are business decisions already logged under
+"Blocked on Nick" (Phase 3 deploy trigger, outreach send, app.csoai.org DNS split, main-branch
+archival, ACLED/FIRMS keys) -- none of them block showing the live product.
