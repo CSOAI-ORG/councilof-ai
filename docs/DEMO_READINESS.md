@@ -124,3 +124,23 @@ Live-verified: bundle hash on www.csoai.org matches the local build exactly (`in
 Also reviewed (this pass, not touched — genuinely M4's lane and already shipped there):
 `os.meok.ai/api/registry` (61-model registry, live), the free-GPU bridge + OWEM growth-dispatch
 work, and the launch-readiness / capability-boundary docs. No collision, no duplicate work found.
+
+## Update (2026-07-12, later still) — CI coverage added for the 4 SOV3 pages
+
+Real gap closed: the 4 SOV3 pages shipped earlier today had zero automated regression coverage,
+only manual curl checks. Added a `sov3Pages()` check to `claims-e2e.mjs` (commit `aecce7f`) that
+confirms each page's real client-set title and non-trivial body content — so a future change that
+silently breaks one of these pages will now fail CI instead of going unnoticed.
+
+Dispatched fresh on the hosted runner (run 29189131416, commit `aecce7f`) — **success**. The
+"Run claims verification against live site + brain" step (which exits non-zero on any single
+check failure) passed clean, confirming all 4 new page checks pass on the real live site, not
+just a syntax check.
+
+Reviewed the wider estate for anything else genuinely actionable in this lane (no browser/GPU
+dependency): the senior-friendly legibility punch-list, the 12-around-1 and world-model honesty
+corrections, and the leading-edge OWEM research are all M4/Hermes-lane work on different repos
+(meok-os-deploy, the SOV33 substrate) — reviewed, no collision, nothing to duplicate or fix here.
+Confirmed the flagged "1.09T/218B fusion" overclaim does not appear anywhere in councilof-ai.
+
+This lane's SOV3-release-infrastructure task is now complete and CI-guarded end to end.
