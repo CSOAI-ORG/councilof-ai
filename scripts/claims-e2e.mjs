@@ -34,6 +34,29 @@ async function open(b, path) {
   return p;
 }
 
+// SOV3 release-infrastructure pages (2026-07-12) — confirm each renders its
+// own real title (not the SPA's generic fallback) and non-trivial content,
+// so a future change can't silently break one without CI catching it.
+async function sov3Pages(b) {
+  const checks = [
+    { path: "/sov3-model-card", titleRe: /Model Card/i, bodyRe: /governed sovereign substrate|Oracle GenAI|Qwen3-MoE/i },
+    { path: "/sov3-system-card", titleRe: /System.*Safety Card/i, bodyRe: /care-floor|Containment|governance signal/i },
+    { path: "/sov3-whitepaper", titleRe: /Growth by Accretion/i, bodyRe: /accretion|frozen base|invariant/i },
+    { path: "/research-transparency", titleRe: /Research.*Transparency/i, bodyRe: /CONFIRMED|RETRACTED|wrong turns/i },
+  ];
+  for (const c of checks) {
+    try {
+      const p = await open(b, c.path);
+      await p.waitForTimeout(1500);
+      const title = await p.title();
+      const body = await p.innerText("body");
+      const ok = c.titleRe.test(title) && c.bodyRe.test(body);
+      ok ? pass(`CLAIM "${c.path} renders"`, `title="${title.slice(0, 40)}"`) : fail(c.path, `title="${title}" bodyMatch=${c.bodyRe.test(body)}`);
+      await p.close();
+    } catch (e) { fail(c.path, e.message.slice(0, 45)); }
+  }
+}
+
 async function interactive(b) {
   // Tool Runner
   try { const p = await open(b, "/tool-commons"); await p.waitForSelector("text=/Run tool/", { timeout: 12000 });
@@ -63,6 +86,7 @@ async function interactive(b) {
 const b = await chromium.launch();
 await apiTruth();
 await interactive(b);
+await sov3Pages(b);
 await b.close();
 const passes = R.filter((x) => x[0] === "✅").length, fails = R.filter((x) => x[0] === "❌").length;
 console.log("# CSOAI Claims-Verification E2E — " + SITE + "\n");
