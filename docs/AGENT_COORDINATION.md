@@ -344,3 +344,12 @@ redeploys, still zero references) without ever finding the actual cause. Root-ca
 - Not yet independently re-tested this window: `/orchestrate` (flagged thin in the prior E2E
   report), full visual/browser rendering (needs Playwright, unavailable — no `node_modules` in
   this checkout).
+
+## 🔍 LANE NOTE (2026-07-12) — Claude Science building SOV3/SOV3³ release-infrastructure pages
+Building 4 new pages/docs to close the gaps found in the release-readiness audit
+(`_alignment/SOV3_RELEASE_READINESS_2026-07-12.md`): a SOV3 model card, a SOV3 system/safety card,
+a public whitepaper (formatted from `GROWTH_BY_ACCRETION_PARADIGM`), and a curated public
+"Research & Transparency" page (edited synthesis of the honest `_alignment/` findings — no raw
+internal file dumps, nothing that reads like an internal note). All new routes, additive, not
+touching `auth*`/`payments*`/`AssessTool*`/`sovereign-charters` (M4's) or the account-experience
+harness (M2's). Will run `claims-e2e.mjs`-equivalent checks (route 200s, build clean) before pushing.
