@@ -83,6 +83,10 @@ const Signup = lazy(() => import("./pages/Signup"));
 const Welcome = lazy(() => import("./pages/Welcome"));
 const FrameworkHive = lazy(() => import("./pages/FrameworkHive"));
 const SystemCard = lazy(() => import("./pages/SystemCard"));
+const Sov3ModelCard = lazy(() => import("./pages/Sov3ModelCard"));
+const Sov3SystemCard = lazy(() => import("./pages/Sov3SystemCard"));
+const Sov3Whitepaper = lazy(() => import("./pages/Sov3Whitepaper"));
+const ResearchTransparency = lazy(() => import("./pages/ResearchTransparency"));
 const Ecosystem = lazy(() => import("./pages/Ecosystem"));
 const Protect = lazy(() => import("./pages/Protect"));
 const Ontology = lazy(() => import("./pages/Ontology"));
@@ -399,6 +403,10 @@ function App() {
                   <Route path="/system-card" component={SystemCard} />
                   <Route path="/assurance" component={SystemCard} />
                   <Route path="/systemcard" component={SystemCard} />
+                  <Route path="/sov3-model-card" component={Sov3ModelCard} />
+                  <Route path="/sov3-system-card" component={Sov3SystemCard} />
+                  <Route path="/sov3-whitepaper" component={Sov3Whitepaper} />
+                  <Route path="/research-transparency" component={ResearchTransparency} />
                   <Route path="/safe-space" component={Ecosystem} />
                   <Route path="/governance-commons" component={Ecosystem} />
                   <Route path="/protect" component={Protect} />

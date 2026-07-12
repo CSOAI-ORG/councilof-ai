@@ -42,6 +42,8 @@ const ROUTES = [
   '/vs/vanta', '/vs/drata', '/vs/credo-ai', '/vs/onetrust',
   // Net-new sector pages
   '/energy-ai-act', '/pharma-ai-act', '/defence-ai-act',
+  // SOV3 model-release documentation
+  '/sov3-model-card', '/sov3-system-card', '/sov3-whitepaper', '/research-transparency',
 ];
 
 const MIME = {
