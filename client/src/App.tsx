@@ -229,6 +229,7 @@ import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
 import { blogdata } from "./data/blog-content";
 import { AnalyticsProvider } from "./components/Analytics";
+import CookieConsent from "./components/CookieConsent";
 import EnforcementBanner from "./components/EnforcementBanner";
 
 function ScrollToTop() {
@@ -753,6 +754,7 @@ function App() {
                 <Footer />
                 <SovereignDock />
                 <DemoTour />
+                <CookieConsent />
               </div>
               <Toaster
                 position="top-right"

@@ -6,6 +6,7 @@
 
 import { useEffect } from "react";
 import { useLocation } from "wouter";
+import { hasAnalyticsConsent } from "./CookieConsent";
 
 // Event types for analytics
 type AnalyticsEvent = {
@@ -45,6 +46,8 @@ const getSessionId = (() => {
 // Track an analytics event
 export function trackEvent(event: AnalyticsEvent): void {
   if (!ANALYTICS_CONFIG.enabled) return;
+  // GDPR: only fire once the visitor has actively accepted (not just "not yet declined").
+  if (!hasAnalyticsConsent()) return;
 
   const enrichedEvent = {
     ...event,
