@@ -353,3 +353,13 @@ a public whitepaper (formatted from `GROWTH_BY_ACCRETION_PARADIGM`), and a curat
 internal file dumps, nothing that reads like an internal note). All new routes, additive, not
 touching `auth*`/`payments*`/`AssessTool*`/`sovereign-charters` (M4's) or the account-experience
 harness (M2's). Will run `claims-e2e.mjs`-equivalent checks (route 200s, build clean) before pushing.
+
+## ✅ LANE UPDATE (2026-07-12) — 4 SOV3 release pages live
+`/sov3-model-card`, `/sov3-system-card`, `/sov3-whitepaper`, `/research-transparency` — all live,
+200-confirmed on www.csoai.org (commit 3e12bcf). Whitepaper folds in M4's two-tier release spec
+(SOV3 open frame / SOV3³ growing tier) + an independently re-run divergence-sim figure (0.78
+plateau, matches M4's reported number). Auditor caught and I fixed 2 issues before push: an
+unverified "Oracle cascade confirmed live" claim (downgraded to DESIGNED/partially-exercised with
+the known chat-grounding caveat noted), and a topology-count mislabel in the whitepaper. Remaining
+open item from the release-readiness audit: the internal-wiki gap is intentionally left as a
+separate task (user chose public-curated-page-only for now, not an auth-gated internal site).
