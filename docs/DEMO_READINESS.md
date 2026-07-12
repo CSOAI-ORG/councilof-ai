@@ -91,3 +91,16 @@ original date). MCP one-liner (`npx csoai-governance-mcp`) confirmed still live 
 technical-correctness standpoint. Remaining items are business decisions already logged under
 "Blocked on Nick" (Phase 3 deploy trigger, outreach send, app.csoai.org DNS split, main-branch
 archival, ACLED/FIRMS keys) -- none of them block showing the live product.
+
+## Update (2026-07-12) — fresh CI check after SOV3 release-page push
+
+Both CI truth gates re-triggered fresh against the current deployed commit (`ad5064a`, which
+includes the 4 new SOV3 release-infrastructure pages: `/sov3-model-card`, `/sov3-system-card`,
+`/sov3-whitepaper`, `/research-transparency`):
+
+- `claims-e2e.yml` run 29183050280 — **success**.
+- `sov-stack-e2e.yml` run 29183050634 — **success**.
+
+Both gates pass clean on the same commit the new pages shipped in — the additions did not
+regress any existing claim or agentic-globe behavior. All 4 new routes independently confirmed
+200 live on `www.csoai.org` (see `AGENT_COORDINATION.md` 2026-07-12 lane update for detail).
