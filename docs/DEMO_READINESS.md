@@ -104,3 +104,23 @@ includes the 4 new SOV3 release-infrastructure pages: `/sov3-model-card`, `/sov3
 Both gates pass clean on the same commit the new pages shipped in — the additions did not
 regress any existing claim or agentic-globe behavior. All 4 new routes independently confirmed
 200 live on `www.csoai.org` (see `AGENT_COORDINATION.md` 2026-07-12 lane update for detail).
+
+## Update (2026-07-12, later) — cookie-consent banner shipped + re-verified
+
+Closed the one concrete, code-buildable gap found while re-aligning against the estate's
+`GATES_SORTED_2026-07-12.md` (Tier D1, GDPR): legal pages existed and were live (Privacy/Terms/
+DPA/Cookie Policy) but there was no actual consent banner, only a footer link. Shipped
+`CookieConsent.tsx` (localStorage-persisted, Accept/Essential-only), wired `Analytics.tsx` to
+gate on real consent (currently a no-op either way — no analytics endpoint is configured — but
+this is what will actually gate it the moment one is added). Commit `32d46a7`.
+
+Both CI truth gates re-triggered fresh against this commit:
+- `claims-e2e.yml` run 29184522992 — **success**.
+- `sov-stack-e2e.yml` run 29184523452 — **success**.
+
+Live-verified: bundle hash on www.csoai.org matches the local build exactly (`index-BvHWQnrD.js`);
+`/`, `/pricing`, `/terms`, `/privacy`, `/cookie-policy` all 200.
+
+Also reviewed (this pass, not touched — genuinely M4's lane and already shipped there):
+`os.meok.ai/api/registry` (61-model registry, live), the free-GPU bridge + OWEM growth-dispatch
+work, and the launch-readiness / capability-boundary docs. No collision, no duplicate work found.
